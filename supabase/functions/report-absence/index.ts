@@ -33,6 +33,7 @@ Deno.serve(async (req) => {
     if (userError || !userData.user) return Response.json({ error: "UNAUTHORIZED" }, { status: 401, headers: corsHeaders });
 
     const { hasMedicalReport = false, note = null } = await req.json();
+    const normalizedNote = typeof note === "string" && note.trim() ? note.trim() : null;
     const now = new Date();
     const today = new Intl.DateTimeFormat("en-CA", {
       timeZone: "Europe/Istanbul",
@@ -53,16 +54,30 @@ Deno.serve(async (req) => {
         teacher_id: userData.user.id,
         report_date: today,
         has_medical_report: Boolean(hasMedicalReport),
-        note: typeof note === "string" && note.trim() ? note.trim() : null,
+        note: normalizedNote,
         status: "open",
       }, { onConflict: "teacher_id,report_date" })
       .select("id")
       .single();
     if (reportError) throw reportError;
 
+    const { data: absence, error: absenceError } = await admin
+      .from("absences")
+      .upsert({
+        crisis_report_id: report.id,
+        teacher_id: userData.user.id,
+        absence_date: today,
+        has_medical_report: Boolean(hasMedicalReport),
+        note: normalizedNote,
+        status: "open",
+      }, { onConflict: "teacher_id,absence_date" })
+      .select("id")
+      .single();
+    if (absenceError) throw absenceError;
+
     const { data: schedule, error: scheduleError } = await admin
       .from("teacher_schedule")
-      .select("period,class_name,subject")
+      .select("period,class_id,class_name,subject")
       .eq("teacher_id", userData.user.id)
       .eq("weekday", weekday)
       .order("period");
@@ -75,6 +90,7 @@ Deno.serve(async (req) => {
           teacher_id: userData.user.id,
           lesson_date: today,
           period: lesson.period,
+          class_id: lesson.class_id ?? null,
           class_name: lesson.class_name,
           subject: lesson.subject,
         })),
@@ -103,6 +119,7 @@ Deno.serve(async (req) => {
       {
         ok: true,
         reportId: report.id,
+        absenceId: absence.id,
         lessonCount: schedule?.length ?? 0,
         dutyVicePrincipal,
         instruction: "Devamsızlığınızı MEBBİS üzerinden de bildiriniz ve nöbetçi müdür yardımcısını bilgilendiriniz.",
