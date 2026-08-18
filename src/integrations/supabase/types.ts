@@ -14,6 +14,147 @@ export type Database = {
   }
   public: {
     Tables: {
+      absence_lessons: {
+        Row: {
+          class_name: string
+          crisis_report_id: string
+          id: string
+          lesson_date: string
+          period: number
+          subject: string
+          teacher_id: string
+        }
+        Insert: {
+          class_name: string
+          crisis_report_id: string
+          id?: string
+          lesson_date: string
+          period: number
+          subject: string
+          teacher_id: string
+        }
+        Update: {
+          class_name?: string
+          crisis_report_id?: string
+          id?: string
+          lesson_date?: string
+          period?: number
+          subject?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "absence_lessons_crisis_report_id_fkey"
+            columns: ["crisis_report_id"]
+            isOneToOne: false
+            referencedRelation: "crisis_reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "absence_lessons_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      crisis_reports: {
+        Row: {
+          created_at: string
+          has_medical_report: boolean
+          id: string
+          note: string | null
+          report_date: string
+          status: string
+          teacher_id: string
+        }
+        Insert: {
+          created_at?: string
+          has_medical_report?: boolean
+          id?: string
+          note?: string | null
+          report_date?: string
+          status?: string
+          teacher_id: string
+        }
+        Update: {
+          created_at?: string
+          has_medical_report?: boolean
+          id?: string
+          note?: string | null
+          report_date?: string
+          status?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crisis_reports_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      duty_rotation: {
+        Row: {
+          created_at: string
+          duty_date: string
+          vice_principal_id: string
+        }
+        Insert: {
+          created_at?: string
+          duty_date: string
+          vice_principal_id: string
+        }
+        Update: {
+          created_at?: string
+          duty_date?: string
+          vice_principal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duty_rotation_vice_principal_id_fkey"
+            columns: ["vice_principal_id"]
+            isOneToOne: false
+            referencedRelation: "vice_principals"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      fcm_tokens: {
+        Row: {
+          id: string
+          platform: string
+          token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          platform?: string
+          token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          platform?: string
+          token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fcm_tokens_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       pre_registered_teachers: {
         Row: {
           active: boolean
@@ -80,12 +221,155 @@ export type Database = {
         }
         Relationships: []
       }
+      substitute_assignments: {
+        Row: {
+          absence_lesson_id: string
+          assigned_at: string
+          assigned_by: string
+          id: string
+          notified_at: string | null
+          substitute_user_id: string
+        }
+        Insert: {
+          absence_lesson_id: string
+          assigned_at?: string
+          assigned_by: string
+          id?: string
+          notified_at?: string | null
+          substitute_user_id: string
+        }
+        Update: {
+          absence_lesson_id?: string
+          assigned_at?: string
+          assigned_by?: string
+          id?: string
+          notified_at?: string | null
+          substitute_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "substitute_assignments_absence_lesson_id_fkey"
+            columns: ["absence_lesson_id"]
+            isOneToOne: true
+            referencedRelation: "absence_lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "substitute_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "substitute_assignments_substitute_user_id_fkey"
+            columns: ["substitute_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      teacher_duty_assignments: {
+        Row: {
+          duty_date: string
+          teacher_id: string
+        }
+        Insert: {
+          duty_date: string
+          teacher_id: string
+        }
+        Update: {
+          duty_date?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_duty_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      teacher_schedule: {
+        Row: {
+          class_name: string
+          id: string
+          period: number
+          subject: string
+          teacher_id: string
+          weekday: number
+        }
+        Insert: {
+          class_name: string
+          id?: string
+          period: number
+          subject: string
+          teacher_id: string
+          weekday: number
+        }
+        Update: {
+          class_name?: string
+          id?: string
+          period?: number
+          subject?: string
+          teacher_id?: string
+          weekday?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_schedule_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      vice_principals: {
+        Row: {
+          active: boolean
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vice_principals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      assign_substitutes_for_day: {
+        Args: { p_date?: string }
+        Returns: {
+          absence_lesson_id: string
+          assignment_id: string
+          class_name: string
+          period: number
+          subject: string
+          substitute_name: string
+          substitute_user_id: string
+        }[]
+      }
       is_admin: { Args: never; Returns: boolean }
+      is_manager_or_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "manager" | "teacher"
