@@ -10,33 +10,92 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ClassesRouteImport } from './routes/classes'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as PayrollRouteImport } from './routes/payroll'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SubstitutesRouteImport } from './routes/substitutes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClassesRoute = ClassesRouteImport.update({
+  id: '/classes',
+  path: '/classes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayrollRoute = PayrollRouteImport.update({
+  id: '/payroll',
+  path: '/payroll',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubstitutesRoute = SubstitutesRouteImport.update({
+  id: '/substitutes',
+  path: '/substitutes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/classes': typeof ClassesRoute
+  '/dashboard': typeof DashboardRoute
+  '/payroll': typeof PayrollRoute
+  '/settings': typeof SettingsRoute
+  '/substitutes': typeof SubstitutesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/classes': typeof ClassesRoute
+  '/dashboard': typeof DashboardRoute
+  '/payroll': typeof PayrollRoute
+  '/settings': typeof SettingsRoute
+  '/substitutes': typeof SubstitutesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/classes': typeof ClassesRoute
+  '/dashboard': typeof DashboardRoute
+  '/payroll': typeof PayrollRoute
+  '/settings': typeof SettingsRoute
+  '/substitutes': typeof SubstitutesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/classes' | '/dashboard' | '/payroll' | '/settings' | '/substitutes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    '/' | '/classes' | '/dashboard' | '/payroll' | '/settings' | '/substitutes'
+  id:
+    | '__root__'
+    | '/'
+    | '/classes'
+    | '/dashboard'
+    | '/payroll'
+    | '/settings'
+    | '/substitutes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClassesRoute: typeof ClassesRoute
+  DashboardRoute: typeof DashboardRoute
+  PayrollRoute: typeof PayrollRoute
+  SettingsRoute: typeof SettingsRoute
+  SubstitutesRoute: typeof SubstitutesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +107,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/classes': {
+      id: '/classes'
+      path: '/classes'
+      fullPath: '/classes'
+      preLoaderRoute: typeof ClassesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payroll': {
+      id: '/payroll'
+      path: '/payroll'
+      fullPath: '/payroll'
+      preLoaderRoute: typeof PayrollRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/substitutes': {
+      id: '/substitutes'
+      path: '/substitutes'
+      fullPath: '/substitutes'
+      preLoaderRoute: typeof SubstitutesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClassesRoute: ClassesRoute,
+  DashboardRoute: DashboardRoute,
+  PayrollRoute: PayrollRoute,
+  SettingsRoute: SettingsRoute,
+  SubstitutesRoute: SubstitutesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
