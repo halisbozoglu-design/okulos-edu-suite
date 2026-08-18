@@ -15,6 +15,26 @@ const isoWeekday: Record<string, number> = {
   Sun: 7,
 };
 
+async function dispatchTelegram(
+  url: string,
+  serviceKey: string,
+  payload: { userId: string; title: string; message: string },
+) {
+  try {
+    const response = await fetch(`${url}/functions/v1/telegram-dispatcher`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${serviceKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) console.error("Telegram dispatcher failed", await response.text());
+  } catch (error) {
+    console.error("Telegram dispatcher unavailable", error);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
@@ -107,12 +127,17 @@ Deno.serve(async (req) => {
 
     let dutyVicePrincipal = null;
     if (rotation?.vice_principal_id) {
-      const { data: profile } = await admin
-        .from("profiles")
-        .select("full_name,phone")
-        .eq("user_id", rotation.vice_principal_id)
-        .maybeSingle();
+      const [{ data: profile }, { data: teacherProfile }] = await Promise.all([
+        admin.from("profiles").select("full_name,phone").eq("user_id", rotation.vice_principal_id).maybeSingle(),
+        admin.from("profiles").select("full_name").eq("user_id", userData.user.id).maybeSingle(),
+      ]);
       dutyVicePrincipal = profile;
+      const teacherName = teacherProfile?.full_name ?? "Bir öğretmen";
+      void dispatchTelegram(url, serviceKey, {
+        userId: rotation.vice_principal_id,
+        title: "OkulOS · Kriz / Devamsızlık",
+        message: `${teacherName} bugün devamsızlık bildirdi${hasMedicalReport ? " (raporu var)" : ""}. ${schedule?.length ?? 0} ders için vekalet planını kontrol edin.`,
+      });
     }
 
     return Response.json(
