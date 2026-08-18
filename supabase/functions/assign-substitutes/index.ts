@@ -82,6 +82,33 @@ async function sendFcm(
   return response.ok;
 }
 
+async function dispatchTelegram(
+  url: string,
+  serviceKey: string,
+  assignment: { substitute_user_id: string; period: number; class_name: string; subject: string },
+) {
+  try {
+    const response = await fetch(`${url}/functions/v1/telegram-dispatcher`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${serviceKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: assignment.substitute_user_id,
+        title: "OkulOS · Vekalet Görevi",
+        message: `Bugün ${assignment.period}. ders ${assignment.class_name} sınıfında ${assignment.subject} dersine vekalet edeceksiniz. Dersi yürütün ve işlenen konuyu sınıf defterine kaydedin.`,
+      }),
+    });
+    if (!response.ok) return false;
+    const result = await response.json();
+    return Boolean(result?.sent);
+  } catch (error) {
+    console.error("Telegram dispatcher unavailable", error);
+    return false;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
@@ -121,12 +148,19 @@ Deno.serve(async (req) => {
     const newAssignments = (planned ?? []).filter((row: { assignment_id: string }) => !beforeIds.has(row.assignment_id));
     const firebaseRaw = Deno.env.get("FIREBASE_SERVICE_ACCOUNT_JSON");
     let notified = 0;
+    let telegramNotified = 0;
 
+    let accessToken: string | null = null;
+    let serviceAccount: { client_email: string; private_key: string; project_id: string } | null = null;
     if (firebaseRaw && newAssignments.length) {
-      const serviceAccount = JSON.parse(firebaseRaw) as { client_email: string; private_key: string; project_id: string };
-      const accessToken = await getFirebaseAccessToken(serviceAccount);
+      serviceAccount = JSON.parse(firebaseRaw) as { client_email: string; private_key: string; project_id: string };
+      accessToken = await getFirebaseAccessToken(serviceAccount);
+    }
 
-      for (const assignment of newAssignments) {
+    for (const assignment of newAssignments) {
+      let anyDelivery = false;
+
+      if (accessToken && serviceAccount) {
         const { data: tokens } = await admin
           .from("fcm_tokens")
           .select("token")
@@ -137,15 +171,30 @@ Deno.serve(async (req) => {
         }
         if (sent) {
           notified += 1;
-          await admin
-            .from("substitute_assignments")
-            .update({ notified_at: new Date().toISOString() })
-            .eq("id", assignment.assignment_id);
+          anyDelivery = true;
         }
+      }
+
+      if (await dispatchTelegram(url, serviceKey, assignment)) {
+        telegramNotified += 1;
+        anyDelivery = true;
+      }
+
+      if (anyDelivery) {
+        await admin
+          .from("substitute_assignments")
+          .update({ notified_at: new Date().toISOString() })
+          .eq("id", assignment.assignment_id);
       }
     }
 
-    return Response.json({ ok: true, assignments: planned ?? [], newlyAssigned: newAssignments.length, notified }, { headers: corsHeaders });
+    return Response.json({
+      ok: true,
+      assignments: planned ?? [],
+      newlyAssigned: newAssignments.length,
+      notified,
+      telegramNotified,
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error(error);
     return Response.json({ error: "ASSIGNMENT_FAILED" }, { status: 500, headers: corsHeaders });
