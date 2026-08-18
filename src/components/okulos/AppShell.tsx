@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { Bell, CalendarClock, LayoutGrid, Table2, Users, Settings } from "lucide-react";
+import { Bell, CalendarClock, LayoutGrid, Table2, Users, Settings, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -36,6 +36,16 @@ export function AppShell({
           </div>
           <div className="flex shrink-0 items-center gap-2">
             {action}
+            <button
+              type="button"
+              aria-label="Profil bilgilerini tamamla"
+              className="relative grid size-9 shrink-0 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <UserRound className="size-5" />
+              <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-red-600 text-[11px] font-bold leading-none text-white ring-2 ring-card">
+                !
+              </span>
+            </button>
             <button
               type="button"
               aria-label="Bildirimler"
