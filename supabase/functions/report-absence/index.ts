@@ -5,6 +5,16 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const isoWeekday: Record<string, number> = {
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
+  Sun: 7,
+};
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
@@ -23,8 +33,19 @@ Deno.serve(async (req) => {
     if (userError || !userData.user) return Response.json({ error: "UNAUTHORIZED" }, { status: 401, headers: corsHeaders });
 
     const { hasMedicalReport = false, note = null } = await req.json();
-    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
-    const weekday = Number(new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Istanbul", weekday: "short" }).formatToParts(new Date()).find((p) => p.type === "weekday")?.value === "Sun" ? 7 : new Date(`${today}T12:00:00+03:00`).getUTCDay() || 7);
+    const now = new Date();
+    const today = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Istanbul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(now);
+    const weekdayLabel = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Europe/Istanbul",
+      weekday: "short",
+    }).format(now);
+    const weekday = isoWeekday[weekdayLabel];
+    if (!weekday) throw new Error("WEEKDAY_RESOLUTION_FAILED");
 
     const { data: report, error: reportError } = await admin
       .from("crisis_reports")
