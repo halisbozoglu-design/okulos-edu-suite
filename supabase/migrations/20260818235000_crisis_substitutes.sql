@@ -123,6 +123,10 @@ $$;
 revoke all on function public.is_manager_or_admin() from public;
 grant execute on function public.is_manager_or_admin() to authenticated;
 
+create policy "managers can read operational profiles"
+on public.profiles for select to authenticated
+using (public.is_manager_or_admin());
+
 create or replace function public.assign_substitutes_for_day(p_date date default current_date)
 returns table (
   assignment_id uuid,
