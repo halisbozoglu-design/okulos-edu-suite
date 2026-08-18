@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BellRing, CheckCircle2, Sparkles, UserMinus, UserPlus } from "lucide-react";
+import { BellRing, CheckCircle2, Lightbulb, Sparkles, UserMinus, UserPlus } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/substitutes")({
       { title: "Vekalet Yönetimi — OkulOS" },
       {
         name: "description",
-        content: "Devamsız öğretmenleri görün ve nöbetçi öğretmen önceliğiyle akıllı vekalet ataması yapın.",
+        content: "Devamsız öğretmenleri görün, uygun vekilleri haftalık yük dengesiyle önerin ve atayın.",
       },
     ],
   }),
@@ -20,12 +20,7 @@ export const Route = createFileRoute("/substitutes")({
 });
 
 type Profile = { user_id: string; full_name: string | null };
-type Crisis = {
-  id: string;
-  teacher_id: string;
-  has_medical_report: boolean;
-  status: string;
-};
+type Crisis = { id: string; teacher_id: string; has_medical_report: boolean; status: string };
 type Lesson = {
   id: string;
   crisis_report_id: string;
@@ -40,7 +35,6 @@ type Assignment = {
   substitute_user_id: string;
   notified_at: string | null;
 };
-
 type EngineAssignment = {
   assignment_id: string;
   absence_lesson_id: string;
@@ -49,6 +43,18 @@ type EngineAssignment = {
   period: number;
   class_name: string;
   subject: string;
+};
+type Suggestion = {
+  absence_lesson_id: string;
+  period: number;
+  class_name: string;
+  subject: string;
+  candidate_user_id: string;
+  candidate_name: string | null;
+  candidate_role: "admin" | "manager" | "teacher";
+  priority: number;
+  weekly_load: number;
+  reason: string;
 };
 
 function istanbulToday() {
@@ -68,8 +74,10 @@ function SubstituteManager() {
   const [dutyTeacherIds, setDutyTeacherIds] = useState<string[]>([]);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
   const [busy, setBusy] = useState(false);
+  const [suggestBusy, setSuggestBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastEngineResult, setLastEngineResult] = useState<EngineAssignment[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [notifiedCount, setNotifiedCount] = useState(0);
 
   const loadOverview = useCallback(async () => {
@@ -104,13 +112,11 @@ function SubstituteManager() {
     setAssignments(assignmentRows);
     setDutyTeacherIds(dutyIds);
 
-    const profileIds = Array.from(
-      new Set([
-        ...crisisRows.map((row) => row.teacher_id),
-        ...assignmentRows.map((row) => row.substitute_user_id),
-        ...dutyIds,
-      ]),
-    );
+    const profileIds = Array.from(new Set([
+      ...crisisRows.map((row) => row.teacher_id),
+      ...assignmentRows.map((row) => row.substitute_user_id),
+      ...dutyIds,
+    ]));
 
     if (profileIds.length) {
       const { data: profileRows, error: profileError } = await supabase
@@ -118,9 +124,7 @@ function SubstituteManager() {
         .select("user_id,full_name")
         .in("user_id", profileIds);
       if (!profileError) {
-        setProfiles(
-          Object.fromEntries(((profileRows ?? []) as Profile[]).map((profile) => [profile.user_id, profile])),
-        );
+        setProfiles(Object.fromEntries(((profileRows ?? []) as Profile[]).map((profile) => [profile.user_id, profile])));
       }
     }
   }, [today]);
@@ -129,13 +133,23 @@ function SubstituteManager() {
     void loadOverview();
   }, [loadOverview]);
 
+  async function calculateSuggestions() {
+    setSuggestBusy(true);
+    setError(null);
+    const { data, error: rpcError } = await supabase.rpc("suggest_substitutes_for_day", { p_date: today });
+    setSuggestBusy(false);
+    if (rpcError) {
+      setError("Vekalet önerileri hesaplanamadı.");
+      return;
+    }
+    setSuggestions((data ?? []) as Suggestion[]);
+  }
+
   async function assignSubstitutes() {
     setBusy(true);
     setError(null);
     setNotifiedCount(0);
-    const { data, error: fnError } = await supabase.functions.invoke("assign-substitutes", {
-      body: { date: today },
-    });
+    const { data, error: fnError } = await supabase.functions.invoke("assign-substitutes", { body: { date: today } });
     setBusy(false);
 
     if (fnError || !data?.ok) {
@@ -149,26 +163,49 @@ function SubstituteManager() {
 
     setLastEngineResult((data.assignments ?? []) as EngineAssignment[]);
     setNotifiedCount(data.notified ?? 0);
+    setSuggestions([]);
     await loadOverview();
   }
 
   const lessonById = Object.fromEntries(lessons.map((lesson) => [lesson.id, lesson]));
   const assignedLessonIds = new Set(assignments.map((assignment) => assignment.absence_lesson_id));
+  const bestSuggestions = suggestions.filter((row, index, all) =>
+    all.findIndex((other) => other.absence_lesson_id === row.absence_lesson_id) === index,
+  );
 
   return (
-    <AppShell
-      title="Vekalet Yöneticisi"
-      subtitle={`Bugün ${crises.length} devamsızlık kaydı`}
-      action={<Badge variant="secondary">İdareci</Badge>}
-    >
-      <Button size="lg" className="w-full gap-2" onClick={assignSubstitutes} disabled={busy}>
-        <Sparkles className="size-4" />
-        {busy ? "Atamalar Yapılıyor..." : "Vekilleri Ata (Akıllı Eşleştirme)"}
-      </Button>
+    <AppShell title="Vekalet Yöneticisi" subtitle={`Bugün ${crises.length} devamsızlık kaydı`} action={<Badge variant="secondary">İdareci</Badge>}>
+      <div className="grid gap-2 sm:grid-cols-2">
+        <Button size="lg" variant="outline" className="w-full gap-2" onClick={calculateSuggestions} disabled={suggestBusy || busy}>
+          <Lightbulb className="size-4" />
+          {suggestBusy ? "Öneriler Hesaplanıyor..." : "Uygun Vekilleri Öner"}
+        </Button>
+        <Button size="lg" className="w-full gap-2" onClick={assignSubstitutes} disabled={busy || suggestBusy}>
+          <Sparkles className="size-4" />
+          {busy ? "Atamalar Yapılıyor..." : "Vekilleri Ata (Akıllı Eşleştirme)"}
+        </Button>
+      </div>
 
       <div className="mt-3 rounded-xl border border-border bg-card px-4 py-3 text-xs text-muted-foreground">
-        Öncelik: <strong className="text-foreground">nöbetçi öğretmen → nöbetçi müdür yardımcısı → diğer müdür yardımcıları</strong>. Aynı öncelik grubunda aylık vekalet yükü en düşük personel seçilir.
+        Öncelik: <strong className="text-foreground">nöbetçi öğretmen → nöbetçi müdür yardımcısı → diğer müdür yardımcıları</strong>. Aynı öncelik grubunda bu haftaki vekalet yükü en düşük uygun personel öne çıkarılır.
       </div>
+
+      {bestSuggestions.length ? (
+        <section className="mt-4 rounded-xl border border-primary/20 bg-primary-soft/40 p-4">
+          <h2 className="text-sm font-semibold">Önerilen Vekiller</h2>
+          <ul className="mt-2 space-y-2">
+            {bestSuggestions.map((item) => (
+              <li key={item.absence_lesson_id} className="flex flex-col gap-1 rounded-lg border border-border bg-card px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-medium">{item.period}. ders · {item.class_name} · {item.subject}</p>
+                  <p className="text-xs text-muted-foreground">{item.candidate_name ?? "Personel"} · {item.reason}</p>
+                </div>
+                <Badge variant="secondary" className="w-fit">Bu hafta {item.weekly_load} vekalet</Badge>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {notifiedCount > 0 ? (
         <div className="mt-3 flex items-center gap-2 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm text-primary">
@@ -177,11 +214,7 @@ function SubstituteManager() {
         </div>
       ) : null}
 
-      {error ? (
-        <div className="mt-3 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          {error}
-        </div>
-      ) : null}
+      {error ? <div className="mt-3 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div> : null}
 
       <section className="mt-5">
         <h2 className="mb-2 text-sm font-semibold text-muted-foreground">Devamsız Öğretmenler</h2>
@@ -193,37 +226,23 @@ function SubstituteManager() {
               <li key={crisis.id} className="rounded-xl border border-border bg-card p-4">
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
                   <div className="flex min-w-0 items-center gap-3">
-                    <div className="grid size-9 shrink-0 place-items-center rounded-full bg-destructive/10 text-destructive">
-                      <UserMinus className="size-4" />
-                    </div>
+                    <div className="grid size-9 shrink-0 place-items-center rounded-full bg-destructive/10 text-destructive"><UserMinus className="size-4" /></div>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold">
-                        {profiles[crisis.teacher_id]?.full_name ?? "Öğretmen"}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {crisis.has_medical_report ? "Raporlu" : "Devamsızlık bildirimi"}
-                      </p>
+                      <p className="truncate text-sm font-semibold">{profiles[crisis.teacher_id]?.full_name ?? "Öğretmen"}</p>
+                      <p className="text-xs text-muted-foreground">{crisis.has_medical_report ? "Raporlu" : "Devamsızlık bildirimi"}</p>
                     </div>
                   </div>
-                  <Badge variant={fullyAssigned ? "secondary" : "destructive"}>
-                    {fullyAssigned ? "Atandı" : "Bekliyor"}
-                  </Badge>
+                  <Badge variant={fullyAssigned ? "secondary" : "destructive"}>{fullyAssigned ? "Atandı" : "Bekliyor"}</Badge>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {teacherLessons.map((lesson) => (
-                    <span key={lesson.id} className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                      {lesson.period}. ders · {lesson.class_name} · {lesson.subject}
-                    </span>
+                    <span key={lesson.id} className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">{lesson.period}. ders · {lesson.class_name} · {lesson.subject}</span>
                   ))}
                 </div>
               </li>
             );
           })}
-          {!crises.length ? (
-            <li className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
-              Bugün için devamsızlık bildirimi yok.
-            </li>
-          ) : null}
+          {!crises.length ? <li className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">Bugün için devamsızlık bildirimi yok.</li> : null}
         </ul>
       </section>
 
@@ -234,26 +253,16 @@ function SubstituteManager() {
             const lesson = lessonById[assignment.absence_lesson_id];
             return (
               <li key={assignment.id} className="flex items-center gap-3 px-4 py-3">
-                <div className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-primary">
-                  <CheckCircle2 className="size-4" />
-                </div>
+                <div className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-primary"><CheckCircle2 className="size-4" /></div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">
-                    {profiles[assignment.substitute_user_id]?.full_name ?? "Vekil personel"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {lesson ? `${lesson.period}. ders · ${lesson.class_name} · ${lesson.subject}` : "Ders bilgisi"}
-                  </p>
+                  <p className="truncate text-sm font-medium">{profiles[assignment.substitute_user_id]?.full_name ?? "Vekil personel"}</p>
+                  <p className="text-xs text-muted-foreground">{lesson ? `${lesson.period}. ders · ${lesson.class_name} · ${lesson.subject}` : "Ders bilgisi"}</p>
                 </div>
-                <Badge variant={assignment.notified_at ? "secondary" : "outline"} className="shrink-0">
-                  {assignment.notified_at ? "Bildirildi" : "Atandı"}
-                </Badge>
+                <Badge variant={assignment.notified_at ? "secondary" : "outline"} className="shrink-0">{assignment.notified_at ? "Bildirildi" : "Atandı"}</Badge>
               </li>
             );
           })}
-          {!assignments.length ? (
-            <li className="px-4 py-3 text-sm text-muted-foreground">Henüz vekalet ataması yapılmadı.</li>
-          ) : null}
+          {!assignments.length ? <li className="px-4 py-3 text-sm text-muted-foreground">Henüz vekalet ataması yapılmadı.</li> : null}
         </ul>
       </section>
 
@@ -262,9 +271,7 @@ function SubstituteManager() {
         <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
           {dutyTeacherIds.map((teacherId) => (
             <li key={teacherId} className="flex items-center gap-3 px-4 py-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-primary">
-                <UserPlus className="size-4" />
-              </div>
+              <div className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-primary"><UserPlus className="size-4" /></div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{profiles[teacherId]?.full_name ?? "Nöbetçi öğretmen"}</p>
                 <p className="text-xs text-muted-foreground">Uygun boş derslerde ilk sırada değerlendirilir.</p>
@@ -272,17 +279,11 @@ function SubstituteManager() {
               <Badge variant="secondary">Öncelikli</Badge>
             </li>
           ))}
-          {!dutyTeacherIds.length ? (
-            <li className="px-4 py-3 text-sm text-muted-foreground">Bugün için nöbetçi öğretmen kaydı bulunamadı.</li>
-          ) : null}
+          {!dutyTeacherIds.length ? <li className="px-4 py-3 text-sm text-muted-foreground">Bugün için nöbetçi öğretmen kaydı bulunamadı.</li> : null}
         </ul>
       </section>
 
-      {lastEngineResult.length ? (
-        <p className="mt-3 text-xs text-muted-foreground">
-          Son motor çalıştırması {lastEngineResult.length} dersin vekalet planını doğruladı.
-        </p>
-      ) : null}
+      {lastEngineResult.length ? <p className="mt-3 text-xs text-muted-foreground">Son motor çalıştırması {lastEngineResult.length} dersin vekalet planını doğruladı.</p> : null}
     </AppShell>
   );
 }
