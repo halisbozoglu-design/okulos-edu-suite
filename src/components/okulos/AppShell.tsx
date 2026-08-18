@@ -1,6 +1,6 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
-import { Bell, CalendarClock, LayoutGrid, Table2, Users, Settings, UserRound } from "lucide-react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Bell, CalendarClock, Check, LayoutGrid, Settings, Table2, UserRound, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { isProfileIncomplete, maskNationalId } from "@/lib/security";
@@ -28,6 +28,46 @@ type Profile = {
   emergency_contact: string | null;
 };
 
+type RealtimeNotification = {
+  id: string;
+  user_id: string;
+  type: "crisis" | "substitute" | "schedule" | "system";
+  priority: "normal" | "high" | "critical";
+  title: string;
+  message: string;
+  action_label: string | null;
+  action_url: string | null;
+  read_at: string | null;
+  created_at: string;
+};
+
+function playAlertChime() {
+  try {
+    const AudioContextClass = window.AudioContext ?? (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const context = new AudioContextClass();
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(0.0001, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.16, context.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.55);
+    gain.connect(context.destination);
+
+    [880, 1174].forEach((frequency, index) => {
+      const oscillator = context.createOscillator();
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+      oscillator.connect(gain);
+      const start = context.currentTime + index * 0.14;
+      oscillator.start(start);
+      oscillator.stop(start + 0.22);
+    });
+
+    window.setTimeout(() => void context.close(), 900);
+  } catch {
+    // Browsers can block audio until the user has interacted with the page.
+  }
+}
+
 export function AppShell({
   title,
   subtitle,
@@ -40,36 +80,97 @@ export function AppShell({
   action?: ReactNode;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [bloodType, setBloodType] = useState("");
   const [phone, setPhone] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
   const [saving, setSaving] = useState(false);
+  const [notifications, setNotifications] = useState<RealtimeNotification[]>([]);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [liveAlert, setLiveAlert] = useState<RealtimeNotification | null>(null);
+  const liveAlertTimer = useRef<number | null>(null);
 
   useEffect(() => {
     let active = true;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
     void (async () => {
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id,tckn,email,full_name,role,blood_type,phone,emergency_contact")
-        .eq("user_id", userData.user.id)
-        .maybeSingle();
-      if (!active || !data) return;
-      const next = data as Profile;
-      setProfile(next);
-      setBloodType(next.blood_type ?? "");
-      setPhone(next.phone ?? "");
-      setEmergencyContact(next.emergency_contact ?? "");
+      if (!userData.user || !active) return;
+
+      const userId = userData.user.id;
+      const [{ data: profileData }, { data: notificationData }] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("user_id,tckn,email,full_name,role,blood_type,phone,emergency_contact")
+          .eq("user_id", userId)
+          .maybeSingle(),
+        supabase
+          .from("notifications")
+          .select("id,user_id,type,priority,title,message,action_label,action_url,read_at,created_at")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(20),
+      ]);
+
+      if (!active) return;
+
+      if (profileData) {
+        const next = profileData as Profile;
+        setProfile(next);
+        setBloodType(next.blood_type ?? "");
+        setPhone(next.phone ?? "");
+        setEmergencyContact(next.emergency_contact ?? "");
+      }
+
+      setNotifications((notificationData ?? []) as RealtimeNotification[]);
+
+      channel = supabase
+        .channel(`user-notifications-${userId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${userId}`,
+          },
+          (payload) => {
+            const incoming = payload.new as RealtimeNotification;
+            setNotifications((current) => [incoming, ...current.filter((item) => item.id !== incoming.id)].slice(0, 20));
+            setLiveAlert(incoming);
+            playAlertChime();
+            if (liveAlertTimer.current) window.clearTimeout(liveAlertTimer.current);
+            liveAlertTimer.current = window.setTimeout(() => setLiveAlert(null), 12000);
+          },
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${userId}`,
+          },
+          (payload) => {
+            const updated = payload.new as RealtimeNotification;
+            setNotifications((current) => current.map((item) => (item.id === updated.id ? updated : item)));
+          },
+        )
+        .subscribe();
     })();
+
     return () => {
       active = false;
+      if (channel) void supabase.removeChannel(channel);
+      if (liveAlertTimer.current) window.clearTimeout(liveAlertTimer.current);
     };
   }, []);
 
   const incomplete = isProfileIncomplete(profile);
+  const unreadCount = useMemo(() => notifications.filter((item) => !item.read_at).length, [notifications]);
 
   async function saveProfile() {
     if (!profile) return;
@@ -89,6 +190,28 @@ export function AppShell({
     setProfileOpen(false);
   }
 
+  async function markRead(notification: RealtimeNotification) {
+    if (notification.read_at) return;
+    const readAt = new Date().toISOString();
+    setNotifications((current) => current.map((item) => (item.id === notification.id ? { ...item, read_at: readAt } : item)));
+    await supabase.from("notifications").update({ read_at: readAt }).eq("id", notification.id);
+  }
+
+  async function markAllRead() {
+    const unreadIds = notifications.filter((item) => !item.read_at).map((item) => item.id);
+    if (!unreadIds.length) return;
+    const readAt = new Date().toISOString();
+    setNotifications((current) => current.map((item) => (item.read_at ? item : { ...item, read_at: readAt })));
+    await supabase.from("notifications").update({ read_at: readAt }).in("id", unreadIds);
+  }
+
+  async function openNotificationAction(notification: RealtimeNotification) {
+    await markRead(notification);
+    setNotificationOpen(false);
+    setLiveAlert(null);
+    if (notification.action_url) void navigate({ to: notification.action_url as never });
+  }
+
   return (
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-20 border-b border-border bg-card/90 backdrop-blur">
@@ -97,7 +220,7 @@ export function AppShell({
             <p className="truncate text-base font-semibold tracking-tight">{title}</p>
             {subtitle ? <p className="truncate text-xs text-muted-foreground">{subtitle}</p> : null}
           </div>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="relative flex shrink-0 items-center gap-2">
             {action}
             <button
               type="button"
@@ -110,13 +233,89 @@ export function AppShell({
                 <span className="absolute -right-1 -top-1 grid size-5 animate-pulse place-items-center rounded-full bg-red-600 text-[11px] font-bold leading-none text-white ring-2 ring-card">!</span>
               ) : null}
             </button>
-            <button type="button" aria-label="Bildirimler" className="relative grid size-9 shrink-0 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:text-foreground">
+            <button
+              type="button"
+              aria-label={`Bildirimler${unreadCount ? `, ${unreadCount} okunmamış` : ""}`}
+              onClick={() => setNotificationOpen((open) => !open)}
+              className="relative grid size-9 shrink-0 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:text-foreground"
+            >
               <Bell className="size-4" />
-              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-destructive" />
+              {unreadCount > 0 ? (
+                <span className="absolute -right-1.5 -top-1.5 grid min-w-5 place-items-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-5 text-white ring-2 ring-card">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              ) : null}
             </button>
+
+            {notificationOpen ? (
+              <div className="absolute right-0 top-11 z-50 w-[min(92vw,360px)] overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
+                <div className="flex items-center justify-between border-b border-border px-4 py-3">
+                  <div>
+                    <p className="text-sm font-semibold">Bildirimler</p>
+                    <p className="text-xs text-muted-foreground">{unreadCount} okunmamış</p>
+                  </div>
+                  {unreadCount ? (
+                    <Button variant="ghost" size="sm" className="gap-1 text-xs" onClick={() => void markAllRead()}>
+                      <Check className="size-3.5" /> Tümünü Oku
+                    </Button>
+                  ) : null}
+                </div>
+                <div className="max-h-[420px] overflow-y-auto">
+                  {notifications.length ? notifications.map((notification) => (
+                    <button
+                      key={notification.id}
+                      type="button"
+                      onClick={() => void openNotificationAction(notification)}
+                      className={cn(
+                        "block w-full border-b border-border px-4 py-3 text-left last:border-b-0 hover:bg-muted/50",
+                        !notification.read_at && "bg-indigo-50/70",
+                      )}
+                    >
+                      <div className="flex items-start gap-2">
+                        <span className={cn("mt-1.5 size-2 shrink-0 rounded-full", notification.priority === "critical" ? "bg-red-600" : notification.priority === "high" ? "bg-amber-500" : "bg-indigo-600")} />
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold">{notification.title}</p>
+                          <p className="mt-1 line-clamp-3 text-xs text-muted-foreground">{notification.message}</p>
+                          <p className="mt-1.5 text-[10px] text-muted-foreground">{new Date(notification.created_at).toLocaleString("tr-TR")}</p>
+                        </div>
+                      </div>
+                    </button>
+                  )) : (
+                    <p className="px-4 py-8 text-center text-sm text-muted-foreground">Henüz bildiriminiz yok.</p>
+                  )}
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </header>
+
+      {liveAlert ? (
+        <div className="fixed inset-x-3 top-20 z-[60] mx-auto max-w-xl rounded-2xl border border-red-200 bg-white p-4 shadow-2xl ring-1 ring-red-100">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-full bg-red-600 text-white">
+              <Bell className="size-4" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-red-700">{liveAlert.title}</p>
+              <p className="mt-1 text-sm text-foreground">{liveAlert.message}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {liveAlert.action_url ? (
+                  <Button size="sm" onClick={() => void openNotificationAction(liveAlert)}>
+                    {liveAlert.action_label ?? "Aç"}
+                  </Button>
+                ) : null}
+                <Button variant="outline" size="sm" onClick={() => { void markRead(liveAlert); setLiveAlert(null); }}>
+                  Okundu
+                </Button>
+              </div>
+            </div>
+            <button type="button" aria-label="Uyarıyı kapat" onClick={() => setLiveAlert(null)} className="text-muted-foreground hover:text-foreground">
+              <X className="size-4" />
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <main className="mx-auto w-full max-w-5xl px-4 py-5">{children}</main>
 
