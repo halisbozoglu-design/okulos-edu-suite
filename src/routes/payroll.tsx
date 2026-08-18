@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown, ChevronRight, FileSpreadsheet } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
@@ -75,7 +75,7 @@ function PayrollGrid() {
                   (row.daily.rehberlik[i] ?? 0),
               );
               return (
-                <React.Fragment key={row.id}>
+                <Fragment key={row.id}>
                   <tr className="border-t border-border">
                     <td className="sticky left-0 z-10 bg-card px-2 py-2 text-muted-foreground">
                       {idx + 1}
@@ -136,7 +136,7 @@ function PayrollGrid() {
                         </td>
                       </tr>
                     ))}
-                </React.Fragment>
+                </Fragment>
               );
             })}
           </tbody>
