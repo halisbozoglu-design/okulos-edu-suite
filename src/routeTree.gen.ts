@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ClassesRouteImport } from './routes/classes'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as PayrollRouteImport } from './routes/payroll'
 import { Route as SubstitutesRouteImport } from './routes/substitutes'
@@ -17,6 +18,11 @@ import { Route as SubstitutesRouteImport } from './routes/substitutes'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassesRoute = ClassesRouteImport.update({
+  id: '/classes',
+  path: '/classes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -37,12 +43,14 @@ const SubstitutesRoute = SubstitutesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/classes': typeof ClassesRoute
   '/dashboard': typeof DashboardRoute
   '/payroll': typeof PayrollRoute
   '/substitutes': typeof SubstitutesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/classes': typeof ClassesRoute
   '/dashboard': typeof DashboardRoute
   '/payroll': typeof PayrollRoute
   '/substitutes': typeof SubstitutesRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/classes': typeof ClassesRoute
   '/dashboard': typeof DashboardRoute
   '/payroll': typeof PayrollRoute
   '/substitutes': typeof SubstitutesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/payroll' | '/substitutes'
+  fullPaths: '/' | '/classes' | '/dashboard' | '/payroll' | '/substitutes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/payroll' | '/substitutes'
-  id: '__root__' | '/' | '/dashboard' | '/payroll' | '/substitutes'
+  to: '/' | '/classes' | '/dashboard' | '/payroll' | '/substitutes'
+  id: '__root__' | '/' | '/classes' | '/dashboard' | '/payroll' | '/substitutes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClassesRoute: typeof ClassesRoute
   DashboardRoute: typeof DashboardRoute
   PayrollRoute: typeof PayrollRoute
   SubstitutesRoute: typeof SubstitutesRoute
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes': {
+      id: '/classes'
+      path: '/classes'
+      fullPath: '/classes'
+      preLoaderRoute: typeof ClassesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClassesRoute: ClassesRoute,
   DashboardRoute: DashboardRoute,
   PayrollRoute: PayrollRoute,
   SubstitutesRoute: SubstitutesRoute,
