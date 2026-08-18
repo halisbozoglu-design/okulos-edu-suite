@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Bell, CalendarClock, Check, LayoutGrid, Send, Settings, Table2, UserRound, Users, X } from "lucide-react";
+import { Bell, CalendarClock, Check, Copy, LayoutGrid, Send, Settings, Table2, UserRound, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { isProfileIncomplete, maskNationalId } from "@/lib/security";
@@ -91,6 +91,8 @@ export function AppShell({
   const [saving, setSaving] = useState(false);
   const [telegramLinked, setTelegramLinked] = useState(false);
   const [telegramLinking, setTelegramLinking] = useState(false);
+  const [telegramCode, setTelegramCode] = useState<string | null>(null);
+  const [telegramCopied, setTelegramCopied] = useState(false);
   const [notifications, setNotifications] = useState<RealtimeNotification[]>([]);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [liveAlert, setLiveAlert] = useState<RealtimeNotification | null>(null);
@@ -200,19 +202,33 @@ export function AppShell({
     setProfileOpen(false);
   }
 
-  async function activateTelegram() {
+  async function generateTelegramCode(openBot = false) {
     setTelegramLinking(true);
+    setTelegramCopied(false);
     const { data, error } = await supabase.rpc("create_telegram_link_token");
     setTelegramLinking(false);
     if (error || typeof data !== "string") return;
-    window.open(`https://t.me/${TELEGRAM_BOT_USERNAME}?start=${encodeURIComponent(data)}`, "_blank", "noopener,noreferrer");
+    setTelegramCode(data);
+    if (openBot) {
+      window.open(`https://t.me/${TELEGRAM_BOT_USERNAME}?start=${encodeURIComponent(data)}`, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  async function copyTelegramCommand() {
+    if (!telegramCode) return;
+    await navigator.clipboard.writeText(`/start ${telegramCode}`);
+    setTelegramCopied(true);
+    window.setTimeout(() => setTelegramCopied(false), 1800);
   }
 
   async function disableTelegram() {
     setTelegramLinking(true);
     const { error } = await supabase.rpc("disable_telegram_notifications");
     setTelegramLinking(false);
-    if (!error) setTelegramLinked(false);
+    if (!error) {
+      setTelegramLinked(false);
+      setTelegramCode(null);
+    }
   }
 
   async function markRead(notification: RealtimeNotification) {
@@ -405,24 +421,55 @@ export function AppShell({
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold">Telegram Bildirimleri</p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Bildirimler OkulOS botundan gelir. Yöneticinin kişisel Telegram hesabı ve telefon numarası paylaşılmaz.
+                    Telegram'da @{TELEGRAM_BOT_USERNAME} botuna <strong>/start &lt;kod&gt;</strong> göndererek bildirimleri açabilirsiniz.
                   </p>
                 </div>
               </div>
-              <Button
-                type="button"
-                variant={telegramLinked ? "outline" : "secondary"}
-                className="mt-3 w-full gap-2"
-                disabled={telegramLinking}
-                onClick={() => void (telegramLinked ? disableTelegram() : activateTelegram())}
-              >
-                <Send className="size-4" />
-                {telegramLinking
-                  ? "İşleniyor..."
-                  : telegramLinked
-                    ? "Telegram Bildirimlerini Kapat"
-                    : "Telegram Bildirimlerini Aktifleştir"}
-              </Button>
+
+              {!telegramLinked ? (
+                <>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="mt-3 w-full gap-2"
+                    disabled={telegramLinking}
+                    onClick={() => void generateTelegramCode(false)}
+                  >
+                    <Send className="size-4" />
+                    {telegramLinking ? "Kod Oluşturuluyor..." : telegramCode ? "Yeni Bağlantı Kodu Oluştur" : "Bağlantı Kodu Oluştur"}
+                  </Button>
+
+                  {telegramCode ? (
+                    <div className="mt-3 rounded-lg border border-sky-200 bg-white p-3">
+                      <p className="text-xs font-medium text-muted-foreground">Bağlantı kodunuz</p>
+                      <p className="mt-1 break-all font-mono text-sm font-semibold text-foreground">{telegramCode}</p>
+                      <div className="mt-2 rounded-md bg-muted px-3 py-2 font-mono text-xs text-foreground">
+                        /start {telegramCode}
+                      </div>
+                      <p className="mt-2 text-[11px] text-muted-foreground">Bu kod kısa süreli ve tek kullanımlıktır.</p>
+                      <div className="mt-3 grid grid-cols-2 gap-2">
+                        <Button type="button" variant="outline" size="sm" className="gap-2" onClick={() => void copyTelegramCommand()}>
+                          <Copy className="size-3.5" /> {telegramCopied ? "Kopyalandı" : "Komutu Kopyala"}
+                        </Button>
+                        <Button type="button" size="sm" className="gap-2" onClick={() => window.open(`https://t.me/${TELEGRAM_BOT_USERNAME}?start=${encodeURIComponent(telegramCode)}`, "_blank", "noopener,noreferrer")}>
+                          <Send className="size-3.5" /> Telegram'ı Aç
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null}
+                </>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-3 w-full gap-2"
+                  disabled={telegramLinking}
+                  onClick={() => void disableTelegram()}
+                >
+                  <Send className="size-4" />
+                  {telegramLinking ? "İşleniyor..." : "Telegram Bildirimlerini Kapat"}
+                </Button>
+              )}
             </div>
 
             <Button className="w-full" onClick={saveProfile} disabled={saving}>{saving ? "Kaydediliyor..." : "Kaydet"}</Button>
