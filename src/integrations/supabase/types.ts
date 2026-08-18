@@ -14,16 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      pre_registered_teachers: {
+        Row: {
+          active: boolean
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          tckn: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          tckn: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          tckn?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          blood_type: string | null
+          email: string | null
+          emergency_contact: string | null
+          full_name: string | null
+          phone: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          tckn: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          blood_type?: string | null
+          email?: string | null
+          emergency_contact?: string | null
+          full_name?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          tckn: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          blood_type?: string | null
+          email?: string | null
+          emergency_contact?: string | null
+          full_name?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          tckn?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "manager" | "teacher"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +215,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "manager", "teacher"],
+    },
   },
 } as const
