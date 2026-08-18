@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Bell, CalendarClock, Check, LayoutGrid, Settings, Table2, UserRound, Users, X } from "lucide-react";
+import { Bell, CalendarClock, Check, LayoutGrid, Send, Settings, Table2, UserRound, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { isProfileIncomplete, maskNationalId } from "@/lib/security";
@@ -16,6 +16,8 @@ const nav = [
   { to: "/classes", label: "Sınıflar", icon: CalendarClock },
   { to: "/settings", label: "Ayarlar", icon: Settings },
 ] as const;
+
+const TELEGRAM_BOT_USERNAME = "okulos_bildirim_botu";
 
 type Profile = {
   user_id: string;
@@ -87,6 +89,8 @@ export function AppShell({
   const [phone, setPhone] = useState("");
   const [emergencyContact, setEmergencyContact] = useState("");
   const [saving, setSaving] = useState(false);
+  const [telegramLinked, setTelegramLinked] = useState(false);
+  const [telegramLinking, setTelegramLinking] = useState(false);
   const [notifications, setNotifications] = useState<RealtimeNotification[]>([]);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [liveAlert, setLiveAlert] = useState<RealtimeNotification | null>(null);
@@ -101,7 +105,7 @@ export function AppShell({
       if (!userData.user || !active) return;
 
       const userId = userData.user.id;
-      const [{ data: profileData }, { data: notificationData }] = await Promise.all([
+      const [{ data: profileData }, { data: notificationData }, { data: telegramData }] = await Promise.all([
         supabase
           .from("profiles")
           .select("user_id,tckn,email,full_name,role,blood_type,phone,emergency_contact")
@@ -113,6 +117,11 @@ export function AppShell({
           .eq("user_id", userId)
           .order("created_at", { ascending: false })
           .limit(20),
+        supabase
+          .from("telegram_integrations")
+          .select("enabled")
+          .eq("user_id", userId)
+          .maybeSingle(),
       ]);
 
       if (!active) return;
@@ -125,6 +134,7 @@ export function AppShell({
         setEmergencyContact(next.emergency_contact ?? "");
       }
 
+      setTelegramLinked(Boolean(telegramData?.enabled));
       setNotifications((notificationData ?? []) as RealtimeNotification[]);
 
       channel = supabase
@@ -188,6 +198,21 @@ export function AppShell({
     if (error) return;
     setProfile({ ...profile, blood_type: bloodType || null, phone: phone || null, emergency_contact: emergencyContact || null });
     setProfileOpen(false);
+  }
+
+  async function activateTelegram() {
+    setTelegramLinking(true);
+    const { data, error } = await supabase.rpc("create_telegram_link_token");
+    setTelegramLinking(false);
+    if (error || typeof data !== "string") return;
+    window.open(`https://t.me/${TELEGRAM_BOT_USERNAME}?start=${encodeURIComponent(data)}`, "_blank", "noopener,noreferrer");
+  }
+
+  async function disableTelegram() {
+    setTelegramLinking(true);
+    const { error } = await supabase.rpc("disable_telegram_notifications");
+    setTelegramLinking(false);
+    if (!error) setTelegramLinked(false);
   }
 
   async function markRead(notification: RealtimeNotification) {
@@ -370,6 +395,34 @@ export function AppShell({
             <div className="space-y-2">
               <Label htmlFor="emergency-contact">Acil Durum İletişim</Label>
               <Input id="emergency-contact" value={emergencyContact} onChange={(e) => setEmergencyContact(e.target.value)} />
+            </div>
+
+            <div className="rounded-xl border border-border bg-muted/30 p-3">
+              <div className="flex items-start gap-3">
+                <div className="grid size-9 shrink-0 place-items-center rounded-full bg-sky-100 text-sky-700">
+                  <Send className="size-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold">Telegram Bildirimleri</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Bildirimler OkulOS botundan gelir. Yöneticinin kişisel Telegram hesabı ve telefon numarası paylaşılmaz.
+                  </p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant={telegramLinked ? "outline" : "secondary"}
+                className="mt-3 w-full gap-2"
+                disabled={telegramLinking}
+                onClick={() => void (telegramLinked ? disableTelegram() : activateTelegram())}
+              >
+                <Send className="size-4" />
+                {telegramLinking
+                  ? "İşleniyor..."
+                  : telegramLinked
+                    ? "Telegram Bildirimlerini Kapat"
+                    : "Telegram Bildirimlerini Aktifleştir"}
+              </Button>
             </div>
 
             <Button className="w-full" onClick={saveProfile} disabled={saving}>{saving ? "Kaydediliyor..." : "Kaydet"}</Button>
