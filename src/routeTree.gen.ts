@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as PayrollRouteImport } from './routes/payroll'
 import { Route as SubstitutesRouteImport } from './routes/substitutes'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PayrollRoute = PayrollRouteImport.update({
+  id: '/payroll',
+  path: '/payroll',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SubstitutesRoute = SubstitutesRouteImport.update({
   id: '/substitutes',
   path: '/substitutes',
@@ -32,30 +38,34 @@ const SubstitutesRoute = SubstitutesRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/payroll': typeof PayrollRoute
   '/substitutes': typeof SubstitutesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/payroll': typeof PayrollRoute
   '/substitutes': typeof SubstitutesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/payroll': typeof PayrollRoute
   '/substitutes': typeof SubstitutesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/substitutes'
+  fullPaths: '/' | '/dashboard' | '/payroll' | '/substitutes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/substitutes'
-  id: '__root__' | '/' | '/dashboard' | '/substitutes'
+  to: '/' | '/dashboard' | '/payroll' | '/substitutes'
+  id: '__root__' | '/' | '/dashboard' | '/payroll' | '/substitutes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  PayrollRoute: typeof PayrollRoute
   SubstitutesRoute: typeof SubstitutesRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payroll': {
+      id: '/payroll'
+      path: '/payroll'
+      fullPath: '/payroll'
+      preLoaderRoute: typeof PayrollRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/substitutes': {
       id: '/substitutes'
       path: '/substitutes'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  PayrollRoute: PayrollRoute,
   SubstitutesRoute: SubstitutesRoute,
 }
 export const routeTree = rootRouteImport

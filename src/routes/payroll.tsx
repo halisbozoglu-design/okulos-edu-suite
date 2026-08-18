@@ -69,11 +69,14 @@ function PayrollGrid() {
             {payrollRows.map((row, idx) => {
               const expanded = open.includes(row.id);
               const totals = days.map(
-                (_, i) => row.daily.gunduz[i] + row.daily.nobet[i] + row.daily.rehberlik[i],
+                (_, i) =>
+                  (row.daily.gunduz[i] ?? 0) +
+                  (row.daily.nobet[i] ?? 0) +
+                  (row.daily.rehberlik[i] ?? 0),
               );
               return (
-                <>
-                  <tr key={row.id} className="border-t border-border">
+                <React.Fragment key={row.id}>
+                  <tr className="border-t border-border">
                     <td className="sticky left-0 z-10 bg-card px-2 py-2 text-muted-foreground">
                       {idx + 1}
                     </td>
@@ -133,7 +136,7 @@ function PayrollGrid() {
                         </td>
                       </tr>
                     ))}
-                </>
+                </React.Fragment>
               );
             })}
           </tbody>
