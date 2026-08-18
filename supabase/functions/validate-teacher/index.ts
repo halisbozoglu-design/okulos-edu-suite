@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
 
   try {
-    const { tckn } = await req.json();
+    const { tckn, email } = await req.json();
     if (typeof tckn !== "string" || !/^\d{11}$/.test(tckn)) {
       return Response.json({ valid: false }, { status: 400, headers: corsHeaders });
     }
@@ -21,13 +21,17 @@ Deno.serve(async (req) => {
       { auth: { persistSession: false, autoRefreshToken: false } },
     );
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("pre_registered_teachers")
-      .select("id")
+      .select("id,email")
       .eq("tckn", tckn)
-      .eq("active", true)
-      .maybeSingle();
+      .eq("active", true);
 
+    if (typeof email === "string" && email.trim()) {
+      query = query.ilike("email", email.trim());
+    }
+
+    const { data, error } = await query.maybeSingle();
     if (error) throw error;
 
     return Response.json({ valid: Boolean(data) }, { headers: corsHeaders });
