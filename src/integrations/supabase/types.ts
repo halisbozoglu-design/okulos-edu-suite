@@ -2594,9 +2594,11 @@ export type Database = {
       }
       schedule_scenario_rows: {
         Row: {
+          block_key: string | null
           class_id: string | null
           class_name: string
           classroom_id: string | null
+          course_id: string | null
           id: string
           is_group_split: boolean
           locked: boolean
@@ -2607,14 +2609,17 @@ export type Database = {
           subgroup_id: string | null
           subgroup_key: string | null
           subject: string
+          sync_group_id: string | null
           teacher_assignment_id: string | null
           teacher_id: string
           weekday: number
         }
         Insert: {
+          block_key?: string | null
           class_id?: string | null
           class_name: string
           classroom_id?: string | null
+          course_id?: string | null
           id?: string
           is_group_split?: boolean
           locked?: boolean
@@ -2625,14 +2630,17 @@ export type Database = {
           subgroup_id?: string | null
           subgroup_key?: string | null
           subject: string
+          sync_group_id?: string | null
           teacher_assignment_id?: string | null
           teacher_id: string
           weekday: number
         }
         Update: {
+          block_key?: string | null
           class_id?: string | null
           class_name?: string
           classroom_id?: string | null
+          course_id?: string | null
           id?: string
           is_group_split?: boolean
           locked?: boolean
@@ -2643,6 +2651,7 @@ export type Database = {
           subgroup_id?: string | null
           subgroup_key?: string | null
           subject?: string
+          sync_group_id?: string | null
           teacher_assignment_id?: string | null
           teacher_id?: string
           weekday?: number
@@ -2674,6 +2683,13 @@ export type Database = {
             columns: ["classroom_id"]
             isOneToOne: false
             referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
             referencedColumns: ["id"]
           },
           {
@@ -2709,6 +2725,13 @@ export type Database = {
             columns: ["subgroup_id"]
             isOneToOne: false
             referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_sync_group_id_fkey"
+            columns: ["sync_group_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sync_groups"
             referencedColumns: ["id"]
           },
           {
@@ -2921,8 +2944,10 @@ export type Database = {
       }
       schedule_unplaced_items: {
         Row: {
+          block_hours: number
           class_id: string | null
           created_at: string
+          diagnostic: Json
           id: string
           reason: string
           requirement_id: string | null
@@ -2932,8 +2957,10 @@ export type Database = {
           teacher_id: string | null
         }
         Insert: {
+          block_hours?: number
           class_id?: string | null
           created_at?: string
+          diagnostic?: Json
           id?: string
           reason: string
           requirement_id?: string | null
@@ -2943,8 +2970,10 @@ export type Database = {
           teacher_id?: string | null
         }
         Update: {
+          block_hours?: number
           class_id?: string | null
           created_at?: string
+          diagnostic?: Json
           id?: string
           reason?: string
           requirement_id?: string | null
@@ -4550,10 +4579,30 @@ export type Database = {
         Args: { p_restore_point_id: string }
         Returns: number
       }
+      scenario_slot_diagnostic: {
+        Args: {
+          p_assignment: string
+          p_block_hours: number
+          p_scenario: string
+        }
+        Returns: Json
+      }
       scenario_teacher_consecutive_count: {
         Args: {
           p_day: number
           p_period: number
+          p_scenario: string
+          p_teacher: string
+        }
+        Returns: number
+      }
+      scenario_teacher_daily_count: {
+        Args: { p_day: number; p_scenario: string; p_teacher: string }
+        Returns: number
+      }
+      scenario_teacher_working_days: {
+        Args: {
+          p_candidate_day?: number
           p_scenario: string
           p_teacher: string
         }
