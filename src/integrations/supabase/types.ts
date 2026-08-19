@@ -1962,6 +1962,107 @@ export type Database = {
           },
         ]
       }
+      permission_audit_log: {
+        Row: {
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          note: string | null
+          operation: string
+          permission_code: string
+          scope: Json
+          target_user_id: string
+        }
+        Insert: {
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          operation: string
+          permission_code: string
+          scope?: Json
+          target_user_id: string
+        }
+        Update: {
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          operation?: string
+          permission_code?: string
+          scope?: Json
+          target_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permission_audit_log_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "permission_audit_log_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "permission_audit_log_target_user_id_fkey"
+            columns: ["target_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "permission_audit_log_target_user_id_fkey"
+            columns: ["target_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      permission_catalog: {
+        Row: {
+          action: string
+          active: boolean
+          code: string
+          created_at: string
+          dangerous: boolean
+          description: string | null
+          label: string
+          module_code: string
+          module_label: string
+          sort_order: number
+        }
+        Insert: {
+          action: string
+          active?: boolean
+          code: string
+          created_at?: string
+          dangerous?: boolean
+          description?: string | null
+          label: string
+          module_code: string
+          module_label: string
+          sort_order?: number
+        }
+        Update: {
+          action?: string
+          active?: boolean
+          code?: string
+          created_at?: string
+          dangerous?: boolean
+          description?: string | null
+          label?: string
+          module_code?: string
+          module_label?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       pre_registered_teachers: {
         Row: {
           active: boolean
@@ -4241,6 +4342,84 @@ export type Database = {
           },
         ]
       }
+      user_permission_grants: {
+        Row: {
+          active: boolean
+          created_at: string
+          granted_by: string | null
+          id: string
+          note: string | null
+          permission_code: string
+          scope: Json
+          updated_at: string
+          user_id: string
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          note?: string | null
+          permission_code: string
+          scope?: Json
+          updated_at?: string
+          user_id: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          note?: string | null
+          permission_code?: string
+          scope?: Json
+          updated_at?: string
+          user_id?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_permission_grants_granted_by_fkey"
+            columns: ["granted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_permission_grants_granted_by_fkey"
+            columns: ["granted_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "user_permission_grants_permission_code_fkey"
+            columns: ["permission_code"]
+            isOneToOne: false
+            referencedRelation: "permission_catalog"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "user_permission_grants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_permission_grants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       vice_principals: {
         Row: {
           active: boolean
@@ -4578,6 +4757,7 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      can_manage_permissions: { Args: never; Returns: boolean }
       claim_super_admin_profile: {
         Args: never
         Returns: {
@@ -4807,6 +4987,18 @@ export type Database = {
           total_weekly_hours: number
         }[]
       }
+      get_my_permissions: {
+        Args: never
+        Returns: {
+          action: string
+          code: string
+          dangerous: boolean
+          label: string
+          module_code: string
+          module_label: string
+          scope: Json
+        }[]
+      }
       get_my_published_schedule: {
         Args: { p_date?: string }
         Returns: {
@@ -4844,6 +5036,18 @@ export type Database = {
           missing_area_rule_count: number
           missing_course_area_count: number
           ready: boolean
+        }[]
+      }
+      get_permission_admin_matrix: {
+        Args: never
+        Returns: {
+          full_name: string
+          permission_code: string
+          role: Database["public"]["Enums"]["app_role"]
+          scope: Json
+          user_id: string
+          valid_from: string
+          valid_until: string
         }[]
       }
       get_published_schedule_rows: {
@@ -4886,6 +5090,14 @@ export type Database = {
           unassigned_rows: number
         }[]
       }
+      get_schedule_configuration_issues_before_scoped_rules_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_configuration_issues_v2: {
         Args: never
         Returns: {
@@ -4922,6 +5134,16 @@ export type Database = {
         }[]
       }
       get_schedule_preparation_readiness: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
+      get_schedule_preparation_readiness_before_flexible_blocks_v2: {
         Args: never
         Returns: {
           affected_count: number
@@ -4988,6 +5210,14 @@ export type Database = {
           tckn_masked: string
           teaching_area_id: string
         }[]
+      }
+      has_any_module_permission: {
+        Args: { p_module: string }
+        Returns: boolean
+      }
+      has_permission: {
+        Args: { p_code: string; p_scope?: Json }
+        Returns: boolean
       }
       import_eokul_roster: {
         Args: { p_file_name: string; p_file_type: string; p_rows: Json }
@@ -5161,6 +5391,16 @@ export type Database = {
         }
         Returns: number
       }
+      scenario_teacher_consecutive_count_block_v2: {
+        Args: {
+          p_block_hours: number
+          p_day: number
+          p_scenario: string
+          p_start: number
+          p_teacher: string
+        }
+        Returns: number
+      }
       scenario_teacher_daily_count: {
         Args: { p_day: number; p_scenario: string; p_teacher: string }
         Returns: number
@@ -5184,6 +5424,18 @@ export type Database = {
       set_duty_month_lock: {
         Args: { p_locked: boolean; p_month: string }
         Returns: undefined
+      }
+      set_user_permission: {
+        Args: {
+          p_enabled: boolean
+          p_note?: string
+          p_permission_code: string
+          p_scope?: Json
+          p_user_id: string
+          p_valid_from?: string
+          p_valid_until?: string
+        }
+        Returns: boolean
       }
       student_count_for_schedule: {
         Args: { p_class_id: string; p_subgroup_id: string }
