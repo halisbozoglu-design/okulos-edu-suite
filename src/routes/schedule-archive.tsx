@@ -54,7 +54,7 @@ function ScheduleArchive() {
       p_effective_from: effectiveFrom,
       p_academic_year: academicYear,
       p_title: title,
-      p_note: note || null,
+      p_note: note || undefined,
     });
     setBusy(false);
     if (error) {
