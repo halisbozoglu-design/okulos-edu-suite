@@ -1,0 +1,24 @@
+{
+  "name": "OkulOS",
+  "short_name": "OkulOS",
+  "description": "Okul yönetimi, ders programı, nöbet, ek ders ve bildirim sistemi",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "orientation": "any",
+  "lang": "tr-TR",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-maskable.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Panel", "short_name": "Panel", "url": "/dashboard", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] },
+    { "name": "Vekalet", "short_name": "Vekalet", "url": "/substitutes", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] },
+    { "name": "Bildirimler", "short_name": "Bildirim", "url": "/notifications", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] }
+  ]
+}
