@@ -16,6 +16,7 @@ declare
   v_rule public.course_schedule_rules%rowtype;
   v_room public.classrooms%rowtype;
   v_subgroup public.class_subgroups%rowtype;
+  v_lr public.lesson_room_rules%rowtype;
   v_daily integer;
   v_weekly integer;
   v_days integer;
@@ -66,27 +67,16 @@ begin
       raise exception 'ROOM_CAPACITY_EXCEEDED';
     end if;
 
-    select * into v_rule
-    from public.course_schedule_rules cr
-    where cr.course_id=new.course_id and cr.active=true
+    select * into v_lr
+    from public.lesson_room_rules lr
+    where lr.active=true and new.subject ilike lr.subject_pattern
+    order by length(lr.subject_pattern) desc
     limit 1;
-
-    -- Physical-room specialization remains sourced from lesson_room_rules.
-    declare_room_rule: begin
-      declare v_lr public.lesson_room_rules%rowtype;
-      begin
-        select * into v_lr
-        from public.lesson_room_rules lr
-        where lr.active=true and new.subject ilike lr.subject_pattern
-        order by length(lr.subject_pattern) desc
-        limit 1;
-        if found then
-          if v_lr.required_room_type is not null and v_room.room_type<>v_lr.required_room_type then raise exception 'ROOM_TYPE_MISMATCH';end if;
-          if v_lr.required_department is not null and coalesce(v_room.department,'')<>v_lr.required_department then raise exception 'ROOM_DEPARTMENT_MISMATCH';end if;
-          if v_lr.required_hardware is not null and v_lr.required_hardware<>'{}'::jsonb and not(v_room.hardware @> v_lr.required_hardware) then raise exception 'ROOM_HARDWARE_MISMATCH';end if;
-        end if;
-      end;
-    end declare_room_rule;
+    if found then
+      if v_lr.required_room_type is not null and v_room.room_type<>v_lr.required_room_type then raise exception 'ROOM_TYPE_MISMATCH';end if;
+      if v_lr.required_department is not null and coalesce(v_room.department,'')<>v_lr.required_department then raise exception 'ROOM_DEPARTMENT_MISMATCH';end if;
+      if v_lr.required_hardware is not null and v_lr.required_hardware<>'{}'::jsonb and not(v_room.hardware @> v_lr.required_hardware) then raise exception 'ROOM_HARDWARE_MISMATCH';end if;
+    end if;
 
     if exists(
       select 1 from public.teacher_schedule ts
