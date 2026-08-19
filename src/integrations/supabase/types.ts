@@ -1955,6 +1955,26 @@ export type Database = {
       create_telegram_link_token: { Args: never; Returns: string }
       current_schedule_signature: { Args: never; Returns: string }
       disable_telegram_notifications: { Args: never; Returns: undefined }
+      finalize_my_registration: {
+        Args: { p_email: string; p_tckn: string }
+        Returns: {
+          blood_type: string | null
+          email: string | null
+          emergency_contact: string | null
+          full_name: string | null
+          phone: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          tckn: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       generate_monthly_teacher_duties: {
         Args: { p_month: string; p_overwrite?: boolean }
         Returns: number
@@ -2171,6 +2191,30 @@ export type Database = {
           subject: string
           weekly_load: number
         }[]
+      }
+      update_my_profile_safe: {
+        Args: {
+          p_blood_type?: string
+          p_emergency_contact?: string
+          p_phone?: string
+        }
+        Returns: {
+          blood_type: string | null
+          email: string | null
+          emergency_contact: string | null
+          full_name: string | null
+          phone: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          tckn: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {
