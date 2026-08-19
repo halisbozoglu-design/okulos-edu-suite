@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { AlertTriangle, CalendarDays, ClipboardList, FileText, Phone, Shield, Wallet } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { AlertTriangle, CalendarDays, ClipboardList, FileLock2, FileText, Phone, Shield, Wallet } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { StatWidget } from "@/components/okulos/StatWidget";
 import { Badge } from "@/components/ui/badge";
@@ -17,17 +17,13 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { documents, payslip, scheduleRows } from "@/data/mock";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
       { title: "Öğretmen Paneli — OkulOS" },
-      {
-        name: "description",
-        content: "Günlük özet, nöbet durumu, haftalık ders programı, ek ders ve belgeleriniz.",
-      },
+      { name: "description", content: "Yayınlanmış ders programı, nöbet, ek ders ve belgeleriniz." },
     ],
   }),
   component: TeacherDashboard,
@@ -39,27 +35,95 @@ type CrisisResult = {
   lessonCount: number;
 };
 
+type PublishedScheduleRow = {
+  publication_id: string;
+  effective_from: string;
+  academic_year: string | null;
+  title: string;
+  schedule_hash: string;
+  weekday: number;
+  period: number;
+  class_id: string | null;
+  class_name: string;
+  subject: string;
+  classroom: string | null;
+  subgroup_id: string | null;
+  subgroup_key: string | null;
+  is_group_split: boolean;
+};
+
+type ProfileSummary = {
+  full_name: string | null;
+  role: "admin" | "manager" | "teacher";
+};
+
+const dayColumns = [
+  { id: 1, short: "Pzt" },
+  { id: 2, short: "Sal" },
+  { id: 3, short: "Çar" },
+  { id: 4, short: "Per" },
+  { id: 5, short: "Cum" },
+] as const;
+
 function TeacherDashboard() {
-  const total = payslip.reduce((sum, r) => sum + r.hours * r.rate, 0);
+  const [profile, setProfile] = useState<ProfileSummary | null>(null);
+  const [schedule, setSchedule] = useState<PublishedScheduleRow[]>([]);
+  const [scheduleLoading, setScheduleLoading] = useState(true);
+  const [scheduleError, setScheduleError] = useState<string | null>(null);
   const [crisisOpen, setCrisisOpen] = useState(false);
   const [hasMedicalReport, setHasMedicalReport] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [crisisError, setCrisisError] = useState<string | null>(null);
   const [crisisResult, setCrisisResult] = useState<CrisisResult | null>(null);
 
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user || !active) return;
+
+      const [profileRes, scheduleRes] = await Promise.all([
+        supabase.from("profiles").select("full_name,role").eq("user_id", userData.user.id).maybeSingle(),
+        supabase.rpc("get_my_published_schedule"),
+      ]);
+
+      if (!active) return;
+      if (profileRes.data) setProfile(profileRes.data as ProfileSummary);
+      if (scheduleRes.error) {
+        setScheduleError("Yayınlanmış ders programınız yüklenemedi.");
+      } else {
+        setSchedule((scheduleRes.data ?? []) as PublishedScheduleRow[]);
+      }
+      setScheduleLoading(false);
+    })();
+    return () => { active = false; };
+  }, []);
+
+  const maxPeriod = useMemo(() => Math.max(8, ...schedule.map((row) => row.period)), [schedule]);
+  const periods = useMemo(() => Array.from({ length: maxPeriod }, (_, i) => i + 1), [maxPeriod]);
+  const todayWeekday = (() => {
+    const nativeDay = new Date().getDay();
+    return nativeDay >= 1 && nativeDay <= 5 ? nativeDay : null;
+  })();
+  const todayLessons = useMemo(
+    () => todayWeekday ? schedule.filter((row) => row.weekday === todayWeekday).length : 0,
+    [schedule, todayWeekday],
+  );
+  const publication = schedule[0] ?? null;
+
+  function cellRows(day: number, period: number) {
+    return schedule.filter((row) => row.weekday === day && row.period === period);
+  }
+
   async function reportAbsence() {
     setSubmitting(true);
     setCrisisError(null);
-    const { data, error } = await supabase.functions.invoke("report-absence", {
-      body: { hasMedicalReport },
-    });
+    const { data, error } = await supabase.functions.invoke("report-absence", { body: { hasMedicalReport } });
     setSubmitting(false);
-
     if (error || !data?.ok) {
       setCrisisError("Devamsızlık bildirimi kaydedilemedi. Lütfen tekrar deneyiniz.");
       return;
     }
-
     setCrisisResult({
       dutyVicePrincipal: data.dutyVicePrincipal ?? null,
       instruction: data.instruction,
@@ -67,11 +131,14 @@ function TeacherDashboard() {
     });
   }
 
+  const displayName = profile?.full_name?.trim() || "Öğretmen";
+  const roleLabel = profile?.role === "admin" ? "Yönetici" : profile?.role === "manager" ? "Müdür Yardımcısı" : "Öğretmen";
+
   return (
     <AppShell
-      title="Merhaba, Ayşe Hanım"
-      subtitle="18 Ağustos 2026, Salı"
-      action={<Badge variant="secondary">Öğretmen</Badge>}
+      title={`Merhaba, ${displayName}`}
+      subtitle={new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long" })}
+      action={<Badge variant="secondary">{roleLabel}</Badge>}
     >
       <Dialog
         open={crisisOpen}
@@ -86,80 +153,48 @@ function TeacherDashboard() {
       >
         <DialogTrigger asChild>
           <Button variant="destructive" size="lg" className="h-14 w-full gap-2 text-base font-semibold">
-            <AlertTriangle className="size-5" />
-            KRİZ / DEVAMSIZLIK BİLDİR
+            <AlertTriangle className="size-5" /> KRİZ / DEVAMSIZLIK BİLDİR
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Devamsızlık Bildirimi</DialogTitle>
-            <DialogDescription>
-              Bugünkü dersleriniz vekalet planına alınacaktır.
-            </DialogDescription>
+            <DialogDescription>Bugünkü dersleriniz vekalet planına alınacaktır.</DialogDescription>
           </DialogHeader>
-
           {!crisisResult ? (
             <>
               <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 p-3">
-                <Checkbox
-                  id="medical-report"
-                  checked={hasMedicalReport}
-                  onCheckedChange={(checked) => setHasMedicalReport(checked === true)}
-                />
-                <Label htmlFor="medical-report" className="cursor-pointer text-sm font-medium">
-                  Raporum var
-                </Label>
+                <Checkbox id="medical-report" checked={hasMedicalReport} onCheckedChange={(checked) => setHasMedicalReport(checked === true)} />
+                <Label htmlFor="medical-report" className="cursor-pointer text-sm font-medium">Raporum var</Label>
               </div>
-
-              {crisisError ? (
-                <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-                  {crisisError}
-                </div>
-              ) : null}
-
+              {crisisError ? <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{crisisError}</div> : null}
               <DialogFooter>
-                <Button variant="outline" onClick={() => setCrisisOpen(false)}>
-                  Vazgeç
-                </Button>
-                <Button variant="destructive" onClick={reportAbsence} disabled={submitting}>
-                  {submitting ? "Kaydediliyor..." : "Bildirimi Gönder"}
-                </Button>
+                <Button variant="outline" onClick={() => setCrisisOpen(false)}>Vazgeç</Button>
+                <Button variant="destructive" onClick={reportAbsence} disabled={submitting}>{submitting ? "Kaydediliyor..." : "Bildirimi Gönder"}</Button>
               </DialogFooter>
             </>
           ) : (
             <div className="space-y-3">
               <div className="rounded-xl border border-primary/20 bg-primary-soft p-4">
                 <p className="text-xs font-medium text-muted-foreground">Bugünkü nöbetçi müdür yardımcısı</p>
-                <p className="mt-1 text-base font-semibold">
-                  {crisisResult.dutyVicePrincipal?.full_name ?? "Nöbetçi idareci tanımlanmamış"}
-                </p>
+                <p className="mt-1 text-base font-semibold">{crisisResult.dutyVicePrincipal?.full_name ?? "Nöbetçi idareci tanımlanmamış"}</p>
                 {crisisResult.dutyVicePrincipal?.phone ? (
-                  <a
-                    href={`tel:${crisisResult.dutyVicePrincipal.phone}`}
-                    className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-primary"
-                  >
-                    <Phone className="size-4" />
-                    {crisisResult.dutyVicePrincipal.phone}
+                  <a href={`tel:${crisisResult.dutyVicePrincipal.phone}`} className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                    <Phone className="size-4" /> {crisisResult.dutyVicePrincipal.phone}
                   </a>
                 ) : null}
               </div>
-              <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-                <strong>MEBBİS hatırlatması:</strong> {crisisResult.instruction}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {crisisResult.lessonCount} ders vekalet planına aktarıldı.
-              </p>
-              <Button className="w-full" onClick={() => setCrisisOpen(false)}>
-                Tamam
-              </Button>
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"><strong>MEBBİS hatırlatması:</strong> {crisisResult.instruction}</div>
+              <p className="text-xs text-muted-foreground">{crisisResult.lessonCount} ders vekalet planına aktarıldı.</p>
+              <Button className="w-full" onClick={() => setCrisisOpen(false)}>Tamam</Button>
             </div>
           )}
         </DialogContent>
       </Dialog>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <StatWidget icon={ClipboardList} label="Bugünün Özeti" value="5 Ders" hint="2 boş saat · 1 nöbet" />
-        <StatWidget icon={Shield} label="Nöbet Durumu" value="Aktif" hint="A Blok · 2. Kat" />
+        <StatWidget icon={ClipboardList} label="Bugünün Programı" value={scheduleLoading ? "…" : `${todayLessons} Ders`} hint={todayWeekday ? "Yayınlanmış program" : "Hafta sonu"} />
+        <StatWidget icon={Shield} label="Program Kaynağı" value={publication ? "Yayınlanmış" : "Bekliyor"} hint={publication ? `Başlangıç: ${new Date(`${publication.effective_from}T00:00:00`).toLocaleDateString("tr-TR")}` : "İdare henüz program yayınlamadı"} />
       </div>
 
       <Tabs defaultValue="schedule" className="mt-5">
@@ -169,77 +204,66 @@ function TeacherDashboard() {
           <TabsTrigger value="docs" className="flex-1">Belgeler</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="schedule" className="mt-4">
-          <div className="overflow-x-auto rounded-xl border border-border bg-card">
-            <table className="w-full min-w-[560px] text-sm">
-              <thead className="bg-muted/60 text-xs text-muted-foreground">
-                <tr>
-                  {["Saat", "Pzt", "Sal", "Çar", "Per", "Cum"].map((h) => (
-                    <th key={h} className="px-3 py-2 text-left font-medium">{h}</th>
+        <TabsContent value="schedule" className="mt-4 space-y-3">
+          {scheduleError ? <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">{scheduleError}</div> : null}
+          {!scheduleLoading && !scheduleError && !publication ? (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+              <div className="flex items-start gap-2"><FileLock2 className="mt-0.5 size-4 shrink-0" /><div><b>Yürürlükte yayınlanmış ders programı bulunmuyor.</b> Taslak programlar öğretmen ekranında gösterilmez. İdare programı “Yayınla / Kullanıma Al” işleminden sonra burada görebilirsiniz.</div></div>
+            </div>
+          ) : null}
+          {publication ? (
+            <div className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-xs text-indigo-950">
+              <b>{publication.title}</b> · {publication.academic_year ?? "Eğitim yılı belirtilmemiş"} · İçerik özeti: <span className="font-mono">{publication.schedule_hash.slice(0, 12)}…</span>
+            </div>
+          ) : null}
+          {schedule.length ? (
+            <div className="overflow-x-auto rounded-xl border border-border bg-card">
+              <table className="w-full min-w-[760px] text-sm">
+                <thead className="bg-muted/60 text-xs text-muted-foreground">
+                  <tr><th className="px-3 py-2 text-left font-medium">Saat</th>{dayColumns.map((day) => <th key={day.id} className="px-3 py-2 text-left font-medium">{day.short}</th>)}</tr>
+                </thead>
+                <tbody>
+                  {periods.map((period) => (
+                    <tr key={period} className="border-t border-border align-top">
+                      <td className="whitespace-nowrap px-3 py-3 font-semibold">{period}. Ders</td>
+                      {dayColumns.map((day) => {
+                        const rows = cellRows(day.id, period);
+                        return <td key={day.id} className="min-w-32 px-3 py-3">{rows.length ? rows.map((row) => (
+                          <div key={`${row.publication_id}-${day.id}-${period}-${row.class_id}-${row.subgroup_key ?? "main"}`} className="mb-1 rounded-lg bg-primary-soft p-2 last:mb-0">
+                            <p className="font-semibold text-foreground">{row.subject}</p>
+                            <p className="text-xs text-muted-foreground">{row.class_name}{row.subgroup_key ? ` · ${row.subgroup_key}` : ""}</p>
+                            {row.classroom ? <p className="text-[11px] text-muted-foreground">{row.classroom}</p> : null}
+                          </div>
+                        )) : <span className="text-xs text-muted-foreground">—</span>}</td>;
+                      })}
+                    </tr>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {scheduleRows.map((r) => (
-                  <tr key={r.hour} className="border-t border-border">
-                    <td className="whitespace-nowrap px-3 py-2 font-medium">{r.hour}</td>
-                    {[r.mon, r.tue, r.wed, r.thu, r.fri].map((c, i) => (
-                      <td key={i} className="whitespace-nowrap px-3 py-2 text-muted-foreground">{c}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
+          ) : null}
         </TabsContent>
 
-        <TabsContent value="payroll" className="mt-4 space-y-3">
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Wallet className="size-4 text-primary" />
-              <span className="text-xs font-medium">Ağustos 2026 Tahmini</span>
-            </div>
-            <p className="mt-1 text-2xl font-semibold tracking-tight">
-              {total.toLocaleString("tr-TR", { maximumFractionDigits: 0 })} ₺
-            </p>
+        <TabsContent value="payroll" className="mt-4">
+          <div className="rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 font-medium text-foreground"><Wallet className="size-4 text-primary" /> Ek Ders</div>
+            <p className="mt-2">Öğretmen kişisel puantajı, onaylanmış ek ders verileri öğretmen görünümüne bağlandığında burada gösterilecektir. Tahmini veya mock ücret gösterilmez.</p>
           </div>
-          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
-            {payslip.map((row) => (
-              <li key={row.label} className="flex items-center justify-between gap-3 px-4 py-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{row.label}</p>
-                  <p className="text-xs text-muted-foreground">{row.hours} saat × {row.rate} ₺</p>
-                </div>
-                <span className="shrink-0 text-sm font-semibold">
-                  {(row.hours * row.rate).toLocaleString("tr-TR")} ₺
-                </span>
-              </li>
-            ))}
-          </ul>
         </TabsContent>
 
         <TabsContent value="docs" className="mt-4">
-          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
-            {documents.map((doc) => (
-              <li key={doc.id} className="flex items-center gap-3 px-4 py-3">
-                <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
-                  <FileText className="size-4" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{doc.title}</p>
-                  <p className="text-xs text-muted-foreground">{doc.type} · {doc.date}</p>
-                </div>
-                <Button variant="ghost" size="sm" className="shrink-0">İndir</Button>
-              </li>
-            ))}
-          </ul>
+          <div className="rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 font-medium text-foreground"><FileText className="size-4 text-primary" /> Belgelerim</div>
+            <p className="mt-2">Yayınlanmış tebliğ belgeleri ve kullanıcıya atanmış gerçek evraklar bağlandığında burada listelenecektir. Örnek belge gösterilmez.</p>
+          </div>
         </TabsContent>
       </Tabs>
 
-      <div className="mt-5 flex items-center gap-2 rounded-xl border border-border bg-primary-soft px-4 py-3 text-xs text-accent-foreground">
-        <CalendarDays className="size-4 shrink-0" />
-        Yarınki nöbet yeriniz: Bahçe / Kantin bölgesi.
-      </div>
+      {publication ? (
+        <div className="mt-5 flex items-center gap-2 rounded-xl border border-border bg-primary-soft px-4 py-3 text-xs text-accent-foreground">
+          <CalendarDays className="size-4 shrink-0" /> Bu ekran yalnız değiştirilemez, yürürlükteki yayınlanmış ders programını gösterir.
+        </div>
+      ) : null}
     </AppShell>
   );
 }
