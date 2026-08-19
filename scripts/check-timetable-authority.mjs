@@ -11,6 +11,7 @@ const protectedDefinitions = {
   "function:rescore_schedule_scenario_v2": "20260819071700_timetable_scenario_freshness_guard.sql",
   "function:repair_schedule_scenario_v2": "20260819071800_timetable_postprocess_freshness_wrappers.sql",
   "function:assign_classrooms_to_scenario": "20260819071800_timetable_postprocess_freshness_wrappers.sql",
+  "function:publish_current_schedule": "20260819071900_timetable_publish_mutation_lock.sql",
   "function:get_schedule_integrity_report_core_v2": "20260819071300_schedule_parallel_count_null_fix.sql",
   "function:get_schedule_scenario_hard_issues_v2": "20260819071300_schedule_parallel_count_null_fix.sql",
   "view:schedule_scenario_status_v2": "20260819071600_timetable_revision_and_concurrency_guard.sql",
