@@ -1,217 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AlertTriangle, CalendarRange, CheckCircle2, Lock, MapPin, Plus, Printer, RefreshCw, Unlock, Wand2 } from "lucide-react";
+import { AlertTriangle, CalendarRange, CheckCircle2, Lock, MapPin, Plus, Printer, RefreshCw, ShieldCheck, Unlock, Wand2 } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase";
+import { usePermissions } from "@/lib/permissions";
 
-export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Aylık Nöbet Rotasyonu — OkulOS" }] }),
-  component: DutyRotationSettings,
-});
+export const Route=createFileRoute("/settings")({head:()=>({meta:[{title:"Aylık Nöbet Rotasyonu — OkulOS"}]}),component:DutyRotationSettings});
+type Profile={user_id:string;full_name:string|null;role:string};type Rotation={duty_date:string;vice_principal_id:string};type DutyAssignment={duty_date:string;teacher_id:string;duty_location:string|null};type Location={id:string;name:string;critical:boolean;sort_order:number};type MonthState={month_start:string;locked:boolean;stored_schedule_signature:string|null;current_schedule_signature:string;schedule_changed:boolean;generated_at:string|null};
+type DutyBook={date:string;manager:{user_id:string;full_name:string|null;phone?:string|null}|null;duty_teachers:{user_id:string;full_name:string|null;location:string|null}[];absent_teachers:{teacher_id:string;full_name:string|null;medical_report:boolean;note:string|null;lessons:{period:number;class_name:string;subject:string}[]}[];substitutions:{period:number;class_name:string;subject:string;substitute:string|null}[];notes:{start_time?:string;end_time?:string;teaching_mode?:string;general_note?:string;empty_lesson_resolution?:string}|null};
+const weekdays=[{id:1,label:"Pazartesi"},{id:2,label:"Salı"},{id:3,label:"Çarşamba"},{id:4,label:"Perşembe"},{id:5,label:"Cuma"}];
+function monthRange(month:string){const start=`${month}-01`;const d=new Date(`${start}T00:00:00`);d.setMonth(d.getMonth()+1);return{start,next:d.toISOString().slice(0,10)}}
 
-type Profile = { user_id: string; full_name: string | null; role: string };
-type Rotation = { duty_date: string; vice_principal_id: string };
-type DutyAssignment = { duty_date: string; teacher_id: string; duty_location: string | null };
-type Location = { id: string; name: string; critical: boolean; sort_order: number };
-type CycleMember = { teacher_id: string; weekday: number; rotation_offset: number; active: boolean };
-type MonthState = { month_start: string; locked: boolean; stored_schedule_signature: string | null; current_schedule_signature: string; schedule_changed: boolean; generated_at: string | null };
-type DutyBook = {
-  date: string;
-  manager: { user_id: string; full_name: string | null; phone?: string | null } | null;
-  duty_teachers: { user_id: string; full_name: string | null; location: string | null }[];
-  absent_teachers: { teacher_id: string; full_name: string | null; medical_report: boolean; note: string | null; lessons: { period: number; class_name: string; subject: string }[] }[];
-  substitutions: { period: number; class_name: string; subject: string; substitute: string | null }[];
-  notes: { start_time?: string; end_time?: string; teaching_mode?: string; general_note?: string; empty_lesson_resolution?: string } | null;
-};
-
-const weekdays = [
-  { id: 1, label: "Pazartesi" }, { id: 2, label: "Salı" }, { id: 3, label: "Çarşamba" },
-  { id: 4, label: "Perşembe" }, { id: 5, label: "Cuma" },
-];
-
-function monthRange(month: string) {
-  const start = `${month}-01`;
-  const d = new Date(`${start}T00:00:00`);
-  d.setMonth(d.getMonth() + 1);
-  return { start, next: d.toISOString().slice(0, 10) };
+function DutyRotationSettings(){
+ const {can,any,loading:permissionLoading}=usePermissions();const mayView=any("duty.view","duty.manage","duty.generate","duty.lock"),mayManage=can("duty.manage"),mayGenerate=can("duty.generate"),mayLock=can("duty.lock"),mayQuran=can("quran.manage");
+ const [month,setMonth]=useState(new Date().toISOString().slice(0,7)),[managers,setManagers]=useState<Profile[]>([]),[teachers,setTeachers]=useState<Profile[]>([]),[activeVpIds,setActiveVpIds]=useState<string[]>([]),[rotations,setRotations]=useState<Rotation[]>([]),[assignments,setAssignments]=useState<DutyAssignment[]>([]),[locations,setLocations]=useState<Location[]>([]),[monthState,setMonthState]=useState<MonthState|null>(null),[newLocation,setNewLocation]=useState(""),[criticalLocation,setCriticalLocation]=useState(false),[memberTeacher,setMemberTeacher]=useState(""),[memberDay,setMemberDay]=useState(1),[selectedDate,setSelectedDate]=useState(new Date().toISOString().slice(0,10)),[dutyBook,setDutyBook]=useState<DutyBook|null>(null),[busy,setBusy]=useState(false),[message,setMessage]=useState<string|null>(null);
+ const profileMap=useMemo(()=>Object.fromEntries([...managers,...teachers].map(p=>[p.user_id,p.full_name??"Personel"])),[managers,teachers]);
+ const loadData=useCallback(async()=>{if(permissionLoading||!mayView)return;const{start,next}=monthRange(month);const [managerRes,teacherRes,vpRes,rotationRes,assignmentRes,locationRes,stateRes]=await Promise.all([supabase.from("profiles").select("user_id,full_name,role").in("role",["manager","admin"]).order("full_name"),supabase.from("profiles").select("user_id,full_name,role").eq("role","teacher").order("full_name"),supabase.from("vice_principals").select("user_id").eq("active",true),supabase.from("duty_rotation").select("duty_date,vice_principal_id").gte("duty_date",start).lt("duty_date",next).order("duty_date"),supabase.from("teacher_duty_assignments").select("duty_date,teacher_id,duty_location").gte("duty_date",start).lt("duty_date",next).order("duty_date"),supabase.from("duty_locations").select("id,name,critical,sort_order").eq("active",true).order("critical",{ascending:false}).order("sort_order"),supabase.rpc("get_duty_month_state",{p_month:start})]);setManagers((managerRes.data??[]) as Profile[]);setTeachers((teacherRes.data??[]) as Profile[]);setActiveVpIds((vpRes.data??[]).map((x:{user_id:string})=>x.user_id));setRotations((rotationRes.data??[]) as Rotation[]);setAssignments((assignmentRes.data??[]) as DutyAssignment[]);setLocations((locationRes.data??[]) as Location[]);const state=Array.isArray(stateRes.data)?stateRes.data[0]:stateRes.data;setMonthState((state??null) as MonthState|null);},[month,mayView,permissionLoading]);useEffect(()=>{void loadData()},[loadData]);
+ async function toggleVp(userId:string){if(!mayManage)return;setMessage(null);if(activeVpIds.includes(userId)){const{error}=await supabase.from("vice_principals").update({active:false}).eq("user_id",userId);if(!error)setActiveVpIds(v=>v.filter(id=>id!==userId));}else{const{error}=await supabase.from("vice_principals").upsert({user_id:userId,active:true});if(!error)setActiveVpIds(v=>[...v,userId]);}}
+ async function addLocation(){if(!mayManage||!newLocation.trim())return;const{error}=await supabase.from("duty_locations").insert({name:newLocation.trim(),critical:criticalLocation,sort_order:locations.length+1});if(error){setMessage("Nöbet yeri eklenemedi.");return;}setNewLocation("");setCriticalLocation(false);await loadData();}
+ async function addCycleMember(){if(!mayManage||!memberTeacher)return;const{error}=await supabase.from("teacher_duty_cycle_members").upsert({teacher_id:memberTeacher,weekday:memberDay,active:true,rotation_offset:0});if(error){setMessage("Öğretmen aylık nöbet döngüsüne eklenemedi.");return;}await loadData();}
+ async function generateMonth(){if(!mayGenerate)return;if(!activeVpIds.length){setMessage("Önce en az bir nöbetçi müdür yardımcısı seçin.");return;}if(!locations.length){setMessage("Önce en az bir nöbet yeri tanımlayın.");return;}if(monthState?.locked){setMessage("Bu ay kilitli. Güncellemek için önce ay kilidini kaldırın.");return;}setBusy(true);setMessage(null);const monthStart=`${month}-01`;const[vp,teacher]=await Promise.all([supabase.rpc("generate_monthly_vp_rotation",{p_month:monthStart,p_vice_principal_ids:activeVpIds,p_overwrite:true}),supabase.rpc("generate_monthly_teacher_duties",{p_month:monthStart,p_overwrite:true})]);setBusy(false);if(vp.error||teacher.error){setMessage("Aylık nöbet döngüsü oluşturulamadı. Yetki, ay kilidi ve tanımları kontrol edin.");return;}setMessage(`Aylık plan oluşturuldu: ${vp.data??0} idareci günü, ${teacher.data??0} öğretmen nöbet kaydı.`);await loadData();}
+ async function toggleMonthLock(){if(!mayLock)return;const next=!monthState?.locked;const{error}=await supabase.rpc("set_duty_month_lock",{p_month:`${month}-01`,p_locked:next});if(error){setMessage("Ay kilidi güncellenemedi.");return;}setMessage(next?"Aylık nöbet planı kilitlendi.":"Ay kilidi kaldırıldı.");await loadData();}
+ async function fetchDutyBook(){if(!mayView)return null;const{data,error}=await supabase.rpc("get_daily_duty_book",{p_date:selectedDate});if(error){setMessage("Nöbet defteri verileri alınamadı.");return null;}const book=data as DutyBook;setDutyBook(book);return book;}
+ async function printDutyBook(){const book=dutyBook?.date===selectedDate?dutyBook:await fetchDutyBook();if(!book)return;requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));}
+ if(permissionLoading)return <AppShell title="Nöbet"><p className="text-sm text-muted-foreground">Yetki kontrol ediliyor…</p></AppShell>;
+ if(!mayView)return <AppShell title="Nöbet"><div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">Bu kullanıcıya Nöbet görevi atanmadı.</div></AppShell>;
+ return <AppShell title="Nöbet Rotasyonu" subtitle="Görev bazlı aylık plan · günlük nöbet defteri">
+  <div className="print:hidden"><div className="mb-3 flex flex-wrap gap-2 text-[11px] text-muted-foreground"><span className="rounded-full border px-2 py-1">Görüntüleme</span>{mayManage?<span className="rounded-full border px-2 py-1">Yönetim</span>:null}{mayGenerate?<span className="rounded-full border px-2 py-1">Aylık Üretim</span>:null}{mayLock?<span className="rounded-full border px-2 py-1">Kilitle/Aç</span>:null}</div>
+   <div className="grid gap-3 sm:grid-cols-[180px_1fr]"><div className="space-y-2"><Label>Plan Ayı</Label><Input type="month" value={month} onChange={e=>setMonth(e.target.value)}/></div><div className="flex items-end gap-2">{mayGenerate?<Button onClick={()=>void generateMonth()} disabled={busy||Boolean(monthState?.locked)} className="w-full gap-2"><Wand2 className="size-4"/>{busy?"Oluşturuluyor...":"Aylık Döngüyü Oluştur / Güncelle"}</Button>:<div className="flex w-full items-center gap-2 rounded-md border bg-muted/30 px-3 text-xs text-muted-foreground"><ShieldCheck className="size-4"/>Aylık üretim yetkisi yok</div>}<Button variant="outline" onClick={()=>void loadData()}><RefreshCw className="size-4"/></Button></div></div>
+   <div className={`mt-3 rounded-xl border p-3 text-sm ${monthState?.schedule_changed?"border-amber-300 bg-amber-50 text-amber-950":"border-emerald-200 bg-emerald-50 text-emerald-950"}`}><div className="flex items-start gap-2">{monthState?.schedule_changed?<AlertTriangle className="mt-0.5 size-4"/>:<CheckCircle2 className="mt-0.5 size-4"/>}<div><b>{monthState?.schedule_changed?"Ders programı değişmiş.":"Ders programı değişmemiş."}</b><p className="mt-0.5 text-xs">{monthState?.schedule_changed?"Bu ayın nöbet planı eski program sürümüyle üretildi.":"Aylık nöbet planı mevcut program sürümüyle uyumlu."}</p></div></div><div className="mt-2 flex flex-wrap gap-2">{mayLock?<Button size="sm" variant={monthState?.locked?"secondary":"outline"} onClick={()=>void toggleMonthLock()}>{monthState?.locked?<><Unlock className="mr-1 size-3.5"/>Kilidi Kaldır</>:<><Lock className="mr-1 size-3.5"/>Ayı Kilitle</>}</Button>:null}{mayQuran?<a href="/quran-groups" className="inline-flex h-9 items-center rounded-md border px-3 text-xs font-medium">Kur’an 25+ Grup Planlama</a>:null}</div></div>
+   {message?<p className="mt-3 rounded-lg border bg-muted/40 p-3 text-sm">{message}</p>:null}
+   {mayManage?<><section className="mt-5 rounded-xl border bg-card p-4"><h2 className="text-sm font-semibold">Nöbetçi Müdür Yardımcısı Havuzu</h2><p className="mt-1 text-xs text-muted-foreground">Seçilen idareciler iş günlerine döngüsel atanır.</p><div className="mt-3 flex flex-wrap gap-2">{managers.map(m=><button key={m.user_id} onClick={()=>void toggleVp(m.user_id)} className={`rounded-lg border px-3 py-2 text-sm ${activeVpIds.includes(m.user_id)?"border-primary bg-primary text-primary-foreground":""}`}>{m.full_name??"İdareci"}</button>)}</div></section><section className="mt-5 grid gap-4 md:grid-cols-2"><div className="rounded-xl border bg-card p-4"><h2 className="flex items-center gap-2 text-sm font-semibold"><MapPin className="size-4"/>Nöbet Yerleri</h2><div className="mt-3 flex gap-2"><Input value={newLocation} onChange={e=>setNewLocation(e.target.value)} placeholder="Bahçe, Zemin Kat..."/><Button onClick={()=>void addLocation()}><Plus className="size-4"/></Button></div><label className="mt-2 flex items-center gap-2 text-xs"><input type="checkbox" checked={criticalLocation} onChange={e=>setCriticalLocation(e.target.checked)}/>Kritik bölge</label><div className="mt-3 flex flex-wrap gap-2">{locations.map(l=><span key={l.id} className="rounded-full bg-muted px-3 py-1 text-xs">{l.name}{l.critical?" · kritik":""}</span>)}</div></div><div className="rounded-xl border bg-card p-4"><h2 className="text-sm font-semibold">Öğretmen Aylık Nöbet Döngüsü</h2><div className="mt-3 space-y-2"><select value={memberTeacher} onChange={e=>setMemberTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçin</option>{teachers.map(t=><option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select><select value={memberDay} onChange={e=>setMemberDay(Number(e.target.value))} className="h-10 w-full rounded-md border bg-background px-3 text-sm">{weekdays.map(d=><option key={d.id} value={d.id}>{d.label}</option>)}</select><Button variant="secondary" onClick={()=>void addCycleMember()} className="w-full">Döngüye Ekle / Gününü Güncelle</Button></div></div></section></>:null}
+   <section className="mt-6"><h2 className="mb-2 flex items-center gap-2 text-sm font-semibold"><CalendarRange className="size-4"/>{month} Aylık Plan</h2><div className="overflow-x-auto rounded-xl border bg-card"><table className="min-w-[760px] w-full text-sm"><thead><tr className="border-b"><th className="p-2 text-left">Tarih</th><th className="p-2 text-left">Nöbetçi İdareci</th><th className="p-2 text-left">Nöbetçi Öğretmen / Yer</th></tr></thead><tbody>{rotations.map(r=><tr key={r.duty_date} className="border-b"><td className="p-2">{new Date(`${r.duty_date}T00:00:00`).toLocaleDateString("tr-TR")}</td><td className="p-2 font-medium">{profileMap[r.vice_principal_id]??"—"}</td><td className="p-2 text-xs">{assignments.filter(a=>a.duty_date===r.duty_date).map(a=>`${profileMap[a.teacher_id]??"Öğretmen"} (${a.duty_location??"Yer yok"})`).join(" · ")||"—"}</td></tr>)}</tbody></table></div></section>
+   <section className="mt-6 rounded-xl border bg-card p-4"><h2 className="text-sm font-semibold">Günlük Nöbet Defteri · Fizikî Baskı</h2><p className="mt-1 text-xs text-muted-foreground">Canlı nöbet, devamsızlık ve vekalet verilerinden üretilir.</p><div className="mt-3 flex flex-col gap-2 sm:flex-row"><Input type="date" value={selectedDate} onChange={e=>setSelectedDate(e.target.value)}/><Button variant="outline" onClick={()=>void fetchDutyBook()}>Önizle</Button><Button onClick={()=>void printDutyBook()} className="gap-2"><Printer className="size-4"/>Fizikî Baskı / PDF</Button></div></section>
+  </div>{dutyBook?<DutyBookPrint data={dutyBook}/>:null}
+ </AppShell>;
 }
-
-function DutyRotationSettings() {
-  const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
-  const [managers, setManagers] = useState<Profile[]>([]);
-  const [teachers, setTeachers] = useState<Profile[]>([]);
-  const [activeVpIds, setActiveVpIds] = useState<string[]>([]);
-  const [rotations, setRotations] = useState<Rotation[]>([]);
-  const [assignments, setAssignments] = useState<DutyAssignment[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [cycleMembers, setCycleMembers] = useState<CycleMember[]>([]);
-  const [monthState, setMonthState] = useState<MonthState | null>(null);
-  const [newLocation, setNewLocation] = useState("");
-  const [criticalLocation, setCriticalLocation] = useState(false);
-  const [memberTeacher, setMemberTeacher] = useState("");
-  const [memberDay, setMemberDay] = useState(1);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
-  const [dutyBook, setDutyBook] = useState<DutyBook | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-
-  const profileMap = useMemo(() => Object.fromEntries([...managers, ...teachers].map((p) => [p.user_id, p.full_name ?? "Personel"])), [managers, teachers]);
-
-  const loadData = useCallback(async () => {
-    const { start, next } = monthRange(month);
-    const [managerRes, teacherRes, vpRes, rotationRes, assignmentRes, locationRes, memberRes, stateRes] = await Promise.all([
-      supabase.from("profiles").select("user_id,full_name,role").in("role", ["manager", "admin"]).order("full_name"),
-      supabase.from("profiles").select("user_id,full_name,role").eq("role", "teacher").order("full_name"),
-      supabase.from("vice_principals").select("user_id").eq("active", true),
-      supabase.from("duty_rotation").select("duty_date,vice_principal_id").gte("duty_date", start).lt("duty_date", next).order("duty_date"),
-      supabase.from("teacher_duty_assignments").select("duty_date,teacher_id,duty_location").gte("duty_date", start).lt("duty_date", next).order("duty_date"),
-      supabase.from("duty_locations").select("id,name,critical,sort_order").eq("active", true).order("critical", { ascending: false }).order("sort_order"),
-      supabase.from("teacher_duty_cycle_members").select("teacher_id,weekday,rotation_offset,active").eq("active", true),
-      supabase.rpc("get_duty_month_state", { p_month: start }),
-    ]);
-    setManagers((managerRes.data ?? []) as Profile[]);
-    setTeachers((teacherRes.data ?? []) as Profile[]);
-    setActiveVpIds((vpRes.data ?? []).map((x: { user_id: string }) => x.user_id));
-    setRotations((rotationRes.data ?? []) as Rotation[]);
-    setAssignments((assignmentRes.data ?? []) as DutyAssignment[]);
-    setLocations((locationRes.data ?? []) as Location[]);
-    setCycleMembers((memberRes.data ?? []) as CycleMember[]);
-    const state = Array.isArray(stateRes.data) ? stateRes.data[0] : stateRes.data;
-    setMonthState((state ?? null) as MonthState | null);
-  }, [month]);
-
-  useEffect(() => { void loadData(); }, [loadData]);
-
-  async function toggleVp(userId: string) {
-    setMessage(null);
-    if (activeVpIds.includes(userId)) {
-      const { error } = await supabase.from("vice_principals").update({ active: false }).eq("user_id", userId);
-      if (!error) setActiveVpIds((v) => v.filter((id) => id !== userId));
-    } else {
-      const { error } = await supabase.from("vice_principals").upsert({ user_id: userId, active: true });
-      if (!error) setActiveVpIds((v) => [...v, userId]);
-    }
-  }
-
-  async function addLocation() {
-    if (!newLocation.trim()) return;
-    const { error } = await supabase.from("duty_locations").insert({ name: newLocation.trim(), critical: criticalLocation, sort_order: locations.length + 1 });
-    if (error) { setMessage("Nöbet yeri eklenemedi."); return; }
-    setNewLocation(""); setCriticalLocation(false); await loadData();
-  }
-
-  async function addCycleMember() {
-    if (!memberTeacher) return;
-    const { error } = await supabase.from("teacher_duty_cycle_members").upsert({ teacher_id: memberTeacher, weekday: memberDay, active: true, rotation_offset: 0 });
-    if (error) { setMessage("Öğretmen aylık nöbet döngüsüne eklenemedi."); return; }
-    await loadData();
-  }
-
-  async function generateMonth() {
-    if (!activeVpIds.length) { setMessage("Önce en az bir nöbetçi müdür yardımcısı seçin."); return; }
-    if (!locations.length) { setMessage("Önce en az bir nöbet yeri tanımlayın."); return; }
-    if (monthState?.locked) { setMessage("Bu ay kilitli. Güncellemek için önce ay kilidini kaldırın."); return; }
-    setBusy(true); setMessage(null);
-    const monthStart = `${month}-01`;
-    const [vp, teacher] = await Promise.all([
-      supabase.rpc("generate_monthly_vp_rotation", { p_month: monthStart, p_vice_principal_ids: activeVpIds, p_overwrite: true }),
-      supabase.rpc("generate_monthly_teacher_duties", { p_month: monthStart, p_overwrite: true }),
-    ]);
-    setBusy(false);
-    if (vp.error || teacher.error) { setMessage("Aylık nöbet döngüsü oluşturulamadı. Ay kilidini ve tanımları kontrol edin."); return; }
-    setMessage(`Aylık plan oluşturuldu: ${vp.data ?? 0} idareci günü, ${teacher.data ?? 0} öğretmen nöbet kaydı. Ders programı sürümü bu aya bağlandı.`);
-    await loadData();
-  }
-
-  async function toggleMonthLock() {
-    const next = !monthState?.locked;
-    const { error } = await supabase.rpc("set_duty_month_lock", { p_month: `${month}-01`, p_locked: next });
-    if (error) { setMessage("Ay kilidi güncellenemedi."); return; }
-    setMessage(next ? "Aylık nöbet planı kilitlendi." : "Ay kilidi kaldırıldı. Gerekirse plan yeniden oluşturulabilir.");
-    await loadData();
-  }
-
-  async function fetchDutyBook(): Promise<DutyBook | null> {
-    const { data, error } = await supabase.rpc("get_daily_duty_book", { p_date: selectedDate });
-    if (error) { setMessage("Nöbet defteri verileri alınamadı."); return null; }
-    const book = data as DutyBook;
-    setDutyBook(book);
-    return book;
-  }
-
-  async function printDutyBook() {
-    const book = dutyBook?.date === selectedDate ? dutyBook : await fetchDutyBook();
-    if (!book) return;
-    requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
-  }
-
-  return (
-    <AppShell title="Ayarlar & Nöbet Rotasyonu" subtitle="Aylık döngü · fiziki nöbet defteri çıktısı">
-      <div className="print:hidden">
-        <div className="grid gap-3 sm:grid-cols-[180px_1fr]">
-          <div className="space-y-2"><Label>Plan Ayı</Label><Input type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></div>
-          <div className="flex items-end gap-2"><Button onClick={() => void generateMonth()} disabled={busy || Boolean(monthState?.locked)} className="w-full gap-2"><Wand2 className="size-4" />{busy ? "Oluşturuluyor..." : "Aylık Döngüyü Oluştur / Güncelle"}</Button><Button variant="outline" onClick={() => void loadData()}><RefreshCw className="size-4" /></Button></div>
-        </div>
-
-        <div className={`mt-3 rounded-xl border p-3 text-sm ${monthState?.schedule_changed ? "border-amber-300 bg-amber-50 text-amber-950" : "border-emerald-200 bg-emerald-50 text-emerald-950"}`}>
-          <div className="flex items-start gap-2">{monthState?.schedule_changed ? <AlertTriangle className="mt-0.5 size-4 shrink-0" /> : <CheckCircle2 className="mt-0.5 size-4 shrink-0" />}<div><b>{monthState?.schedule_changed ? "Ders programı değişmiş." : "Ders programı değişmemiş."}</b><p className="mt-0.5 text-xs">{monthState?.schedule_changed ? "Bu ayın nöbet planı eski ders programı sürümüyle üretildi. Kilit açıkken planı yeniden oluşturun." : "Mevcut aylık nöbet planı, kaydedilen ders programı sürümüyle uyumlu."}</p></div></div>
-          <div className="mt-2 flex flex-wrap gap-2"><Button size="sm" variant={monthState?.locked ? "secondary" : "outline"} onClick={() => void toggleMonthLock()} className="gap-1.5">{monthState?.locked ? <><Unlock className="size-3.5" /> Kilidi Kaldır</> : <><Lock className="size-3.5" /> Ayı Kilitle</>}</Button><a href="/quran-groups" className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 text-xs font-medium hover:bg-accent">Kur’an 25+ Grup Planlama</a></div>
-        </div>
-        {message ? <p className="mt-3 rounded-lg border border-border bg-muted/40 p-3 text-sm">{message}</p> : null}
-
-        <section className="mt-5 rounded-xl border border-border bg-card p-4">
-          <h2 className="text-sm font-semibold">Nöbetçi Müdür Yardımcısı Havuzu</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Seçilen idareciler ayın iş günlerine sırayla ve döngüsel atanır.</p>
-          <div className="mt-3 flex flex-wrap gap-2">{managers.map((m) => <button key={m.user_id} onClick={() => void toggleVp(m.user_id)} className={`rounded-lg border px-3 py-2 text-sm ${activeVpIds.includes(m.user_id) ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background"}`}>{m.full_name ?? "İdareci"}</button>)}</div>
-        </section>
-
-        <section className="mt-5 grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl border border-border bg-card p-4">
-            <h2 className="flex items-center gap-2 text-sm font-semibold"><MapPin className="size-4" /> Nöbet Yerleri</h2>
-            <div className="mt-3 flex gap-2"><Input value={newLocation} onChange={(e) => setNewLocation(e.target.value)} placeholder="Bahçe, Zemin Kat..." /><Button onClick={() => void addLocation()}><Plus className="size-4" /></Button></div>
-            <label className="mt-2 flex items-center gap-2 text-xs"><input type="checkbox" checked={criticalLocation} onChange={(e) => setCriticalLocation(e.target.checked)} /> Kritik bölge (dağıtımda öncelikli)</label>
-            <div className="mt-3 flex flex-wrap gap-2">{locations.map((l) => <span key={l.id} className="rounded-full bg-muted px-3 py-1 text-xs">{l.name}{l.critical ? " · kritik" : ""}</span>)}</div>
-          </div>
-
-          <div className="rounded-xl border border-border bg-card p-4">
-            <h2 className="text-sm font-semibold">Öğretmen Aylık Nöbet Döngüsü</h2>
-            <div className="mt-3 space-y-2"><select value={memberTeacher} onChange={(e) => setMemberTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçin</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select><select value={memberDay} onChange={(e) => setMemberDay(Number(e.target.value))} className="h-10 w-full rounded-md border bg-background px-3 text-sm">{weekdays.map((d) => <option key={d.id} value={d.id}>{d.label}</option>)}</select><Button variant="secondary" onClick={() => void addCycleMember()} className="w-full">Döngüye Ekle / Gününü Güncelle</Button></div>
-            <p className="mt-3 text-xs text-muted-foreground">Öğretmenin nöbet günü ay boyunca korunur; nöbet yeri ay içindeki haftalarda döner. Ders programı değişirse sistem ay planını “değişti” olarak işaretler.</p>
-          </div>
-        </section>
-
-        <section className="mt-6">
-          <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold"><CalendarRange className="size-4" /> {month} Aylık Plan</h2>
-          <div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="min-w-[760px] w-full text-sm"><thead><tr className="border-b"><th className="p-2 text-left">Tarih</th><th className="p-2 text-left">Nöbetçi İdareci</th><th className="p-2 text-left">Nöbetçi Öğretmen / Yer</th></tr></thead><tbody>{rotations.map((r) => <tr key={r.duty_date} className="border-b last:border-0"><td className="p-2">{new Date(`${r.duty_date}T00:00:00`).toLocaleDateString("tr-TR")}</td><td className="p-2 font-medium">{profileMap[r.vice_principal_id] ?? "—"}</td><td className="p-2 text-xs">{assignments.filter((a) => a.duty_date === r.duty_date).map((a) => `${profileMap[a.teacher_id] ?? "Öğretmen"} (${a.duty_location ?? "Yer yok"})`).join(" · ") || "—"}</td></tr>)}</tbody></table></div>
-        </section>
-
-        <section className="mt-6 rounded-xl border border-border bg-card p-4">
-          <h2 className="text-sm font-semibold">Günlük Nöbet Defteri · Fizikî Baskı</h2>
-          <p className="mt-1 text-xs text-muted-foreground">Seçilen tarihteki nöbetçi idareci/öğretmenler, devamsız personel, boş dersler ve vekalet atamaları sistemdeki canlı veriden alınır.</p>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row"><Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} /><Button variant="outline" onClick={() => void fetchDutyBook()}>Önizle</Button><Button onClick={() => void printDutyBook()} className="gap-2"><Printer className="size-4" /> Fizikî Baskı / PDF</Button></div>
-        </section>
-      </div>
-
-      {dutyBook ? <DutyBookPrint data={dutyBook} /> : null}
-    </AppShell>
-  );
-}
-
-function DutyBookPrint({ data }: { data: DutyBook }) {
-  const periods = Array.from({ length: 12 }, (_, i) => i + 1);
-  return <section className="mt-6 bg-white p-4 text-black print:fixed print:inset-0 print:z-[9999] print:m-0 print:block print:min-h-screen print:p-[10mm]">
-    <div className="mx-auto max-w-[190mm] border-2 border-black p-4 text-[11px]">
-      <h1 className="text-center text-xl font-bold">GÜNLÜK NÖBET DEFTERİ</h1>
-      <div className="mt-3 grid grid-cols-4 gap-2 border-b border-black pb-3"><div><b>Nöbet Tarihi</b><br />{new Date(`${data.date}T00:00:00`).toLocaleDateString("tr-TR")}</div><div><b>Başlama</b><br />{data.notes?.start_time ?? "........"}</div><div><b>Bitiş</b><br />{data.notes?.end_time ?? "........"}</div><div><b>Nöbetçi Md. Yrd.</b><br />{data.manager?.full_name ?? "—"}</div></div>
-      <p className="mt-3"><b>Nöbetçi Öğretmenler:</b> {data.duty_teachers.map((t) => `${t.full_name ?? "Öğretmen"}${t.location ? ` (${t.location})` : ""}`).join(" · ") || "—"}</p>
-      <h2 className="mt-5 border-y border-black py-1 text-center font-bold">DERSE GELMEYEN ÖĞRETMENLER VE ETKİLENEN SINIFLAR</h2>
-      <div className="overflow-hidden"><table className="w-full border-collapse"><thead><tr><th className="border border-black p-1 text-left">Öğretmen</th>{periods.map((p) => <th key={p} className="border border-black p-1">{p}</th>)}<th className="border border-black p-1">Düşünceler</th></tr></thead><tbody>{data.absent_teachers.length ? data.absent_teachers.map((a) => <tr key={a.teacher_id}><td className="border border-black p-1">{a.full_name}</td>{periods.map((p) => <td key={p} className="border border-black p-1 text-center">{a.lessons.find((l) => l.period === p)?.class_name ?? ""}</td>)}<td className="border border-black p-1">{a.medical_report ? "Rapor var" : ""} {a.note ?? ""}</td></tr>) : <tr><td colSpan={14} className="border border-black p-4 text-center">Devamsız personel kaydı yoktur.</td></tr>}</tbody></table></div>
-      <div className="mt-4"><b>Boş geçen derslerin nasıl doldurulduğu:</b><div className="mt-1 min-h-16 border-b border-black">{data.substitutions.map((s) => `${s.period}. ders ${s.class_name}: ${s.substitute ?? "—"}`).join("; ") || data.notes?.empty_lesson_resolution || ""}</div></div>
-      <div className="mt-4"><b>Nöbet süresince olaylar / alınan önlemler:</b><div className="mt-1 min-h-20 border-b border-black">{data.notes?.general_note ?? ""}</div></div>
-      <div className="mt-12 grid grid-cols-2 text-center"><div><b>NÖBETÇİ MÜDÜR YARDIMCISI</b><br /><br />{data.manager?.full_name ?? ""}</div><div><b>GÖRÜLDÜ<br />OKUL MÜDÜRÜ</b></div></div>
-    </div>
-  </section>;
-}
+function DutyBookPrint({data}:{data:DutyBook}){const periods=Array.from({length:12},(_,i)=>i+1);return <section className="mt-6 bg-white p-4 text-black print:fixed print:inset-0 print:z-[9999] print:m-0 print:block print:min-h-screen print:p-[10mm]"><div className="mx-auto max-w-[190mm] border-2 border-black p-4 text-[11px]"><h1 className="text-center text-xl font-bold">GÜNLÜK NÖBET DEFTERİ</h1><div className="mt-3 grid grid-cols-4 gap-2 border-b border-black pb-3"><div><b>Nöbet Tarihi</b><br/>{new Date(`${data.date}T00:00:00`).toLocaleDateString("tr-TR")}</div><div><b>Başlama</b><br/>{data.notes?.start_time??"........"}</div><div><b>Bitiş</b><br/>{data.notes?.end_time??"........"}</div><div><b>Nöbetçi Md. Yrd.</b><br/>{data.manager?.full_name??"—"}</div></div><p className="mt-3"><b>Nöbetçi Öğretmenler:</b> {data.duty_teachers.map(t=>`${t.full_name??"Öğretmen"}${t.location?` (${t.location})`:""}`).join(" · ")||"—"}</p><h2 className="mt-5 border-y border-black py-1 text-center font-bold">DERSE GELMEYEN ÖĞRETMENLER VE ETKİLENEN SINIFLAR</h2><table className="w-full border-collapse"><thead><tr><th className="border border-black p-1 text-left">Öğretmen</th>{periods.map(p=><th key={p} className="border border-black p-1">{p}</th>)}<th className="border border-black p-1">Düşünceler</th></tr></thead><tbody>{data.absent_teachers.length?data.absent_teachers.map(a=><tr key={a.teacher_id}><td className="border border-black p-1">{a.full_name}</td>{periods.map(p=><td key={p} className="border border-black p-1 text-center">{a.lessons.find(l=>l.period===p)?.class_name??""}</td>)}<td className="border border-black p-1">{a.medical_report?"Rapor var":""} {a.note??""}</td></tr>):<tr><td colSpan={14} className="border border-black p-4 text-center">Devamsız personel kaydı yoktur.</td></tr>}</tbody></table><div className="mt-4"><b>Boş geçen derslerin nasıl doldurulduğu:</b><div className="mt-1 min-h-16 border-b border-black">{data.substitutions.map(s=>`${s.period}. ders ${s.class_name}: ${s.substitute??"—"}`).join("; ")||data.notes?.empty_lesson_resolution||""}</div></div><div className="mt-4"><b>Nöbet süresince olaylar / alınan önlemler:</b><div className="mt-1 min-h-20 border-b border-black">{data.notes?.general_note??""}</div></div><div className="mt-12 grid grid-cols-2 text-center"><div><b>NÖBETÇİ MÜDÜR YARDIMCISI</b><br/><br/>{data.manager?.full_name??""}</div><div><b>GÖRÜLDÜ<br/>OKUL MÜDÜRÜ</b></div></div></div></section>}
