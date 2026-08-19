@@ -2066,6 +2066,39 @@ export type Database = {
           },
         ]
       }
+      schedule_generation_settings: {
+        Row: {
+          gap_penalty: number
+          id: boolean
+          late_period_penalty: number
+          max_same_course_per_day: number
+          periods_per_day: number
+          repeated_course_penalty: number
+          teaching_days: number[]
+          updated_at: string
+        }
+        Insert: {
+          gap_penalty?: number
+          id?: boolean
+          late_period_penalty?: number
+          max_same_course_per_day?: number
+          periods_per_day?: number
+          repeated_course_penalty?: number
+          teaching_days?: number[]
+          updated_at?: string
+        }
+        Update: {
+          gap_penalty?: number
+          id?: boolean
+          late_period_penalty?: number
+          max_same_course_per_day?: number
+          periods_per_day?: number
+          repeated_course_penalty?: number
+          teaching_days?: number[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       schedule_import_batches: {
         Row: {
           file_name: string
@@ -2271,6 +2304,295 @@ export type Database = {
           {
             foreignKeyName: "schedule_publications_published_by_fkey"
             columns: ["published_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      schedule_scenario_rows: {
+        Row: {
+          class_id: string | null
+          class_name: string
+          classroom_id: string | null
+          id: string
+          is_group_split: boolean
+          locked: boolean
+          period: number
+          requirement_id: string | null
+          scenario_id: string
+          source_schedule_id: string | null
+          subgroup_id: string | null
+          subgroup_key: string | null
+          subject: string
+          teacher_assignment_id: string | null
+          teacher_id: string
+          weekday: number
+        }
+        Insert: {
+          class_id?: string | null
+          class_name: string
+          classroom_id?: string | null
+          id?: string
+          is_group_split?: boolean
+          locked?: boolean
+          period: number
+          requirement_id?: string | null
+          scenario_id: string
+          source_schedule_id?: string | null
+          subgroup_id?: string | null
+          subgroup_key?: string | null
+          subject: string
+          teacher_assignment_id?: string | null
+          teacher_id: string
+          weekday: number
+        }
+        Update: {
+          class_id?: string | null
+          class_name?: string
+          classroom_id?: string | null
+          id?: string
+          is_group_split?: boolean
+          locked?: boolean
+          period?: number
+          requirement_id?: string | null
+          scenario_id?: string
+          source_schedule_id?: string | null
+          subgroup_id?: string | null
+          subgroup_key?: string | null
+          subject?: string
+          teacher_assignment_id?: string | null
+          teacher_id?: string
+          weekday?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_scenario_rows_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_source_schedule_id_fkey"
+            columns: ["source_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_source_schedule_id_fkey"
+            columns: ["source_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_schedule"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_subgroup_id_fkey"
+            columns: ["subgroup_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      schedule_scenarios: {
+        Row: {
+          generated_at: string
+          generated_by: string | null
+          generation_group: string
+          id: string
+          row_count: number
+          scenario_no: number
+          score: number
+          status: string
+          title: string
+          unplaced_count: number
+        }
+        Insert: {
+          generated_at?: string
+          generated_by?: string | null
+          generation_group: string
+          id?: string
+          row_count?: number
+          scenario_no: number
+          score?: number
+          status?: string
+          title: string
+          unplaced_count?: number
+        }
+        Update: {
+          generated_at?: string
+          generated_by?: string | null
+          generation_group?: string
+          id?: string
+          row_count?: number
+          scenario_no?: number
+          score?: number
+          status?: string
+          title?: string
+          unplaced_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_scenarios_generated_by_fkey"
+            columns: ["generated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_scenarios_generated_by_fkey"
+            columns: ["generated_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      schedule_unplaced_items: {
+        Row: {
+          class_id: string | null
+          created_at: string
+          id: string
+          reason: string
+          requirement_id: string | null
+          scenario_id: string
+          subject: string
+          teacher_assignment_id: string | null
+          teacher_id: string | null
+        }
+        Insert: {
+          class_id?: string | null
+          created_at?: string
+          id?: string
+          reason: string
+          requirement_id?: string | null
+          scenario_id: string
+          subject: string
+          teacher_assignment_id?: string | null
+          teacher_id?: string | null
+        }
+        Update: {
+          class_id?: string | null
+          created_at?: string
+          id?: string
+          reason?: string
+          requirement_id?: string | null
+          scenario_id?: string
+          subject?: string
+          teacher_assignment_id?: string | null
+          teacher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_unplaced_items_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_teacher_id_fkey"
+            columns: ["teacher_id"]
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
@@ -2780,6 +3102,7 @@ export type Database = {
           classroom_id: string | null
           id: string
           is_group_split: boolean
+          locked: boolean
           period: number
           subgroup_id: string | null
           subgroup_key: string | null
@@ -2796,6 +3119,7 @@ export type Database = {
           classroom_id?: string | null
           id?: string
           is_group_split?: boolean
+          locked?: boolean
           period: number
           subgroup_id?: string | null
           subgroup_key?: string | null
@@ -2812,6 +3136,7 @@ export type Database = {
           classroom_id?: string | null
           id?: string
           is_group_split?: boolean
+          locked?: boolean
           period?: number
           subgroup_id?: string | null
           subgroup_key?: string | null
@@ -3256,6 +3581,10 @@ export type Database = {
         Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
         Returns: number
       }
+      apply_schedule_scenario: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       approve_payroll_activity: {
         Args: { p_activity_id: string; p_approve?: boolean }
         Returns: boolean
@@ -3372,6 +3701,17 @@ export type Database = {
           p_vice_principal_ids: string[]
         }
         Returns: number
+      }
+      generate_schedule_scenarios: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
       }
       get_active_academic_year: {
         Args: never
@@ -3626,6 +3966,15 @@ export type Database = {
       refresh_class_curriculum_status: {
         Args: { p_class_id: string }
         Returns: string
+      }
+      scenario_teacher_consecutive_count: {
+        Args: {
+          p_day: number
+          p_period: number
+          p_scenario: string
+          p_teacher: string
+        }
+        Returns: number
       }
       set_active_academic_year: {
         Args: { p_academic_year_id: string }
