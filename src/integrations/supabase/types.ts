@@ -2681,6 +2681,86 @@ export type Database = {
           },
         ]
       }
+      schedule_rule_overrides: {
+        Row: {
+          active: boolean
+          avoid_last_period: boolean
+          block_pattern: number[]
+          class_course_requirement_id: string | null
+          id: string
+          max_per_day: number | null
+          min_distinct_days: number | null
+          note: string | null
+          preferred_days: number[]
+          preferred_periods: number[]
+          prohibited_days: number[]
+          prohibited_periods: number[]
+          teacher_assignment_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          avoid_last_period?: boolean
+          block_pattern?: number[]
+          class_course_requirement_id?: string | null
+          id?: string
+          max_per_day?: number | null
+          min_distinct_days?: number | null
+          note?: string | null
+          preferred_days?: number[]
+          preferred_periods?: number[]
+          prohibited_days?: number[]
+          prohibited_periods?: number[]
+          teacher_assignment_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          avoid_last_period?: boolean
+          block_pattern?: number[]
+          class_course_requirement_id?: string | null
+          id?: string
+          max_per_day?: number | null
+          min_distinct_days?: number | null
+          note?: string | null
+          preferred_days?: number[]
+          preferred_periods?: number[]
+          prohibited_days?: number[]
+          prohibited_periods?: number[]
+          teacher_assignment_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_rule_overrides_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["teacher_assignment_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schedule_scenario_integrity_issues: {
         Row: {
           affected_count: number
@@ -4685,6 +4765,34 @@ export type Database = {
           stored_schedule_signature: string
         }[]
       }
+      get_effective_schedule_rule_scope_v2: {
+        Args: { p_requirement_id: string; p_teacher_assignment_id?: string }
+        Returns: string
+      }
+      get_effective_schedule_rule_v2: {
+        Args: { p_requirement_id: string; p_teacher_assignment_id?: string }
+        Returns: {
+          active: boolean
+          avoid_last_period: boolean
+          block_pattern: number[]
+          course_id: string
+          id: string
+          max_per_day: number | null
+          min_distinct_days: number | null
+          note: string | null
+          preferred_days: number[]
+          preferred_periods: number[]
+          prohibited_days: number[]
+          prohibited_periods: number[]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "course_schedule_rules"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_formal_norm_analysis: {
         Args: { p_on_date?: string }
         Returns: {
@@ -4923,6 +5031,10 @@ export type Database = {
       normalize_class_key: {
         Args: { p_class_name: string; p_program_type: string }
         Returns: string
+      }
+      normalize_schedule_block_pattern_v2: {
+        Args: { p_hours: number; p_pattern: number[] }
+        Returns: number[]
       }
       payroll_month_is_locked: {
         Args: { p_month: number; p_year: number }
