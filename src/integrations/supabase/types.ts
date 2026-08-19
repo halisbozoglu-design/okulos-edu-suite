@@ -168,6 +168,75 @@ export type Database = {
           },
         ]
       }
+      academic_years: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          created_by: string | null
+          ends_on: string
+          first_term_ends_on: string | null
+          id: string
+          second_term_starts_on: string | null
+          source_note: string | null
+          starts_on: string
+          teacher_work_starts_on: string | null
+          teaching_ends_on: string | null
+          teaching_starts_on: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          created_by?: string | null
+          ends_on: string
+          first_term_ends_on?: string | null
+          id?: string
+          second_term_starts_on?: string | null
+          source_note?: string | null
+          starts_on: string
+          teacher_work_starts_on?: string | null
+          teaching_ends_on?: string | null
+          teaching_starts_on?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          ends_on?: string
+          first_term_ends_on?: string | null
+          id?: string
+          second_term_starts_on?: string | null
+          source_note?: string | null
+          starts_on?: string
+          teacher_work_starts_on?: string | null
+          teaching_ends_on?: string | null
+          teaching_starts_on?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "academic_years_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "academic_years_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       area_course_permissions: {
         Row: {
           active: boolean
@@ -2019,6 +2088,79 @@ export type Database = {
           },
         ]
       }
+      school_calendar_events: {
+        Row: {
+          academic_year_id: string
+          all_day: boolean
+          blocks_teaching: boolean
+          counts_as_workday: boolean
+          created_at: string
+          created_by: string | null
+          ends_on: string
+          event_type: string
+          id: string
+          note: string | null
+          source_note: string | null
+          starts_on: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id: string
+          all_day?: boolean
+          blocks_teaching?: boolean
+          counts_as_workday?: boolean
+          created_at?: string
+          created_by?: string | null
+          ends_on: string
+          event_type: string
+          id?: string
+          note?: string | null
+          source_note?: string | null
+          starts_on: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string
+          all_day?: boolean
+          blocks_teaching?: boolean
+          counts_as_workday?: boolean
+          created_at?: string
+          created_by?: string | null
+          ends_on?: string
+          event_type?: string
+          id?: string
+          note?: string | null
+          source_note?: string | null
+          starts_on?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_calendar_events_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_calendar_events_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "school_calendar_events_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       school_classes: {
         Row: {
           active: boolean
@@ -2926,6 +3068,10 @@ export type Database = {
         Returns: number
       }
       assert_curriculum_ready_for_timetable: { Args: never; Returns: boolean }
+      assert_date_in_active_academic_year: {
+        Args: { p_date: string }
+        Returns: boolean
+      }
       assign_quran_parallel_lesson: {
         Args: {
           p_academic_year: string
@@ -3029,6 +3175,42 @@ export type Database = {
           p_vice_principal_ids: string[]
         }
         Returns: number
+      }
+      get_active_academic_year: {
+        Args: never
+        Returns: {
+          active: boolean
+          code: string
+          created_at: string
+          created_by: string | null
+          ends_on: string
+          first_term_ends_on: string | null
+          id: string
+          second_term_starts_on: string | null
+          source_note: string | null
+          starts_on: string
+          teacher_work_starts_on: string | null
+          teaching_ends_on: string | null
+          teaching_starts_on: string | null
+          title: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "academic_years"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      get_calendar_days: {
+        Args: { p_from: string; p_to: string }
+        Returns: {
+          day_date: string
+          event_titles: string[]
+          is_teaching_day: boolean
+          is_weekday: boolean
+          is_workday: boolean
+        }[]
       }
       get_curriculum_readiness: {
         Args: { p_class_id?: string }
@@ -3156,6 +3338,8 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       is_manager_or_admin: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
+      is_teaching_day: { Args: { p_date: string }; Returns: boolean }
+      is_valid_tckn: { Args: { p_tckn: string }; Returns: boolean }
       kbs_payroll_export: {
         Args: { p_month: number; p_year: number }
         Returns: {
@@ -3241,6 +3425,10 @@ export type Database = {
       refresh_class_curriculum_status: {
         Args: { p_class_id: string }
         Returns: string
+      }
+      set_active_academic_year: {
+        Args: { p_academic_year_id: string }
+        Returns: boolean
       }
       set_duty_month_lock: {
         Args: { p_locked: boolean; p_month: string }
