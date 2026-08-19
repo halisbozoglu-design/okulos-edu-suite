@@ -538,6 +538,38 @@ export type Database = {
           },
         ]
       }
+      payroll_dirty_periods: {
+        Row: {
+          marked_at: string
+          month: number
+          reason: string
+          teacher_id: string
+          year: number
+        }
+        Insert: {
+          marked_at?: string
+          month: number
+          reason: string
+          teacher_id: string
+          year: number
+        }
+        Update: {
+          marked_at?: string
+          month?: number
+          reason?: string
+          teacher_id?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_dirty_periods_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       pre_registered_teachers: {
         Row: {
           active: boolean
@@ -603,6 +635,93 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      schedule_audit_log: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          id: number
+          new_row: Json | null
+          old_row: Json | null
+          schedule_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: never
+          new_row?: Json | null
+          old_row?: Json | null
+          schedule_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: never
+          new_row?: Json | null
+          old_row?: Json | null
+          schedule_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_audit_log_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_audit_log_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_audit_log_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_import_batches: {
+        Row: {
+          file_name: string
+          file_type: string
+          id: string
+          imported_at: string
+          imported_by: string
+          row_count: number
+        }
+        Insert: {
+          file_name: string
+          file_type: string
+          id?: string
+          imported_at?: string
+          imported_by: string
+          row_count?: number
+        }
+        Update: {
+          file_name?: string
+          file_type?: string
+          id?: string
+          imported_at?: string
+          imported_by?: string
+          row_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_import_batches_imported_by_fkey"
+            columns: ["imported_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       school_classes: {
         Row: {
@@ -832,30 +951,45 @@ export type Database = {
       }
       teacher_schedule: {
         Row: {
+          active: boolean
           class_id: string | null
           class_name: string
+          classroom: string | null
           id: string
+          is_group_split: boolean
           period: number
+          subgroup_key: string | null
           subject: string
           teacher_id: string
+          updated_at: string
           weekday: number
         }
         Insert: {
+          active?: boolean
           class_id?: string | null
           class_name: string
+          classroom?: string | null
           id?: string
+          is_group_split?: boolean
           period: number
+          subgroup_key?: string | null
           subject: string
           teacher_id: string
+          updated_at?: string
           weekday: number
         }
         Update: {
+          active?: boolean
           class_id?: string | null
           class_name?: string
+          classroom?: string | null
           id?: string
+          is_group_split?: boolean
           period?: number
+          subgroup_key?: string | null
           subject?: string
           teacher_id?: string
+          updated_at?: string
           weekday?: number
         }
         Relationships: [
@@ -876,6 +1010,73 @@ export type Database = {
           {
             foreignKeyName: "teacher_schedule_teacher_id_fkey"
             columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      telegram_integrations: {
+        Row: {
+          enabled: boolean
+          linked_at: string | null
+          telegram_chat_id: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          enabled?: boolean
+          linked_at?: string | null
+          telegram_chat_id?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          enabled?: boolean
+          linked_at?: string | null
+          telegram_chat_id?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telegram_integrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      telegram_link_tokens: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          token_hash: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          token_hash: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          token_hash?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telegram_link_tokens_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
@@ -922,6 +1123,73 @@ export type Database = {
         }
         Relationships: []
       }
+      schedules: {
+        Row: {
+          active: boolean | null
+          class_id: string | null
+          class_name: string | null
+          classroom: string | null
+          day_of_week: number | null
+          id: string | null
+          is_group_split: boolean | null
+          period_number: number | null
+          subgroup_key: string | null
+          subject: string | null
+          teacher_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          class_id?: string | null
+          class_name?: string | null
+          classroom?: string | null
+          day_of_week?: number | null
+          id?: string | null
+          is_group_split?: boolean | null
+          period_number?: number | null
+          subgroup_key?: string | null
+          subject?: string | null
+          teacher_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          class_id?: string | null
+          class_name?: string | null
+          classroom?: string | null
+          day_of_week?: number | null
+          id?: string | null
+          is_group_split?: boolean | null
+          period_number?: number | null
+          subgroup_key?: string | null
+          subject?: string | null
+          teacher_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_schedule_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Functions: {
       approve_payroll_month: {
@@ -940,12 +1208,21 @@ export type Database = {
           substitute_user_id: string
         }[]
       }
+      create_telegram_link_token: { Args: never; Returns: string }
+      disable_telegram_notifications: { Args: never; Returns: undefined }
       import_eokul_roster: {
         Args: { p_file_name: string; p_file_type: string; p_rows: Json }
         Returns: {
           affected_classes: number
           import_batch_id: string
           imported_students: number
+        }[]
+      }
+      import_weekly_schedule: {
+        Args: { p_file_name: string; p_file_type: string; p_rows: Json }
+        Returns: {
+          import_batch_id: string
+          imported_rows: number
         }[]
       }
       is_admin: { Args: never; Returns: boolean }
