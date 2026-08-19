@@ -8,7 +8,9 @@ const required=[
  'supabase/migrations/20260819074800_schedule_rule_mode_completion.sql',
  'supabase/migrations/20260819074900_schedule_soft_local_search_optimizer.sql',
  'supabase/migrations/20260819075000_schedule_advanced_publish_integrity.sql',
+ 'supabase/migrations/20260819075100_schedule_local_search_audit_accuracy.sql',
  'src/routes/schedule-optimization.tsx',
+ 'src/routes/__root.tsx',
 ];
 const errors=[];
 for(const f of required) if(!existsSync(f)) errors.push(`eksik dosya: ${f}`);
@@ -27,8 +29,12 @@ if(!errors.length){
  for(const token of ['improve_schedule_scenario_soft_v1','soft_local_search','SOFT_LOCAL_SEARCH']) if(!local.includes(token)) errors.push(`local search eksik: ${token}`);
  const publish=readFileSync(required[6],'utf8');
  for(const token of ['get_schedule_advanced_integrity_issues_v1','get_schedule_integrity_report_pre_advanced_v3','COURSE_TIME_PREFERENCE']) if(!publish.includes(token)) errors.push(`publish integrity eksik: ${token}`);
- const ui=readFileSync(required[7],'utf8');
+ const monotonic=readFileSync(required[7],'utf8');
+ for(const token of ['v_current_hard','v_trial_hard<=v_current_hard','v_start_hard,v_end_hard']) if(!monotonic.includes(token)) errors.push(`local-search hard güvenliği eksik: ${token}`);
+ const ui=readFileSync(required[8],'utf8');
  for(const token of ['Program Optimizasyonu','Hard/Soft','Nöbet ↔ Ders Programı','Açıklanabilir Senaryo Karşılaştırması','Repair / Backtracking Geçmişi']) if(!ui.includes(token)) errors.push(`optimizasyon UI eksik: ${token}`);
+ const root=readFileSync(required[9],'utf8');
+ if(!root.includes('{ prefix: "/schedule-optimization", any: ["schedule.rules"] }')) errors.push('schedule-optimization route schedule.rules ile korunmuyor');
 }
 if(errors.length){console.error('Advanced optimization check FAILED:\n'+errors.map(x=>`- ${x}`).join('\n'));process.exit(1)}
 console.log('Advanced optimization check OK.');
