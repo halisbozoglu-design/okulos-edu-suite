@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { BellRing, BookOpenCheck, Building2, CalendarDays, Calculator, Crown, FileClock, GraduationCap, History, KeyRound, Scale, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Table2, UserCog, Users } from "lucide-react";
+import { BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, Calculator, Crown, FileClock, GraduationCap, History, KeyRound, Scale, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Table2, UserCog, Users } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { supabase } from "@/lib/supabase";
 
@@ -23,9 +23,9 @@ const items=[
  {to:'/substitutes',title:'Vekalet',desc:'Devamsızlık, boş ders ve vekalet atamaları',icon:Users,permissions:['substitutes.view','substitutes.manage']},
  {to:'/settings',title:'Nöbet Ayarları',desc:'Aylık idareci/öğretmen nöbet planı',icon:Settings,permissions:['duty.view','duty.manage','duty.generate','duty.lock']},
  {to:'/duty-book',title:'Nöbet Defteri',desc:'Günlük nöbet, boş ders, gecikme ve olay kayıtları',icon:FileClock,permissions:['duty.view','duty.manage']},
- {to:'/notifications',title:'Bildirim & PWA',desc:'Web Push, Service Worker ve Telegram',icon:BellRing,permissions:['notifications.manage']},
  {to:'/personnel-admin',title:'Kayıtlı Personel',desc:'Kayıt olmuş personelin atama alanı ve temel sistem ilişkileri',icon:UserCog,permissions:['personnel.view','personnel.manage']},
  {to:'/settings/permissions',title:'Görev ve Yetki Atama',desc:'Personel bazlı modül, işlem, süre ve görev delegasyonu',icon:KeyRound,permissions:['permissions.manage']},
+ {to:'/settings-task-roles',title:'Görev Şablonları',desc:'Okula özel tekrar kullanılabilir görev/rol paketleri',icon:BriefcaseBusiness,permissions:['permissions.manage']},
  {to:'/super-admin',title:'Süper Admin',desc:'Personel, atama alanı, TTKB, norm ve kaynak girdileri',icon:Crown,permissions:[],superOnly:true},
 ] as const;
 function ManagementHub(){
