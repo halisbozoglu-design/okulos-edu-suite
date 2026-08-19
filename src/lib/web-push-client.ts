@@ -16,12 +16,15 @@ function arrayBufferToBase64Url(buffer: ArrayBuffer | null) {
   return window.btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 
+async function getVapidPublicKey() {
+  const { data, error } = await supabase.functions.invoke("web-push-public-key", { body: {} });
+  if (error || !data?.publicKey) return null;
+  return String(data.publicKey);
+}
+
 export function getPushCapability() {
-  const supported = typeof window !== "undefined" && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
-  const publicKey = (import.meta.env as Record<string, string | undefined>).VITE_WEB_PUSH_VAPID_PUBLIC_KEY;
   return {
-    supported,
-    configured: Boolean(publicKey),
+    supported: typeof window !== "undefined" && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window,
     permission: typeof Notification !== "undefined" ? Notification.permission : "denied",
     standalone: typeof window !== "undefined" && (window.matchMedia?.("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true),
   };
@@ -40,11 +43,9 @@ export async function getCurrentPushSubscription() {
 }
 
 export async function enableBrowserPush(): Promise<PushSetupResult> {
-  if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
-    return { ok: false, reason: "PUSH_NOT_SUPPORTED" };
-  }
+  if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) return { ok: false, reason: "PUSH_NOT_SUPPORTED" };
 
-  const vapidPublicKey = (import.meta.env as Record<string, string | undefined>).VITE_WEB_PUSH_VAPID_PUBLIC_KEY;
+  const vapidPublicKey = await getVapidPublicKey();
   if (!vapidPublicKey) return { ok: false, reason: "VAPID_PUBLIC_KEY_MISSING" };
 
   const permission = await Notification.requestPermission();
@@ -56,10 +57,7 @@ export async function enableBrowserPush(): Promise<PushSetupResult> {
 
   let subscription = await registration.pushManager.getSubscription();
   if (!subscription) {
-    subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: base64UrlToUint8Array(vapidPublicKey),
-    });
+    subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: base64UrlToUint8Array(vapidPublicKey) });
   }
 
   const p256dh = arrayBufferToBase64Url(subscription.getKey("p256dh"));
@@ -81,8 +79,7 @@ export async function enableBrowserPush(): Promise<PushSetupResult> {
 export async function disableBrowserPush(): Promise<PushSetupResult> {
   const subscription = await getCurrentPushSubscription();
   if (!subscription) return { ok: true };
-  const endpoint = subscription.endpoint;
-  const { error } = await supabase.rpc("disable_push_subscription", { p_endpoint: endpoint });
+  const { error } = await supabase.rpc("disable_push_subscription", { p_endpoint: subscription.endpoint });
   if (error) return { ok: false, reason: "SUBSCRIPTION_DISABLE_FAILED" };
   await subscription.unsubscribe();
   return { ok: true };
