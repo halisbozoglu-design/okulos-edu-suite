@@ -4886,6 +4886,14 @@ export type Database = {
           unassigned_rows: number
         }[]
       }
+      get_schedule_configuration_issues_before_scoped_rules_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_configuration_issues_v2: {
         Args: never
         Returns: {
@@ -4922,6 +4930,16 @@ export type Database = {
         }[]
       }
       get_schedule_preparation_readiness: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
+      get_schedule_preparation_readiness_before_flexible_blocks_v2: {
         Args: never
         Returns: {
           affected_count: number
