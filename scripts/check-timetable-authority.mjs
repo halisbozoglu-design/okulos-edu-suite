@@ -16,7 +16,7 @@ const protectedDefinitions = {
   "function:upsert_schedule_slot_v2": "20260819072900_delegated_permission_gateway.sql",
   "function:create_schedule_restore_point": "20260819073900_schedule_restore_delegation_and_draft_semantics.sql",
   "function:restore_schedule_restore_point": "20260819073900_schedule_restore_delegation_and_draft_semantics.sql",
-  "function:get_schedule_preparation_readiness": "20260819074000_schedule_teacher_capacity_preflight_v2.sql",
+  "function:get_schedule_preparation_readiness": "20260819074200_assigned_educator_constraint_preflight.sql",
   "function:get_schedule_integrity_report_core_v2": "20260819071300_schedule_parallel_count_null_fix.sql",
   "function:get_schedule_scenario_hard_issues_v2": "20260819071300_schedule_parallel_count_null_fix.sql",
   "view:schedule_scenario_status_v2": "20260819071600_timetable_revision_and_concurrency_guard.sql",
