@@ -13,6 +13,8 @@ const files={
  legacyCleanup:'supabase/migrations/20260819073600_delegated_manager_legacy_policy_cleanup.sql',
  dutyCleanup:'supabase/migrations/20260819073700_close_legacy_duty_policy_bypass.sql',
  volatility:'supabase/migrations/20260819073800_permission_context_volatility_fix.sql',
+ restore:'supabase/migrations/20260819073900_schedule_restore_delegation_and_draft_semantics.sql',
+ capacity:'supabase/migrations/20260819074000_schedule_teacher_capacity_preflight_v2.sql',
  hook:'src/lib/permissions.ts',
  root:'src/routes/__root.tsx',
  permissionUi:'src/routes/settings-permissions.tsx',
@@ -23,13 +25,14 @@ const files={
  dutyUi:'src/routes/settings.tsx',
  substitutesUi:'src/routes/substitutes.tsx',
  managementUi:'src/routes/management.tsx',
+ preparationUi:'src/routes/schedule-preparation.tsx',
 };
 const errors=[];
 for(const [key,file] of Object.entries(files)) if(!existsSync(file)) errors.push(`${key}: eksik dosya ${file}`);
 const read=(key)=>readFileSync(files[key],'utf8');
 const requireTokens=(key,tokens)=>{const body=read(key);for(const token of tokens)if(!body.includes(token))errors.push(`${key}: eksik sözleşme ${token}`);return body;};
 
-requireTokens('engine',['permission_catalog','user_permission_grants','permission_audit_log','set_user_permission','schedule.generate','duty.generate','payroll.calculate','permissions.manage']);
+requireTokens('engine',['permission_catalog','user_permission_grants','permission_audit_log','set_user_permission','schedule.generate','schedule.restore','duty.generate','payroll.calculate','permissions.manage']);
 requireTokens('mode',['permission_mode',"'delegated'",'set_user_permission_mode','drop function if exists public.get_permission_admin_matrix']);
 requireTokens('gateway',['open_permission_context','current_permission_context','schedule.generate','schedule.apply','schedule.publish','duty.generate','duty.lock','payroll.calculate','payroll.approve','payroll.publish','has_permission(public.current_permission_context())']);
 requireTokens('coverage',['substitutes.manage','curriculum.manage','quran.manage','norm.manage','classrooms.manage']);
@@ -42,19 +45,23 @@ const cleanup=requireTokens('legacyCleanup',['drop policy if exists "teacher can
 if(!cleanup.includes("has_module_operation_permission('duty')"))errors.push('legacyCleanup: nöbet görevli okuma köprüsü eksik');
 requireTokens('dutyCleanup',['drop policy if exists "authenticated read duty incidents"','drop policy if exists "authenticated create duty incidents"','duty.manage']);
 requireTokens('volatility',['payroll_month_matrix(int,int) volatile','kbs_payroll_export(int,int) volatile','get_daily_duty_book(date) volatile']);
+const restore=requireTokens('restore',['open_permission_context(\'schedule.restore\')','create_schedule_restore_point_permission_core_v2','upsert_schedule_slot_permission_core_v2','delegated schedule restorers read restore points','delegated schedule restorers read restore rows','delegated schedule restorers read timetable']);
+if(restore.includes('perform public.assert_schedule_publishable()'))errors.push('restore: çalışma taslağı geri yüklemede publish gate kullanılmamalı');
+requireTokens('capacity',['TEACHER_ASSIGNED_HOURS_EXCEED_WEEKLY_LIMIT','TEACHER_ASSIGNED_HOURS_EXCEED_DAY_CAPACITY','get_schedule_preparation_readiness_before_teacher_capacity_v2']);
 
 requireTokens('hook',['usePermissions','get_my_permissions','can','any','all']);
-const root=requireTokens('root',['PermissionBoundary','protectedRoutes','/settings/permissions','/schedule-solver','/payroll','/duty-book','/personnel-admin','superOnly']);
+const root=requireTokens('root',['PermissionBoundary','protectedRoutes','/settings/permissions','/schedule-solver','/schedule-history','schedule.restore','/payroll','/duty-book','/personnel-admin','superOnly']);
 if(!root.includes('rule.any.some((code) => codes.has(code))'))errors.push('root: route permission matching eksik');
-requireTokens('permissionUi',['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','Görev Bazlı','Yetki Denetim Geçmişi']);
+requireTokens('permissionUi',['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','schedule.restore','Görev Bazlı','Yetki Denetim Geçmişi']);
 requireTokens('taskRoleUi',['Görev Şablonları','save_task_role_template','assign_task_role_template','revoke_task_role_template']);
 requireTokens('payrollUi',['payroll.calculate','payroll.edit','payroll.approve','payroll.publish']);
 requireTokens('personnelUi',['personnel.view','personnel.manage','get_personnel_admin_list']);
 requireTokens('calendarUi',['settings.manage','salt okunur']);
 requireTokens('dutyUi',['duty.view','duty.manage','duty.generate','duty.lock']);
 requireTokens('substitutesUi',['substitutes.view','substitutes.manage','Salt okunur']);
+requireTokens('preparationUi',['TEACHER_ASSIGNED_HOURS_EXCEED_WEEKLY_LIMIT','TEACHER_ASSIGNED_HOURS_EXCEED_DAY_CAPACITY']);
 const management=requireTokens('managementUi',['/settings/permissions','/settings-task-roles','permissions.manage']);
 if(management.includes("to:'/notifications'"))errors.push('managementUi: kişisel PWA/bildirim ayarı kurumsal görev delegasyonu kartı olarak gösterilmemeli');
 
 if(errors.length){console.error('Permission flow check FAILED:\n'+errors.map(e=>`- ${e}`).join('\n'));process.exit(1);}
-console.log('Permission flow check OK: delegated roles, task templates, route guards, gateways, RLS cleanup and permission-aware UIs are present.');
+console.log('Permission flow check OK: delegated roles, task templates, route guards, restore authority, capacity preflight, gateways, RLS cleanup and permission-aware UIs are present.');
