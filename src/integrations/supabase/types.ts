@@ -608,6 +608,62 @@ export type Database = {
         }
         Relationships: []
       }
+      course_schedule_rules: {
+        Row: {
+          active: boolean
+          avoid_last_period: boolean
+          block_pattern: number[]
+          course_id: string
+          id: string
+          max_per_day: number | null
+          min_distinct_days: number | null
+          note: string | null
+          preferred_days: number[]
+          preferred_periods: number[]
+          prohibited_days: number[]
+          prohibited_periods: number[]
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          avoid_last_period?: boolean
+          block_pattern?: number[]
+          course_id: string
+          id?: string
+          max_per_day?: number | null
+          min_distinct_days?: number | null
+          note?: string | null
+          preferred_days?: number[]
+          preferred_periods?: number[]
+          prohibited_days?: number[]
+          prohibited_periods?: number[]
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          avoid_last_period?: boolean
+          block_pattern?: number[]
+          course_id?: string
+          id?: string
+          max_per_day?: number | null
+          min_distinct_days?: number | null
+          note?: string | null
+          preferred_days?: number[]
+          preferred_periods?: number[]
+          prohibited_days?: number[]
+          prohibited_periods?: number[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_schedule_rules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crisis_reports: {
         Row: {
           created_at: string
@@ -2732,6 +2788,137 @@ export type Database = {
           },
         ]
       }
+      schedule_sync_group_members: {
+        Row: {
+          block_hours: number
+          id: string
+          subgroup_id: string | null
+          sync_group_id: string
+          teacher_assignment_id: string
+        }
+        Insert: {
+          block_hours?: number
+          id?: string
+          subgroup_id?: string | null
+          sync_group_id: string
+          teacher_assignment_id: string
+        }
+        Update: {
+          block_hours?: number
+          id?: string
+          subgroup_id?: string | null
+          sync_group_id?: string
+          teacher_assignment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_sync_group_members_subgroup_id_fkey"
+            columns: ["subgroup_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_sync_group_members_sync_group_id_fkey"
+            columns: ["sync_group_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sync_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_sync_group_members_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_sync_groups: {
+        Row: {
+          active: boolean
+          class_id: string | null
+          created_at: string
+          id: string
+          name: string
+          note: string | null
+          required_simultaneous: boolean
+        }
+        Insert: {
+          active?: boolean
+          class_id?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          note?: string | null
+          required_simultaneous?: boolean
+        }
+        Update: {
+          active?: boolean
+          class_id?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          note?: string | null
+          required_simultaneous?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_sync_groups_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "schedule_sync_groups_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_sync_groups_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_time_profiles: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          lunch_after_period: number | null
+          name: string
+          periods_per_day: number
+          teaching_days: number[]
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          lunch_after_period?: number | null
+          name: string
+          periods_per_day?: number
+          teaching_days?: number[]
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          lunch_after_period?: number | null
+          name?: string
+          periods_per_day?: number
+          teaching_days?: number[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       schedule_unplaced_items: {
         Row: {
           class_id: string | null
@@ -3322,56 +3509,75 @@ export type Database = {
       teacher_schedule: {
         Row: {
           active: boolean
+          class_course_requirement_id: string | null
           class_id: string | null
           class_name: string
           classroom: string | null
           classroom_id: string | null
+          course_id: string | null
           id: string
           is_group_split: boolean
           locked: boolean
           period: number
+          source_kind: string
           subgroup_id: string | null
           subgroup_key: string | null
           subject: string
+          teacher_assignment_id: string | null
           teacher_id: string
           updated_at: string
           weekday: number
         }
         Insert: {
           active?: boolean
+          class_course_requirement_id?: string | null
           class_id?: string | null
           class_name: string
           classroom?: string | null
           classroom_id?: string | null
+          course_id?: string | null
           id?: string
           is_group_split?: boolean
           locked?: boolean
           period: number
+          source_kind?: string
           subgroup_id?: string | null
           subgroup_key?: string | null
           subject: string
+          teacher_assignment_id?: string | null
           teacher_id: string
           updated_at?: string
           weekday: number
         }
         Update: {
           active?: boolean
+          class_course_requirement_id?: string | null
           class_id?: string | null
           class_name?: string
           classroom?: string | null
           classroom_id?: string | null
+          course_id?: string | null
           id?: string
           is_group_split?: boolean
           locked?: boolean
           period?: number
+          source_kind?: string
           subgroup_id?: string | null
           subgroup_key?: string | null
           subject?: string
+          teacher_assignment_id?: string | null
           teacher_id?: string
           updated_at?: string
           weekday?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "teacher_schedule_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "teacher_schedule_class_id_fkey"
             columns: ["class_id"]
@@ -3401,10 +3607,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "teacher_schedule_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "teacher_schedule_subgroup_id_fkey"
             columns: ["subgroup_id"]
             isOneToOne: false
             referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_assignments"
             referencedColumns: ["id"]
           },
           {
@@ -3426,19 +3646,31 @@ export type Database = {
       teacher_schedule_constraints: {
         Row: {
           max_consecutive_hours: number
+          max_daily_hours: number | null
           max_weekly_hours: number | null
+          max_working_days: number | null
+          min_working_days: number | null
+          preferred_free_day: number | null
           teacher_id: string
           updated_at: string
         }
         Insert: {
           max_consecutive_hours?: number
+          max_daily_hours?: number | null
           max_weekly_hours?: number | null
+          max_working_days?: number | null
+          min_working_days?: number | null
+          preferred_free_day?: number | null
           teacher_id: string
           updated_at?: string
         }
         Update: {
           max_consecutive_hours?: number
+          max_daily_hours?: number | null
           max_weekly_hours?: number | null
+          max_working_days?: number | null
+          min_working_days?: number | null
+          preferred_free_day?: number | null
           teacher_id?: string
           updated_at?: string
         }
@@ -3454,6 +3686,54 @@ export type Database = {
             foreignKeyName: "teacher_schedule_constraints_teacher_id_fkey"
             columns: ["teacher_id"]
             isOneToOne: true
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      teacher_schedule_preferences: {
+        Row: {
+          active: boolean
+          id: string
+          note: string | null
+          period: number
+          preference: string
+          teacher_id: string
+          weekday: number
+          weight: number
+        }
+        Insert: {
+          active?: boolean
+          id?: string
+          note?: string | null
+          period: number
+          preference: string
+          teacher_id: string
+          weekday: number
+          weight?: number
+        }
+        Update: {
+          active?: boolean
+          id?: string
+          note?: string | null
+          period?: number
+          preference?: string
+          teacher_id?: string
+          weekday?: number
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_schedule_preferences_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_preferences_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
@@ -3976,6 +4256,25 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_active_schedule_time_profile: {
+        Args: never
+        Returns: {
+          active: boolean
+          created_at: string
+          id: string
+          lunch_after_period: number | null
+          name: string
+          periods_per_day: number
+          teaching_days: number[]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "schedule_time_profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_calendar_days: {
         Args: { p_from: string; p_to: string }
         Returns: {
@@ -4335,6 +4634,19 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      upsert_schedule_slot_v2: {
+        Args: {
+          p_classroom_id?: string
+          p_locked?: boolean
+          p_period: number
+          p_schedule_id?: string
+          p_source_kind?: string
+          p_subgroup_id?: string
+          p_teacher_assignment_id: string
+          p_weekday: number
+        }
+        Returns: string
       }
     }
     Enums: {
