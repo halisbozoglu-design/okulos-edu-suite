@@ -9,19 +9,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-const nav = [
+const primaryNav = [
   { to: "/dashboard", label: "Panel", icon: LayoutGrid },
   { to: "/substitutes", label: "Vekalet", icon: Users },
   { to: "/payroll", label: "Ek Ders", icon: Table2 },
   { to: "/classes", label: "Sınıflar", icon: CalendarClock },
-  { to: "/settings", label: "Ayarlar", icon: Settings },
 ] as const;
+const managerNavItem = { to: "/management", label: "Yönetim", icon: Settings } as const;
+const teacherNavItem = { to: "/notifications", label: "Bildirim", icon: Bell } as const;
 
 const TELEGRAM_BOT_USERNAME = "okulos_bildirim_botu";
 
 type Profile = {
   user_id: string;
-  tckn: string;
+  tckn: string | null;
   email: string | null;
   full_name: string | null;
   role: "admin" | "manager" | "teacher";
@@ -183,6 +184,7 @@ export function AppShell({
 
   const incomplete = isProfileIncomplete(profile);
   const unreadCount = useMemo(() => notifications.filter((item) => !item.read_at).length, [notifications]);
+  const nav = useMemo(() => [...primaryNav, profile?.role === "admin" || profile?.role === "manager" ? managerNavItem : teacherNavItem], [profile?.role]);
 
   async function saveProfile() {
     if (!profile) return;
@@ -367,7 +369,7 @@ export function AppShell({
             const Icon = item.icon;
             return (
               <li key={item.to}>
-                <Link to={item.to} className={cn("flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors", active ? "text-primary" : "text-muted-foreground")}>
+                <Link to={item.to as never} className={cn("flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors", active ? "text-primary" : "text-muted-foreground")}>
                   <Icon className="size-5" />
                   {item.label}
                 </Link>
