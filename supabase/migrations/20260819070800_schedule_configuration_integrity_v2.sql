@@ -6,16 +6,14 @@ returns trigger
 language plpgsql
 set search_path=public
 as $$
-declare
-  v_day smallint;
 begin
   if cardinality(new.teaching_days)=0 then
     raise exception 'SCHEDULE_TIME_PROFILE_REQUIRES_TEACHING_DAY';
   end if;
-  if exists(select 1 from unnest(new.teaching_days) d where d not between 1 and 7) then
+  if exists(select 1 from unnest(new.teaching_days) as d(day_no) where d.day_no not between 1 and 7) then
     raise exception 'INVALID_TEACHING_DAY';
   end if;
-  if cardinality(new.teaching_days) <> (select count(distinct d) from unnest(new.teaching_days) d) then
+  if cardinality(new.teaching_days) <> (select count(distinct d.day_no) from unnest(new.teaching_days) as d(day_no)) then
     raise exception 'DUPLICATE_TEACHING_DAY';
   end if;
   if new.lunch_after_period is not null and new.lunch_after_period >= new.periods_per_day then
@@ -82,18 +80,26 @@ begin
     into v_periods,v_days
   from public.schedule_time_profiles where active=true limit 1;
 
-  if exists(select 1 from unnest(new.preferred_days) d where d not between 1 and 7)
-     or exists(select 1 from unnest(new.prohibited_days) d where d not between 1 and 7) then
+  if exists(select 1 from unnest(new.preferred_days) as d(day_no) where d.day_no not between 1 and 7)
+     or exists(select 1 from unnest(new.prohibited_days) as d(day_no) where d.day_no not between 1 and 7) then
     raise exception 'INVALID_COURSE_DAY_RULE';
   end if;
-  if exists(select 1 from unnest(new.preferred_periods) p where p<1 or (v_periods is not null and p>v_periods))
-     or exists(select 1 from unnest(new.prohibited_periods) p where p<1 or (v_periods is not null and p>v_periods)) then
+  if exists(select 1 from unnest(new.preferred_periods) as p(period_no) where p.period_no<1 or (v_periods is not null and p.period_no>v_periods))
+     or exists(select 1 from unnest(new.prohibited_periods) as p(period_no) where p.period_no<1 or (v_periods is not null and p.period_no>v_periods)) then
     raise exception 'INVALID_COURSE_PERIOD_RULE';
   end if;
-  if exists(select 1 from unnest(new.preferred_days) p join unnest(new.prohibited_days) x on x=p) then
+  if exists(
+    select 1
+    from unnest(new.preferred_days) as p(day_no)
+    join unnest(new.prohibited_days) as x(day_no) on x.day_no=p.day_no
+  ) then
     raise exception 'COURSE_DAY_BOTH_PREFERRED_AND_PROHIBITED';
   end if;
-  if exists(select 1 from unnest(new.preferred_periods) p join unnest(new.prohibited_periods) x on x=p) then
+  if exists(
+    select 1
+    from unnest(new.preferred_periods) as p(period_no)
+    join unnest(new.prohibited_periods) as x(period_no) on x.period_no=p.period_no
+  ) then
     raise exception 'COURSE_PERIOD_BOTH_PREFERRED_AND_PROHIBITED';
   end if;
   if v_periods is not null and new.max_per_day is not null and new.max_per_day>v_periods then
@@ -102,7 +108,10 @@ begin
   if v_days is not null and new.min_distinct_days is not null and new.min_distinct_days>v_days then
     raise exception 'COURSE_MIN_SPREAD_EXCEEDS_TEACHING_DAYS';
   end if;
-  if cardinality(new.block_pattern)>0 and exists(select 1 from unnest(new.block_pattern) x where x<1 or (v_periods is not null and x>v_periods)) then
+  if cardinality(new.block_pattern)>0 and exists(
+    select 1 from unnest(new.block_pattern) as b(block_hours)
+    where b.block_hours<1 or (v_periods is not null and b.block_hours>v_periods)
+  ) then
     raise exception 'INVALID_COURSE_BLOCK_PATTERN';
   end if;
   return new;
@@ -142,8 +151,8 @@ profile_bad as (
   select count(*)::integer n from public.schedule_time_profiles
   where active and (
     cardinality(teaching_days)=0
-    or exists(select 1 from unnest(teaching_days) d where d not between 1 and 7)
-    or cardinality(teaching_days)<>(select count(distinct d) from unnest(teaching_days) d)
+    or exists(select 1 from unnest(teaching_days) as d(day_no) where d.day_no not between 1 and 7)
+    or cardinality(teaching_days)<>(select count(distinct d.day_no) from unnest(teaching_days) as d(day_no))
     or (lunch_after_period is not null and lunch_after_period>=periods_per_day)
   )
 ),
@@ -162,15 +171,15 @@ course_rule_bad as (
   from public.course_schedule_rules r
   cross join lateral (select periods_per_day,cardinality(teaching_days) school_days from public.schedule_time_profiles where active limit 1) p
   where r.active and (
-    exists(select 1 from unnest(r.preferred_days) d where d not between 1 and 7)
-    or exists(select 1 from unnest(r.prohibited_days) d where d not between 1 and 7)
-    or exists(select 1 from unnest(r.preferred_periods) x where x<1 or x>p.periods_per_day)
-    or exists(select 1 from unnest(r.prohibited_periods) x where x<1 or x>p.periods_per_day)
-    or exists(select 1 from unnest(r.preferred_days) x join unnest(r.prohibited_days) y on y=x)
-    or exists(select 1 from unnest(r.preferred_periods) x join unnest(r.prohibited_periods) y on y=x)
+    exists(select 1 from unnest(r.preferred_days) as d(day_no) where d.day_no not between 1 and 7)
+    or exists(select 1 from unnest(r.prohibited_days) as d(day_no) where d.day_no not between 1 and 7)
+    or exists(select 1 from unnest(r.preferred_periods) as x(period_no) where x.period_no<1 or x.period_no>p.periods_per_day)
+    or exists(select 1 from unnest(r.prohibited_periods) as x(period_no) where x.period_no<1 or x.period_no>p.periods_per_day)
+    or exists(select 1 from unnest(r.preferred_days) as x(day_no) join unnest(r.prohibited_days) as y(day_no) on y.day_no=x.day_no)
+    or exists(select 1 from unnest(r.preferred_periods) as x(period_no) join unnest(r.prohibited_periods) as y(period_no) on y.period_no=x.period_no)
     or (r.max_per_day is not null and r.max_per_day>p.periods_per_day)
     or (r.min_distinct_days is not null and r.min_distinct_days>p.school_days)
-    or exists(select 1 from unnest(r.block_pattern) x where x<1 or x>p.periods_per_day)
+    or exists(select 1 from unnest(r.block_pattern) as x(block_hours) where x.block_hours<1 or x.block_hours>p.periods_per_day)
   )
 ),
 sync_member_count_bad as (
