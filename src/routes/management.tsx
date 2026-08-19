@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, Calculator, Crown, FileClock, GraduationCap, History, KeyRound, Scale, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Table2, UserCog, Users } from "lucide-react";
+import { BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, Calculator, Crown, FileClock, GraduationCap, History, KeyRound, Scale, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { supabase } from "@/lib/supabase";
 
 export const Route=createFileRoute("/management")({head:()=>({meta:[{title:"Yönetim Merkezi — OkulOS"}]}),component:ManagementHub});
-const items=[
+type ManagementItem={to:string;title:string;desc:string;icon:LucideIcon;permissions:readonly string[];superOnly?:boolean};
+const items:readonly ManagementItem[]=[
  {to:'/calendar',title:'Çalışma Takvimi',desc:'Akademik yıl, tatil, mesleki çalışma ve sınav aralıkları',icon:CalendarDays,permissions:['settings.manage']},
  {to:'/curriculum',title:'Müfredat & Ders Yükü',desc:'Sınıf dersleri, haftalık saatler ve öğretmen dağıtımı',icon:BookOpenCheck,permissions:['curriculum.manage']},
  {to:'/norm-analysis',title:'Norm Kadro Analizi',desc:'Ders yükü, formal norm, mevcut öğretmen ve açık/fazla analizi',icon:Scale,permissions:['norm.view','norm.manage']},
@@ -27,7 +28,7 @@ const items=[
  {to:'/settings/permissions',title:'Görev ve Yetki Atama',desc:'Personel bazlı modül, işlem, süre ve görev delegasyonu',icon:KeyRound,permissions:['permissions.manage']},
  {to:'/settings-task-roles',title:'Görev Şablonları',desc:'Okula özel tekrar kullanılabilir görev/rol paketleri',icon:BriefcaseBusiness,permissions:['permissions.manage']},
  {to:'/super-admin',title:'Süper Admin',desc:'Personel, atama alanı, TTKB, norm ve kaynak girdileri',icon:Crown,permissions:[],superOnly:true},
-] as const;
+];
 function ManagementHub(){
  const [codes,setCodes]=useState<Set<string>|null>(null),[isSuper,setIsSuper]=useState(false),[error,setError]=useState<string|null>(null);
  useEffect(()=>{void(async()=>{const [p,s]=await Promise.all([supabase.rpc('get_my_permissions'),supabase.rpc('is_super_admin')]);if(p.error){setError('Görev/yetki bilgileri okunamadı.');setCodes(new Set());return;}setCodes(new Set((p.data??[]).map((x:{code:string})=>x.code)));setIsSuper(Boolean(s.data));})()},[]);
