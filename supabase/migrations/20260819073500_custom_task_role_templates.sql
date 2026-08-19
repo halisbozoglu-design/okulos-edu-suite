@@ -28,9 +28,10 @@ create table if not exists public.user_task_role_assignments(
   assigned_by uuid references public.profiles(user_id) on delete set null,
   assigned_at timestamptz not null default now(),
   note text,
-  check(valid_until is null or valid_from is null or valid_until>=valid_from),
-  unique(user_id,template_id,valid_from)
+  check(valid_until is null or valid_from is null or valid_until>=valid_from)
 );
+create unique index if not exists uq_user_task_role_assignment_period
+on public.user_task_role_assignments(user_id,template_id,coalesce(valid_from,'0001-01-01'::date));
 
 alter table public.task_role_templates enable row level security;
 alter table public.task_role_template_permissions enable row level security;
@@ -76,7 +77,7 @@ create or replace function public.assign_task_role_template(
   p_user_id uuid,p_template_id uuid,p_valid_from date default null,p_valid_until date default null,p_note text default null
 )
 returns integer language plpgsql security definer set search_path=public as $$
-declare v_count integer:=0;v_rec record;
+declare v_count integer:=0;v_rec record;v_assignment_id uuid;
 begin
   if not public.can_manage_permissions() then raise exception 'NOT_AUTHORIZED';end if;
   if p_user_id=auth.uid() and not public.is_super_admin() then raise exception 'CANNOT_CHANGE_OWN_PERMISSIONS';end if;
@@ -84,9 +85,19 @@ begin
   if not exists(select 1 from public.task_role_templates where id=p_template_id and active) then raise exception 'TASK_ROLE_TEMPLATE_NOT_FOUND';end if;
 
   perform public.set_user_permission_mode(p_user_id,'delegated');
-  insert into public.user_task_role_assignments(user_id,template_id,valid_from,valid_until,assigned_by,note)
-  values(p_user_id,p_template_id,p_valid_from,p_valid_until,auth.uid(),p_note)
-  on conflict(user_id,template_id,valid_from) do update set valid_until=excluded.valid_until,active=true,assigned_by=auth.uid(),assigned_at=now(),note=excluded.note;
+
+  select id into v_assignment_id from public.user_task_role_assignments
+  where user_id=p_user_id and template_id=p_template_id and valid_from is not distinct from p_valid_from
+  limit 1;
+  if v_assignment_id is null then
+    insert into public.user_task_role_assignments(user_id,template_id,valid_from,valid_until,assigned_by,note)
+    values(p_user_id,p_template_id,p_valid_from,p_valid_until,auth.uid(),p_note)
+    returning id into v_assignment_id;
+  else
+    update public.user_task_role_assignments
+    set valid_until=p_valid_until,active=true,assigned_by=auth.uid(),assigned_at=now(),note=p_note
+    where id=v_assignment_id;
+  end if;
 
   for v_rec in select permission_code,scope from public.task_role_template_permissions where template_id=p_template_id loop
     perform public.set_user_permission(p_user_id,v_rec.permission_code,true,v_rec.scope,p_valid_from,p_valid_until,coalesce(p_note,'Görev şablonu: '||(select name from public.task_role_templates where id=p_template_id)));
