@@ -4,14 +4,17 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { registerPwaServiceWorker } from "../lib/web-push-client";
+import { usePermissions } from "../lib/permissions";
+import { supabase } from "../lib/supabase";
 
 function NotFoundComponent() {
   return (
@@ -78,8 +81,71 @@ function RootShell({ children }: { children: ReactNode }) {
   return <html lang="tr"><head><HeadContent /></head><body>{children}<Scripts /></body></html>;
 }
 
+type RouteRule = { prefix: string; any: string[]; superOnly?: boolean };
+const protectedRoutes: RouteRule[] = [
+  { prefix: "/settings/permissions", any: ["permissions.manage"] },
+  { prefix: "/settings-permissions", any: ["permissions.manage"] },
+  { prefix: "/settings-task-roles", any: ["permissions.manage"] },
+  { prefix: "/personnel-admin", any: ["personnel.view", "personnel.manage"] },
+  { prefix: "/calendar", any: ["settings.manage"] },
+  { prefix: "/curriculum", any: ["curriculum.manage"] },
+  { prefix: "/classes", any: ["classes.manage"] },
+  { prefix: "/classrooms", any: ["classrooms.manage"] },
+  { prefix: "/quran-groups", any: ["quran.manage"] },
+  { prefix: "/norm-settings", any: ["norm.manage"] },
+  { prefix: "/norm-analysis", any: ["norm.view", "norm.manage"] },
+  { prefix: "/schedule-rules", any: ["schedule.rules"] },
+  { prefix: "/schedule-preparation", any: ["schedule.rules", "schedule.generate"] },
+  { prefix: "/schedule-solver", any: ["schedule.generate", "schedule.apply"] },
+  { prefix: "/room-assignment", any: ["schedule.generate", "classrooms.manage"] },
+  { prefix: "/schedule-validation", any: ["schedule.view", "schedule.publish"] },
+  { prefix: "/schedule-history", any: ["schedule.restore"] },
+  { prefix: "/schedule-archive", any: ["schedule.publish"] },
+  { prefix: "/schedule", any: ["schedule.view", "schedule.edit", "schedule.generate", "schedule.apply", "schedule.publish", "schedule.restore"] },
+  { prefix: "/payroll-rules", any: ["payroll.edit"] },
+  { prefix: "/payroll", any: ["payroll.view", "payroll.calculate", "payroll.edit", "payroll.approve", "payroll.publish"] },
+  { prefix: "/substitutes", any: ["substitutes.view", "substitutes.manage"] },
+  { prefix: "/duty-book", any: ["duty.view", "duty.manage"] },
+  { prefix: "/settings", any: ["duty.view", "duty.manage", "duty.generate", "duty.lock", "permissions.manage", "settings.manage"] },
+  { prefix: "/super-admin", any: [], superOnly: true },
+];
+
+function PermissionBoundary({ children }: { children: ReactNode }) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const { codes, loading, error } = usePermissions();
+  const [isSuper, setIsSuper] = useState(false);
+  const [superChecked, setSuperChecked] = useState(false);
+
+  const rule = useMemo(() => protectedRoutes
+    .filter((item) => pathname === item.prefix || pathname.startsWith(`${item.prefix}/`))
+    .sort((a, b) => b.prefix.length - a.prefix.length)[0] ?? null, [pathname]);
+
+  useEffect(() => {
+    let alive = true;
+    if (!rule?.superOnly) { setSuperChecked(true); return; }
+    setSuperChecked(false);
+    void supabase.rpc("is_super_admin").then(({ data }) => {
+      if (!alive) return;
+      setIsSuper(Boolean(data));
+      setSuperChecked(true);
+    });
+    return () => { alive = false; };
+  }, [rule?.superOnly]);
+
+  if (!rule) return <>{children}</>;
+  if (loading || (rule.superOnly && !superChecked)) {
+    return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="rounded-xl border bg-card px-5 py-4 text-sm text-muted-foreground">Görev ve yetkiler kontrol ediliyor…</div></div>;
+  }
+
+  const allowed = rule.superOnly ? isSuper : rule.any.some((code) => codes.has(code));
+  if (!allowed) {
+    return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="w-full max-w-lg rounded-2xl border bg-card p-6 text-center shadow-sm"><h1 className="text-lg font-semibold">Bu işlem için görev atanmamış</h1><p className="mt-2 text-sm text-muted-foreground">Bu modül, kullanıcıya atanmış görev ve işlem yetkileri dışında. Yetki gerekiyorsa okul yöneticiniz Ayarlar → Görev ve Yetki Atama bölümünden tanımlayabilir.</p>{error?<p className="mt-2 text-xs text-destructive">Yetki bilgisi okunamadı: {error}</p>:null}<div className="mt-5 flex justify-center gap-2"><Link to="/management" className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">Yönetim Merkezi</Link><Link to="/dashboard" className="rounded-md border px-4 py-2 text-sm font-medium">Ana Panel</Link></div></div></div>;
+  }
+  return <>{children}</>;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useEffect(() => { void registerPwaServiceWorker(); }, []);
-  return <QueryClientProvider client={queryClient}><Outlet /></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><PermissionBoundary><Outlet /></PermissionBoundary></QueryClientProvider>;
 }
