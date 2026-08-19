@@ -4547,6 +4547,15 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      finalize_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          applicable: boolean
+          hard_issue_count: number
+          repaired_count: number
+          score: number
+        }[]
+      }
       generate_monthly_teacher_duties: {
         Args: { p_month: string; p_overwrite?: boolean }
         Returns: number
@@ -4819,6 +4828,14 @@ export type Database = {
           same_day_revision_no: number
           schedule_hash: string
           title: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
         }[]
       }
       get_super_admin_personnel: {
