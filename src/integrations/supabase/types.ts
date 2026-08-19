@@ -1157,6 +1157,154 @@ export type Database = {
           },
         ]
       }
+      schedule_publication_rows: {
+        Row: {
+          class_id: string | null
+          class_name: string
+          classroom: string | null
+          classroom_id: string | null
+          id: number
+          is_group_split: boolean
+          period: number
+          publication_id: string
+          snapshot: Json
+          source_schedule_id: string | null
+          subgroup_id: string | null
+          subgroup_key: string | null
+          subject: string
+          teacher_id: string
+          weekday: number
+        }
+        Insert: {
+          class_id?: string | null
+          class_name: string
+          classroom?: string | null
+          classroom_id?: string | null
+          id?: never
+          is_group_split?: boolean
+          period: number
+          publication_id: string
+          snapshot: Json
+          source_schedule_id?: string | null
+          subgroup_id?: string | null
+          subgroup_key?: string | null
+          subject: string
+          teacher_id: string
+          weekday: number
+        }
+        Update: {
+          class_id?: string | null
+          class_name?: string
+          classroom?: string | null
+          classroom_id?: string | null
+          id?: never
+          is_group_split?: boolean
+          period?: number
+          publication_id?: string
+          snapshot?: Json
+          source_schedule_id?: string | null
+          subgroup_id?: string | null
+          subgroup_key?: string | null
+          subject?: string
+          teacher_id?: string
+          weekday?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_publication_rows_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_publication_rows_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_publication_rows_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_publication_rows_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_publication_periods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_publication_rows_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_publications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_publication_rows_subgroup_id_fkey"
+            columns: ["subgroup_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_publication_rows_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      schedule_publications: {
+        Row: {
+          academic_year: string | null
+          effective_from: string
+          id: string
+          note: string | null
+          published_at: string
+          published_by: string | null
+          row_count: number
+          schedule_hash: string
+          title: string
+        }
+        Insert: {
+          academic_year?: string | null
+          effective_from: string
+          id?: string
+          note?: string | null
+          published_at?: string
+          published_by?: string | null
+          row_count: number
+          schedule_hash: string
+          title?: string
+        }
+        Update: {
+          academic_year?: string | null
+          effective_from?: string
+          id?: string
+          note?: string | null
+          published_at?: string
+          published_by?: string | null
+          row_count?: number
+          schedule_hash?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_publications_published_by_fkey"
+            columns: ["published_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       school_classes: {
         Row: {
           active: boolean
@@ -1695,6 +1843,30 @@ export type Database = {
         }
         Relationships: []
       }
+      schedule_publication_periods: {
+        Row: {
+          academic_year: string | null
+          effective_from: string | null
+          effective_to: string | null
+          id: string | null
+          next_effective_date: string | null
+          note: string | null
+          published_at: string | null
+          published_by: string | null
+          row_count: number | null
+          schedule_hash: string | null
+          title: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_publications_published_by_fkey"
+            columns: ["published_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       schedules: {
         Row: {
           active: boolean | null
@@ -1807,6 +1979,76 @@ export type Database = {
           stored_schedule_signature: string
         }[]
       }
+      get_my_published_schedule: {
+        Args: { p_date?: string }
+        Returns: {
+          academic_year: string
+          class_id: string
+          class_name: string
+          classroom: string
+          classroom_id: string
+          effective_from: string
+          is_group_split: boolean
+          period: number
+          publication_id: string
+          schedule_hash: string
+          subgroup_id: string
+          subgroup_key: string
+          subject: string
+          title: string
+          weekday: number
+        }[]
+      }
+      get_published_schedule_rows: {
+        Args: {
+          p_class_id?: string
+          p_publication_id: string
+          p_teacher_id?: string
+        }
+        Returns: {
+          class_id: string | null
+          class_name: string
+          classroom: string | null
+          classroom_id: string | null
+          id: number
+          is_group_split: boolean
+          period: number
+          publication_id: string
+          snapshot: Json
+          source_schedule_id: string | null
+          subgroup_id: string | null
+          subgroup_key: string | null
+          subject: string
+          teacher_id: string
+          weekday: number
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "schedule_publication_rows"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      get_schedule_publication_for_date: {
+        Args: { p_date: string }
+        Returns: string
+      }
+      get_schedule_publication_history: {
+        Args: never
+        Returns: {
+          academic_year: string
+          effective_from: string
+          effective_to: string
+          note: string
+          publication_id: string
+          published_at: string
+          published_by: string
+          row_count: number
+          same_day_revision_no: number
+          schedule_hash: string
+          title: string
+        }[]
+      }
       import_eokul_roster: {
         Args: { p_file_name: string; p_file_type: string; p_rows: Json }
         Returns: {
@@ -1892,6 +2134,15 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      publish_current_schedule: {
+        Args: {
+          p_academic_year?: string
+          p_effective_from: string
+          p_note?: string
+          p_title?: string
+        }
+        Returns: string
       }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
