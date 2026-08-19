@@ -1,68 +1,100 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { BellRing, CheckCircle2, ShieldAlert } from "lucide-react";
+import { BellRing, CheckCircle2, Download, ShieldAlert, Smartphone } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Button } from "@/components/ui/button";
-import { disableBrowserPush, enableBrowserPush, getPushCapability } from "@/lib/fcm-client";
-import { supabase } from "@/lib/supabase";
+import { disableBrowserPush, enableBrowserPush, getCurrentPushSubscription, getPushCapability, registerPwaServiceWorker } from "@/lib/web-push-client";
 
 export const Route = createFileRoute("/notifications")({
-  head: () => ({ meta: [{ title: "Bildirim Ayarları — OkulOS" }] }),
+  head: () => ({ meta: [{ title: "Bildirim ve PWA — OkulOS" }] }),
   component: NotificationSettings,
 });
+
+type InstallPromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: "accepted" | "dismissed" }> };
 
 function NotificationSettings() {
   const [capability, setCapability] = useState(() => getPushCapability());
   const [registered, setRegistered] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    void (async () => {
-      const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) return;
-      const { data } = await supabase.from("fcm_tokens").select("id").eq("user_id", auth.user.id).eq("platform", "web").limit(1);
-      setRegistered(Boolean(data?.length));
-    })();
+    void registerPwaServiceWorker();
+    void getCurrentPushSubscription().then((sub) => setRegistered(Boolean(sub)));
+    const handler = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as InstallPromptEvent);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
 
   async function enable() {
     setBusy(true); setMessage(null);
     try {
       const result = await enableBrowserPush();
-      if (result.ok) { setRegistered(true); setMessage("Bu cihaz için anlık bildirimler etkinleştirildi."); }
-      else {
+      if (result.ok) {
+        setRegistered(true);
+        setMessage("Bu cihaz için arka plan Web Push bildirimleri etkinleştirildi.");
+      } else {
         const labels: Record<string,string> = {
-          PUSH_NOT_SUPPORTED: "Bu tarayıcı web bildirimlerini desteklemiyor.",
-          FIREBASE_CLIENT_CONFIG_MISSING: "Firebase istemci yapılandırması henüz girilmemiş. VAPID ve web app bilgileri gerekli.",
+          PUSH_NOT_SUPPORTED: "Bu tarayıcı PWA/Web Push bildirimlerini desteklemiyor.",
+          VAPID_PUBLIC_KEY_MISSING: "Web Push genel anahtarı henüz yapılandırılmamış.",
           NOTIFICATION_PERMISSION_DENIED: "Tarayıcı bildirim izni verilmedi.",
-          FCM_TOKEN_EMPTY: "Firebase cihaz tokenı üretmedi.",
-          NOT_AUTHENTICATED: "Önce giriş yapmalısınız.",
-          TOKEN_SAVE_FAILED: "Cihaz tokenı veritabanına kaydedilemedi.",
+          SERVICE_WORKER_FAILED: "PWA servis worker başlatılamadı.",
+          SUBSCRIPTION_KEYS_MISSING: "Tarayıcı push aboneliği oluşturulamadı.",
+          SUBSCRIPTION_SAVE_FAILED: "Push aboneliği Supabase'e kaydedilemedi.",
         };
         setMessage(labels[result.reason] ?? result.reason);
       }
-    } catch { setMessage("Bildirim kurulumu sırasında beklenmeyen bir hata oluştu."); }
+    } catch {
+      setMessage("Bildirim kurulumu sırasında beklenmeyen bir hata oluştu.");
+    }
     setBusy(false); setCapability(getPushCapability());
   }
 
   async function disable() {
-    setBusy(true); await disableBrowserPush(); setRegistered(false); setBusy(false); setMessage("Bu cihazın OkulOS push kaydı kaldırıldı."); setCapability(getPushCapability());
+    setBusy(true);
+    const result = await disableBrowserPush();
+    setBusy(false);
+    if (result.ok) {
+      setRegistered(false);
+      setMessage("Bu cihazın Web Push aboneliği kaldırıldı.");
+    } else setMessage("Push aboneliği kapatılamadı.");
+    setCapability(getPushCapability());
   }
 
-  return <AppShell title="Bildirim Ayarları" subtitle="Web push · FCM · Telegram'dan bağımsız cihaz bildirimi" action={<BellRing className="size-5" />}>
+  async function installApp() {
+    if (!installPrompt) return;
+    await installPrompt.prompt();
+    const choice = await installPrompt.userChoice;
+    if (choice.outcome === "accepted") setMessage("OkulOS ana ekrana uygulama olarak eklendi.");
+    setInstallPrompt(null);
+    setCapability(getPushCapability());
+  }
+
+  return <AppShell title="Bildirim ve PWA" subtitle="Supabase · Web Push · Service Worker · Telegram" action={<BellRing className="size-5" />}>
     <div className="grid gap-3 sm:grid-cols-3">
-      <div className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">Tarayıcı desteği</p><p className="mt-1 font-semibold">{capability.supported?"Destekleniyor":"Desteklenmiyor"}</p></div>
-      <div className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">Firebase yapılandırması</p><p className="mt-1 font-semibold">{capability.configured?"Hazır":"Eksik"}</p></div>
-      <div className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">Bu cihaz</p><p className="mt-1 font-semibold">{registered?"Kayıtlı":"Kayıtlı değil"}</p></div>
+      <div className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">PWA / Push desteği</p><p className="mt-1 font-semibold">{capability.supported?"Destekleniyor":"Desteklenmiyor"}</p></div>
+      <div className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">Web Push anahtarı</p><p className="mt-1 font-semibold">{capability.configured?"Hazır":"Eksik"}</p></div>
+      <div className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">Çalışma modu</p><p className="mt-1 font-semibold">{capability.standalone?"Uygulama":"Tarayıcı"}</p></div>
     </div>
 
     <div className="mt-4 rounded-xl border bg-card p-4">
-      {registered?<div className="flex items-start gap-3 text-sm"><CheckCircle2 className="mt-0.5 size-5 text-emerald-600"/><div><b>Anlık bildirimler açık.</b><p className="mt-1 text-xs text-muted-foreground">Vekalet ve kritik bildirimler, sunucu FCM gönderebildiğinde bu cihaza ulaşabilir.</p></div></div>:<div className="flex items-start gap-3 text-sm"><ShieldAlert className="mt-0.5 size-5 text-amber-600"/><div><b>Bu cihaz henüz kayıtlı değil.</b><p className="mt-1 text-xs text-muted-foreground">Etkinleştir dediğinizde tarayıcı bildirim izni ister ve Firebase tokenı kullanıcı hesabınıza kaydedilir.</p></div></div>}
+      <div className="flex items-start gap-3">
+        <Smartphone className="mt-0.5 size-5 text-primary" />
+        <div><b>OkulOS'u ana ekrana ekleyin</b><p className="mt-1 text-xs text-muted-foreground">Ana ekran ikonundan açıldığında adres çubuğu olmadan bağımsız uygulama gibi çalışır.</p></div>
+      </div>
+      {installPrompt ? <Button className="mt-4 gap-2" onClick={()=>void installApp()}><Download className="size-4"/>Ana Ekrana Uygulama Olarak Ekle</Button> : <p className="mt-3 text-xs text-muted-foreground">iPhone/iPad: Safari → Paylaş → Ana Ekrana Ekle. Android/Chrome destekliyorsa tarayıcı ayrıca yükleme seçeneği gösterir.</p>}
+    </div>
+
+    <div className="mt-4 rounded-xl border bg-card p-4">
+      {registered?<div className="flex items-start gap-3 text-sm"><CheckCircle2 className="mt-0.5 size-5 text-emerald-600"/><div><b>Arka plan bildirimleri açık.</b><p className="mt-1 text-xs text-muted-foreground">OkulOS ekranda açık olmasa da Service Worker push geldiğinde sistem bildirimi gösterebilir. Cihazın sessiz/odak ayarları ses ve titreşimi belirler.</p></div></div>:<div className="flex items-start gap-3 text-sm"><ShieldAlert className="mt-0.5 size-5 text-amber-600"/><div><b>Bu cihaz henüz Web Push'a kayıtlı değil.</b><p className="mt-1 text-xs text-muted-foreground">Etkinleştirdiğinizde tarayıcı izin ister ve cihazın standart Push API aboneliği Supabase hesabınıza kaydedilir. Firebase kullanılmaz.</p></div></div>}
       <div className="mt-4 flex gap-2">{registered?<Button variant="outline" onClick={()=>void disable()} disabled={busy}>Bu Cihazda Kapat</Button>:<Button onClick={()=>void enable()} disabled={busy||!capability.supported}>Bildirimleri Etkinleştir</Button>}</div>
       {message?<p className="mt-3 rounded-lg bg-muted p-3 text-xs">{message}</p>:null}
     </div>
 
-    <div className="mt-4 rounded-xl border bg-muted/30 p-4 text-xs text-muted-foreground">Gerekli Vite değişkenleri: VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID, VITE_FIREBASE_MESSAGING_SENDER_ID, VITE_FIREBASE_APP_ID ve VITE_FIREBASE_VAPID_KEY. Sunucu gönderimi için ayrıca mevcut FIREBASE_SERVICE_ACCOUNT_JSON kullanılır.</div>
+    <div className="mt-4 rounded-xl border bg-muted/30 p-4 text-xs text-muted-foreground">Mimari: Supabase Realtime uygulama açıkken ekran içi anlık uyarıyı sağlar; standart Web Push + Service Worker uygulama kapalı/arka plandayken sistem bildirimini sağlar; Telegram ikinci bildirim kanalı olarak devam eder.</div>
   </AppShell>;
 }
