@@ -44,6 +44,9 @@ jobs:
       - name: Check delegated permission flow
         run: node scripts/check-permission-flow.mjs
 
+      - name: Check advanced timetable optimization
+        run: node scripts/check-advanced-optimization.mjs
+
       - name: Production build and generate routes
         run: bun run build
 
