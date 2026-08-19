@@ -2302,6 +2302,24 @@ export type Database = {
           },
         ]
       }
+      schedule_engine_state: {
+        Row: {
+          id: boolean
+          revision: number
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          revision?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          revision?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       schedule_generation_settings: {
         Row: {
           gap_penalty: number
@@ -2893,6 +2911,7 @@ export type Database = {
       }
       schedule_scenarios: {
         Row: {
+          basis_revision: number | null
           generated_at: string
           generated_by: string | null
           generation_group: string
@@ -2905,6 +2924,7 @@ export type Database = {
           unplaced_count: number
         }
         Insert: {
+          basis_revision?: number | null
           generated_at?: string
           generated_by?: string | null
           generation_group: string
@@ -2917,6 +2937,7 @@ export type Database = {
           unplaced_count?: number
         }
         Update: {
+          basis_revision?: number | null
           generated_at?: string
           generated_by?: string | null
           generation_group?: string
@@ -4295,6 +4316,8 @@ export type Database = {
       schedule_scenario_status_v2: {
         Row: {
           applicable: boolean | null
+          basis_revision: number | null
+          current_revision: number | null
           generation_group: string | null
           hard_issue_count: number | null
           room_issue_count: number | null
@@ -4302,29 +4325,9 @@ export type Database = {
           scenario_id: string | null
           scenario_no: number | null
           score: number | null
+          stale: boolean | null
+          status: string | null
           unplaced_count: number | null
-        }
-        Insert: {
-          applicable?: never
-          generation_group?: string | null
-          hard_issue_count?: never
-          room_issue_count?: never
-          row_count?: number | null
-          scenario_id?: string | null
-          scenario_no?: number | null
-          score?: number | null
-          unplaced_count?: number | null
-        }
-        Update: {
-          applicable?: never
-          generation_group?: string | null
-          hard_issue_count?: never
-          room_issue_count?: never
-          row_count?: number | null
-          scenario_id?: string | null
-          scenario_no?: number | null
-          score?: number | null
-          unplaced_count?: number | null
         }
         Relationships: []
       }
@@ -4436,7 +4439,18 @@ export type Database = {
       }
       assert_schedule_preparation_ready: { Args: never; Returns: boolean }
       assert_schedule_publishable: { Args: never; Returns: boolean }
+      assert_schedule_scenario_fresh_v2: {
+        Args: { p_scenario_id: string }
+        Returns: undefined
+      }
       assign_classrooms_to_scenario: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          assigned_count: number
+          unassigned_count: number
+        }[]
+      }
+      assign_classrooms_to_scenario_core_v2: {
         Args: { p_scenario_id: string }
         Returns: {
           assigned_count: number
@@ -4966,6 +4980,15 @@ export type Database = {
         }
         Returns: string
       }
+      publish_current_schedule_core_v2: {
+        Args: {
+          p_academic_year?: string
+          p_effective_from: string
+          p_note?: string
+          p_title?: string
+        }
+        Returns: string
+      }
       quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
@@ -4988,6 +5011,10 @@ export type Database = {
           p_user_agent?: string
         }
         Returns: string
+      }
+      repair_schedule_scenario_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
       }
       repair_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
