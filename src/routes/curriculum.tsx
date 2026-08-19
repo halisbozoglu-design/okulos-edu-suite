@@ -143,13 +143,12 @@ function CurriculumManager() {
     await load();
   }
 
-  async function assignTeacher() {
+  async function submitTeacherAssignment() {
     if (!assignRequirement || !assignTeacher) return;
     setBusy(true); setMessage(null);
     const { error } = await supabase.rpc("assign_teacher_to_class_course", {
       p_requirement_id: assignRequirement,
       p_teacher_id: assignTeacher,
-      p_hours: null,
       p_group: "main",
     });
     setBusy(false);
@@ -209,7 +208,7 @@ function CurriculumManager() {
 
         <div className="rounded-xl border border-border bg-card p-4">
           <h2 className="flex items-center gap-2 font-semibold"><UserRoundCheck className="size-4" /> Öğretmen Ata</h2>
-          <div className="mt-3 space-y-3"><select value={assignRequirement} onChange={(e) => setAssignRequirement(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Ders seçiniz</option>{classRequirements.map((r) => <option key={r.id} value={r.id}>{courseMap[r.course_id]?.name ?? "Ders"} · {r.weekly_hours} saat</option>)}</select><select value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçiniz</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select><Button className="w-full" onClick={() => void assignTeacher()} disabled={busy}>Derse Ata</Button><p className="text-xs text-muted-foreground">Branş/TTKB uygunluğu bir sonraki kural motorunda zorunlu doğrulamaya bağlanacaktır.</p></div>
+          <div className="mt-3 space-y-3"><select value={assignRequirement} onChange={(e) => setAssignRequirement(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Ders seçiniz</option>{classRequirements.map((r) => <option key={r.id} value={r.id}>{courseMap[r.course_id]?.name ?? "Ders"} · {r.weekly_hours} saat</option>)}</select><select value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçiniz</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select><Button className="w-full" onClick={() => void submitTeacherAssignment()} disabled={busy}>Derse Ata</Button><p className="text-xs text-muted-foreground">Branş/TTKB uygunluğu bir sonraki kural motorunda zorunlu doğrulamaya bağlanacaktır.</p></div>
         </div>
       </section>
 

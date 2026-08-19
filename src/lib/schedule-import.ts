@@ -93,8 +93,9 @@ function normalizeRow(raw: Record<string, unknown>): ScheduleImportRow {
 function delimitedTextToObjects(text: string) {
   const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/).filter((line) => line.trim());
   if (lines.length < 2) throw new Error("PROGRAM_DOSYASI_BOS");
-  const delimiter = lines[0].includes(";") ? ";" : lines[0].includes("\t") ? "\t" : ",";
-  const headers = lines[0].split(delimiter).map((cell) => cell.trim());
+  const headerLine = lines[0] ?? "";
+  const delimiter = headerLine.includes(";") ? ";" : headerLine.includes("\t") ? "\t" : ",";
+  const headers = headerLine.split(delimiter).map((cell) => cell.trim());
   return lines.slice(1).map((line) => {
     const cells = line.split(delimiter);
     return Object.fromEntries(headers.map((header, index) => [header, cells[index]?.trim() ?? ""]));
@@ -107,7 +108,9 @@ export async function parseScheduleImport(file: File): Promise<ScheduleImportRow
 
   if (extension === "xlsx" || extension === "xls") {
     const workbook = XLSX.read(await file.arrayBuffer(), { type: "array" });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const sheetName = workbook.SheetNames[0];
+    const sheet = sheetName ? workbook.Sheets[sheetName] : undefined;
+    if (!sheet) throw new Error("PROGRAM_DOSYASI_BOS");
     rawRows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: "" });
   } else if (extension === "csv" || extension === "txt") {
     rawRows = delimitedTextToObjects(await file.text());

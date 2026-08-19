@@ -11,10 +11,16 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClassesRouteImport } from './routes/classes'
+import { Route as CurriculumRouteImport } from './routes/curriculum'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DutyBookRouteImport } from './routes/duty-book'
 import { Route as PayrollRouteImport } from './routes/payroll'
+import { Route as QuranGroupsRouteImport } from './routes/quran-groups'
+import { Route as ScheduleRouteImport } from './routes/schedule'
+import { Route as ScheduleArchiveRouteImport } from './routes/schedule-archive'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SubstitutesRouteImport } from './routes/substitutes'
+import { Route as SuperAdminRouteImport } from './routes/super-admin'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -26,14 +32,39 @@ const ClassesRoute = ClassesRouteImport.update({
   path: '/classes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CurriculumRoute = CurriculumRouteImport.update({
+  id: '/curriculum',
+  path: '/curriculum',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DutyBookRoute = DutyBookRouteImport.update({
+  id: '/duty-book',
+  path: '/duty-book',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PayrollRoute = PayrollRouteImport.update({
   id: '/payroll',
   path: '/payroll',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuranGroupsRoute = QuranGroupsRouteImport.update({
+  id: '/quran-groups',
+  path: '/quran-groups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleRoute = ScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleArchiveRoute = ScheduleArchiveRouteImport.update({
+  id: '/schedule-archive',
+  path: '/schedule-archive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -46,56 +77,113 @@ const SubstitutesRoute = SubstitutesRouteImport.update({
   path: '/substitutes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuperAdminRoute = SuperAdminRouteImport.update({
+  id: '/super-admin',
+  path: '/super-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/classes': typeof ClassesRoute
+  '/curriculum': typeof CurriculumRoute
   '/dashboard': typeof DashboardRoute
+  '/duty-book': typeof DutyBookRoute
   '/payroll': typeof PayrollRoute
+  '/quran-groups': typeof QuranGroupsRoute
+  '/schedule': typeof ScheduleRoute
+  '/schedule-archive': typeof ScheduleArchiveRoute
   '/settings': typeof SettingsRoute
   '/substitutes': typeof SubstitutesRoute
+  '/super-admin': typeof SuperAdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/classes': typeof ClassesRoute
+  '/curriculum': typeof CurriculumRoute
   '/dashboard': typeof DashboardRoute
+  '/duty-book': typeof DutyBookRoute
   '/payroll': typeof PayrollRoute
+  '/quran-groups': typeof QuranGroupsRoute
+  '/schedule': typeof ScheduleRoute
+  '/schedule-archive': typeof ScheduleArchiveRoute
   '/settings': typeof SettingsRoute
   '/substitutes': typeof SubstitutesRoute
+  '/super-admin': typeof SuperAdminRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/classes': typeof ClassesRoute
+  '/curriculum': typeof CurriculumRoute
   '/dashboard': typeof DashboardRoute
+  '/duty-book': typeof DutyBookRoute
   '/payroll': typeof PayrollRoute
+  '/quran-groups': typeof QuranGroupsRoute
+  '/schedule': typeof ScheduleRoute
+  '/schedule-archive': typeof ScheduleArchiveRoute
   '/settings': typeof SettingsRoute
   '/substitutes': typeof SubstitutesRoute
+  '/super-admin': typeof SuperAdminRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/classes' | '/dashboard' | '/payroll' | '/settings' | '/substitutes'
+    | '/'
+    | '/classes'
+    | '/curriculum'
+    | '/dashboard'
+    | '/duty-book'
+    | '/payroll'
+    | '/quran-groups'
+    | '/schedule'
+    | '/schedule-archive'
+    | '/settings'
+    | '/substitutes'
+    | '/super-admin'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/classes' | '/dashboard' | '/payroll' | '/settings' | '/substitutes'
+    | '/'
+    | '/classes'
+    | '/curriculum'
+    | '/dashboard'
+    | '/duty-book'
+    | '/payroll'
+    | '/quran-groups'
+    | '/schedule'
+    | '/schedule-archive'
+    | '/settings'
+    | '/substitutes'
+    | '/super-admin'
   id:
     | '__root__'
     | '/'
     | '/classes'
+    | '/curriculum'
     | '/dashboard'
+    | '/duty-book'
     | '/payroll'
+    | '/quran-groups'
+    | '/schedule'
+    | '/schedule-archive'
     | '/settings'
     | '/substitutes'
+    | '/super-admin'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ClassesRoute: typeof ClassesRoute
+  CurriculumRoute: typeof CurriculumRoute
   DashboardRoute: typeof DashboardRoute
+  DutyBookRoute: typeof DutyBookRoute
   PayrollRoute: typeof PayrollRoute
+  QuranGroupsRoute: typeof QuranGroupsRoute
+  ScheduleRoute: typeof ScheduleRoute
+  ScheduleArchiveRoute: typeof ScheduleArchiveRoute
   SettingsRoute: typeof SettingsRoute
   SubstitutesRoute: typeof SubstitutesRoute
+  SuperAdminRoute: typeof SuperAdminRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -114,6 +202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClassesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/curriculum': {
+      id: '/curriculum'
+      path: '/curriculum'
+      fullPath: '/curriculum'
+      preLoaderRoute: typeof CurriculumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -121,11 +216,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/duty-book': {
+      id: '/duty-book'
+      path: '/duty-book'
+      fullPath: '/duty-book'
+      preLoaderRoute: typeof DutyBookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/payroll': {
       id: '/payroll'
       path: '/payroll'
       fullPath: '/payroll'
       preLoaderRoute: typeof PayrollRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quran-groups': {
+      id: '/quran-groups'
+      path: '/quran-groups'
+      fullPath: '/quran-groups'
+      preLoaderRoute: typeof QuranGroupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule': {
+      id: '/schedule'
+      path: '/schedule'
+      fullPath: '/schedule'
+      preLoaderRoute: typeof ScheduleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule-archive': {
+      id: '/schedule-archive'
+      path: '/schedule-archive'
+      fullPath: '/schedule-archive'
+      preLoaderRoute: typeof ScheduleArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -142,16 +265,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubstitutesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/super-admin': {
+      id: '/super-admin'
+      path: '/super-admin'
+      fullPath: '/super-admin'
+      preLoaderRoute: typeof SuperAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ClassesRoute: ClassesRoute,
+  CurriculumRoute: CurriculumRoute,
   DashboardRoute: DashboardRoute,
+  DutyBookRoute: DutyBookRoute,
   PayrollRoute: PayrollRoute,
+  QuranGroupsRoute: QuranGroupsRoute,
+  ScheduleRoute: ScheduleRoute,
+  ScheduleArchiveRoute: ScheduleArchiveRoute,
   SettingsRoute: SettingsRoute,
   SubstitutesRoute: SubstitutesRoute,
+  SuperAdminRoute: SuperAdminRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

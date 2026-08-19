@@ -74,7 +74,7 @@ function PayrollGrid() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [year, month] = period.split("-").map(Number);
+  const [year = 0, month = 1] = period.split("-").map(Number);
   const dayCount = new Date(year, month, 0).getDate();
   const days = useMemo(() => Array.from({ length: dayCount }, (_, i) => i + 1), [dayCount]);
 
@@ -113,7 +113,7 @@ function PayrollGrid() {
       }
       const item = map.get(row.teacher_id)!;
       const day = Number(row.work_date.slice(8, 10));
-      if (day >= 1 && day <= dayCount) item.daily[row.category][day - 1] += Number(row.hours ?? 0);
+      if (day >= 1 && day <= dayCount) { const bucket = item.daily[row.category as keyof typeof item.daily]; bucket[day - 1] = (bucket[day - 1] ?? 0) + Number(row.hours ?? 0); }
       item.approved = item.approved && Boolean(row.approved);
     }
     return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name, "tr"));
@@ -240,7 +240,7 @@ function PayrollGrid() {
           <tbody>
             {teachers.map((row, idx) => {
               const expanded = open.includes(row.id);
-              const totals = days.map((_, i) => row.daily.gunduz[i] + row.daily.nobet[i] + row.daily.rehberlik[i]);
+              const totals = days.map((_, i) => (row.daily.gunduz[i] ?? 0) + (row.daily.nobet[i] ?? 0) + (row.daily.rehberlik[i] ?? 0));
               return (
                 <Fragment key={row.id}>
                   <tr className="border-t border-border">

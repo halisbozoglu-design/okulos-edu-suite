@@ -96,7 +96,7 @@ function SuperAdminCenter() {
 
   async function addPersonnel() {
     setMessage(null);
-    const { error } = await supabase.rpc("super_admin_upsert_personnel", { p_tckn: personTc, p_full_name: personName, p_email: personEmail || null, p_role: personRole, p_teaching_area_id: personArea || null });
+    const { error } = await supabase.rpc("super_admin_upsert_personnel", { p_tckn: personTc, p_full_name: personName, p_role: personRole, ...(personEmail ? { p_email: personEmail } : {}), ...(personArea ? { p_teaching_area_id: personArea } : {}) });
     if (error) return setMessage(error.message.includes("INVALID_TCKN") ? "T.C. Kimlik No 11 rakam olmalıdır." : "Personel kaydı yapılamadı.");
     setPersonTc(""); setPersonName(""); setPersonEmail(""); setPersonArea(""); setMessage("Personel ön kayıt havuzuna eklendi/güncellendi."); await load();
   }

@@ -221,7 +221,7 @@ function ScheduleManager() {
     try {
       const parsed = await parseScheduleImport(file);
       const fileType = file.name.split(".").pop()?.toLowerCase();
-      const { data, error: importError } = await supabase.rpc("import_weekly_schedule", { p_file_name: file.name, p_file_type: fileType, p_rows: parsed });
+      const { data, error: importError } = await supabase.rpc("import_weekly_schedule", { p_file_name: file.name, p_file_type: fileType ?? "", p_rows: parsed });
       if (importError) throw importError;
       const result = Array.isArray(data) ? data[0] : data;
       setSuccess(`${result?.imported_rows ?? parsed.length} program satırı kısıt kontrollerinden geçirilerek içe aktarıldı.`);

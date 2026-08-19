@@ -30,7 +30,7 @@ function parseClass(value: string) {
   return {
     className: `${match[1]}/${match[2]}`,
     gradeLevel: Number(match[1]),
-    section: match[2],
+    section: match[2] ?? "",
   };
 }
 
@@ -64,14 +64,16 @@ export async function parseEokulFile(file: File): Promise<EokulStudentRow[]> {
   if (ext === "xlsx" || ext === "xls") {
     const XLSX = await import("xlsx");
     const workbook = XLSX.read(await file.arrayBuffer(), { type: "array" });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]!];
+    const sheetName = workbook.SheetNames[0];
+    const sheet = sheetName ? workbook.Sheets[sheetName] : undefined;
+    if (!sheet) throw new Error("EMPTY_WORKBOOK");
     const rows = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1, defval: "" });
     return normalizeRows(rows);
   }
 
   if (ext === "pdf") {
     const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
-    const pdf = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()), disableWorker: true }).promise;
+    const pdf = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
     const lines: string[] = [];
     for (let pageNo = 1; pageNo <= pdf.numPages; pageNo += 1) {
       const page = await pdf.getPage(pageNo);
@@ -99,7 +101,7 @@ export async function parseEokulFile(file: File): Promise<EokulStudentRow[]> {
         const info = parseClass(activeClass);
         rows.push({
           schoolNumber: student[1]!,
-          fullName: normalize(student[2]),
+          fullName: normalize(student[2] ?? ""),
           className: info.className,
           programType: activeProgram.toLocaleUpperCase("tr-TR"),
           gradeLevel: info.gradeLevel,
