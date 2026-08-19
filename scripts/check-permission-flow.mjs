@@ -15,6 +15,7 @@ const files={
  volatility:'supabase/migrations/20260819073800_permission_context_volatility_fix.sql',
  restore:'supabase/migrations/20260819073900_schedule_restore_delegation_and_draft_semantics.sql',
  capacity:'supabase/migrations/20260819074000_schedule_teacher_capacity_preflight_v2.sql',
+ atomicBundle:'supabase/migrations/20260819074100_atomic_permission_bundle_assignment.sql',
  hook:'src/lib/permissions.ts',
  root:'src/routes/__root.tsx',
  permissionUi:'src/routes/settings-permissions.tsx',
@@ -47,12 +48,13 @@ requireTokens('dutyCleanup',['drop policy if exists "authenticated read duty inc
 requireTokens('volatility',['payroll_month_matrix(int,int) volatile','kbs_payroll_export(int,int) volatile','get_daily_duty_book(date) volatile']);
 const restore=requireTokens('restore',['open_permission_context(\'schedule.restore\')','create_schedule_restore_point_permission_core_v2','upsert_schedule_slot_permission_core_v2','delegated schedule restorers read restore points','delegated schedule restorers read restore rows','delegated schedule restorers read timetable']);
 if(restore.includes('perform public.assert_schedule_publishable()'))errors.push('restore: çalışma taslağı geri yüklemede publish gate kullanılmamalı');
-requireTokens('capacity',['TEACHER_ASSIGNED_HOURS_EXCEED_WEEKLY_LIMIT','TEACHER_ASSIGNED_HOURS_EXCEED_DAY_CAPACITY','get_schedule_preparation_readiness_before_teacher_capacity_v2']);
+requireTokens('capacity',['assignment_loads','TEACHER_ASSIGNED_HOURS_EXCEED_WEEKLY_LIMIT','TEACHER_ASSIGNED_HOURS_EXCEED_DAY_CAPACITY','get_schedule_preparation_readiness_before_teacher_capacity_v2']);
+requireTokens('atomicBundle',['set_user_permission_bundle','set_user_permission_mode','perform public.set_user_permission','EMPTY_PERMISSION_BUNDLE','UNKNOWN_PERMISSION_IN_BUNDLE']);
 
 requireTokens('hook',['usePermissions','get_my_permissions','can','any','all']);
 const root=requireTokens('root',['PermissionBoundary','protectedRoutes','/settings/permissions','/schedule-solver','/schedule-history','schedule.restore','/payroll','/duty-book','/personnel-admin','superOnly']);
 if(!root.includes('rule.any.some((code) => codes.has(code))'))errors.push('root: route permission matching eksik');
-requireTokens('permissionUi',['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','schedule.restore','Görev Bazlı','Yetki Denetim Geçmişi']);
+requireTokens('permissionUi',['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','schedule.restore','set_user_permission_bundle','Görev Bazlı','Yetki Denetim Geçmişi']);
 requireTokens('taskRoleUi',['Görev Şablonları','save_task_role_template','assign_task_role_template','revoke_task_role_template']);
 requireTokens('payrollUi',['payroll.calculate','payroll.edit','payroll.approve','payroll.publish']);
 requireTokens('personnelUi',['personnel.view','personnel.manage','get_personnel_admin_list']);
@@ -64,4 +66,4 @@ const management=requireTokens('managementUi',['/settings/permissions','/setting
 if(management.includes("to:'/notifications'"))errors.push('managementUi: kişisel PWA/bildirim ayarı kurumsal görev delegasyonu kartı olarak gösterilmemeli');
 
 if(errors.length){console.error('Permission flow check FAILED:\n'+errors.map(e=>`- ${e}`).join('\n'));process.exit(1);}
-console.log('Permission flow check OK: delegated roles, task templates, route guards, restore authority, capacity preflight, gateways, RLS cleanup and permission-aware UIs are present.');
+console.log('Permission flow check OK: delegated roles, task templates, atomic bundles, route guards, restore authority, capacity preflight, gateways, RLS cleanup and permission-aware UIs are present.');
