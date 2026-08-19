@@ -70,7 +70,10 @@ begin
 end;
 $$;
 
-create or replace function public.get_permission_admin_matrix()
+-- PostgreSQL cannot CREATE OR REPLACE a function when the OUT row shape changes.
+-- 72700 created this function without permission_mode, therefore drop it before the V2 shape.
+drop function if exists public.get_permission_admin_matrix();
+create function public.get_permission_admin_matrix()
 returns table(user_id uuid,full_name text,role public.app_role,permission_mode text,permission_code text,scope jsonb,valid_from date,valid_until date)
 language sql stable security definer set search_path=public as $$
   select p.user_id,p.full_name,p.role,p.permission_mode,g.permission_code,g.scope,g.valid_from,g.valid_until
@@ -80,4 +83,5 @@ language sql stable security definer set search_path=public as $$
 $$;
 
 revoke all on function public.set_user_permission_mode(uuid,text) from public;
-grant execute on function public.set_user_permission_mode(uuid,text) to authenticated;
+revoke all on function public.get_permission_admin_matrix() from public;
+grant execute on function public.set_user_permission_mode(uuid,text),public.get_permission_admin_matrix() to authenticated;
