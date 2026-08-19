@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BellRing, BookOpenCheck, CalendarDays, Calculator, Crown, FileClock, GraduationCap, Scale, Settings, Sparkles, Table2, Users } from "lucide-react";
+import { BellRing, BookOpenCheck, Building2, CalendarDays, Calculator, Crown, FileClock, GraduationCap, History, Scale, Settings, Sparkles, Table2, Users } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 
 export const Route=createFileRoute("/management")({head:()=>({meta:[{title:"Yönetim Merkezi — OkulOS"}]}),component:ManagementHub});
@@ -7,8 +7,11 @@ const items=[
  {to:'/calendar',title:'Çalışma Takvimi',desc:'Akademik yıl, tatil, mesleki çalışma ve sınav aralıkları',icon:CalendarDays},
  {to:'/curriculum',title:'Müfredat & Ders Yükü',desc:'Sınıf dersleri, haftalık saatler ve öğretmen dağıtımı',icon:BookOpenCheck},
  {to:'/norm-analysis',title:'Norm Kadro Analizi',desc:'Ders yükü, formal norm, mevcut öğretmen ve açık/fazla analizi',icon:Scale},
+ {to:'/norm-settings',title:'Norm Eşleştirmeleri',desc:'Ders → norm alanı ve alan → yürürlükteki norm kuralı',icon:Settings},
  {to:'/schedule-solver',title:'Program Çözücü',desc:'Kilitler, dört senaryo, puanlama ve otomatik yerleştirme',icon:Sparkles},
+ {to:'/room-assignment',title:'Otomatik Derslik Atama',desc:'Kapasite, derslik tipi, donanım ve saat çakışmasına göre atama',icon:Building2},
  {to:'/schedule',title:'Çalışma Programı',desc:'Taslak haftalık ders programı ve manuel müdahale',icon:GraduationCap},
+ {to:'/schedule-history',title:'Program Geçmişi',desc:'Geri dönüş noktaları, geri al ve yeniden uygula',icon:History},
  {to:'/schedule-archive',title:'Yayın & Arşiv',desc:'Kullanıma alınan programların değişmez ispat arşivi',icon:FileClock},
  {to:'/payroll',title:'Ek Ders 2.0',desc:'Puantaj, faaliyetler, onay ve KBS çıktısı',icon:Table2},
  {to:'/payroll-rules',title:'Ek Ders Kuralları',desc:'Yürürlük tarihli mevzuat ve KBS veri tipi kayıtları',icon:Calculator},
