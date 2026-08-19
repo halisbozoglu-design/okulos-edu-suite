@@ -212,6 +212,111 @@ export type Database = {
           },
         ]
       }
+      class_subgroup_students: {
+        Row: {
+          student_id: string
+          subgroup_id: string
+        }
+        Insert: {
+          student_id: string
+          subgroup_id: string
+        }
+        Update: {
+          student_id?: string
+          subgroup_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_subgroup_students_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_subgroup_students_subgroup_id_fkey"
+            columns: ["subgroup_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      class_subgroups: {
+        Row: {
+          active: boolean
+          class_id: string
+          id: string
+          label: string | null
+          subgroup_key: string
+        }
+        Insert: {
+          active?: boolean
+          class_id: string
+          id?: string
+          label?: string | null
+          subgroup_key: string
+        }
+        Update: {
+          active?: boolean
+          class_id?: string
+          id?: string
+          label?: string | null
+          subgroup_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_subgroups_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_subgroups_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classrooms: {
+        Row: {
+          active: boolean
+          capacity: number
+          created_at: string
+          department: string | null
+          hardware: Json
+          id: string
+          name: string
+          room_type: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          capacity: number
+          created_at?: string
+          department?: string | null
+          hardware?: Json
+          id?: string
+          name: string
+          room_type?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          capacity?: number
+          created_at?: string
+          department?: string | null
+          hardware?: Json
+          id?: string
+          name?: string
+          room_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       crisis_reports: {
         Row: {
           created_at: string
@@ -342,6 +447,33 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      lesson_room_rules: {
+        Row: {
+          active: boolean
+          id: string
+          required_department: string | null
+          required_hardware: Json
+          required_room_type: string | null
+          subject_pattern: string
+        }
+        Insert: {
+          active?: boolean
+          id?: string
+          required_department?: string | null
+          required_hardware?: Json
+          required_room_type?: string | null
+          subject_pattern: string
+        }
+        Update: {
+          active?: boolean
+          id?: string
+          required_department?: string | null
+          required_hardware?: Json
+          required_room_type?: string | null
+          subject_pattern?: string
+        }
+        Relationships: []
       }
       notifications: {
         Row: {
@@ -955,9 +1087,11 @@ export type Database = {
           class_id: string | null
           class_name: string
           classroom: string | null
+          classroom_id: string | null
           id: string
           is_group_split: boolean
           period: number
+          subgroup_id: string | null
           subgroup_key: string | null
           subject: string
           teacher_id: string
@@ -969,9 +1103,11 @@ export type Database = {
           class_id?: string | null
           class_name: string
           classroom?: string | null
+          classroom_id?: string | null
           id?: string
           is_group_split?: boolean
           period: number
+          subgroup_id?: string | null
           subgroup_key?: string | null
           subject: string
           teacher_id: string
@@ -983,9 +1119,11 @@ export type Database = {
           class_id?: string | null
           class_name?: string
           classroom?: string | null
+          classroom_id?: string | null
           id?: string
           is_group_split?: boolean
           period?: number
+          subgroup_id?: string | null
           subgroup_key?: string | null
           subject?: string
           teacher_id?: string
@@ -1008,7 +1146,98 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "teacher_schedule_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_subgroup_id_fkey"
+            columns: ["subgroup_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "teacher_schedule_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      teacher_schedule_constraints: {
+        Row: {
+          max_consecutive_hours: number
+          max_weekly_hours: number | null
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          max_consecutive_hours?: number
+          max_weekly_hours?: number | null
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          max_consecutive_hours?: number
+          max_weekly_hours?: number | null
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_schedule_constraints_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      teacher_unavailability: {
+        Row: {
+          active: boolean
+          approved_at: string | null
+          approved_by: string | null
+          id: string
+          period: number
+          reason: string
+          teacher_id: string
+          weekday: number
+        }
+        Insert: {
+          active?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
+          id?: string
+          period: number
+          reason?: string
+          teacher_id: string
+          weekday: number
+        }
+        Update: {
+          active?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
+          id?: string
+          period?: number
+          reason?: string
+          teacher_id?: string
+          weekday?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_unavailability_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_unavailability_teacher_id_fkey"
             columns: ["teacher_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -1129,42 +1358,16 @@ export type Database = {
           class_id: string | null
           class_name: string | null
           classroom: string | null
+          classroom_id: string | null
           day_of_week: number | null
           id: string | null
           is_group_split: boolean | null
           period_number: number | null
+          subgroup_id: string | null
           subgroup_key: string | null
           subject: string | null
           teacher_id: string | null
           updated_at: string | null
-        }
-        Insert: {
-          active?: boolean | null
-          class_id?: string | null
-          class_name?: string | null
-          classroom?: string | null
-          day_of_week?: number | null
-          id?: string | null
-          is_group_split?: boolean | null
-          period_number?: number | null
-          subgroup_key?: string | null
-          subject?: string | null
-          teacher_id?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          active?: boolean | null
-          class_id?: string | null
-          class_name?: string | null
-          classroom?: string | null
-          day_of_week?: number | null
-          id?: string | null
-          is_group_split?: boolean | null
-          period_number?: number | null
-          subgroup_key?: string | null
-          subject?: string | null
-          teacher_id?: string | null
-          updated_at?: string | null
         }
         Relationships: [
           {
@@ -1179,6 +1382,20 @@ export type Database = {
             columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_subgroup_id_fkey"
+            columns: ["subgroup_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
             referencedColumns: ["id"]
           },
           {
@@ -1237,6 +1454,15 @@ export type Database = {
           tckn: string
         }[]
       }
+      max_consecutive_with_candidate: {
+        Args: {
+          p_exclude_id?: string
+          p_period: number
+          p_teacher_id: string
+          p_weekday: number
+        }
+        Returns: number
+      }
       normalize_class_key: {
         Args: { p_class_name: string; p_program_type: string }
         Returns: string
@@ -1261,6 +1487,10 @@ export type Database = {
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
         Returns: string
+      }
+      student_count_for_schedule: {
+        Args: { p_class_id: string; p_subgroup_id: string }
+        Returns: number
       }
       suggest_substitutes_for_day: {
         Args: { p_date?: string }
