@@ -2700,6 +2700,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "schedule_scenario_rows_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
             foreignKeyName: "schedule_scenario_rows_scenario_id_fkey"
             columns: ["scenario_id"]
             isOneToOne: false
@@ -2733,6 +2740,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "schedule_sync_groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["teacher_assignment_id"]
           },
           {
             foreignKeyName: "schedule_scenario_rows_teacher_assignment_id_fkey"
@@ -2847,6 +2861,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "schedule_sync_groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_sync_group_members_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["teacher_assignment_id"]
           },
           {
             foreignKeyName: "schedule_sync_group_members_teacher_assignment_id_fkey"
@@ -3012,11 +3033,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "schedule_unplaced_items_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
             foreignKeyName: "schedule_unplaced_items_scenario_id_fkey"
             columns: ["scenario_id"]
             isOneToOne: false
             referencedRelation: "schedule_scenarios"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["teacher_assignment_id"]
           },
           {
             foreignKeyName: "schedule_unplaced_items_teacher_assignment_id_fkey"
@@ -3380,6 +3415,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "teacher_course_assignments_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
             foreignKeyName: "teacher_course_assignments_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -3614,6 +3656,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "teacher_schedule_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
             foreignKeyName: "teacher_schedule_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
@@ -3661,6 +3710,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "schedule_sync_groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["teacher_assignment_id"]
           },
           {
             foreignKeyName: "teacher_schedule_teacher_assignment_id_fkey"
@@ -4008,6 +4064,66 @@ export type Database = {
           suggested_group_count: number | null
         }
         Relationships: []
+      }
+      schedule_assignment_options: {
+        Row: {
+          assigned_hours: number | null
+          class_id: string | null
+          class_name: string | null
+          composite_key: string | null
+          course_id: string | null
+          course_name: string | null
+          placed_hours: number | null
+          remaining_hours: number | null
+          requirement_id: string | null
+          teacher_assignment_id: string | null
+          teacher_id: string | null
+          teacher_name: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_course_requirements_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "class_course_requirements_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_course_requirements_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_course_requirements_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
       }
       schedule_publication_periods: {
         Row: {
