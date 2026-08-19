@@ -93,8 +93,6 @@ const protectedRoutes: RouteRule[] = [
   { prefix: "/quran-groups", any: ["quran.manage"] },
   { prefix: "/norm-settings", any: ["norm.manage"] },
   { prefix: "/norm-analysis", any: ["norm.view", "norm.manage"] },
-  { prefix: "/schedule-scenario-comparison", any: ["schedule.view", "schedule.generate", "schedule.apply"] },
-  { prefix: "/schedule-optimization", any: ["schedule.rules"] },
   { prefix: "/schedule-rules", any: ["schedule.rules"] },
   { prefix: "/schedule-preparation", any: ["schedule.rules", "schedule.generate"] },
   { prefix: "/schedule-solver", any: ["schedule.generate", "schedule.apply"] },

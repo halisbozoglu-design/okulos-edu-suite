@@ -2053,6 +2053,60 @@ export type Database = {
           },
         ]
       }
+      push_subscriptions: {
+        Row: {
+          active: boolean
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          platform: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          platform?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          platform?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       quran_split_plans: {
         Row: {
           academic_year: string
@@ -2064,6 +2118,7 @@ export type Database = {
           group_2_id: string | null
           id: string
           source_note: string
+          sync_group_id: string | null
           teacher_1_id: string | null
           teacher_2_id: string | null
           threshold: number
@@ -2079,6 +2134,7 @@ export type Database = {
           group_2_id?: string | null
           id?: string
           source_note?: string
+          sync_group_id?: string | null
           teacher_1_id?: string | null
           teacher_2_id?: string | null
           threshold?: number
@@ -2094,6 +2150,7 @@ export type Database = {
           group_2_id?: string | null
           id?: string
           source_note?: string
+          sync_group_id?: string | null
           teacher_1_id?: string | null
           teacher_2_id?: string | null
           threshold?: number
@@ -2147,6 +2204,13 @@ export type Database = {
             columns: ["group_2_id"]
             isOneToOne: false
             referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_sync_group_id_fkey"
+            columns: ["sync_group_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sync_groups"
             referencedColumns: ["id"]
           },
           {
@@ -2580,6 +2644,13 @@ export type Database = {
             foreignKeyName: "schedule_room_assignment_issues_scenario_id_fkey"
             columns: ["scenario_id"]
             isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_room_assignment_issues_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
             referencedRelation: "schedule_scenarios"
             referencedColumns: ["id"]
           },
@@ -2588,6 +2659,48 @@ export type Database = {
             columns: ["scenario_row_id"]
             isOneToOne: false
             referencedRelation: "schedule_scenario_rows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_scenario_integrity_issues: {
+        Row: {
+          affected_count: number
+          code: string
+          created_at: string
+          detail: string
+          id: string
+          scenario_id: string
+        }
+        Insert: {
+          affected_count?: number
+          code: string
+          created_at?: string
+          detail: string
+          id?: string
+          scenario_id: string
+        }
+        Update: {
+          affected_count?: number
+          code?: string
+          created_at?: string
+          detail?: string
+          id?: string
+          scenario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_scenario_integrity_issues_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_integrity_issues_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
             referencedColumns: ["id"]
           },
         ]
@@ -2705,6 +2818,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "schedule_assignment_options"
             referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
           },
           {
             foreignKeyName: "schedule_scenario_rows_scenario_id_fkey"
@@ -2887,6 +3007,9 @@ export type Database = {
           name: string
           note: string | null
           required_simultaneous: boolean
+          source_block_index: number | null
+          source_id: string | null
+          source_type: string | null
         }
         Insert: {
           active?: boolean
@@ -2896,6 +3019,9 @@ export type Database = {
           name: string
           note?: string | null
           required_simultaneous?: boolean
+          source_block_index?: number | null
+          source_id?: string | null
+          source_type?: string | null
         }
         Update: {
           active?: boolean
@@ -2905,6 +3031,9 @@ export type Database = {
           name?: string
           note?: string | null
           required_simultaneous?: boolean
+          source_block_index?: number | null
+          source_id?: string | null
+          source_type?: string | null
         }
         Relationships: [
           {
@@ -3038,6 +3167,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "schedule_assignment_options"
             referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
           },
           {
             foreignKeyName: "schedule_unplaced_items_scenario_id_fkey"
@@ -4156,6 +4292,42 @@ export type Database = {
           },
         ]
       }
+      schedule_scenario_status_v2: {
+        Row: {
+          applicable: boolean | null
+          generation_group: string | null
+          hard_issue_count: number | null
+          room_issue_count: number | null
+          row_count: number | null
+          scenario_id: string | null
+          scenario_no: number | null
+          score: number | null
+          unplaced_count: number | null
+        }
+        Insert: {
+          applicable?: never
+          generation_group?: string | null
+          hard_issue_count?: never
+          room_issue_count?: never
+          row_count?: number | null
+          scenario_id?: string | null
+          scenario_no?: number | null
+          score?: number | null
+          unplaced_count?: number | null
+        }
+        Update: {
+          applicable?: never
+          generation_group?: string | null
+          hard_issue_count?: never
+          room_issue_count?: never
+          row_count?: number | null
+          scenario_id?: string | null
+          scenario_no?: number | null
+          score?: number | null
+          unplaced_count?: number | null
+        }
+        Relationships: []
+      }
       schedules: {
         Row: {
           active: boolean | null
@@ -4262,6 +4434,7 @@ export type Database = {
         Args: { p_date: string }
         Returns: boolean
       }
+      assert_schedule_preparation_ready: { Args: never; Returns: boolean }
       assert_schedule_publishable: { Args: never; Returns: boolean }
       assign_classrooms_to_scenario: {
         Args: { p_scenario_id: string }
@@ -4307,6 +4480,10 @@ export type Database = {
         Args: { p_rule_set_id: string; p_total_hours: number }
         Returns: number
       }
+      calculate_schedule_scenario_score_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       claim_super_admin_profile: {
         Args: never
         Returns: {
@@ -4343,6 +4520,10 @@ export type Database = {
       }
       create_telegram_link_token: { Args: never; Returns: string }
       current_schedule_signature: { Args: never; Returns: string }
+      disable_push_subscription: {
+        Args: { p_endpoint: string }
+        Returns: boolean
+      }
       disable_telegram_notifications: { Args: never; Returns: undefined }
       finalize_my_registration: {
         Args: { p_email: string; p_tckn: string }
@@ -4379,6 +4560,17 @@ export type Database = {
         Returns: number
       }
       generate_schedule_scenarios: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
+      }
+      generate_schedule_scenarios_v2: {
         Args: never
         Returns: {
           generation_group: string
@@ -4563,6 +4755,14 @@ export type Database = {
           unassigned_rows: number
         }[]
       }
+      get_schedule_configuration_issues_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_integrity_report: {
         Args: never
         Returns: {
@@ -4570,6 +4770,35 @@ export type Database = {
           code: string
           detail: string
           severity: string
+        }[]
+      }
+      get_schedule_integrity_report_core_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_preparation_readiness: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
+      get_schedule_preparation_readiness_core_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
         }[]
       }
       get_schedule_publication_for_date: {
@@ -4681,6 +4910,7 @@ export type Database = {
           group_2_id: string | null
           id: string
           source_note: string
+          sync_group_id: string | null
           teacher_1_id: string | null
           teacher_2_id: string | null
           threshold: number
@@ -4702,6 +4932,7 @@ export type Database = {
         }
         Returns: string
       }
+      quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
         Returns: string
@@ -4714,9 +4945,31 @@ export type Database = {
         Args: { p_class_id: string }
         Returns: string
       }
+      register_push_subscription: {
+        Args: {
+          p_auth: string
+          p_endpoint: string
+          p_p256dh: string
+          p_platform?: string
+          p_user_agent?: string
+        }
+        Returns: string
+      }
+      repair_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      rescore_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       restore_schedule_restore_point: {
         Args: { p_restore_point_id: string }
         Returns: number
+      }
+      scenario_assignment_run_lengths: {
+        Args: { p_assignment: string; p_scenario: string }
+        Returns: number[]
       }
       scenario_slot_diagnostic: {
         Args: {
@@ -4793,9 +5046,20 @@ export type Database = {
         }
         Returns: string
       }
+      sync_all_quran_plans_to_timetable: {
+        Args: never
+        Returns: {
+          failed: number
+          synced: number
+        }[]
+      }
       sync_payroll_calendar_from_academic_year: {
         Args: { p_month: number; p_year: number }
         Returns: number
+      }
+      sync_quran_plan_to_timetable: {
+        Args: { p_plan_id: string }
+        Returns: string
       }
       teacher_course_permission_status: {
         Args: { p_course_id: string; p_on_date?: string; p_teacher_id: string }
@@ -4839,6 +5103,10 @@ export type Database = {
           p_weekday: number
         }
         Returns: string
+      }
+      validate_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
       }
     }
     Enums: {

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { BookOpenCheck, BrainCircuit, BriefcaseBusiness, Building2, CalendarDays, Calculator, Crown, FileClock, GitCompareArrows, GraduationCap, History, KeyRound, Scale, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
+import { BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, Calculator, Crown, FileClock, GraduationCap, History, KeyRound, Scale, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { supabase } from "@/lib/supabase";
 
@@ -12,9 +12,7 @@ const items:readonly ManagementItem[]=[
  {to:'/norm-analysis',title:'Norm Kadro Analizi',desc:'Ders yükü, formal norm, mevcut öğretmen ve açık/fazla analizi',icon:Scale,permissions:['norm.view','norm.manage']},
  {to:'/norm-settings',title:'Norm Eşleştirmeleri',desc:'Ders → norm alanı ve alan → yürürlükteki norm kuralı',icon:Settings,permissions:['norm.manage']},
  {to:'/schedule-rules',title:'Program Kuralları',desc:'Zaman şablonu, öğretmen tercihleri, blok ve eşzamanlı grup kuralları',icon:SlidersHorizontal,permissions:['schedule.rules']},
- {to:'/schedule-optimization',title:'Program Optimizasyonu',desc:'Hard/Soft kurallar, pedagojik yük, nöbet, atölye ve açıklanabilir senaryo',icon:BrainCircuit,permissions:['schedule.rules']},
  {to:'/schedule-solver',title:'Program Çözücü',desc:'Kilitler, 4 senaryo, repair/backtracking ve kalite puanlama',icon:Sparkles,permissions:['schedule.generate','schedule.apply']},
- {to:'/schedule-scenario-comparison',title:'Senaryo Karşılaştırması',desc:'Son 4 senaryoyu hard bütünlük, pedagojik kalite, nöbet ve atölye etkisiyle yan yana karşılaştır',icon:GitCompareArrows,permissions:['schedule.view','schedule.generate','schedule.apply']},
  {to:'/classrooms',title:'Derslik Envanteri',desc:'Kapasite, derslik tipi, bölüm ve gerekli donanım kuralları',icon:Building2,permissions:['classrooms.manage']},
  {to:'/room-assignment',title:'Otomatik Derslik Atama',desc:'Kapasite, tip, donanım ve saat çakışmasına göre atama',icon:Building2,permissions:['schedule.generate','classrooms.manage']},
  {to:'/schedule',title:'Çalışma Programı',desc:'Müfredata bağlı manuel program ve e-Okul/Excel içe aktarma',icon:GraduationCap,permissions:['schedule.view','schedule.edit']},
