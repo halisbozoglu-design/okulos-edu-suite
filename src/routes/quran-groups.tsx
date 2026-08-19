@@ -46,7 +46,7 @@ function QuranGroupManager() {
 
   const load = useCallback(async () => {
     const [c, t, r, p] = await Promise.all([
-      supabase.from("school_classes").select("id,class_name,composite_key,program_type,student_count").eq("active", true).order("composite_key"),
+      supabase.from("class_roster_summary").select("id,class_name,composite_key,program_type,student_count").order("composite_key"),
       supabase.from("profiles").select("user_id,full_name").eq("role", "teacher").order("full_name"),
       supabase.from("classrooms").select("id,name,capacity").eq("active", true).order("name"),
       supabase.from("quran_split_plans").select("id,class_id,academic_year,enabled,teacher_1_id,teacher_2_id").eq("enabled", true),
