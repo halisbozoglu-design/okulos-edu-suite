@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { AlertCircle, ArrowRight, GraduationCap, MailCheck, ShieldCheck } from "lucide-react";
+import { AlertCircle, ArrowRight, Crown, GraduationCap, MailCheck, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,8 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/")({ component: AuthScreen });
+
+const SUPER_ADMIN_EMAIL = "halisbozoglu@yahoo.com";
 
 function AuthScreen() {
   return (
@@ -20,10 +22,15 @@ function AuthScreen() {
           <p className="mt-1 text-sm text-muted-foreground">Kurumsal personel giriş ve kayıt ekranı.</p>
         </div>
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-          <Tabs defaultValue="signup">
-            <TabsList className="w-full"><TabsTrigger value="login" className="flex-1">Giriş Yap</TabsTrigger><TabsTrigger value="signup" className="flex-1">Üye Ol</TabsTrigger></TabsList>
+          <Tabs defaultValue="login">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="login">Giriş Yap</TabsTrigger>
+              <TabsTrigger value="signup">Üye Ol</TabsTrigger>
+              <TabsTrigger value="superadmin">Süper Admin</TabsTrigger>
+            </TabsList>
             <TabsContent value="login" className="mt-5"><LoginForm /></TabsContent>
             <TabsContent value="signup" className="mt-5"><SignUpFlow /></TabsContent>
+            <TabsContent value="superadmin" className="mt-5"><SuperAdminLogin /></TabsContent>
           </Tabs>
           <p className="mt-5 flex items-start gap-2 text-xs text-muted-foreground"><ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-primary" />Kimlik ve profil verileri yetki kurallarıyla korunur.</p>
         </div>
@@ -45,6 +52,50 @@ async function validateTeacher(tckn: string, email?: string) {
   return !error && Boolean(data?.valid);
 }
 
+function SuperAdminLogin() {
+  const navigate = useNavigate();
+  const [otp, setOtp] = useState("");
+  const [codeSent, setCodeSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function sendCode() {
+    setBusy(true); setError(null);
+    const { error: authError } = await supabase.auth.signInWithOtp({
+      email: SUPER_ADMIN_EMAIL,
+      options: { shouldCreateUser: true },
+    });
+    setBusy(false);
+    if (authError) return setError("Süper Admin doğrulama kodu gönderilemedi.");
+    setCodeSent(true);
+  }
+
+  async function verify(e: React.FormEvent) {
+    e.preventDefault();
+    if (otp.length !== 6) return setError("6 haneli doğrulama kodunu giriniz.");
+    setBusy(true); setError(null);
+    const { data, error: authError } = await supabase.auth.verifyOtp({ email: SUPER_ADMIN_EMAIL, token: otp, type: "email" });
+    if (authError || !data.user) { setBusy(false); return setError("Doğrulama kodu geçersiz veya süresi dolmuş."); }
+    const { error: claimError } = await supabase.rpc("claim_super_admin_profile");
+    setBusy(false);
+    if (claimError) return setError("Süper Admin profili oluşturulamadı. Bootstrap migration'ını kontrol edin.");
+    void navigate({ to: "/super-admin" });
+  }
+
+  return (
+    <form className="space-y-4" onSubmit={verify}>
+      <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-3 text-sm text-indigo-950">
+        <div className="flex items-start gap-2"><Crown className="mt-0.5 size-4 shrink-0" /><div><b>İlk sistem yöneticisi girişi.</b> T.C. ön kayıt kontrolü uygulanmaz; yalnız sistemde izin verilen bu e-posta 6 haneli OTP ile doğrulanır.</div></div>
+      </div>
+      <div className="space-y-2"><Label>Süper Admin E-posta</Label><Input value={SUPER_ADMIN_EMAIL} readOnly /></div>
+      <Button type="button" className="w-full" onClick={() => void sendCode()} disabled={busy}>{codeSent ? "Kodu Tekrar Gönder" : "6 Haneli Kod Gönder"}</Button>
+      {codeSent ? <div className="space-y-2"><div className="flex items-center gap-2 text-xs text-muted-foreground"><MailCheck className="size-3.5 text-primary" />Kod e-posta adresinize gönderildi.</div><Label>Doğrulama Kodu</Label><OtpFields otp={otp} setOtp={setOtp} /></div> : null}
+      {error ? <ErrorNotice message={error} /> : null}
+      <Button type="submit" size="lg" className="w-full gap-2" disabled={!codeSent || busy}>Süper Admin Olarak Gir <Crown className="size-4" /></Button>
+    </form>
+  );
+}
+
 function LoginForm() {
   const navigate = useNavigate();
   const [tckn, setTckn] = useState("");
@@ -59,9 +110,7 @@ function LoginForm() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return setError("Geçerli bir e-posta adresi giriniz.");
     setBusy(true); setError(null);
     const normalizedEmail = email.trim().toLowerCase();
-    if (!(await validateTeacher(tckn, normalizedEmail))) {
-      setBusy(false); setError("Kaydınız bulunamadı. Lütfen kurumunuzla iletişime geçiniz."); return;
-    }
+    if (!(await validateTeacher(tckn, normalizedEmail))) { setBusy(false); setError("Kaydınız bulunamadı. Lütfen kurumunuzla iletişime geçiniz."); return; }
     const { error: authError } = await supabase.auth.signInWithOtp({ email: normalizedEmail, options: { shouldCreateUser: false } });
     setBusy(false);
     if (authError) return setError("Giriş kodu gönderilemedi. Bilgilerinizi kontrol ediniz.");
@@ -78,16 +127,14 @@ function LoginForm() {
     void navigate({ to: "/dashboard" });
   }
 
-  return (
-    <form className="space-y-4" onSubmit={verify}>
-      <div className="space-y-2"><Label htmlFor="login-tckn">T.C. Kimlik No</Label><Input id="login-tckn" inputMode="numeric" maxLength={11} value={tckn} disabled={codeSent} onChange={(e) => setTckn(e.target.value.replace(/\D/g, "").slice(0,11))} /></div>
-      <div className="space-y-2"><Label htmlFor="login-email">E-posta</Label><Input id="login-email" type="email" value={email} disabled={codeSent} onChange={(e) => setEmail(e.target.value)} /></div>
-      <Button type="button" className="w-full" onClick={sendCode} disabled={busy}>{codeSent ? "Kodu Tekrar Gönder" : "Kod Gönder"}</Button>
-      {codeSent ? <div className="space-y-2"><Label>Doğrulama Kodu</Label><OtpFields otp={otp} setOtp={setOtp} /></div> : null}
-      {error ? <ErrorNotice message={error} /> : null}
-      <Button type="submit" size="lg" className="w-full gap-2" disabled={!codeSent || busy}>Giriş Yap <ArrowRight className="size-4" /></Button>
-    </form>
-  );
+  return <form className="space-y-4" onSubmit={verify}>
+    <div className="space-y-2"><Label htmlFor="login-tckn">T.C. Kimlik No</Label><Input id="login-tckn" inputMode="numeric" maxLength={11} value={tckn} disabled={codeSent} onChange={(e) => setTckn(e.target.value.replace(/\D/g, "").slice(0,11))} /></div>
+    <div className="space-y-2"><Label htmlFor="login-email">E-posta</Label><Input id="login-email" type="email" value={email} disabled={codeSent} onChange={(e) => setEmail(e.target.value)} /></div>
+    <Button type="button" className="w-full" onClick={() => void sendCode()} disabled={busy}>{codeSent ? "Kodu Tekrar Gönder" : "Kod Gönder"}</Button>
+    {codeSent ? <div className="space-y-2"><Label>Doğrulama Kodu</Label><OtpFields otp={otp} setOtp={setOtp} /></div> : null}
+    {error ? <ErrorNotice message={error} /> : null}
+    <Button type="submit" size="lg" className="w-full gap-2" disabled={!codeSent || busy}>Giriş Yap <ArrowRight className="size-4" /></Button>
+  </form>;
 }
 
 function SignUpFlow() {
@@ -114,9 +161,7 @@ function SignUpFlow() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return setError("Geçerli bir e-posta adresi giriniz.");
     setBusy(true); setError(null);
     const normalizedEmail = email.trim().toLowerCase();
-    if (!(await validateTeacher(tckn, normalizedEmail))) {
-      setBusy(false); setError("T.C. Kimlik No ile e-posta kaydı eşleşmiyor. Lütfen kurumunuzla iletişime geçiniz."); return;
-    }
+    if (!(await validateTeacher(tckn, normalizedEmail))) { setBusy(false); setError("T.C. Kimlik No ile e-posta kaydı eşleşmiyor. Lütfen kurumunuzla iletişime geçiniz."); return; }
     const { error: authError } = await supabase.auth.signInWithOtp({ email: normalizedEmail, options: { shouldCreateUser: true } });
     setBusy(false);
     if (authError) return setError("Doğrulama kodu gönderilemedi.");
@@ -136,21 +181,15 @@ function SignUpFlow() {
     void navigate({ to: "/dashboard" });
   }
 
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2"><span className="text-xs font-medium text-muted-foreground">{step === 1 ? "Adım 1 / 2 · Kimlik Doğrulama" : "Adım 2 / 2 · E-posta Onayı"}</span><div className="ml-auto flex gap-1"><span className="h-1.5 w-6 rounded-full bg-primary" /><span className={step === 2 ? "h-1.5 w-6 rounded-full bg-primary" : "h-1.5 w-6 rounded-full bg-muted"} /></div></div>
-      {step === 1 ? (
-        <form className="space-y-4" onSubmit={continueWithTc}><div className="space-y-2"><Label htmlFor="signup-tckn">T.C. Kimlik No</Label><Input id="signup-tckn" inputMode="numeric" maxLength={11} value={tckn} onChange={(e) => setTckn(e.target.value.replace(/\D/g, "").slice(0,11))} /><p className="text-xs text-muted-foreground">{tckn.length}/11 hane</p></div>{error ? <ErrorNotice message={error} /> : null}<Button type="submit" size="lg" className="w-full gap-2" disabled={busy}>Devam Et <ArrowRight className="size-4" /></Button></form>
-      ) : (
-        <form className="space-y-4" onSubmit={finalize}>
-          <div className="rounded-xl border border-border bg-primary-soft px-3 py-2 text-xs text-accent-foreground">Kimlik doğrulandı · {tckn.slice(0,2)}*******{tckn.slice(-2)}</div>
-          <div className="space-y-2"><Label htmlFor="signup-email">E-posta</Label><Input id="signup-email" type="email" value={email} disabled={codeSent} onChange={(e) => setEmail(e.target.value)} /></div>
-          <Button type="button" className="w-full" onClick={sendCode} disabled={busy}>{codeSent ? "Kodu Tekrar Gönder" : "Kod Gönder"}</Button>
-          {codeSent ? <div className="space-y-2"><div className="flex items-center gap-2 text-xs text-muted-foreground"><MailCheck className="size-3.5 text-primary" />6 haneli kod e-posta adresinize gönderildi.</div><Label>Doğrulama Kodu</Label><OtpFields otp={otp} setOtp={setOtp} /></div> : null}
-          {error ? <ErrorNotice message={error} /> : null}
-          <div className="flex gap-2"><Button type="button" variant="ghost" onClick={() => { setStep(1); setError(null); }}>Geri</Button><Button type="submit" size="lg" className="flex-1" disabled={!codeSent || busy}>Kaydı Tamamla</Button></div>
-        </form>
-      )}
-    </div>
-  );
+  return <div className="space-y-4">
+    <div className="flex items-center gap-2"><span className="text-xs font-medium text-muted-foreground">{step === 1 ? "Adım 1 / 2 · Kimlik Doğrulama" : "Adım 2 / 2 · E-posta Onayı"}</span><div className="ml-auto flex gap-1"><span className="h-1.5 w-6 rounded-full bg-primary" /><span className={step === 2 ? "h-1.5 w-6 rounded-full bg-primary" : "h-1.5 w-6 rounded-full bg-muted"} /></div></div>
+    {step === 1 ? <form className="space-y-4" onSubmit={continueWithTc}><div className="space-y-2"><Label htmlFor="signup-tckn">T.C. Kimlik No</Label><Input id="signup-tckn" inputMode="numeric" maxLength={11} value={tckn} onChange={(e) => setTckn(e.target.value.replace(/\D/g, "").slice(0,11))} /><p className="text-xs text-muted-foreground">{tckn.length}/11 hane</p></div>{error ? <ErrorNotice message={error} /> : null}<Button type="submit" size="lg" className="w-full gap-2" disabled={busy}>Devam Et <ArrowRight className="size-4" /></Button></form> : <form className="space-y-4" onSubmit={finalize}>
+      <div className="rounded-xl border border-border bg-primary-soft px-3 py-2 text-xs text-accent-foreground">Kimlik doğrulandı · {tckn.slice(0,2)}*******{tckn.slice(-2)}</div>
+      <div className="space-y-2"><Label htmlFor="signup-email">E-posta</Label><Input id="signup-email" type="email" value={email} disabled={codeSent} onChange={(e) => setEmail(e.target.value)} /></div>
+      <Button type="button" className="w-full" onClick={() => void sendCode()} disabled={busy}>{codeSent ? "Kodu Tekrar Gönder" : "Kod Gönder"}</Button>
+      {codeSent ? <div className="space-y-2"><div className="flex items-center gap-2 text-xs text-muted-foreground"><MailCheck className="size-3.5 text-primary" />6 haneli kod e-posta adresinize gönderildi.</div><Label>Doğrulama Kodu</Label><OtpFields otp={otp} setOtp={setOtp} /></div> : null}
+      {error ? <ErrorNotice message={error} /> : null}
+      <div className="flex gap-2"><Button type="button" variant="ghost" onClick={() => { setStep(1); setError(null); }}>Geri</Button><Button type="submit" size="lg" className="flex-1" disabled={!codeSent || busy}>Kaydı Tamamla</Button></div>
+    </form>}
+  </div>;
 }
