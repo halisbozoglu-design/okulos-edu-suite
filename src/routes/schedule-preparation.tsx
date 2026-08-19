@@ -9,6 +9,7 @@ export const Route=createFileRoute("/schedule-preparation")({head:()=>({meta:[{t
 type Item={category:string;code:string;status:string;affected_count:number;detail:string};
 const target:Record<string,string>={
  ACTIVE_TIME_PROFILE:"/schedule-rules",CURRICULUM_NOT_READY:"/curriculum",TEACHER_CONSTRAINT_ROW_MISSING:"/schedule-rules",
+ TEACHER_ASSIGNED_HOURS_EXCEED_WEEKLY_LIMIT:"/schedule-rules",TEACHER_ASSIGNED_HOURS_EXCEED_DAY_CAPACITY:"/schedule-rules",
  LOCKED_ROW_UNLINKED:"/schedule",LOCKED_ROW_SEMANTIC_MISMATCH:"/schedule",LOCKED_TEACHER_UNAVAILABLE:"/schedule-rules",LOCKED_HOURS_EXCEED_ASSIGNMENT:"/schedule",
  SYNC_GROUP_EMPTY:"/schedule-rules",SYNC_MEMBER_BLOCK_LENGTH_MISMATCH:"/schedule-rules",SYNC_SUBGROUP_MISMATCH:"/schedule-rules",SYNC_SUBGROUP_HAS_NO_STUDENTS:"/schedule-rules",SYNC_SUBGROUP_STUDENT_OVERLAP:"/schedule-rules",
  QURAN_WEEKLY_SYNC_INCOMPLETE:"/quran-groups",ROOM_RULE_HAS_NO_MATCHING_ROOM:"/classrooms",BLOCK_PATTERN_ASSIGNMENT_MISMATCH:"/schedule-rules",
