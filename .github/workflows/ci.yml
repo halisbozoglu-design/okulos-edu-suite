@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Typecheck & Build
+    name: Build & Typecheck
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -41,8 +41,8 @@ jobs:
       - name: Check auth flow
         run: node scripts/check-auth-flow.mjs
 
+      - name: Production build and generate routes
+        run: bun run build
+
       - name: TypeScript check
         run: bunx tsc --noEmit
-
-      - name: Production build
-        run: bun run build
