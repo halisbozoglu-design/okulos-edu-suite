@@ -50,6 +50,13 @@ export type Database = {
             foreignKeyName: "absence_lessons_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "absence_lessons_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
             referencedRelation: "school_classes"
             referencedColumns: ["id"]
           },
@@ -72,6 +79,9 @@ export type Database = {
       absences: {
         Row: {
           absence_date: string
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
           created_at: string
           crisis_report_id: string
           has_medical_report: boolean
@@ -82,6 +92,9 @@ export type Database = {
         }
         Insert: {
           absence_date: string
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           crisis_report_id: string
           has_medical_report?: boolean
@@ -92,6 +105,9 @@ export type Database = {
         }
         Update: {
           absence_date?: string
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           crisis_report_id?: string
           has_medical_report?: boolean
@@ -101,6 +117,13 @@ export type Database = {
           teacher_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "absences_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "absences_crisis_report_id_fkey"
             columns: ["crisis_report_id"]
@@ -253,6 +276,41 @@ export type Database = {
           },
         ]
       }
+      eokul_import_batches: {
+        Row: {
+          file_name: string
+          file_type: string
+          id: string
+          imported_at: string
+          imported_by: string
+          row_count: number
+        }
+        Insert: {
+          file_name: string
+          file_type: string
+          id?: string
+          imported_at?: string
+          imported_by: string
+          row_count?: number
+        }
+        Update: {
+          file_name?: string
+          file_type?: string
+          id?: string
+          imported_at?: string
+          imported_by?: string
+          row_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eokul_import_batches_imported_by_fkey"
+            columns: ["imported_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       fcm_tokens: {
         Row: {
           id: string
@@ -332,6 +390,154 @@ export type Database = {
           },
         ]
       }
+      payroll_calculation_runs: {
+        Row: {
+          calculated_by: string
+          created_at: string
+          id: string
+          period_end: string
+          period_start: string
+          rule_version: string
+          status: string
+        }
+        Insert: {
+          calculated_by: string
+          created_at?: string
+          id?: string
+          period_end: string
+          period_start: string
+          rule_version?: string
+          status?: string
+        }
+        Update: {
+          calculated_by?: string
+          created_at?: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          rule_version?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_calculation_runs_calculated_by_fkey"
+            columns: ["calculated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      payroll_calendar: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          calendar_date: string
+          day_type: string
+          deemed_guidance_performed: boolean
+          deemed_regular_performed: boolean
+          duty_payable: boolean
+          source_note: string | null
+          title: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          calendar_date: string
+          day_type: string
+          deemed_guidance_performed?: boolean
+          deemed_regular_performed?: boolean
+          duty_payable?: boolean
+          source_note?: string | null
+          title: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          calendar_date?: string
+          day_type?: string
+          deemed_guidance_performed?: boolean
+          deemed_regular_performed?: boolean
+          duty_payable?: boolean
+          source_note?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_calendar_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      payroll_day_entries: {
+        Row: {
+          approved: boolean
+          approved_at: string | null
+          approved_by: string | null
+          calculated: boolean
+          category: string
+          created_at: string
+          explanation: string | null
+          hours: number
+          id: string
+          kbs_data_type: string
+          source_id: string | null
+          source_type: string
+          teacher_id: string
+          work_date: string
+        }
+        Insert: {
+          approved?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
+          calculated?: boolean
+          category: string
+          created_at?: string
+          explanation?: string | null
+          hours?: number
+          id?: string
+          kbs_data_type?: string
+          source_id?: string | null
+          source_type: string
+          teacher_id: string
+          work_date: string
+        }
+        Update: {
+          approved?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
+          calculated?: boolean
+          category?: string
+          created_at?: string
+          explanation?: string | null
+          hours?: number
+          id?: string
+          kbs_data_type?: string
+          source_id?: string | null
+          source_type?: string
+          teacher_id?: string
+          work_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_day_entries_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_day_entries_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       pre_registered_teachers: {
         Row: {
           active: boolean
@@ -402,22 +608,98 @@ export type Database = {
         Row: {
           active: boolean
           class_name: string
+          composite_key: string | null
+          grade_level: number | null
           id: string
           program_type: string | null
+          section: string | null
+          source: string
+          split_threshold: number
+          updated_at: string
         }
         Insert: {
           active?: boolean
           class_name: string
+          composite_key?: string | null
+          grade_level?: number | null
           id?: string
           program_type?: string | null
+          section?: string | null
+          source?: string
+          split_threshold?: number
+          updated_at?: string
         }
         Update: {
           active?: boolean
           class_name?: string
+          composite_key?: string | null
+          grade_level?: number | null
           id?: string
           program_type?: string | null
+          section?: string | null
+          source?: string
+          split_threshold?: number
+          updated_at?: string
         }
         Relationships: []
+      }
+      students: {
+        Row: {
+          active: boolean
+          class_id: string
+          created_at: string
+          full_name: string
+          id: string
+          import_batch_id: string | null
+          school_number: string
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          class_id: string
+          created_at?: string
+          full_name: string
+          id?: string
+          import_batch_id?: string | null
+          school_number: string
+          source?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          class_id?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          import_batch_id?: string | null
+          school_number?: string
+          source?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "students_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "students_import_batch_id_fkey"
+            columns: ["import_batch_id"]
+            isOneToOne: false
+            referencedRelation: "eokul_import_batches"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       substitute_assignments: {
         Row: {
@@ -507,6 +789,47 @@ export type Database = {
           },
         ]
       }
+      teacher_payroll_config: {
+        Row: {
+          active: boolean
+          gunduz_kbs_data_type: string
+          has_class_guidance: boolean
+          nobet_kbs_data_type: string
+          rehberlik_kbs_data_type: string
+          teacher_id: string
+          updated_at: string
+          weekly_salary_obligation: number
+        }
+        Insert: {
+          active?: boolean
+          gunduz_kbs_data_type?: string
+          has_class_guidance?: boolean
+          nobet_kbs_data_type?: string
+          rehberlik_kbs_data_type?: string
+          teacher_id: string
+          updated_at?: string
+          weekly_salary_obligation?: number
+        }
+        Update: {
+          active?: boolean
+          gunduz_kbs_data_type?: string
+          has_class_guidance?: boolean
+          nobet_kbs_data_type?: string
+          rehberlik_kbs_data_type?: string
+          teacher_id?: string
+          updated_at?: string
+          weekly_salary_obligation?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_payroll_config_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       teacher_schedule: {
         Row: {
           class_id: string | null
@@ -536,6 +859,13 @@ export type Database = {
           weekday?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "teacher_schedule_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "teacher_schedule_class_id_fkey"
             columns: ["class_id"]
@@ -577,9 +907,27 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      class_roster_summary: {
+        Row: {
+          class_name: string | null
+          composite_key: string | null
+          grade_level: number | null
+          id: string | null
+          needs_split: boolean | null
+          program_type: string | null
+          section: string | null
+          split_threshold: number | null
+          student_count: number | null
+          suggested_group_count: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      approve_payroll_month: {
+        Args: { p_month: number; p_year: number }
+        Returns: number
+      }
       assign_substitutes_for_day: {
         Args: { p_date?: string }
         Returns: {
@@ -592,8 +940,51 @@ export type Database = {
           substitute_user_id: string
         }[]
       }
+      import_eokul_roster: {
+        Args: { p_file_name: string; p_file_type: string; p_rows: Json }
+        Returns: {
+          affected_classes: number
+          import_batch_id: string
+          imported_students: number
+        }[]
+      }
       is_admin: { Args: never; Returns: boolean }
       is_manager_or_admin: { Args: never; Returns: boolean }
+      kbs_payroll_export: {
+        Args: { p_month: number; p_year: number }
+        Returns: {
+          data_type: string
+          explanation: string
+          full_name: string
+          hours: number
+          tckn: string
+        }[]
+      }
+      normalize_class_key: {
+        Args: { p_class_name: string; p_program_type: string }
+        Returns: string
+      }
+      payroll_month_is_locked: {
+        Args: { p_month: number; p_year: number }
+        Returns: boolean
+      }
+      payroll_month_matrix: {
+        Args: { p_month: number; p_year: number }
+        Returns: {
+          approved: boolean
+          category: string
+          full_name: string
+          hours: number
+          kbs_data_type: string
+          role: Database["public"]["Enums"]["app_role"]
+          teacher_id: string
+          work_date: string
+        }[]
+      }
+      recalculate_payroll_month: {
+        Args: { p_month: number; p_year: number }
+        Returns: string
+      }
       suggest_substitutes_for_day: {
         Args: { p_date?: string }
         Returns: {
