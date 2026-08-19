@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -33,6 +34,9 @@ jobs:
 
       - name: Check Supabase migrations
         run: node scripts/check-migrations.mjs
+
+      - name: Check timetable migration authority
+        run: node scripts/check-timetable-authority.mjs
 
       - name: TypeScript check
         run: bunx tsc --noEmit
