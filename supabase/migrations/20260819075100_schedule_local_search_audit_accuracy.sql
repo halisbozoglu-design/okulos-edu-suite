@@ -1,4 +1,6 @@
 -- Preserve accurate pre/post hard-issue snapshots for soft local-search audit.
+-- Every accepted move must also be monotonic for hard validity: it may never reintroduce
+-- a hard issue that an earlier accepted move already removed.
 
 create or replace function public.improve_schedule_scenario_soft_v1(p_scenario_id uuid,p_max_moves integer default 20)
 returns integer language plpgsql security definer set search_path=public as $$
@@ -6,7 +8,7 @@ declare
   v_profile public.schedule_time_profiles%rowtype;
   v_row record;v_rule public.course_schedule_rules%rowtype;
   v_old_day smallint;v_old_period smallint;d smallint;p smallint;
-  v_before_score integer;v_after_score integer;v_trial_hard integer;
+  v_before_score integer;v_after_score integer;v_trial_hard integer;v_current_hard integer;
   v_moves integer:=0;v_action_no integer;v_start_score integer;v_end_score integer;
   v_start_hard integer;v_end_hard integer;
 begin
@@ -14,6 +16,7 @@ begin
   if not found or p_max_moves<=0 then return 0;end if;
   v_start_score:=public.calculate_schedule_scenario_score_v2(p_scenario_id);
   select coalesce(sum(affected_count),0)::integer into v_start_hard from public.get_schedule_scenario_hard_issues_v2(p_scenario_id);
+  v_current_hard:=v_start_hard;
 
   for v_row in
     select r.id,r.teacher_id,r.class_id,r.course_id,r.requirement_id,r.teacher_assignment_id,r.classroom_id,r.weekday,r.period
@@ -41,10 +44,11 @@ begin
         begin
           update public.schedule_scenario_rows set weekday=d,period=p where id=v_row.id;
           select coalesce(sum(affected_count),0)::integer into v_trial_hard from public.get_schedule_scenario_hard_issues_v2(p_scenario_id);
-          if v_trial_hard<=v_start_hard then
+          if v_trial_hard<=v_current_hard then
             v_after_score:=public.calculate_schedule_scenario_score_v2(p_scenario_id);
             if v_after_score<v_before_score then
               v_moves:=v_moves+1;
+              v_current_hard:=v_trial_hard;
               v_row.weekday:=d;v_row.period:=p;
               exit candidate_days;
             end if;
