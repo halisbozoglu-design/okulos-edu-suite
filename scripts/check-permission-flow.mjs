@@ -1,30 +1,53 @@
 import { existsSync, readFileSync } from 'node:fs';
 
-const requiredFiles=[
-  'supabase/migrations/20260819072700_dynamic_task_permission_engine.sql',
-  'supabase/migrations/20260819072800_permission_mode_and_legacy_manager_bridge.sql',
-  'supabase/migrations/20260819072900_delegated_permission_gateway.sql',
-  'supabase/migrations/20260819073000_delegated_permission_module_coverage.sql',
-  'src/routes/settings-permissions.tsx',
-];
+const files={
+ engine:'supabase/migrations/20260819072700_dynamic_task_permission_engine.sql',
+ mode:'supabase/migrations/20260819072800_permission_mode_and_legacy_manager_bridge.sql',
+ gateway:'supabase/migrations/20260819072900_delegated_permission_gateway.sql',
+ coverage:'supabase/migrations/20260819073000_delegated_permission_module_coverage.sql',
+ grants:'supabase/migrations/20260819073100_delegated_permission_grants_completion.sql',
+ personnel:'supabase/migrations/20260819073200_delegated_personnel_operations.sql',
+ dependencies:'supabase/migrations/20260819073300_permission_dependency_and_read_access.sql',
+ calendarDuty:'supabase/migrations/20260819073400_delegated_calendar_and_duty_operations.sql',
+ taskRoles:'supabase/migrations/20260819073500_custom_task_role_templates.sql',
+ legacyCleanup:'supabase/migrations/20260819073600_delegated_manager_legacy_policy_cleanup.sql',
+ hook:'src/lib/permissions.ts',
+ permissionUi:'src/routes/settings-permissions.tsx',
+ taskRoleUi:'src/routes/settings-task-roles.tsx',
+ payrollUi:'src/routes/payroll.tsx',
+ personnelUi:'src/routes/personnel-admin.tsx',
+ calendarUi:'src/routes/calendar.tsx',
+ dutyUi:'src/routes/settings.tsx',
+ substitutesUi:'src/routes/substitutes.tsx',
+ managementUi:'src/routes/management.tsx',
+};
 const errors=[];
-for(const file of requiredFiles) if(!existsSync(file)) errors.push(`eksik dosya: ${file}`);
+for(const [key,file] of Object.entries(files)) if(!existsSync(file)) errors.push(`${key}: eksik dosya ${file}`);
+const read=(key)=>readFileSync(files[key],'utf8');
+const requireTokens=(key,tokens)=>{const body=read(key);for(const token of tokens)if(!body.includes(token))errors.push(`${key}: eksik sözleşme ${token}`);return body;};
 
-const engine=readFileSync(requiredFiles[0],'utf8');
-for(const token of ['permission_catalog','user_permission_grants','permission_audit_log','set_user_permission','schedule.generate','duty.generate','payroll.calculate'])
-  if(!engine.includes(token)) errors.push(`permission engine eksik: ${token}`);
+requireTokens('engine',['permission_catalog','user_permission_grants','permission_audit_log','set_user_permission','schedule.generate','duty.generate','payroll.calculate','permissions.manage']);
+requireTokens('mode',['permission_mode',"'delegated'",'set_user_permission_mode','drop function if exists public.get_permission_admin_matrix']);
+requireTokens('gateway',['open_permission_context','current_permission_context','schedule.generate','schedule.apply','schedule.publish','duty.generate','duty.lock','payroll.calculate','payroll.approve','payroll.publish','has_permission(public.current_permission_context())']);
+requireTokens('coverage',['substitutes.manage','curriculum.manage','quran.manage','norm.manage','classrooms.manage']);
+requireTokens('personnel',['get_personnel_admin_list','set_personnel_teaching_area','CANNOT_MODIFY_SUPER_ADMIN','personnel.manage']);
+requireTokens('dependencies',['has_module_operation_permission','payroll_month_matrix_permission_core_v2','module_code=\'payroll\'']);
+requireTokens('calendarDuty',['settings.manage','set_active_academic_year_permission_core_v2','get_daily_duty_book_permission_core_v2','duty.manage']);
+const taskRoles=requireTokens('taskRoles',['task_role_templates','task_role_template_permissions','user_task_role_assignments','assign_task_role_template','revoke_task_role_template','PERMISSION_ADMIN_CANNOT_BE_TASK_TEMPLATE']);
+if(taskRoles.includes("perform public.set_user_permission(p_user_id")) errors.push('taskRoles: şablon yetkileri doğrudan bireysel grant tablosuna kopyalanmamalı');
+const cleanup=requireTokens('legacyCleanup',['drop policy if exists "teacher can read own crisis"','drop policy if exists "teacher can read own absence lessons"','drop policy if exists "assigned teacher can read assignments"','substitutes.view']);
+if(!cleanup.includes("has_module_operation_permission('duty')"))errors.push('legacyCleanup: nöbet görevli okuma köprüsü eksik');
 
-const mode=readFileSync(requiredFiles[1],'utf8');
-for(const token of ['permission_mode',"'delegated'",'set_user_permission_mode'])
-  if(!mode.includes(token)) errors.push(`permission mode eksik: ${token}`);
-
-const gateway=readFileSync(requiredFiles[2],'utf8');
-for(const token of ['open_permission_context','schedule.generate','schedule.apply','schedule.publish','duty.generate','duty.lock','payroll.calculate','payroll.approve','payroll.publish','has_permission(public.current_permission_context())'])
-  if(!gateway.includes(token)) errors.push(`permission gateway eksik: ${token}`);
-
-const ui=readFileSync(requiredFiles[4],'utf8');
-for(const token of ['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','Görev Bazlı'])
-  if(!ui.includes(token)) errors.push(`permission UI eksik: ${token}`);
+requireTokens('hook',['usePermissions','get_my_permissions','can','any','all']);
+requireTokens('permissionUi',['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','Görev Bazlı','Yetki Denetim Geçmişi']);
+requireTokens('taskRoleUi',['Görev Şablonları','save_task_role_template','assign_task_role_template','revoke_task_role_template']);
+requireTokens('payrollUi',['payroll.calculate','payroll.edit','payroll.approve','payroll.publish']);
+requireTokens('personnelUi',['personnel.view','personnel.manage','get_personnel_admin_list']);
+requireTokens('calendarUi',['settings.manage','salt okunur']);
+requireTokens('dutyUi',['duty.view','duty.manage','duty.generate','duty.lock']);
+requireTokens('substitutesUi',['substitutes.view','substitutes.manage','Salt okunur']);
+const management=requireTokens('managementUi',['/settings/permissions','/settings-task-roles','permissions.manage']);
+if(management.includes("to:'/notifications'"))errors.push('managementUi: kişisel PWA/bildirim ayarı kurumsal görev delegasyonu kartı olarak gösterilmemeli');
 
 if(errors.length){console.error('Permission flow check FAILED:\n'+errors.map(e=>`- ${e}`).join('\n'));process.exit(1);}
-console.log('Permission flow check OK.');
+console.log('Permission flow check OK: delegated roles, task templates, gateways, RLS cleanup and permission-aware UIs are present.');
