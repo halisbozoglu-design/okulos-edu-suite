@@ -25,6 +25,7 @@ as $$
 declare
   v_row record;
   v_rule public.lesson_room_rules%rowtype;
+  v_rule_found boolean;
   v_room uuid;
   v_students integer;
   v_assigned integer:=0;
@@ -59,6 +60,7 @@ begin
     where lr.active=true and v_row.subject ilike lr.subject_pattern
     order by length(lr.subject_pattern) desc
     limit 1;
+    v_rule_found:=found;
 
     select c.id into v_room
     from public.classrooms c
@@ -70,7 +72,7 @@ begin
           and x.classroom_id=c.id and x.id<>v_row.id
       )
       and (
-        not found
+        not v_rule_found
         or (
           (v_rule.required_room_type is null or c.room_type=v_rule.required_room_type)
           and (v_rule.required_department is null or coalesce(c.department,'')=v_rule.required_department)
@@ -78,7 +80,7 @@ begin
         )
       )
     order by
-      case when found and v_rule.required_department is not null and c.department=v_rule.required_department then 0 else 1 end,
+      case when v_rule_found and v_rule.required_department is not null and c.department=v_rule.required_department then 0 else 1 end,
       c.capacity-coalesce(v_students,0),
       c.name
     limit 1;
@@ -86,7 +88,7 @@ begin
     if v_room is null then
       insert into public.schedule_room_assignment_issues(scenario_id,scenario_row_id,reason,detail)
       values(p_scenario_id,v_row.id,'NO_SUITABLE_CLASSROOM',
-        case when found then 'Derslik tipi/kapasite/donanım koşullarına uygun boş derslik bulunamadı' else 'Kapasitesi yeterli boş derslik bulunamadı' end)
+        case when v_rule_found then 'Derslik tipi/kapasite/donanım koşullarına uygun boş derslik bulunamadı' else 'Kapasitesi yeterli boş derslik bulunamadı' end)
       on conflict(scenario_id,scenario_row_id) do update set reason=excluded.reason,detail=excluded.detail,created_at=now();
       v_unassigned:=v_unassigned+1;
     else
