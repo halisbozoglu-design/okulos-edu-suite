@@ -1,85 +1,35 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-function base64Url(input: Uint8Array | string) {
-  const bytes = typeof input === "string" ? new TextEncoder().encode(input) : input;
-  let binary = "";
-  for (const b of bytes) binary += String.fromCharCode(b);
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-
-function pemToBytes(pem: string) {
-  const body = pem.replace(/-----BEGIN PRIVATE KEY-----|-----END PRIVATE KEY-----|\s/g, "");
-  const binary = atob(body);
-  return Uint8Array.from(binary, (c) => c.charCodeAt(0));
-}
-
-async function getFirebaseAccessToken(serviceAccount: { client_email: string; private_key: string }) {
-  const now = Math.floor(Date.now() / 1000);
-  const header = base64Url(JSON.stringify({ alg: "RS256", typ: "JWT" }));
-  const payload = base64Url(JSON.stringify({
-    iss: serviceAccount.client_email,
-    scope: "https://www.googleapis.com/auth/firebase.messaging",
-    aud: "https://oauth2.googleapis.com/token",
-    iat: now,
-    exp: now + 3600,
-  }));
-  const unsigned = `${header}.${payload}`;
-  const key = await crypto.subtle.importKey(
-    "pkcs8",
-    pemToBytes(serviceAccount.private_key),
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, new TextEncoder().encode(unsigned));
-  const assertion = `${unsigned}.${base64Url(new Uint8Array(signature))}`;
-
-  const response = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion,
-    }),
-  });
-  if (!response.ok) throw new Error(`FCM OAuth failed: ${await response.text()}`);
-  const json = await response.json();
-  return json.access_token as string;
-}
-
-async function sendFcm(
-  accessToken: string,
-  projectId: string,
-  token: string,
-  assignment: { period: number; class_name: string; subject: string },
+async function dispatchWebPush(
+  url: string,
+  authHeader: string,
+  assignment: { substitute_user_id: string; period: number; class_name: string; subject: string },
 ) {
-  const body = `Bugün ${assignment.period}. ders ${assignment.class_name} sınıfına vekalet edeceksiniz. Dersi yürütün ve işlenen konuyu sınıf defterine kaydedin.`;
-  const response = await fetch(`https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message: {
-        token,
-        notification: { title: "OkulOS · Vekalet Görevi", body },
-        data: {
-          type: "substitute_assignment",
-          period: String(assignment.period),
-          className: assignment.class_name,
-          subject: assignment.subject,
-        },
-        webpush: { fcm_options: { link: "/substitutes" } },
-      },
-    }),
-  });
-  return response.ok;
+  try {
+    const response = await fetch(`${url}/functions/v1/web-push-dispatcher`, {
+      method: "POST",
+      headers: { Authorization: authHeader, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: assignment.substitute_user_id,
+        title: "OkulOS · Vekalet Görevi",
+        message: `Bugün ${assignment.period}. ders ${assignment.class_name} sınıfında ${assignment.subject} dersine vekalet edeceksiniz.`,
+        url: "/substitutes",
+        tag: `substitute-${assignment.period}-${assignment.class_name}`,
+        requireInteraction: true,
+      }),
+    });
+    if (!response.ok) return false;
+    const result = await response.json();
+    return Number(result?.sent ?? 0) > 0;
+  } catch (error) {
+    console.error("Web Push dispatcher unavailable", error);
+    return false;
+  }
 }
 
 async function dispatchTelegram(
@@ -90,10 +40,7 @@ async function dispatchTelegram(
   try {
     const response = await fetch(`${url}/functions/v1/telegram-dispatcher`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${serviceKey}`,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: assignment.substitute_user_id,
         title: "OkulOS · Vekalet Görevi",
@@ -146,55 +93,25 @@ Deno.serve(async (req) => {
     }
 
     const newAssignments = (planned ?? []).filter((row: { assignment_id: string }) => !beforeIds.has(row.assignment_id));
-    const firebaseRaw = Deno.env.get("FIREBASE_SERVICE_ACCOUNT_JSON");
-    let notified = 0;
+    let webPushNotified = 0;
     let telegramNotified = 0;
-
-    let accessToken: string | null = null;
-    let serviceAccount: { client_email: string; private_key: string; project_id: string } | null = null;
-    if (firebaseRaw && newAssignments.length) {
-      serviceAccount = JSON.parse(firebaseRaw) as { client_email: string; private_key: string; project_id: string };
-      accessToken = await getFirebaseAccessToken(serviceAccount);
-    }
 
     for (const assignment of newAssignments) {
       let anyDelivery = false;
-
-      if (accessToken && serviceAccount) {
-        const { data: tokens } = await admin
-          .from("fcm_tokens")
-          .select("token")
-          .eq("user_id", assignment.substitute_user_id);
-        let sent = false;
-        for (const item of tokens ?? []) {
-          if (await sendFcm(accessToken, serviceAccount.project_id, item.token, assignment)) sent = true;
-        }
-        if (sent) {
-          notified += 1;
-          anyDelivery = true;
-        }
+      if (await dispatchWebPush(url, authHeader, assignment)) {
+        webPushNotified += 1;
+        anyDelivery = true;
       }
-
       if (await dispatchTelegram(url, serviceKey, assignment)) {
         telegramNotified += 1;
         anyDelivery = true;
       }
-
       if (anyDelivery) {
-        await admin
-          .from("substitute_assignments")
-          .update({ notified_at: new Date().toISOString() })
-          .eq("id", assignment.assignment_id);
+        await admin.from("substitute_assignments").update({ notified_at: new Date().toISOString() }).eq("id", assignment.assignment_id);
       }
     }
 
-    return Response.json({
-      ok: true,
-      assignments: planned ?? [],
-      newlyAssigned: newAssignments.length,
-      notified,
-      telegramNotified,
-    }, { headers: corsHeaders });
+    return Response.json({ ok: true, assignments: planned ?? [], newlyAssigned: newAssignments.length, webPushNotified, telegramNotified }, { headers: corsHeaders });
   } catch (error) {
     console.error(error);
     return Response.json({ error: "ASSIGNMENT_FAILED" }, { status: 500, headers: corsHeaders });
