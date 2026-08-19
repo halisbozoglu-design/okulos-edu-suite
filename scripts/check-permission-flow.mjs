@@ -11,7 +11,10 @@ const files={
  calendarDuty:'supabase/migrations/20260819073400_delegated_calendar_and_duty_operations.sql',
  taskRoles:'supabase/migrations/20260819073500_custom_task_role_templates.sql',
  legacyCleanup:'supabase/migrations/20260819073600_delegated_manager_legacy_policy_cleanup.sql',
+ dutyCleanup:'supabase/migrations/20260819073700_close_legacy_duty_policy_bypass.sql',
+ volatility:'supabase/migrations/20260819073800_permission_context_volatility_fix.sql',
  hook:'src/lib/permissions.ts',
+ root:'src/routes/__root.tsx',
  permissionUi:'src/routes/settings-permissions.tsx',
  taskRoleUi:'src/routes/settings-task-roles.tsx',
  payrollUi:'src/routes/payroll.tsx',
@@ -37,8 +40,12 @@ const taskRoles=requireTokens('taskRoles',['task_role_templates','task_role_temp
 if(taskRoles.includes("perform public.set_user_permission(p_user_id")) errors.push('taskRoles: şablon yetkileri doğrudan bireysel grant tablosuna kopyalanmamalı');
 const cleanup=requireTokens('legacyCleanup',['drop policy if exists "teacher can read own crisis"','drop policy if exists "teacher can read own absence lessons"','drop policy if exists "assigned teacher can read assignments"','substitutes.view']);
 if(!cleanup.includes("has_module_operation_permission('duty')"))errors.push('legacyCleanup: nöbet görevli okuma köprüsü eksik');
+requireTokens('dutyCleanup',['drop policy if exists "authenticated read duty incidents"','drop policy if exists "authenticated create duty incidents"','duty.manage']);
+requireTokens('volatility',['payroll_month_matrix(int,int) volatile','kbs_payroll_export(int,int) volatile','get_daily_duty_book(date) volatile']);
 
 requireTokens('hook',['usePermissions','get_my_permissions','can','any','all']);
+const root=requireTokens('root',['PermissionBoundary','protectedRoutes','/settings/permissions','/schedule-solver','/payroll','/duty-book','/personnel-admin','superOnly']);
+if(!root.includes('rule.any.some((code) => codes.has(code))'))errors.push('root: route permission matching eksik');
 requireTokens('permissionUi',['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','Görev Bazlı','Yetki Denetim Geçmişi']);
 requireTokens('taskRoleUi',['Görev Şablonları','save_task_role_template','assign_task_role_template','revoke_task_role_template']);
 requireTokens('payrollUi',['payroll.calculate','payroll.edit','payroll.approve','payroll.publish']);
@@ -50,4 +57,4 @@ const management=requireTokens('managementUi',['/settings/permissions','/setting
 if(management.includes("to:'/notifications'"))errors.push('managementUi: kişisel PWA/bildirim ayarı kurumsal görev delegasyonu kartı olarak gösterilmemeli');
 
 if(errors.length){console.error('Permission flow check FAILED:\n'+errors.map(e=>`- ${e}`).join('\n'));process.exit(1);}
-console.log('Permission flow check OK: delegated roles, task templates, gateways, RLS cleanup and permission-aware UIs are present.');
+console.log('Permission flow check OK: delegated roles, task templates, route guards, gateways, RLS cleanup and permission-aware UIs are present.');
