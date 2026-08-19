@@ -25,7 +25,7 @@ const items=[
  {to:'/duty-book',title:'Nöbet Defteri',desc:'Günlük nöbet, boş ders, gecikme ve olay kayıtları',icon:FileClock,permissions:['duty.view','duty.manage']},
  {to:'/notifications',title:'Bildirim & PWA',desc:'Web Push, Service Worker ve Telegram',icon:BellRing,permissions:['notifications.manage']},
  {to:'/personnel-admin',title:'Kayıtlı Personel',desc:'Kayıt olmuş personelin atama alanı ve temel sistem ilişkileri',icon:UserCog,permissions:['personnel.view','personnel.manage']},
- {to:'/settings-permissions',title:'Görev ve Yetki Atama',desc:'Personel bazlı modül, işlem, süre ve görev delegasyonu',icon:KeyRound,permissions:['permissions.manage']},
+ {to:'/settings/permissions',title:'Görev ve Yetki Atama',desc:'Personel bazlı modül, işlem, süre ve görev delegasyonu',icon:KeyRound,permissions:['permissions.manage']},
  {to:'/super-admin',title:'Süper Admin',desc:'Personel, atama alanı, TTKB, norm ve kaynak girdileri',icon:Crown,permissions:[],superOnly:true},
 ] as const;
 function ManagementHub(){
