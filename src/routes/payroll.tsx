@@ -1,288 +1,175 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, ChevronDown, ChevronRight, FileSpreadsheet, RefreshCw } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronRight, FileSpreadsheet, Plus, RefreshCw } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/payroll")({
-  head: () => ({
-    meta: [
-      { title: "Ek Ders Puantaj Tablosu — OkulOS" },
-      {
-        name: "description",
-        content:
-          "Aylık ek ders saatlerini gün gün takip edin, gündüz/nöbet/rehberlik kırılımını görün ve KBS için dışa aktarın.",
-      },
-    ],
-  }),
+  head: () => ({ meta: [{ title: "Ek Ders Puantaj Tablosu — OkulOS" }] }),
   component: PayrollGrid,
 });
 
-type Category = "gunduz" | "nobet" | "rehberlik";
-type MatrixRow = {
-  teacher_id: string;
-  full_name: string | null;
-  role: string;
-  work_date: string;
-  category: Category;
-  hours: number;
-  kbs_data_type: string;
-  approved: boolean;
-};
-type TeacherGrid = {
-  id: string;
-  name: string;
-  role: string;
-  daily: Record<Category, number[]>;
-  approved: boolean;
-};
-type KbsRow = {
-  tckn: string;
-  full_name: string;
-  data_type: string;
-  hours: number;
-  explanation: string;
-};
+type Category = "gunduz" | "nobet" | "rehberlik" | "hazirlik_planlama" | "dyk" | "destek_egitim" | "seminer" | "kurs" | "egzersiz" | "gece_haftasonu" | "yonetim" | "diger";
+type MatrixRow = { teacher_id: string; full_name: string | null; role: string; work_date: string; category: Category; hours: number; kbs_data_type: string; approved: boolean };
+type TeacherGrid = { id: string; name: string; role: string; daily: Record<Category, number[]>; approved: boolean };
+type KbsRow = { tckn: string; full_name: string; data_type: string; hours: number; explanation: string };
+type Teacher = { user_id: string; full_name: string | null };
+type Rule = { id: string; code: string; name: string; category: Category; kbs_data_type: string; effective_from: string; effective_to: string | null; active: boolean };
+type Activity = { id: string; teacher_id: string; activity_date: string; category: Category; hours: number; explanation: string | null; status: string; rule_id: string | null };
 
 const subRows: { key: Category; label: string }[] = [
-  { key: "gunduz", label: "Gündüz" },
-  { key: "nobet", label: "Nöbet" },
-  { key: "rehberlik", label: "Rehberlik" },
+  { key: "gunduz", label: "Gündüz" }, { key: "nobet", label: "Nöbet" }, { key: "rehberlik", label: "Rehberlik" },
+  { key: "hazirlik_planlama", label: "Hazırlık / Planlama" }, { key: "dyk", label: "DYK" }, { key: "destek_egitim", label: "Destek Eğitim" },
+  { key: "seminer", label: "Seminer" }, { key: "kurs", label: "Kurs" }, { key: "egzersiz", label: "Egzersiz" },
+  { key: "gece_haftasonu", label: "Gece / Hafta Sonu" }, { key: "yonetim", label: "Yönetim" }, { key: "diger", label: "Diğer" },
 ];
 
-function istanbulYearMonth() {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Istanbul",
-    year: "numeric",
-    month: "2-digit",
-  }).format(new Date());
-  return parts.slice(0, 7);
-}
+const activityCategories = subRows.filter((x) => !["gunduz", "nobet", "rehberlik"].includes(x.key));
 
-function csvEscape(value: unknown) {
-  const text = String(value ?? "");
-  return `"${text.replace(/"/g, '""')}"`;
+function emptyDaily(dayCount: number): Record<Category, number[]> {
+  return Object.fromEntries(subRows.map((x) => [x.key, Array(dayCount).fill(0)])) as Record<Category, number[]>;
 }
+function istanbulYearMonth() { return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit" }).format(new Date()).slice(0, 7); }
+function csvEscape(value: unknown) { return `"${String(value ?? "").replace(/"/g, '""')}"`; }
 
 function PayrollGrid() {
   const [period, setPeriod] = useState(istanbulYearMonth);
   const [rows, setRows] = useState<MatrixRow[]>([]);
+  const [teachersList, setTeachersList] = useState<Teacher[]>([]);
+  const [rules, setRules] = useState<Rule[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [open, setOpen] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [activityTeacher, setActivityTeacher] = useState("");
+  const [activityDate, setActivityDate] = useState("");
+  const [activityCategory, setActivityCategory] = useState<Category>("dyk");
+  const [activityHours, setActivityHours] = useState("");
+  const [activityRule, setActivityRule] = useState("");
+  const [activityExplanation, setActivityExplanation] = useState("");
+  const [activityEvidence, setActivityEvidence] = useState("");
+
   const [year = 0, month = 1] = period.split("-").map(Number);
   const dayCount = new Date(year, month, 0).getDate();
   const days = useMemo(() => Array.from({ length: dayCount }, (_, i) => i + 1), [dayCount]);
 
-  const loadMatrix = useCallback(async () => {
+  const load = useCallback(async () => {
     setError(null);
-    const { data, error: rpcError } = await supabase.rpc("payroll_month_matrix", {
-      p_year: year,
-      p_month: month,
-    });
-    if (rpcError) {
-      setError("Ek ders matrisi yüklenemedi. Yetkinizi ve Supabase migration durumunu kontrol edin.");
-      return;
-    }
-    setRows((data ?? []) as MatrixRow[]);
-  }, [year, month]);
+    const start = `${period}-01`;
+    const end = new Date(year, month, 0).toISOString().slice(0, 10);
+    const [matrix, people, ruleRows, activityRows] = await Promise.all([
+      supabase.rpc("payroll_month_matrix", { p_year: year, p_month: month }),
+      supabase.from("profiles").select("user_id,full_name").eq("role", "teacher").order("full_name"),
+      supabase.from("payroll_rule_registry").select("id,code,name,category,kbs_data_type,effective_from,effective_to,active").eq("active", true).order("name"),
+      supabase.from("payroll_activity_entries").select("id,teacher_id,activity_date,category,hours,explanation,status,rule_id").gte("activity_date", start).lte("activity_date", end).order("activity_date"),
+    ]);
+    if (matrix.error) setError("Ek ders matrisi yüklenemedi. Migration ve yetkileri kontrol edin.");
+    setRows((matrix.data ?? []) as MatrixRow[]);
+    setTeachersList((people.data ?? []) as Teacher[]);
+    setRules((ruleRows.data ?? []) as Rule[]);
+    setActivities((activityRows.data ?? []) as Activity[]);
+    if (!activityDate || !activityDate.startsWith(period)) setActivityDate(start);
+  }, [year, month, period, activityDate]);
 
-  useEffect(() => {
-    void loadMatrix();
-  }, [loadMatrix]);
+  useEffect(() => { void load(); }, [load]);
 
   const teachers = useMemo<TeacherGrid[]>(() => {
     const map = new Map<string, TeacherGrid>();
     for (const row of rows) {
-      if (!map.has(row.teacher_id)) {
-        map.set(row.teacher_id, {
-          id: row.teacher_id,
-          name: row.full_name ?? "Öğretmen",
-          role: row.role,
-          daily: {
-            gunduz: Array(dayCount).fill(0),
-            nobet: Array(dayCount).fill(0),
-            rehberlik: Array(dayCount).fill(0),
-          },
-          approved: true,
-        });
-      }
+      if (!map.has(row.teacher_id)) map.set(row.teacher_id, { id: row.teacher_id, name: row.full_name ?? "Öğretmen", role: row.role, daily: emptyDaily(dayCount), approved: true });
       const item = map.get(row.teacher_id)!;
       const day = Number(row.work_date.slice(8, 10));
-      if (day >= 1 && day <= dayCount) { const bucket = item.daily[row.category as keyof typeof item.daily]; bucket[day - 1] = (bucket[day - 1] ?? 0) + Number(row.hours ?? 0); }
+      if (day >= 1 && day <= dayCount && item.daily[row.category]) item.daily[row.category][day - 1] += Number(row.hours ?? 0);
       item.approved = item.approved && Boolean(row.approved);
     }
     return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name, "tr"));
   }, [rows, dayCount]);
 
-  function toggle(id: string) {
-    setOpen((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-  }
+  const teacherMap = useMemo(() => Object.fromEntries(teachersList.map((t) => [t.user_id, t.full_name ?? "Öğretmen"])), [teachersList]);
+  const filteredRules = useMemo(() => rules.filter((r) => r.category === activityCategory), [rules, activityCategory]);
 
   async function recalculate() {
-    setBusy(true);
-    setError(null);
-    setMessage(null);
-    const { error: rpcError } = await supabase.rpc("recalculate_payroll_month", {
-      p_year: year,
-      p_month: month,
-    });
+    setBusy(true); setError(null); setMessage(null);
+    const { error: rpcError } = await supabase.rpc("recalculate_payroll_month_v2", { p_year: year, p_month: month });
     setBusy(false);
-    if (rpcError) {
-      setError("Hesaplama tamamlanamadı. Personel ek ders kuralları, takvim veya yetkileri kontrol edin.");
-      return;
-    }
-    setMessage("Aylık ek ders matrisi yeniden hesaplandı.");
-    await loadMatrix();
+    if (rpcError) return setError(`Hesaplama tamamlanamadı: ${rpcError.message}`);
+    setMessage("Merkezi çalışma takvimi ve onaylı ek faaliyetlerle Ek Ders 2.0 yeniden hesaplandı."); await load();
   }
 
   async function approveMonth() {
-    setBusy(true);
-    setError(null);
-    setMessage(null);
-    const { data, error: rpcError } = await supabase.rpc("approve_payroll_month", {
-      p_year: year,
-      p_month: month,
-    });
+    setBusy(true); setError(null); setMessage(null);
+    const { data, error: rpcError } = await supabase.rpc("approve_payroll_month", { p_year: year, p_month: month });
     setBusy(false);
-    if (rpcError) {
-      setError("Ay onaylanamadı.");
-      return;
-    }
-    setMessage(`${Number(data ?? 0)} ek ders satırı onaylandı.`);
-    await loadMatrix();
+    if (rpcError) return setError("Ay onaylanamadı.");
+    setMessage(`${Number(data ?? 0)} ek ders satırı onaylandı.`); await load();
+  }
+
+  async function addActivity() {
+    setError(null); setMessage(null);
+    if (!activityTeacher || !activityDate || !activityHours) return setError("Öğretmen, tarih ve saat zorunludur.");
+    const matching = filteredRules.find((r) => r.id === activityRule);
+    if (!matching) return setError("Bu faaliyet kategorisi için yürürlükteki kuralı seçin. Kural yoksa Süper Admin/Mevzuat girdisinden oluşturun.");
+    const { data: userData } = await supabase.auth.getUser();
+    const { error: insertError } = await supabase.from("payroll_activity_entries").insert({
+      teacher_id: activityTeacher, activity_date: activityDate, category: activityCategory, hours: Number(activityHours), rule_id: activityRule,
+      explanation: activityExplanation || null, evidence_reference: activityEvidence || null, status: "draft", entered_by: userData.user?.id ?? null,
+    });
+    if (insertError) return setError("Faaliyet kaydedilemedi.");
+    setActivityHours(""); setActivityExplanation(""); setActivityEvidence(""); setMessage("Faaliyet taslak olarak kaydedildi; onaylandıktan sonra hesaplamaya girer."); await load();
+  }
+
+  async function approveActivity(id: string, approve: boolean) {
+    const { error: rpcError } = await supabase.rpc("approve_payroll_activity", { p_activity_id: id, p_approve: approve });
+    if (rpcError) return setError("Faaliyet onayı değiştirilemedi.");
+    await load();
   }
 
   async function exportKbs() {
-    setBusy(true);
-    setError(null);
-    setMessage(null);
-    const { data, error: rpcError } = await supabase.rpc("kbs_payroll_export", {
-      p_year: year,
-      p_month: month,
-    });
+    setBusy(true); setError(null); setMessage(null);
+    const { data, error: rpcError } = await supabase.rpc("kbs_payroll_export", { p_year: year, p_month: month });
     setBusy(false);
-    if (rpcError) {
-      setError("KBS aktarım verisi oluşturulamadı.");
-      return;
-    }
+    if (rpcError) return setError("KBS aktarım verisi oluşturulamadı.");
     const exportRows = (data ?? []) as KbsRow[];
-    if (!exportRows.length) {
-      setError("KBS çıktısı için önce hesaplamayı onaylayın.");
-      return;
-    }
-    const header = ["TCKN", "Ad Soyad", "Veri Tipi", "Saat", "Açıklama"];
-    const csv = [
-      header.map(csvEscape).join(";"),
-      ...exportRows.map((r) =>
-        [r.tckn, r.full_name, r.data_type, r.hours, r.explanation].map(csvEscape).join(";"),
-      ),
-    ].join("\r\n");
-    const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `OkulOS-KBS-${period}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-    setMessage("KBS aktarım CSV dosyası oluşturuldu. Veri tiplerini MEBBİS çıktısıyla karşılaştırmadan KBS'ye yüklemeyin.");
+    if (!exportRows.length) return setError("KBS çıktısı için önce hesaplamayı onaylayın.");
+    const csv = [["TCKN", "Ad Soyad", "Veri Tipi", "Saat", "Açıklama"].map(csvEscape).join(";"), ...exportRows.map((r) => [r.tckn, r.full_name, r.data_type, r.hours, r.explanation].map(csvEscape).join(";"))].join("\r\n");
+    const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }); const url = URL.createObjectURL(blob); const link = document.createElement("a");
+    link.href = url; link.download = `OkulOS-KBS-${period}.csv`; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url);
+    setMessage("KBS CSV oluşturuldu. Resmî ödeme öncesi MEBBİS/KBS veri tipi ve toplamlarını doğrulayın.");
   }
 
-  return (
-    <AppShell title="Ek Ders Puantajı" subtitle={`${period} · Supabase hesaplama`}>
-      <div className="grid gap-2 sm:grid-cols-[180px_1fr]">
-        <input
-          type="month"
-          value={period}
-          onChange={(e) => setPeriod(e.target.value)}
-          className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-        />
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-          <Button variant="outline" className="gap-2" onClick={recalculate} disabled={busy}>
-            <RefreshCw className={cn("size-4", busy && "animate-spin")} />
-            Hesapla
-          </Button>
-          <Button variant="secondary" className="gap-2" onClick={approveMonth} disabled={busy || !rows.length}>
-            <CheckCircle2 className="size-4" />
-            Ayı Onayla
-          </Button>
-          <Button className="gap-2" onClick={exportKbs} disabled={busy || !rows.length}>
-            <FileSpreadsheet className="size-4" />
-            KBS CSV Aktar
-          </Button>
-        </div>
-      </div>
+  return <AppShell title="Ek Ders Puantajı" subtitle={`${period} · Ek Ders 2.0`}>
+    <div className="grid gap-2 sm:grid-cols-[180px_1fr]"><input type="month" value={period} onChange={(e) => setPeriod(e.target.value)} className="h-10 rounded-md border border-input bg-background px-3 text-sm"/><div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+      <Button variant="outline" className="gap-2" onClick={()=>void recalculate()} disabled={busy}><RefreshCw className={cn("size-4", busy && "animate-spin")}/>Hesapla</Button>
+      <Button variant="secondary" className="gap-2" onClick={()=>void approveMonth()} disabled={busy || !rows.length}><CheckCircle2 className="size-4"/>Ayı Onayla</Button>
+      <Button className="gap-2" onClick={()=>void exportKbs()} disabled={busy || !rows.length}><FileSpreadsheet className="size-4"/>KBS CSV Aktar</Button>
+    </div></div>
 
-      <div className="mt-3 rounded-xl border border-border bg-muted/30 px-4 py-3 text-xs text-muted-foreground">
-        Hesaplama; haftalık ders yükü, personelin aylık karşılığı ders saati, onaylı devamsızlıklar, onaylı vekaletler, nöbet, rehberlik ve kurum takvimindeki resmî tatil/idari izin kurallarını birlikte değerlendirir.
-      </div>
+    <details className="mt-4 rounded-xl border bg-card p-4"><summary className="cursor-pointer font-semibold">Ek Faaliyet Girişi (DYK / Destek / Seminer / Hazırlık vb.)</summary>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <div><Label>Öğretmen</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={activityTeacher} onChange={(e)=>setActivityTeacher(e.target.value)}><option value="">Seçiniz</option>{teachersList.map(t=><option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select></div>
+        <div><Label>Tarih</Label><Input type="date" value={activityDate} onChange={(e)=>setActivityDate(e.target.value)}/></div>
+        <div><Label>Faaliyet Türü</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={activityCategory} onChange={(e)=>{setActivityCategory(e.target.value as Category);setActivityRule("");}}>{activityCategories.map(x=><option key={x.key} value={x.key}>{x.label}</option>)}</select></div>
+        <div><Label>Saat</Label><Input type="number" min="0.5" step="0.5" value={activityHours} onChange={(e)=>setActivityHours(e.target.value)}/></div>
+        <div><Label>Yürürlükteki Kural</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={activityRule} onChange={(e)=>setActivityRule(e.target.value)}><option value="">Seçiniz</option>{filteredRules.map(r=><option key={r.id} value={r.id}>{r.code} · {r.name} · KBS {r.kbs_data_type}</option>)}</select></div>
+        <div><Label>Kanıt / Evrak Referansı</Label><Input value={activityEvidence} onChange={(e)=>setActivityEvidence(e.target.value)} placeholder="Olur, kurs onayı, çizelge vb."/></div>
+        <div className="md:col-span-2"><Label>Açıklama</Label><Input value={activityExplanation} onChange={(e)=>setActivityExplanation(e.target.value)}/></div>
+      </div><Button className="mt-3 w-full gap-2" onClick={()=>void addActivity()}><Plus className="size-4"/>Faaliyeti Kaydet</Button>
+      <div className="mt-4 space-y-2">{activities.map(a=><div key={a.id} className="flex flex-col gap-2 rounded-lg border p-3 text-sm sm:flex-row sm:items-center"><div className="flex-1"><b>{teacherMap[a.teacher_id]}</b> · {subRows.find(x=>x.key===a.category)?.label} · {a.hours} saat<p className="text-xs text-muted-foreground">{a.activity_date} · {a.explanation??"Açıklama yok"} · {a.status}</p></div>{a.status!=="approved"?<div className="flex gap-2"><Button size="sm" onClick={()=>void approveActivity(a.id,true)}>Onayla</Button><Button size="sm" variant="outline" onClick={()=>void approveActivity(a.id,false)}>Reddet</Button></div>:<span className="text-xs font-semibold text-emerald-700">ONAYLI</span>}</div>)}</div>
+    </details>
 
-      {message ? <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-primary">{message}</div> : null}
-      {error ? <div className="mt-3 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div> : null}
+    <div className="mt-3 rounded-xl border bg-muted/30 px-4 py-3 text-xs text-muted-foreground">Hesaplama; yayınlanmış/çalışan ders yükü, onaylı vekaletler, nöbet, rehberlik, merkezi çalışma takvimi ve ayrıca onaylanmış faaliyet girdilerini birlikte değerlendirir. Mevzuat oranları ve KBS veri tipleri yürürlük tarihli kural kayıtlarından gelir.</div>
+    {message?<div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-primary">{message}</div>:null}{error?<div className="mt-3 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>:null}
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-card">
-        <table className="min-w-max border-collapse text-sm">
-          <thead className="bg-muted/60 text-xs text-muted-foreground">
-            <tr>
-              <th className="sticky left-0 z-10 w-10 bg-muted/95 px-2 py-2 text-left font-medium">#</th>
-              <th className="sticky left-10 z-10 min-w-[150px] bg-muted/95 px-3 py-2 text-left font-medium">Öğretmen</th>
-              <th className="sticky left-[190px] z-10 min-w-[130px] border-r border-border bg-muted/95 px-3 py-2 text-left font-medium">Görev</th>
-              {days.map((d) => <th key={d} className="w-9 px-2 py-2 text-center font-medium">{d}</th>)}
-              <th className="px-3 py-2 text-center font-medium">Top.</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teachers.map((row, idx) => {
-              const expanded = open.includes(row.id);
-              const totals = days.map((_, i) => (row.daily.gunduz[i] ?? 0) + (row.daily.nobet[i] ?? 0) + (row.daily.rehberlik[i] ?? 0));
-              return (
-                <Fragment key={row.id}>
-                  <tr className="border-t border-border">
-                    <td className="sticky left-0 z-10 bg-card px-2 py-2 text-muted-foreground">{idx + 1}</td>
-                    <td className="sticky left-10 z-10 bg-card px-3 py-2">
-                      <button type="button" onClick={() => toggle(row.id)} className="flex items-center gap-1.5 font-medium">
-                        {expanded ? <ChevronDown className="size-4 text-primary" /> : <ChevronRight className="size-4 text-muted-foreground" />}
-                        <span className="truncate">{row.name}</span>
-                      </button>
-                    </td>
-                    <td className="sticky left-[190px] z-10 border-r border-border bg-card px-3 py-2 text-xs text-muted-foreground">
-                      {row.approved ? "Onaylı" : "Taslak"}
-                    </td>
-                    {totals.map((v, i) => (
-                      <td key={i} className={cn("px-2 py-2 text-center tabular-nums", v === 0 && "text-muted-foreground/40")}>{v || 0}</td>
-                    ))}
-                    <td className="px-3 py-2 text-center font-semibold tabular-nums">{totals.reduce((a, b) => a + b, 0)}</td>
-                  </tr>
-                  {expanded && subRows.map((sub) => (
-                    <tr key={`${row.id}-${sub.key}`} className="border-t border-border bg-muted/30">
-                      <td className="sticky left-0 z-10 bg-muted/60 px-2 py-1.5" />
-                      <td className="sticky left-10 z-10 bg-muted/60 px-3 py-1.5 pl-9 text-xs text-muted-foreground">{sub.label}</td>
-                      <td className="sticky left-[190px] z-10 border-r border-border bg-muted/60 px-3 py-1.5" />
-                      {row.daily[sub.key].map((v, i) => (
-                        <td key={i} className={cn("px-2 py-1.5 text-center text-xs tabular-nums", v === 0 ? "text-muted-foreground/40" : "text-foreground")}>{v}</td>
-                      ))}
-                      <td className="px-3 py-1.5 text-center text-xs font-medium tabular-nums">{row.daily[sub.key].reduce((a, b) => a + b, 0)}</td>
-                    </tr>
-                  ))}
-                </Fragment>
-              );
-            })}
-            {!teachers.length ? (
-              <tr><td colSpan={dayCount + 4} className="px-4 py-8 text-center text-sm text-muted-foreground">Bu ay için hesaplanmış ek ders kaydı yok. “Hesapla” ile matrisi oluşturun.</td></tr>
-            ) : null}
-          </tbody>
-        </table>
-      </div>
-
-      <p className="mt-3 text-xs text-muted-foreground">
-        KBS çıktısı yalnızca onaylanmış satırlardan oluşturulur. Resmî ödeme öncesinde MEBBİS Ek Ders Modülü ile veri tipi ve saat toplamları birebir doğrulanmalıdır.
-      </p>
-    </AppShell>
-  );
+    <div className="mt-4 overflow-x-auto rounded-xl border bg-card"><table className="min-w-max border-collapse text-sm"><thead className="bg-muted/60 text-xs text-muted-foreground"><tr><th className="sticky left-0 z-10 w-10 bg-muted/95 px-2 py-2">#</th><th className="sticky left-10 z-10 min-w-[150px] bg-muted/95 px-3 py-2 text-left">Öğretmen</th><th className="sticky left-[190px] z-10 min-w-[110px] border-r bg-muted/95 px-3 py-2 text-left">Durum</th>{days.map(d=><th key={d} className="w-9 px-2 py-2 text-center">{d}</th>)}<th className="px-3 py-2">Top.</th></tr></thead><tbody>
+      {teachers.map((row,idx)=>{const expanded=open.includes(row.id);const totals=days.map((_,i)=>subRows.reduce((s,x)=>s+(row.daily[x.key][i]??0),0));return <Fragment key={row.id}><tr className="border-t"><td className="sticky left-0 z-10 bg-card px-2 py-2">{idx+1}</td><td className="sticky left-10 z-10 bg-card px-3 py-2"><button onClick={()=>setOpen(p=>p.includes(row.id)?p.filter(x=>x!==row.id):[...p,row.id])} className="flex items-center gap-1.5 font-medium">{expanded?<ChevronDown className="size-4"/>:<ChevronRight className="size-4"/>}{row.name}</button></td><td className="sticky left-[190px] z-10 border-r bg-card px-3 py-2 text-xs">{row.approved?"Onaylı":"Taslak"}</td>{totals.map((v,i)=><td key={i} className={cn("px-2 py-2 text-center tabular-nums",!v&&"text-muted-foreground/40")}>{v||0}</td>)}<td className="px-3 py-2 text-center font-semibold">{totals.reduce((a,b)=>a+b,0)}</td></tr>{expanded&&subRows.filter(sub=>row.daily[sub.key].some(v=>v>0)).map(sub=><tr key={`${row.id}-${sub.key}`} className="border-t bg-muted/30"><td className="sticky left-0 z-10 bg-muted/60"/><td className="sticky left-10 z-10 bg-muted/60 px-3 py-1.5 pl-9 text-xs">{sub.label}</td><td className="sticky left-[190px] z-10 border-r bg-muted/60"/>{row.daily[sub.key].map((v,i)=><td key={i} className={cn("px-2 py-1.5 text-center text-xs",!v&&"text-muted-foreground/40")}>{v||0}</td>)}<td className="px-3 py-1.5 text-center text-xs font-medium">{row.daily[sub.key].reduce((a,b)=>a+b,0)}</td></tr>)}</Fragment>})}
+      {!teachers.length?<tr><td colSpan={dayCount+4} className="px-4 py-8 text-center text-muted-foreground">Bu ay için hesaplanmış ek ders kaydı yok. “Hesapla” ile oluşturun.</td></tr>:null}
+    </tbody></table></div>
+    <p className="mt-3 text-xs text-muted-foreground">KBS çıktısı yalnız onaylanmış satırlardan oluşur. Resmî ödeme öncesi MEBBİS/KBS ile saat ve veri tipi doğrulaması yapılmalıdır.</p>
+  </AppShell>;
 }
