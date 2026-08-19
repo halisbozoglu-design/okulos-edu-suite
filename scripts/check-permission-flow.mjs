@@ -18,12 +18,14 @@ const files={
  atomicBundle:'supabase/migrations/20260819074100_atomic_permission_bundle_assignment.sql',
  hook:'src/lib/permissions.ts',
  root:'src/routes/__root.tsx',
+ appShell:'src/components/okulos/AppShell.tsx',
  permissionUi:'src/routes/settings-permissions.tsx',
  taskRoleUi:'src/routes/settings-task-roles.tsx',
  payrollUi:'src/routes/payroll.tsx',
  personnelUi:'src/routes/personnel-admin.tsx',
  calendarUi:'src/routes/calendar.tsx',
  dutyUi:'src/routes/settings.tsx',
+ dutyBookUi:'src/routes/duty-book.tsx',
  substitutesUi:'src/routes/substitutes.tsx',
  managementUi:'src/routes/management.tsx',
  preparationUi:'src/routes/schedule-preparation.tsx',
@@ -54,16 +56,19 @@ requireTokens('atomicBundle',['set_user_permission_bundle','set_user_permission_
 requireTokens('hook',['usePermissions','get_my_permissions','can','any','all']);
 const root=requireTokens('root',['PermissionBoundary','protectedRoutes','/settings/permissions','/schedule-solver','/schedule-history','schedule.restore','/payroll','/duty-book','/personnel-admin','superOnly']);
 if(!root.includes('rule.any.some((code) => codes.has(code))'))errors.push('root: route permission matching eksik');
+requireTokens('appShell',['usePermissions','permissionCodes','substitutes.view','payroll.view','classes.manage','managementCodes','gridTemplateColumns']);
 requireTokens('permissionUi',['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','schedule.restore','set_user_permission_bundle','Görev Bazlı','Yetki Denetim Geçmişi']);
 requireTokens('taskRoleUi',['Görev Şablonları','save_task_role_template','assign_task_role_template','revoke_task_role_template']);
 requireTokens('payrollUi',['payroll.calculate','payroll.edit','payroll.approve','payroll.publish']);
 requireTokens('personnelUi',['personnel.view','personnel.manage','get_personnel_admin_list']);
 requireTokens('calendarUi',['settings.manage','salt okunur']);
 requireTokens('dutyUi',['duty.view','duty.manage','duty.generate','duty.lock']);
+const dutyBook=requireTokens('dutyBookUi',['usePermissions','can("duty.manage")','Salt okunur','duty.manage','if (!canManage)']);
+if(!dutyBook.includes('{canManage ? <>'))errors.push('dutyBookUi: düzenleme formları duty.manage arkasında değil');
 requireTokens('substitutesUi',['substitutes.view','substitutes.manage','Salt okunur']);
 requireTokens('preparationUi',['TEACHER_ASSIGNED_HOURS_EXCEED_WEEKLY_LIMIT','TEACHER_ASSIGNED_HOURS_EXCEED_DAY_CAPACITY']);
 const management=requireTokens('managementUi',['/settings/permissions','/settings-task-roles','permissions.manage']);
 if(management.includes("to:'/notifications'"))errors.push('managementUi: kişisel PWA/bildirim ayarı kurumsal görev delegasyonu kartı olarak gösterilmemeli');
 
 if(errors.length){console.error('Permission flow check FAILED:\n'+errors.map(e=>`- ${e}`).join('\n'));process.exit(1);}
-console.log('Permission flow check OK: delegated roles, task templates, atomic bundles, route guards, restore authority, capacity preflight, gateways, RLS cleanup and permission-aware UIs are present.');
+console.log('Permission flow check OK: delegated roles, atomic bundles, route guards, permission-aware navigation, read-only duty book, restore authority, capacity preflight, gateways and RLS cleanup are present.');
