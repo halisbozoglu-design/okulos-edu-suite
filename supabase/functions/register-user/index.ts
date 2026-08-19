@@ -23,12 +23,22 @@ function isStrongPassword(password: string) {
     /[^A-Za-z0-9ÇĞİÖŞÜçğıöşü]/.test(password);
 }
 
+function isAllowedRedirect(value: unknown) {
+  if (typeof value !== "string" || !value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || (url.protocol === "http:" && ["localhost", "127.0.0.1"].includes(url.hostname));
+  } catch {
+    return false;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
 
   try {
-    const { tckn, email, phone, password } = await req.json();
+    const { tckn, email, phone, password, redirectTo } = await req.json();
     const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
     const normalizedPhone = typeof phone === "string" ? phone.replace(/\D/g, "") : "";
 
@@ -81,7 +91,10 @@ Deno.serve(async (req) => {
     );
     const { error: otpError } = await anon.auth.signInWithOtp({
       email: normalizedEmail,
-      options: { shouldCreateUser: false },
+      options: {
+        shouldCreateUser: false,
+        ...(isAllowedRedirect(redirectTo) ? { emailRedirectTo: redirectTo } : {}),
+      },
     });
 
     if (otpError) {
