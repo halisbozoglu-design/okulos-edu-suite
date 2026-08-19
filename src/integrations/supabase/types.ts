@@ -2644,6 +2644,13 @@ export type Database = {
             foreignKeyName: "schedule_room_assignment_issues_scenario_id_fkey"
             columns: ["scenario_id"]
             isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_room_assignment_issues_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
             referencedRelation: "schedule_scenarios"
             referencedColumns: ["id"]
           },
@@ -2652,6 +2659,48 @@ export type Database = {
             columns: ["scenario_row_id"]
             isOneToOne: false
             referencedRelation: "schedule_scenario_rows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_scenario_integrity_issues: {
+        Row: {
+          affected_count: number
+          code: string
+          created_at: string
+          detail: string
+          id: string
+          scenario_id: string
+        }
+        Insert: {
+          affected_count?: number
+          code: string
+          created_at?: string
+          detail: string
+          id?: string
+          scenario_id: string
+        }
+        Update: {
+          affected_count?: number
+          code?: string
+          created_at?: string
+          detail?: string
+          id?: string
+          scenario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_scenario_integrity_issues_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_integrity_issues_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
             referencedColumns: ["id"]
           },
         ]
@@ -2769,6 +2818,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "schedule_assignment_options"
             referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
           },
           {
             foreignKeyName: "schedule_scenario_rows_scenario_id_fkey"
@@ -3111,6 +3167,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "schedule_assignment_options"
             referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "schedule_unplaced_items_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
           },
           {
             foreignKeyName: "schedule_unplaced_items_scenario_id_fkey"
@@ -4229,6 +4292,42 @@ export type Database = {
           },
         ]
       }
+      schedule_scenario_status_v2: {
+        Row: {
+          applicable: boolean | null
+          generation_group: string | null
+          hard_issue_count: number | null
+          room_issue_count: number | null
+          row_count: number | null
+          scenario_id: string | null
+          scenario_no: number | null
+          score: number | null
+          unplaced_count: number | null
+        }
+        Insert: {
+          applicable?: never
+          generation_group?: string | null
+          hard_issue_count?: never
+          room_issue_count?: never
+          row_count?: number | null
+          scenario_id?: string | null
+          scenario_no?: number | null
+          score?: number | null
+          unplaced_count?: number | null
+        }
+        Update: {
+          applicable?: never
+          generation_group?: string | null
+          hard_issue_count?: never
+          room_issue_count?: never
+          row_count?: number | null
+          scenario_id?: string | null
+          scenario_no?: number | null
+          score?: number | null
+          unplaced_count?: number | null
+        }
+        Relationships: []
+      }
       schedules: {
         Row: {
           active: boolean | null
@@ -4656,6 +4755,14 @@ export type Database = {
           unassigned_rows: number
         }[]
       }
+      get_schedule_configuration_issues_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_integrity_report: {
         Args: never
         Returns: {
@@ -4665,7 +4772,26 @@ export type Database = {
           severity: string
         }[]
       }
+      get_schedule_integrity_report_core_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
       get_schedule_preparation_readiness: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
+      get_schedule_preparation_readiness_core_v2: {
         Args: never
         Returns: {
           affected_count: number
@@ -4841,6 +4967,10 @@ export type Database = {
         Args: { p_restore_point_id: string }
         Returns: number
       }
+      scenario_assignment_run_lengths: {
+        Args: { p_assignment: string; p_scenario: string }
+        Returns: number[]
+      }
       scenario_slot_diagnostic: {
         Args: {
           p_assignment: string
@@ -4973,6 +5103,10 @@ export type Database = {
           p_weekday: number
         }
         Returns: string
+      }
+      validate_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
       }
     }
     Enums: {
