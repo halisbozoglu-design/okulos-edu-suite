@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Bell, CalendarClock, Check, Copy, LayoutGrid, Send, Settings, Table2, UserRound, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
+import { usePermissions } from "@/lib/permissions";
 import { isProfileIncomplete, maskNationalId } from "@/lib/security";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,13 +11,21 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const primaryNav = [
-  { to: "/dashboard", label: "Panel", icon: LayoutGrid },
-  { to: "/substitutes", label: "Vekalet", icon: Users },
-  { to: "/payroll", label: "Ek Ders", icon: Table2 },
-  { to: "/classes", label: "Sınıflar", icon: CalendarClock },
+  { to: "/dashboard", label: "Panel", icon: LayoutGrid, permissions: [] as string[] },
+  { to: "/substitutes", label: "Vekalet", icon: Users, permissions: ["substitutes.view", "substitutes.manage"] },
+  { to: "/payroll", label: "Ek Ders", icon: Table2, permissions: ["payroll.view", "payroll.calculate", "payroll.edit", "payroll.approve", "payroll.publish"] },
+  { to: "/classes", label: "Sınıflar", icon: CalendarClock, permissions: ["classes.manage"] },
 ] as const;
 const managerNavItem = { to: "/management", label: "Yönetim", icon: Settings } as const;
 const teacherNavItem = { to: "/notifications", label: "Bildirim", icon: Bell } as const;
+const managementCodes = [
+  "management.access", "permissions.manage", "settings.manage",
+  "schedule.view", "schedule.edit", "schedule.rules", "schedule.generate", "schedule.apply", "schedule.publish", "schedule.restore",
+  "classrooms.manage", "curriculum.manage", "duty.view", "duty.manage", "duty.generate", "duty.lock",
+  "payroll.view", "payroll.calculate", "payroll.edit", "payroll.approve", "payroll.publish",
+  "substitutes.view", "substitutes.manage", "classes.manage", "personnel.view", "personnel.manage",
+  "norm.view", "norm.manage", "quran.manage", "notifications.manage",
+] as const;
 
 const TELEGRAM_BOT_USERNAME = "okulos_bildirim_botu";
 
@@ -84,6 +93,7 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
+  const { codes: permissionCodes, loading: permissionsLoading } = usePermissions();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [bloodType, setBloodType] = useState("");
@@ -184,7 +194,12 @@ export function AppShell({
 
   const incomplete = isProfileIncomplete(profile);
   const unreadCount = useMemo(() => notifications.filter((item) => !item.read_at).length, [notifications]);
-  const nav = useMemo(() => [...primaryNav, profile?.role === "admin" || profile?.role === "manager" ? managerNavItem : teacherNavItem], [profile?.role]);
+  const nav = useMemo(() => {
+    const visiblePrimary = primaryNav.filter((item) => item.permissions.length === 0 || item.permissions.some((code) => permissionCodes.has(code)));
+    const hasManagementTask = managementCodes.some((code) => permissionCodes.has(code));
+    if (permissionsLoading) return [primaryNav[0], teacherNavItem];
+    return [...visiblePrimary, hasManagementTask ? managerNavItem : teacherNavItem];
+  }, [permissionCodes, permissionsLoading]);
 
   async function saveProfile() {
     if (!profile) return;
@@ -363,7 +378,7 @@ export function AppShell({
       <main className="mx-auto w-full max-w-5xl px-4 py-5">{children}</main>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 backdrop-blur">
-        <ul className="mx-auto grid max-w-5xl grid-cols-5">
+        <ul className="mx-auto grid max-w-5xl" style={{ gridTemplateColumns: `repeat(${Math.max(nav.length, 1)}, minmax(0, 1fr))` }}>
           {nav.map((item) => {
             const active = pathname.startsWith(item.to);
             const Icon = item.icon;
