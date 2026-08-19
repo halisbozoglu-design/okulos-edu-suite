@@ -1244,6 +1244,122 @@ export type Database = {
         }
         Relationships: []
       }
+      norm_area_rule_assignments: {
+        Row: {
+          active: boolean
+          created_at: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          note: string | null
+          rule_set_id: string
+          source_id: string | null
+          teaching_area_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          effective_from: string
+          effective_to?: string | null
+          id?: string
+          note?: string | null
+          rule_set_id: string
+          source_id?: string | null
+          teaching_area_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          note?: string | null
+          rule_set_id?: string
+          source_id?: string | null
+          teaching_area_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "norm_area_rule_assignments_rule_set_id_fkey"
+            columns: ["rule_set_id"]
+            isOneToOne: false
+            referencedRelation: "norm_rule_sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "norm_area_rule_assignments_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "legal_rule_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "norm_area_rule_assignments_teaching_area_id_fkey"
+            columns: ["teaching_area_id"]
+            isOneToOne: false
+            referencedRelation: "teaching_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      norm_course_area_rules: {
+        Row: {
+          active: boolean
+          course_id: string
+          created_at: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          note: string | null
+          source_id: string | null
+          teaching_area_id: string
+        }
+        Insert: {
+          active?: boolean
+          course_id: string
+          created_at?: string
+          effective_from: string
+          effective_to?: string | null
+          id?: string
+          note?: string | null
+          source_id?: string | null
+          teaching_area_id: string
+        }
+        Update: {
+          active?: boolean
+          course_id?: string
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          note?: string | null
+          source_id?: string | null
+          teaching_area_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "norm_course_area_rules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "norm_course_area_rules_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "legal_rule_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "norm_course_area_rules_teaching_area_id_fkey"
+            columns: ["teaching_area_id"]
+            isOneToOne: false
+            referencedRelation: "teaching_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       norm_rule_bands: {
         Row: {
           id: string
@@ -2307,6 +2423,116 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      schedule_restore_point_rows: {
+        Row: {
+          id: number
+          restore_point_id: string
+          snapshot: Json
+        }
+        Insert: {
+          id?: never
+          restore_point_id: string
+          snapshot: Json
+        }
+        Update: {
+          id?: never
+          restore_point_id?: string
+          snapshot?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_restore_point_rows_restore_point_id_fkey"
+            columns: ["restore_point_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_restore_points"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_restore_points: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          label: string
+          reason: string
+          row_count: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label: string
+          reason?: string
+          row_count?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label?: string
+          reason?: string
+          row_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_restore_points_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_restore_points_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      schedule_room_assignment_issues: {
+        Row: {
+          created_at: string
+          detail: string | null
+          id: string
+          reason: string
+          scenario_id: string
+          scenario_row_id: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          id?: string
+          reason: string
+          scenario_id: string
+          scenario_row_id: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          id?: string
+          reason?: string
+          scenario_id?: string
+          scenario_row_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_room_assignment_issues_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_room_assignment_issues_scenario_row_id_fkey"
+            columns: ["scenario_row_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_rows"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -3598,6 +3824,13 @@ export type Database = {
         Args: { p_date: string }
         Returns: boolean
       }
+      assign_classrooms_to_scenario: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          assigned_count: number
+          unassigned_count: number
+        }[]
+      }
       assign_quran_parallel_lesson: {
         Args: {
           p_academic_year: string
@@ -3664,6 +3897,10 @@ export type Database = {
           p_target_class_id: string
         }
         Returns: number
+      }
+      create_schedule_restore_point: {
+        Args: { p_label?: string; p_reason?: string }
+        Returns: string
       }
       create_telegram_link_token: { Args: never; Returns: string }
       current_schedule_signature: { Args: never; Returns: string }
@@ -3775,6 +4012,20 @@ export type Database = {
           stored_schedule_signature: string
         }[]
       }
+      get_formal_norm_analysis: {
+        Args: { p_on_date?: string }
+        Returns: {
+          active_teacher_count: number
+          formal_norm: number
+          operational_difference: number
+          rule_set_id: string
+          rule_set_name: string
+          status: string
+          teaching_area_id: string
+          teaching_area_name: string
+          total_weekly_hours: number
+        }[]
+      }
       get_my_published_schedule: {
         Args: { p_date?: string }
         Returns: {
@@ -3793,6 +4044,25 @@ export type Database = {
           subject: string
           title: string
           weekday: number
+        }[]
+      }
+      get_norm_missing_mappings: {
+        Args: { p_on_date?: string }
+        Returns: {
+          detail: string
+          item_id: string
+          item_name: string
+          item_type: string
+        }[]
+      }
+      get_norm_readiness: {
+        Args: { p_on_date?: string }
+        Returns: {
+          mapped_area_count: number
+          mapped_course_count: number
+          missing_area_rule_count: number
+          missing_course_area_count: number
+          ready: boolean
         }[]
       }
       get_published_schedule_rows: {
@@ -3824,6 +4094,16 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      get_scenario_room_status: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          assigned_rows: number
+          room_issue_count: number
+          rooms_configured: boolean
+          total_rows: number
+          unassigned_rows: number
+        }[]
       }
       get_schedule_publication_for_date: {
         Args: { p_date: string }
@@ -3966,6 +4246,10 @@ export type Database = {
       refresh_class_curriculum_status: {
         Args: { p_class_id: string }
         Returns: string
+      }
+      restore_schedule_restore_point: {
+        Args: { p_restore_point_id: string }
+        Returns: number
       }
       scenario_teacher_consecutive_count: {
         Args: {
