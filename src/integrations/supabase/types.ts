@@ -3538,6 +3538,7 @@ export type Database = {
       teacher_schedule: {
         Row: {
           active: boolean
+          block_key: string | null
           class_course_requirement_id: string | null
           class_id: string | null
           class_name: string
@@ -3552,6 +3553,7 @@ export type Database = {
           subgroup_id: string | null
           subgroup_key: string | null
           subject: string
+          sync_group_id: string | null
           teacher_assignment_id: string | null
           teacher_id: string
           updated_at: string
@@ -3559,6 +3561,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          block_key?: string | null
           class_course_requirement_id?: string | null
           class_id?: string | null
           class_name: string
@@ -3573,6 +3576,7 @@ export type Database = {
           subgroup_id?: string | null
           subgroup_key?: string | null
           subject: string
+          sync_group_id?: string | null
           teacher_assignment_id?: string | null
           teacher_id: string
           updated_at?: string
@@ -3580,6 +3584,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          block_key?: string | null
           class_course_requirement_id?: string | null
           class_id?: string | null
           class_name?: string
@@ -3594,6 +3599,7 @@ export type Database = {
           subgroup_id?: string | null
           subgroup_key?: string | null
           subject?: string
+          sync_group_id?: string | null
           teacher_assignment_id?: string | null
           teacher_id?: string
           updated_at?: string
@@ -3647,6 +3653,13 @@ export type Database = {
             columns: ["subgroup_id"]
             isOneToOne: false
             referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_sync_group_id_fkey"
+            columns: ["sync_group_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sync_groups"
             referencedColumns: ["id"]
           },
           {
@@ -4133,6 +4146,7 @@ export type Database = {
         Args: { p_date: string }
         Returns: boolean
       }
+      assert_schedule_publishable: { Args: never; Returns: boolean }
       assign_classrooms_to_scenario: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -4433,6 +4447,15 @@ export type Database = {
           unassigned_rows: number
         }[]
       }
+      get_schedule_integrity_report: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
       get_schedule_publication_for_date: {
         Args: { p_date: string }
         Returns: string
@@ -4607,6 +4630,10 @@ export type Database = {
           p_teacher: string
         }
         Returns: number
+      }
+      schedule_assignment_run_lengths: {
+        Args: { p_assignment: string }
+        Returns: number[]
       }
       set_active_academic_year: {
         Args: { p_academic_year_id: string }
