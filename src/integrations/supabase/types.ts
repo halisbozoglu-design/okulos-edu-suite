@@ -1386,6 +1386,107 @@ export type Database = {
           },
         ]
       }
+      payroll_activity_entries: {
+        Row: {
+          activity_date: string
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          created_at: string
+          entered_by: string | null
+          evidence_reference: string | null
+          explanation: string | null
+          hours: number
+          id: string
+          rule_id: string | null
+          status: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          activity_date: string
+          approved_at?: string | null
+          approved_by?: string | null
+          category: string
+          created_at?: string
+          entered_by?: string | null
+          evidence_reference?: string | null
+          explanation?: string | null
+          hours: number
+          id?: string
+          rule_id?: string | null
+          status?: string
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          activity_date?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          created_at?: string
+          entered_by?: string | null
+          evidence_reference?: string | null
+          explanation?: string | null
+          hours?: number
+          id?: string
+          rule_id?: string | null
+          status?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_activity_entries_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_activity_entries_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "payroll_activity_entries_entered_by_fkey"
+            columns: ["entered_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_activity_entries_entered_by_fkey"
+            columns: ["entered_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "payroll_activity_entries_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "payroll_rule_registry"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payroll_activity_entries_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_activity_entries_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       payroll_calculation_runs: {
         Row: {
           calculated_by: string
@@ -1490,10 +1591,13 @@ export type Database = {
           calculated: boolean
           category: string
           created_at: string
+          evidence_note: string | null
           explanation: string | null
           hours: number
           id: string
           kbs_data_type: string
+          rate_multiplier: number
+          rule_code: string | null
           source_id: string | null
           source_type: string
           teacher_id: string
@@ -1506,10 +1610,13 @@ export type Database = {
           calculated?: boolean
           category: string
           created_at?: string
+          evidence_note?: string | null
           explanation?: string | null
           hours?: number
           id?: string
           kbs_data_type?: string
+          rate_multiplier?: number
+          rule_code?: string | null
           source_id?: string | null
           source_type: string
           teacher_id: string
@@ -1522,10 +1629,13 @@ export type Database = {
           calculated?: boolean
           category?: string
           created_at?: string
+          evidence_note?: string | null
           explanation?: string | null
           hours?: number
           id?: string
           kbs_data_type?: string
+          rate_multiplier?: number
+          rule_code?: string | null
           source_id?: string | null
           source_type?: string
           teacher_id?: string
@@ -1598,6 +1708,85 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      payroll_rule_registry: {
+        Row: {
+          active: boolean
+          category: string
+          code: string
+          condition_note: string | null
+          created_at: string
+          created_by: string | null
+          effective_from: string
+          effective_to: string | null
+          id: string
+          kbs_data_type: string
+          monthly_cap_hours: number | null
+          name: string
+          rate_multiplier: number
+          requires_actual_performance: boolean
+          source_id: string | null
+          weekly_cap_hours: number | null
+        }
+        Insert: {
+          active?: boolean
+          category: string
+          code: string
+          condition_note?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_from: string
+          effective_to?: string | null
+          id?: string
+          kbs_data_type: string
+          monthly_cap_hours?: number | null
+          name: string
+          rate_multiplier?: number
+          requires_actual_performance?: boolean
+          source_id?: string | null
+          weekly_cap_hours?: number | null
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          code?: string
+          condition_note?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          kbs_data_type?: string
+          monthly_cap_hours?: number | null
+          name?: string
+          rate_multiplier?: number
+          requires_actual_performance?: boolean
+          source_id?: string | null
+          weekly_cap_hours?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_rule_registry_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_rule_registry_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "payroll_rule_registry_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "legal_rule_sources"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -3059,9 +3248,17 @@ export type Database = {
       }
     }
     Functions: {
+      apply_approved_payroll_activities: {
+        Args: { p_month: number; p_run_id: string; p_year: number }
+        Returns: number
+      }
       apply_curriculum_template: {
         Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
         Returns: number
+      }
+      approve_payroll_activity: {
+        Args: { p_activity_id: string; p_approve?: boolean }
+        Returns: boolean
       }
       approve_payroll_month: {
         Args: { p_month: number; p_year: number }
@@ -3422,6 +3619,10 @@ export type Database = {
         Args: { p_month: number; p_year: number }
         Returns: string
       }
+      recalculate_payroll_month_v2: {
+        Args: { p_month: number; p_year: number }
+        Returns: string
+      }
       refresh_class_curriculum_status: {
         Args: { p_class_id: string }
         Returns: string
@@ -3467,6 +3668,10 @@ export type Database = {
           p_teaching_area_id?: string
         }
         Returns: string
+      }
+      sync_payroll_calendar_from_academic_year: {
+        Args: { p_month: number; p_year: number }
+        Returns: number
       }
       teacher_course_permission_status: {
         Args: { p_course_id: string; p_on_date?: string; p_teacher_id: string }
