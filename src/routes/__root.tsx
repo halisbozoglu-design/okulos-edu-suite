@@ -83,7 +83,6 @@ function RootShell({ children }: { children: ReactNode }) {
 
 type RouteRule = { prefix: string; any: string[]; superOnly?: boolean };
 const protectedRoutes: RouteRule[] = [
-  { prefix: "/settings/permissions", any: ["permissions.manage"] },
   { prefix: "/settings-permissions", any: ["permissions.manage"] },
   { prefix: "/settings-task-roles", any: ["permissions.manage"] },
   { prefix: "/personnel-admin", any: ["personnel.view", "personnel.manage"] },

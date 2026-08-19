@@ -38,8 +38,6 @@ import { Route as SettingsTaskRolesRouteImport } from './routes/settings-task-ro
 import { Route as SubstitutesRouteImport } from './routes/substitutes'
 import { Route as SuperAdminRouteImport } from './routes/super-admin'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
-import { Route as SettingsPermissionsRouteImport } from './routes/settings.permissions'
-import { Route as SettingsTaskRolesRouteImport } from './routes/settings.task-roles'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -186,16 +184,6 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SettingsPermissionsRoute = SettingsPermissionsRouteImport.update({
-  id: '/permissions',
-  path: '/permissions',
-  getParentRoute: () => SettingsRoute,
-} as any)
-const SettingsTaskRolesRoute = SettingsTaskRolesRouteImport.update({
-  id: '/task-roles',
-  path: '/task-roles',
-  getParentRoute: () => SettingsRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -221,14 +209,12 @@ export interface FileRoutesByFullPath {
   '/schedule-rules': typeof ScheduleRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
   '/schedule-validation': typeof ScheduleValidationRoute
-  '/settings': typeof SettingsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/settings/permissions': typeof SettingsPermissionsRoute
-  '/settings/task-roles': typeof SettingsTaskRolesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -254,14 +240,12 @@ export interface FileRoutesByTo {
   '/schedule-rules': typeof ScheduleRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
   '/schedule-validation': typeof ScheduleValidationRoute
-  '/settings': typeof SettingsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/settings/permissions': typeof SettingsPermissionsRoute
-  '/settings/task-roles': typeof SettingsTaskRolesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -288,14 +272,12 @@ export interface FileRoutesById {
   '/schedule-rules': typeof ScheduleRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
   '/schedule-validation': typeof ScheduleValidationRoute
-  '/settings': typeof SettingsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
   '/auth/callback': typeof AuthCallbackRoute
-  '/settings/permissions': typeof SettingsPermissionsRoute
-  '/settings/task-roles': typeof SettingsTaskRolesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -329,8 +311,6 @@ export interface FileRouteTypes {
     | '/substitutes'
     | '/super-admin'
     | '/auth/callback'
-    | '/settings/permissions'
-    | '/settings/task-roles'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -362,8 +342,6 @@ export interface FileRouteTypes {
     | '/substitutes'
     | '/super-admin'
     | '/auth/callback'
-    | '/settings/permissions'
-    | '/settings/task-roles'
   id:
     | '__root__'
     | '/'
@@ -395,8 +373,6 @@ export interface FileRouteTypes {
     | '/substitutes'
     | '/super-admin'
     | '/auth/callback'
-    | '/settings/permissions'
-    | '/settings/task-roles'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -423,7 +399,7 @@ export interface RootRouteChildren {
   ScheduleRulesRoute: typeof ScheduleRulesRoute
   ScheduleSolverRoute: typeof ScheduleSolverRoute
   ScheduleValidationRoute: typeof ScheduleValidationRoute
-  SettingsRoute: typeof SettingsRouteWithChildren
+  SettingsRoute: typeof SettingsRoute
   SettingsPermissionsRoute: typeof SettingsPermissionsRoute
   SettingsTaskRolesRoute: typeof SettingsTaskRolesRoute
   SubstitutesRoute: typeof SubstitutesRoute
@@ -636,36 +612,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/settings/permissions': {
-      id: '/settings/permissions'
-      path: '/permissions'
-      fullPath: '/settings/permissions'
-      preLoaderRoute: typeof SettingsPermissionsRouteImport
-      parentRoute: typeof SettingsRoute
-    }
-    '/settings/task-roles': {
-      id: '/settings/task-roles'
-      path: '/task-roles'
-      fullPath: '/settings/task-roles'
-      preLoaderRoute: typeof SettingsTaskRolesRouteImport
-      parentRoute: typeof SettingsRoute
-    }
   }
 }
-
-interface SettingsRouteChildren {
-  SettingsPermissionsRoute: typeof SettingsPermissionsRoute
-  SettingsTaskRolesRoute: typeof SettingsTaskRolesRoute
-}
-
-const SettingsRouteChildren: SettingsRouteChildren = {
-  SettingsPermissionsRoute: SettingsPermissionsRoute,
-  SettingsTaskRolesRoute: SettingsTaskRolesRoute,
-}
-
-const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
-  SettingsRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -691,7 +639,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScheduleRulesRoute: ScheduleRulesRoute,
   ScheduleSolverRoute: ScheduleSolverRoute,
   ScheduleValidationRoute: ScheduleValidationRoute,
-  SettingsRoute: SettingsRouteWithChildren,
+  SettingsRoute: SettingsRoute,
   SettingsPermissionsRoute: SettingsPermissionsRoute,
   SettingsTaskRolesRoute: SettingsTaskRolesRoute,
   SubstitutesRoute: SubstitutesRoute,
