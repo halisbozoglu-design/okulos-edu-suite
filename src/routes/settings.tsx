@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CalendarRange, MapPin, Plus, Printer, RefreshCw, Wand2 } from "lucide-react";
+import { AlertTriangle, CalendarRange, CheckCircle2, Lock, MapPin, Plus, Printer, RefreshCw, Unlock, Wand2 } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ type Rotation = { duty_date: string; vice_principal_id: string };
 type DutyAssignment = { duty_date: string; teacher_id: string; duty_location: string | null };
 type Location = { id: string; name: string; critical: boolean; sort_order: number };
 type CycleMember = { teacher_id: string; weekday: number; rotation_offset: number; active: boolean };
+type MonthState = { month_start: string; locked: boolean; stored_schedule_signature: string | null; current_schedule_signature: string; schedule_changed: boolean; generated_at: string | null };
 type DutyBook = {
   date: string;
   manager: { user_id: string; full_name: string | null; phone?: string | null } | null;
@@ -35,13 +36,11 @@ function monthRange(month: string) {
   const start = `${month}-01`;
   const d = new Date(`${start}T00:00:00`);
   d.setMonth(d.getMonth() + 1);
-  const next = d.toISOString().slice(0, 10);
-  return { start, next };
+  return { start, next: d.toISOString().slice(0, 10) };
 }
 
 function DutyRotationSettings() {
-  const defaultMonth = new Date().toISOString().slice(0, 7);
-  const [month, setMonth] = useState(defaultMonth);
+  const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
   const [managers, setManagers] = useState<Profile[]>([]);
   const [teachers, setTeachers] = useState<Profile[]>([]);
   const [activeVpIds, setActiveVpIds] = useState<string[]>([]);
@@ -49,6 +48,7 @@ function DutyRotationSettings() {
   const [assignments, setAssignments] = useState<DutyAssignment[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [cycleMembers, setCycleMembers] = useState<CycleMember[]>([]);
+  const [monthState, setMonthState] = useState<MonthState | null>(null);
   const [newLocation, setNewLocation] = useState("");
   const [criticalLocation, setCriticalLocation] = useState(false);
   const [memberTeacher, setMemberTeacher] = useState("");
@@ -62,7 +62,7 @@ function DutyRotationSettings() {
 
   const loadData = useCallback(async () => {
     const { start, next } = monthRange(month);
-    const [managerRes, teacherRes, vpRes, rotationRes, assignmentRes, locationRes, memberRes] = await Promise.all([
+    const [managerRes, teacherRes, vpRes, rotationRes, assignmentRes, locationRes, memberRes, stateRes] = await Promise.all([
       supabase.from("profiles").select("user_id,full_name,role").in("role", ["manager", "admin"]).order("full_name"),
       supabase.from("profiles").select("user_id,full_name,role").eq("role", "teacher").order("full_name"),
       supabase.from("vice_principals").select("user_id").eq("active", true),
@@ -70,6 +70,7 @@ function DutyRotationSettings() {
       supabase.from("teacher_duty_assignments").select("duty_date,teacher_id,duty_location").gte("duty_date", start).lt("duty_date", next).order("duty_date"),
       supabase.from("duty_locations").select("id,name,critical,sort_order").eq("active", true).order("critical", { ascending: false }).order("sort_order"),
       supabase.from("teacher_duty_cycle_members").select("teacher_id,weekday,rotation_offset,active").eq("active", true),
+      supabase.rpc("get_duty_month_state", { p_month: start }),
     ]);
     setManagers((managerRes.data ?? []) as Profile[]);
     setTeachers((teacherRes.data ?? []) as Profile[]);
@@ -78,6 +79,8 @@ function DutyRotationSettings() {
     setAssignments((assignmentRes.data ?? []) as DutyAssignment[]);
     setLocations((locationRes.data ?? []) as Location[]);
     setCycleMembers((memberRes.data ?? []) as CycleMember[]);
+    const state = Array.isArray(stateRes.data) ? stateRes.data[0] : stateRes.data;
+    setMonthState((state ?? null) as MonthState | null);
   }, [month]);
 
   useEffect(() => { void loadData(); }, [loadData]);
@@ -110,6 +113,7 @@ function DutyRotationSettings() {
   async function generateMonth() {
     if (!activeVpIds.length) { setMessage("Önce en az bir nöbetçi müdür yardımcısı seçin."); return; }
     if (!locations.length) { setMessage("Önce en az bir nöbet yeri tanımlayın."); return; }
+    if (monthState?.locked) { setMessage("Bu ay kilitli. Güncellemek için önce ay kilidini kaldırın."); return; }
     setBusy(true); setMessage(null);
     const monthStart = `${month}-01`;
     const [vp, teacher] = await Promise.all([
@@ -118,19 +122,30 @@ function DutyRotationSettings() {
     ]);
     setBusy(false);
     if (vp.error || teacher.error) { setMessage("Aylık nöbet döngüsü oluşturulamadı. Ay kilidini ve tanımları kontrol edin."); return; }
-    setMessage(`Aylık plan oluşturuldu: ${vp.data ?? 0} idareci günü, ${teacher.data ?? 0} öğretmen nöbet kaydı.`);
+    setMessage(`Aylık plan oluşturuldu: ${vp.data ?? 0} idareci günü, ${teacher.data ?? 0} öğretmen nöbet kaydı. Ders programı sürümü bu aya bağlandı.`);
     await loadData();
   }
 
-  async function loadDutyBook() {
+  async function toggleMonthLock() {
+    const next = !monthState?.locked;
+    const { error } = await supabase.rpc("set_duty_month_lock", { p_month: `${month}-01`, p_locked: next });
+    if (error) { setMessage("Ay kilidi güncellenemedi."); return; }
+    setMessage(next ? "Aylık nöbet planı kilitlendi." : "Ay kilidi kaldırıldı. Gerekirse plan yeniden oluşturulabilir.");
+    await loadData();
+  }
+
+  async function fetchDutyBook(): Promise<DutyBook | null> {
     const { data, error } = await supabase.rpc("get_daily_duty_book", { p_date: selectedDate });
-    if (error) { setMessage("Nöbet defteri verileri alınamadı."); return; }
-    setDutyBook(data as DutyBook);
+    if (error) { setMessage("Nöbet defteri verileri alınamadı."); return null; }
+    const book = data as DutyBook;
+    setDutyBook(book);
+    return book;
   }
 
   async function printDutyBook() {
-    if (!dutyBook || dutyBook.date !== selectedDate) await loadDutyBook();
-    window.setTimeout(() => window.print(), 100);
+    const book = dutyBook?.date === selectedDate ? dutyBook : await fetchDutyBook();
+    if (!book) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
   }
 
   return (
@@ -138,7 +153,12 @@ function DutyRotationSettings() {
       <div className="print:hidden">
         <div className="grid gap-3 sm:grid-cols-[180px_1fr]">
           <div className="space-y-2"><Label>Plan Ayı</Label><Input type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></div>
-          <div className="flex items-end gap-2"><Button onClick={() => void generateMonth()} disabled={busy} className="w-full gap-2"><Wand2 className="size-4" />{busy ? "Oluşturuluyor..." : "Aylık Döngüyü Oluştur / Güncelle"}</Button><Button variant="outline" onClick={() => void loadData()}><RefreshCw className="size-4" /></Button></div>
+          <div className="flex items-end gap-2"><Button onClick={() => void generateMonth()} disabled={busy || Boolean(monthState?.locked)} className="w-full gap-2"><Wand2 className="size-4" />{busy ? "Oluşturuluyor..." : "Aylık Döngüyü Oluştur / Güncelle"}</Button><Button variant="outline" onClick={() => void loadData()}><RefreshCw className="size-4" /></Button></div>
+        </div>
+
+        <div className={`mt-3 rounded-xl border p-3 text-sm ${monthState?.schedule_changed ? "border-amber-300 bg-amber-50 text-amber-950" : "border-emerald-200 bg-emerald-50 text-emerald-950"}`}>
+          <div className="flex items-start gap-2">{monthState?.schedule_changed ? <AlertTriangle className="mt-0.5 size-4 shrink-0" /> : <CheckCircle2 className="mt-0.5 size-4 shrink-0" />}<div><b>{monthState?.schedule_changed ? "Ders programı değişmiş." : "Ders programı değişmemiş."}</b><p className="mt-0.5 text-xs">{monthState?.schedule_changed ? "Bu ayın nöbet planı eski ders programı sürümüyle üretildi. Kilit açıkken planı yeniden oluşturun." : "Mevcut aylık nöbet planı, kaydedilen ders programı sürümüyle uyumlu."}</p></div></div>
+          <div className="mt-2 flex flex-wrap gap-2"><Button size="sm" variant={monthState?.locked ? "secondary" : "outline"} onClick={() => void toggleMonthLock()} className="gap-1.5">{monthState?.locked ? <><Unlock className="size-3.5" /> Kilidi Kaldır</> : <><Lock className="size-3.5" /> Ayı Kilitle</>}</Button><a href="/quran-groups" className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 text-xs font-medium hover:bg-accent">Kur’an 25+ Grup Planlama</a></div>
         </div>
         {message ? <p className="mt-3 rounded-lg border border-border bg-muted/40 p-3 text-sm">{message}</p> : null}
 
@@ -159,7 +179,7 @@ function DutyRotationSettings() {
           <div className="rounded-xl border border-border bg-card p-4">
             <h2 className="text-sm font-semibold">Öğretmen Aylık Nöbet Döngüsü</h2>
             <div className="mt-3 space-y-2"><select value={memberTeacher} onChange={(e) => setMemberTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçin</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select><select value={memberDay} onChange={(e) => setMemberDay(Number(e.target.value))} className="h-10 w-full rounded-md border bg-background px-3 text-sm">{weekdays.map((d) => <option key={d.id} value={d.id}>{d.label}</option>)}</select><Button variant="secondary" onClick={() => void addCycleMember()} className="w-full">Döngüye Ekle / Gününü Güncelle</Button></div>
-            <p className="mt-3 text-xs text-muted-foreground">Aynı gün nöbetçi öğretmenlerin nöbet yerleri ay içindeki haftalarda otomatik döner; ders programı değişmediği sürece ay planı korunur.</p>
+            <p className="mt-3 text-xs text-muted-foreground">Öğretmenin nöbet günü ay boyunca korunur; nöbet yeri ay içindeki haftalarda döner. Ders programı değişirse sistem ay planını “değişti” olarak işaretler.</p>
           </div>
         </section>
 
@@ -171,7 +191,7 @@ function DutyRotationSettings() {
         <section className="mt-6 rounded-xl border border-border bg-card p-4">
           <h2 className="text-sm font-semibold">Günlük Nöbet Defteri · Fizikî Baskı</h2>
           <p className="mt-1 text-xs text-muted-foreground">Seçilen tarihteki nöbetçi idareci/öğretmenler, devamsız personel, boş dersler ve vekalet atamaları sistemdeki canlı veriden alınır.</p>
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row"><Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} /><Button variant="outline" onClick={() => void loadDutyBook()}>Önizle</Button><Button onClick={() => void printDutyBook()} className="gap-2"><Printer className="size-4" /> Fizikî Baskı / PDF</Button></div>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row"><Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} /><Button variant="outline" onClick={() => void fetchDutyBook()}>Önizle</Button><Button onClick={() => void printDutyBook()} className="gap-2"><Printer className="size-4" /> Fizikî Baskı / PDF</Button></div>
         </section>
       </div>
 
