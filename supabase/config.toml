@@ -1,1 +1,7 @@
 project_id = "mndbkmagrjxcoxdetzdl"
+
+[functions.validate-teacher]
+verify_jwt = false
+
+[functions.password-login]
+verify_jwt = false
