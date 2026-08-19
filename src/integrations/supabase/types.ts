@@ -50,6 +50,13 @@ export type Database = {
             foreignKeyName: "absence_lessons_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "absence_lessons_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
             referencedRelation: "class_roster_summary"
             referencedColumns: ["id"]
           },
@@ -73,6 +80,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "absence_lessons_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -125,6 +139,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "absences_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
             foreignKeyName: "absences_crisis_report_id_fkey"
             columns: ["crisis_report_id"]
             isOneToOne: true
@@ -137,6 +158,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "absences_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -190,6 +218,13 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "assignment_audit_log_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
             foreignKeyName: "assignment_audit_log_assignment_id_fkey"
             columns: ["assignment_id"]
             isOneToOne: false
@@ -204,11 +239,100 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "assignment_audit_log_new_substitute_user_id_fkey"
+            columns: ["new_substitute_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
             foreignKeyName: "assignment_audit_log_old_substitute_user_id_fkey"
             columns: ["old_substitute_user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "assignment_audit_log_old_substitute_user_id_fkey"
+            columns: ["old_substitute_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      class_course_requirements: {
+        Row: {
+          category: string
+          class_id: string
+          course_id: string
+          created_at: string
+          id: string
+          locked: boolean
+          note: string | null
+          source_template_id: string | null
+          updated_at: string
+          weekly_hours: number
+        }
+        Insert: {
+          category?: string
+          class_id: string
+          course_id: string
+          created_at?: string
+          id?: string
+          locked?: boolean
+          note?: string | null
+          source_template_id?: string | null
+          updated_at?: string
+          weekly_hours: number
+        }
+        Update: {
+          category?: string
+          class_id?: string
+          course_id?: string
+          created_at?: string
+          id?: string
+          locked?: boolean
+          note?: string | null
+          source_template_id?: string | null
+          updated_at?: string
+          weekly_hours?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_course_requirements_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "class_course_requirements_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_course_requirements_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_course_requirements_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_course_requirements_source_template_id_fkey"
+            columns: ["source_template_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_templates"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -269,6 +393,13 @@ export type Database = {
             foreignKeyName: "class_subgroups_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "class_subgroups_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
             referencedRelation: "class_roster_summary"
             referencedColumns: ["id"]
           },
@@ -317,6 +448,36 @@ export type Database = {
         }
         Relationships: []
       }
+      course_catalog: {
+        Row: {
+          active: boolean
+          category: string
+          code: string | null
+          created_at: string
+          id: string
+          name: string
+          short_name: string | null
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          code?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          short_name?: string | null
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          code?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          short_name?: string | null
+        }
+        Relationships: []
+      }
       crisis_reports: {
         Row: {
           created_at: string
@@ -352,6 +513,112 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "crisis_reports_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      curriculum_template_courses: {
+        Row: {
+          category: string
+          course_id: string
+          id: string
+          sort_order: number
+          template_id: string
+          weekly_hours: number
+        }
+        Insert: {
+          category?: string
+          course_id: string
+          id?: string
+          sort_order?: number
+          template_id: string
+          weekly_hours: number
+        }
+        Update: {
+          category?: string
+          course_id?: string
+          id?: string
+          sort_order?: number
+          template_id?: string
+          weekly_hours?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_template_courses_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curriculum_template_courses_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curriculum_templates: {
+        Row: {
+          academic_year: string | null
+          active: boolean
+          created_at: string
+          created_by: string | null
+          expected_weekly_hours: number | null
+          grade_level: number | null
+          id: string
+          name: string
+          program_type: string | null
+          school_level: string | null
+          source_note: string | null
+        }
+        Insert: {
+          academic_year?: string | null
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          expected_weekly_hours?: number | null
+          grade_level?: number | null
+          id?: string
+          name: string
+          program_type?: string | null
+          school_level?: string | null
+          source_note?: string | null
+        }
+        Update: {
+          academic_year?: string | null
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          expected_weekly_hours?: number | null
+          grade_level?: number | null
+          id?: string
+          name?: string
+          program_type?: string | null
+          school_level?: string | null
+          source_note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "curriculum_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -400,6 +667,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "duty_day_notes_closed_by_fkey"
+            columns: ["closed_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       duty_incident_logs: {
@@ -440,6 +714,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "duty_incident_logs_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -499,6 +780,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "duty_month_locks_generated_by_fkey"
+            columns: ["generated_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -577,11 +865,25 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "duty_tardiness_logs_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
             foreignKeyName: "duty_tardiness_logs_teacher_id_fkey"
             columns: ["teacher_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "duty_tardiness_logs_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -618,6 +920,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "eokul_import_batches_imported_by_fkey"
+            columns: ["imported_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       fcm_tokens: {
@@ -649,6 +958,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fcm_tokens_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -724,6 +1040,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       payroll_calculation_runs: {
@@ -761,6 +1084,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_calculation_runs_calculated_by_fkey"
+            columns: ["calculated_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -805,6 +1135,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_calendar_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -866,11 +1203,25 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "payroll_day_entries_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
             foreignKeyName: "payroll_day_entries_teacher_id_fkey"
             columns: ["teacher_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_day_entries_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -903,6 +1254,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "payroll_dirty_periods_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1023,6 +1381,13 @@ export type Database = {
             foreignKeyName: "quran_split_plans_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
             referencedRelation: "class_roster_summary"
             referencedColumns: ["id"]
           },
@@ -1039,6 +1404,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
           {
             foreignKeyName: "quran_split_plans_group_1_id_fkey"
@@ -1062,11 +1434,25 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "quran_split_plans_teacher_1_id_fkey"
+            columns: ["teacher_1_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
             foreignKeyName: "quran_split_plans_teacher_2_id_fkey"
             columns: ["teacher_2_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_teacher_2_id_fkey"
+            columns: ["teacher_2_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1105,6 +1491,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_audit_log_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
           {
             foreignKeyName: "schedule_audit_log_schedule_id_fkey"
@@ -1154,6 +1547,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_import_batches_imported_by_fkey"
+            columns: ["imported_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1214,6 +1614,13 @@ export type Database = {
             foreignKeyName: "schedule_publication_rows_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "schedule_publication_rows_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
             referencedRelation: "class_roster_summary"
             referencedColumns: ["id"]
           },
@@ -1259,6 +1666,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "schedule_publication_rows_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       schedule_publications: {
@@ -1303,6 +1717,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "schedule_publications_published_by_fkey"
+            columns: ["published_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       school_classes: {
@@ -1310,6 +1731,8 @@ export type Database = {
           active: boolean
           class_name: string
           composite_key: string | null
+          curriculum_status: string
+          expected_weekly_hours: number | null
           grade_level: number | null
           id: string
           program_type: string | null
@@ -1322,6 +1745,8 @@ export type Database = {
           active?: boolean
           class_name: string
           composite_key?: string | null
+          curriculum_status?: string
+          expected_weekly_hours?: number | null
           grade_level?: number | null
           id?: string
           program_type?: string | null
@@ -1334,6 +1759,8 @@ export type Database = {
           active?: boolean
           class_name?: string
           composite_key?: string | null
+          curriculum_status?: string
+          expected_weekly_hours?: number | null
           grade_level?: number | null
           id?: string
           program_type?: string | null
@@ -1379,6 +1806,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "students_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
           {
             foreignKeyName: "students_class_id_fkey"
             columns: ["class_id"]
@@ -1452,8 +1886,29 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "substitute_assignments_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
             foreignKeyName: "substitute_assignments_assigned_by_fkey"
             columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "substitute_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "substitute_assignments_substitute_user_id_fkey"
+            columns: ["substitute_user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
@@ -1462,8 +1917,80 @@ export type Database = {
             foreignKeyName: "substitute_assignments_substitute_user_id_fkey"
             columns: ["substitute_user_id"]
             isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      teacher_course_assignments: {
+        Row: {
+          assigned_hours: number
+          assignment_group: string
+          class_course_requirement_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string | null
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_hours: number
+          assignment_group?: string
+          class_course_requirement_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_hours?: number
+          assignment_group?: string
+          class_course_requirement_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_course_assignments_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1497,6 +2024,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "teacher_duty_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       teacher_duty_cycle_members: {
@@ -1528,6 +2062,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_duty_cycle_members_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: true
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1569,6 +2110,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_payroll_config_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: true
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1626,6 +2174,13 @@ export type Database = {
             foreignKeyName: "teacher_schedule_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
             referencedRelation: "class_roster_summary"
             referencedColumns: ["id"]
           },
@@ -1657,6 +2212,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "teacher_schedule_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       teacher_schedule_constraints: {
@@ -1685,6 +2247,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_constraints_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: true
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1728,11 +2297,25 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
           {
+            foreignKeyName: "teacher_unavailability_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
             foreignKeyName: "teacher_unavailability_teacher_id_fkey"
             columns: ["teacher_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_unavailability_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1765,6 +2348,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "telegram_integrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
         ]
       }
@@ -1801,6 +2391,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "telegram_link_tokens_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       vice_principals: {
@@ -1824,10 +2421,31 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "vice_principals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
     }
     Views: {
+      class_curriculum_summary: {
+        Row: {
+          assigned_teacher_hours: number | null
+          class_id: string | null
+          class_name: string | null
+          composite_key: string | null
+          course_count: number | null
+          curriculum_status: string | null
+          expected_weekly_hours: number | null
+          planned_weekly_hours: number | null
+          program_type: string | null
+        }
+        Relationships: []
+      }
       class_roster_summary: {
         Row: {
           class_name: string | null
@@ -1865,6 +2483,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "schedule_publications_published_by_fkey"
+            columns: ["published_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
       }
       schedules: {
@@ -1885,6 +2510,13 @@ export type Database = {
           updated_at: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "teacher_schedule_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
           {
             foreignKeyName: "teacher_schedule_class_id_fkey"
             columns: ["class_id"]
@@ -1920,14 +2552,36 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "teacher_schedule_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
         ]
+      }
+      teacher_course_load_summary: {
+        Row: {
+          assigned_weekly_hours: number | null
+          class_count: number | null
+          course_count: number | null
+          full_name: string | null
+          teacher_id: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {
+      apply_curriculum_template: {
+        Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
+        Returns: number
+      }
       approve_payroll_month: {
         Args: { p_month: number; p_year: number }
         Returns: number
       }
+      assert_curriculum_ready_for_timetable: { Args: never; Returns: boolean }
       assign_quran_parallel_lesson: {
         Args: {
           p_academic_year: string
@@ -1951,6 +2605,23 @@ export type Database = {
           substitute_name: string
           substitute_user_id: string
         }[]
+      }
+      assign_teacher_to_class_course: {
+        Args: {
+          p_group?: string
+          p_hours?: number
+          p_requirement_id: string
+          p_teacher_id: string
+        }
+        Returns: string
+      }
+      clone_class_curriculum: {
+        Args: {
+          p_copy_teachers?: boolean
+          p_source_class_id: string
+          p_target_class_id: string
+        }
+        Returns: number
       }
       create_telegram_link_token: { Args: never; Returns: string }
       current_schedule_signature: { Args: never; Returns: string }
@@ -1986,6 +2657,20 @@ export type Database = {
           p_vice_principal_ids: string[]
         }
         Returns: number
+      }
+      get_curriculum_readiness: {
+        Args: { p_class_id?: string }
+        Returns: {
+          assigned_hours: number
+          blocking_reason: string
+          class_id: string
+          composite_key: string
+          expected_hours: number
+          partially_assigned_course_count: number
+          planned_hours: number
+          ready: boolean
+          unassigned_course_count: number
+        }[]
       }
       get_daily_duty_book: { Args: { p_date: string }; Returns: Json }
       get_duty_month_state: {
@@ -2166,6 +2851,10 @@ export type Database = {
       }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
+        Returns: string
+      }
+      refresh_class_curriculum_status: {
+        Args: { p_class_id: string }
         Returns: string
       }
       set_duty_month_lock: {
