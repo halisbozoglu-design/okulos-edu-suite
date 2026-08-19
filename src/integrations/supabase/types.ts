@@ -168,6 +168,67 @@ export type Database = {
           },
         ]
       }
+      area_course_permissions: {
+        Row: {
+          active: boolean
+          condition_note: string | null
+          course_id: string
+          created_at: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          priority_order: number
+          source_id: string | null
+          teaching_area_id: string
+        }
+        Insert: {
+          active?: boolean
+          condition_note?: string | null
+          course_id: string
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          priority_order?: number
+          source_id?: string | null
+          teaching_area_id: string
+        }
+        Update: {
+          active?: boolean
+          condition_note?: string | null
+          course_id?: string
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          priority_order?: number
+          source_id?: string | null
+          teaching_area_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "area_course_permissions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "area_course_permissions_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "legal_rule_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "area_course_permissions_teaching_area_id_fkey"
+            columns: ["teaching_area_id"]
+            isOneToOne: false
+            referencedRelation: "teaching_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assignment_audit_log: {
         Row: {
           absence_lesson_id: string | null
@@ -622,6 +683,83 @@ export type Database = {
           },
         ]
       }
+      duty_assignment_history: {
+        Row: {
+          assignment_type: string
+          change_reason: string | null
+          changed_at: string
+          changed_by: string | null
+          duty_date: string
+          duty_location: string | null
+          effective_end_date: string | null
+          effective_start_date: string
+          id: number
+          new_record: Json | null
+          previous_record: Json | null
+          source: string
+          subject_user_id: string
+        }
+        Insert: {
+          assignment_type: string
+          change_reason?: string | null
+          changed_at?: string
+          changed_by?: string | null
+          duty_date: string
+          duty_location?: string | null
+          effective_end_date?: string | null
+          effective_start_date: string
+          id?: never
+          new_record?: Json | null
+          previous_record?: Json | null
+          source?: string
+          subject_user_id: string
+        }
+        Update: {
+          assignment_type?: string
+          change_reason?: string | null
+          changed_at?: string
+          changed_by?: string | null
+          duty_date?: string
+          duty_location?: string | null
+          effective_end_date?: string | null
+          effective_start_date?: string
+          id?: never
+          new_record?: Json | null
+          previous_record?: Json | null
+          source?: string
+          subject_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duty_assignment_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "duty_assignment_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "duty_assignment_history_subject_user_id_fkey"
+            columns: ["subject_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "duty_assignment_history_subject_user_id_fkey"
+            columns: ["subject_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       duty_day_notes: {
         Row: {
           closed_at: string | null
@@ -968,6 +1106,48 @@ export type Database = {
           },
         ]
       }
+      legal_rule_sources: {
+        Row: {
+          active: boolean
+          authority: string
+          code: string
+          created_at: string
+          decision_date: string | null
+          effective_from: string | null
+          effective_to: string | null
+          id: string
+          note: string | null
+          source_url: string | null
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          authority: string
+          code: string
+          created_at?: string
+          decision_date?: string | null
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          note?: string | null
+          source_url?: string | null
+          title: string
+        }
+        Update: {
+          active?: boolean
+          authority?: string
+          code?: string
+          created_at?: string
+          decision_date?: string | null
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          note?: string | null
+          source_url?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       lesson_room_rules: {
         Row: {
           active: boolean
@@ -994,6 +1174,94 @@ export type Database = {
           subject_pattern?: string
         }
         Relationships: []
+      }
+      norm_rule_bands: {
+        Row: {
+          id: string
+          max_hours: number | null
+          min_hours: number
+          norm_count: number
+          rule_set_id: string
+          sort_order: number
+        }
+        Insert: {
+          id?: string
+          max_hours?: number | null
+          min_hours: number
+          norm_count: number
+          rule_set_id: string
+          sort_order?: number
+        }
+        Update: {
+          id?: string
+          max_hours?: number | null
+          min_hours?: number
+          norm_count?: number
+          rule_set_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "norm_rule_bands_rule_set_id_fkey"
+            columns: ["rule_set_id"]
+            isOneToOne: false
+            referencedRelation: "norm_rule_sets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      norm_rule_sets: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          name: string
+          note: string | null
+          remainder_min_hours: number | null
+          repeating_block_hours: number | null
+          source_id: string | null
+          teacher_category: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          effective_from: string
+          effective_to?: string | null
+          id?: string
+          name: string
+          note?: string | null
+          remainder_min_hours?: number | null
+          repeating_block_hours?: number | null
+          source_id?: string | null
+          teacher_category: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          name?: string
+          note?: string | null
+          remainder_min_hours?: number | null
+          repeating_block_hours?: number | null
+          source_id?: string | null
+          teacher_category?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "norm_rule_sets_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "legal_rule_sources"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
@@ -1273,6 +1541,7 @@ export type Database = {
           id: string
           role: Database["public"]["Enums"]["app_role"]
           tckn: string
+          teaching_area_id: string | null
         }
         Insert: {
           active?: boolean
@@ -1282,6 +1551,7 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           tckn: string
+          teaching_area_id?: string | null
         }
         Update: {
           active?: boolean
@@ -1291,8 +1561,17 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           tckn?: string
+          teaching_area_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "pre_registered_teachers_teaching_area_id_fkey"
+            columns: ["teaching_area_id"]
+            isOneToOne: false
+            referencedRelation: "teaching_areas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -1300,9 +1579,11 @@ export type Database = {
           email: string | null
           emergency_contact: string | null
           full_name: string | null
+          is_super_admin: boolean
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
-          tckn: string
+          tckn: string | null
+          teaching_area_id: string | null
           updated_at: string
           user_id: string
         }
@@ -1311,9 +1592,11 @@ export type Database = {
           email?: string | null
           emergency_contact?: string | null
           full_name?: string | null
+          is_super_admin?: boolean
           phone?: string | null
           role?: Database["public"]["Enums"]["app_role"]
-          tckn: string
+          tckn?: string | null
+          teaching_area_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -1322,13 +1605,23 @@ export type Database = {
           email?: string | null
           emergency_contact?: string | null
           full_name?: string | null
+          is_super_admin?: boolean
           phone?: string | null
           role?: Database["public"]["Enums"]["app_role"]
-          tckn?: string
+          tckn?: string | null
+          teaching_area_id?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_teaching_area_id_fkey"
+            columns: ["teaching_area_id"]
+            isOneToOne: false
+            referencedRelation: "teaching_areas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quran_split_plans: {
         Row: {
@@ -1922,6 +2215,33 @@ export type Database = {
           },
         ]
       }
+      super_admin_bootstrap: {
+        Row: {
+          active: boolean
+          claimed_at: string | null
+          claimed_by: string | null
+          created_at: string
+          email: string
+          full_name: string
+        }
+        Insert: {
+          active?: boolean
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          email: string
+          full_name?: string
+        }
+        Update: {
+          active?: boolean
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+        }
+        Relationships: []
+      }
       teacher_course_assignments: {
         Row: {
           assigned_hours: number
@@ -2319,6 +2639,30 @@ export type Database = {
           },
         ]
       }
+      teaching_areas: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       telegram_integrations: {
         Row: {
           enabled: boolean
@@ -2615,6 +2959,32 @@ export type Database = {
         }
         Returns: string
       }
+      calculate_norm_from_rule: {
+        Args: { p_rule_set_id: string; p_total_hours: number }
+        Returns: number
+      }
+      claim_super_admin_profile: {
+        Args: never
+        Returns: {
+          blood_type: string | null
+          email: string | null
+          emergency_contact: string | null
+          full_name: string | null
+          is_super_admin: boolean
+          phone: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          tckn: string | null
+          teaching_area_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       clone_class_curriculum: {
         Args: {
           p_copy_teachers?: boolean
@@ -2633,9 +3003,11 @@ export type Database = {
           email: string | null
           emergency_contact: string | null
           full_name: string | null
+          is_super_admin: boolean
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
-          tckn: string
+          tckn: string | null
+          teaching_area_id: string | null
           updated_at: string
           user_id: string
         }
@@ -2754,6 +3126,18 @@ export type Database = {
           title: string
         }[]
       }
+      get_super_admin_personnel: {
+        Args: never
+        Returns: {
+          active: boolean
+          email: string
+          full_name: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          tckn_masked: string
+          teaching_area_id: string
+        }[]
+      }
       import_eokul_roster: {
         Args: { p_file_name: string; p_file_type: string; p_rows: Json }
         Returns: {
@@ -2771,6 +3155,7 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_manager_or_admin: { Args: never; Returns: boolean }
+      is_super_admin: { Args: never; Returns: boolean }
       kbs_payroll_export: {
         Args: { p_month: number; p_year: number }
         Returns: {
@@ -2881,6 +3266,24 @@ export type Database = {
           weekly_load: number
         }[]
       }
+      super_admin_set_profile_teaching_area: {
+        Args: { p_teaching_area_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      super_admin_upsert_personnel: {
+        Args: {
+          p_email?: string
+          p_full_name: string
+          p_role?: Database["public"]["Enums"]["app_role"]
+          p_tckn: string
+          p_teaching_area_id?: string
+        }
+        Returns: string
+      }
+      teacher_course_permission_status: {
+        Args: { p_course_id: string; p_on_date?: string; p_teacher_id: string }
+        Returns: string
+      }
       update_my_profile_safe: {
         Args: {
           p_blood_type?: string
@@ -2892,9 +3295,11 @@ export type Database = {
           email: string | null
           emergency_contact: string | null
           full_name: string | null
+          is_super_admin: boolean
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
-          tckn: string
+          tckn: string | null
+          teaching_area_id: string | null
           updated_at: string
           user_id: string
         }
