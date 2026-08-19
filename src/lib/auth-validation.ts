@@ -5,11 +5,12 @@ export function normalizeDigits(value: string) {
 export function isValidTckn(value: string) {
   if (!/^\d{11}$/.test(value) || value[0] === "0") return false;
   const d = value.split("").map(Number);
-  const odd = d[0] + d[2] + d[4] + d[6] + d[8];
-  const even = d[1] + d[3] + d[5] + d[7];
+  const g = (i: number) => d[i] ?? 0;
+  const odd = g(0) + g(2) + g(4) + g(6) + g(8);
+  const even = g(1) + g(3) + g(5) + g(7);
   const tenth = ((odd * 7 - even) % 10 + 10) % 10;
   const eleventh = d.slice(0, 10).reduce((sum, n) => sum + n, 0) % 10;
-  return d[9] === tenth && d[10] === eleventh;
+  return g(9) === tenth && g(10) === eleventh;
 }
 
 export function isValidEmail(value: string) {

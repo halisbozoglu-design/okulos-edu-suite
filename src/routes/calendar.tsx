@@ -86,7 +86,7 @@ function CalendarCenter() {
     ]);
     setYears((y.data ?? []) as AcademicYear[]);
     setEvents((e.data ?? []) as CalendarEvent[]);
-    const active = (y.data ?? []).find((row) => row.active);
+    const active = (y.data ?? []).find((row: AcademicYear) => row.active);
     if (active && !eventYear) setEventYear(active.id);
   }, [eventYear]);
 

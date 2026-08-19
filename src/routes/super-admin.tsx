@@ -88,7 +88,7 @@ function SuperAdminCenter() {
     setAreas((a.data ?? []) as Area[]); setCourses((c.data ?? []) as Course[]); setSources((s.data ?? []) as Source[]);
     setPermissions((p.data ?? []) as Permission[]); setPersonnel((people.data ?? []) as Personnel[]);
     setNormRules((nr.data ?? []) as NormRule[]); setNormBands((nb.data ?? []) as NormBand[]);
-    const ttkb = (s.data ?? []).find((x) => x.code === "TTKB-129-2025");
+    const ttkb = (s.data ?? []).find((x: Source) => x.code === "TTKB-129-2025");
     if (ttkb && !permissionSource) setPermissionSource(ttkb.id);
   }, [permissionSource]);
 

@@ -85,7 +85,8 @@ function PayrollGrid() {
       if (!map.has(row.teacher_id)) map.set(row.teacher_id, { id: row.teacher_id, name: row.full_name ?? "Öğretmen", role: row.role, daily: emptyDaily(dayCount), approved: true });
       const item = map.get(row.teacher_id)!;
       const day = Number(row.work_date.slice(8, 10));
-      if (day >= 1 && day <= dayCount && item.daily[row.category]) item.daily[row.category][day - 1] += Number(row.hours ?? 0);
+      const bucket = item.daily[row.category as keyof typeof item.daily];
+      if (day >= 1 && day <= dayCount && bucket && bucket[day - 1] !== undefined) bucket[day - 1] = (bucket[day - 1] ?? 0) + Number(row.hours ?? 0);
       item.approved = item.approved && Boolean(row.approved);
     }
     return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name, "tr"));

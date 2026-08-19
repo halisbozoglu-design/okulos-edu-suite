@@ -74,7 +74,7 @@ function DutyRotationSettings() {
     ]);
     setManagers((managerRes.data ?? []) as Profile[]);
     setTeachers((teacherRes.data ?? []) as Profile[]);
-    setActiveVpIds((vpRes.data ?? []).map((x) => x.user_id));
+    setActiveVpIds((vpRes.data ?? []).map((x: { user_id: string }) => x.user_id));
     setRotations((rotationRes.data ?? []) as Rotation[]);
     setAssignments((assignmentRes.data ?? []) as DutyAssignment[]);
     setLocations((locationRes.data ?? []) as Location[]);
