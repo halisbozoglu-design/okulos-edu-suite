@@ -93,8 +93,8 @@ function QuranGroupManager() {
       p_weekday: weekday,
       p_period: period,
       p_subject: "Kur’an-ı Kerim",
-      p_classroom_1: room1 || undefined,
-      p_classroom_2: room2 || undefined,
+      ...(room1 ? { p_classroom_1: room1 } : {}),
+      ...(room2 ? { p_classroom_2: room2 } : {}),
     });
     setBusy(false);
     if (error) {

@@ -149,7 +149,6 @@ function CurriculumManager() {
     const { error } = await supabase.rpc("assign_teacher_to_class_course", {
       p_requirement_id: assignRequirement,
       p_teacher_id: assignTeacher,
-      p_hours: undefined,
       p_group: "main",
     });
     setBusy(false);
