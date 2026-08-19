@@ -41,6 +41,9 @@ jobs:
       - name: Check auth flow
         run: node scripts/check-auth-flow.mjs
 
+      - name: Check delegated permission flow
+        run: node scripts/check-permission-flow.mjs
+
       - name: Production build and generate routes
         run: bun run build
 
