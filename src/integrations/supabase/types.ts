@@ -5161,6 +5161,16 @@ export type Database = {
         }
         Returns: number
       }
+      scenario_teacher_consecutive_count_block_v2: {
+        Args: {
+          p_block_hours: number
+          p_day: number
+          p_scenario: string
+          p_start: number
+          p_teacher: string
+        }
+        Returns: number
+      }
       scenario_teacher_daily_count: {
         Args: { p_day: number; p_scenario: string; p_teacher: string }
         Returns: number
