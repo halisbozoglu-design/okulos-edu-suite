@@ -15,14 +15,12 @@ for(const token of ['permission_catalog','user_permission_grants','permission_au
   if(!engine.includes(token)) errors.push(`permission engine eksik: ${token}`);
 
 const mode=readFileSync(requiredFiles[1],'utf8');
-for(const token of ["permission_mode","'delegated'","set_user_permission_mode"])
+for(const token of ['permission_mode',"'delegated'",'set_user_permission_mode'])
   if(!mode.includes(token)) errors.push(`permission mode eksik: ${token}`);
 
 const gateway=readFileSync(requiredFiles[2],'utf8');
-for(const token of ['open_permission_context','schedule.generate','schedule.apply','schedule.publish','duty.generate','duty.lock','payroll.calculate','payroll.approve','payroll.publish'])
+for(const token of ['open_permission_context','schedule.generate','schedule.apply','schedule.publish','duty.generate','duty.lock','payroll.calculate','payroll.approve','payroll.publish','has_permission(public.current_permission_context())'])
   if(!gateway.includes(token)) errors.push(`permission gateway eksik: ${token}`);
-if(/current_permission_context\(\)[\s\S]*?or\s+exists\([\s\S]*?user_permission_grants/i.test(gateway)===false)
-  errors.push('is_manager_or_admin delegated context guard gözden geçirilmeli');
 
 const ui=readFileSync(requiredFiles[4],'utf8');
 for(const token of ['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','Görev Bazlı'])
