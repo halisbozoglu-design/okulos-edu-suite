@@ -1,0 +1,40 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Check, KeyRound, RefreshCw, ShieldCheck, UserCog } from "lucide-react";
+import { AppShell } from "@/components/okulos/AppShell";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { supabase } from "@/lib/supabase";
+
+export const Route=createFileRoute("/settings-permissions")({head:()=>({meta:[{title:"Görev ve Yetki Atama — OkulOS"}]}),component:PermissionSettings});
+
+type Person={user_id:string;full_name:string|null;role:string;permission_code:string|null;scope:Record<string,unknown>|null;valid_from:string|null;valid_until:string|null};
+type Permission={code:string;module_code:string;module_label:string;label:string;action:string;description:string|null;dangerous:boolean;sort_order:number};
+
+const bundles=[
+ {name:"Ders Programı Sorumlusu",codes:["management.access","schedule.view","schedule.edit","schedule.rules","schedule.generate","schedule.apply","schedule.publish","schedule.restore","classrooms.manage","curriculum.manage"]},
+ {name:"Nöbet Sorumlusu",codes:["management.access","duty.view","duty.manage","duty.generate","duty.lock"]},
+ {name:"Ek Ders Sorumlusu",codes:["management.access","payroll.view","payroll.calculate","payroll.edit","payroll.approve","payroll.publish"]},
+ {name:"Personel Sorumlusu",codes:["management.access","personnel.view","personnel.manage"]},
+ {name:"Vekalet Sorumlusu",codes:["management.access","substitutes.view","substitutes.manage"]},
+] as const;
+
+function PermissionSettings(){
+ const [rows,setRows]=useState<Person[]>([]),[catalog,setCatalog]=useState<Permission[]>([]),[selected,setSelected]=useState(""),[from,setFrom]=useState(""),[until,setUntil]=useState(""),[message,setMessage]=useState<string|null>(null),[busy,setBusy]=useState(false);
+ const load=useCallback(async()=>{setMessage(null);const [m,c]=await Promise.all([supabase.rpc("get_permission_admin_matrix"),supabase.from("permission_catalog").select("code,module_code,module_label,label,action,description,dangerous,sort_order").eq("active",true).order("sort_order")]);if(m.error||c.error){setMessage("Görev/yetki bilgileri yüklenemedi. Bu ekran yalnız yetki yöneticileri tarafından kullanılabilir.");return;}setRows((m.data??[]) as Person[]);setCatalog((c.data??[]) as Permission[]);},[]);useEffect(()=>{void load()},[load]);
+ const people=useMemo(()=>Array.from(new Map(rows.map(r=>[r.user_id,{user_id:r.user_id,full_name:r.full_name,role:r.role}])).values()),[rows]);
+ useEffect(()=>{if(!selected&&people.length)setSelected(people[0].user_id)},[people,selected]);
+ const granted=useMemo(()=>new Set(rows.filter(r=>r.user_id===selected&&r.permission_code).map(r=>r.permission_code as string)),[rows,selected]);
+ const groups=useMemo(()=>Array.from(new Map(catalog.map(p=>[p.module_code,{label:p.module_label,items:catalog.filter(x=>x.module_code===p.module_code)}])).values()),[catalog]);
+ const selectedPerson=people.find(p=>p.user_id===selected);
+ async function setPermission(code:string,enabled:boolean){if(!selected)return;setBusy(true);const {error}=await supabase.rpc("set_user_permission",{p_user_id:selected,p_permission_code:code,p_enabled:enabled,p_scope:{},p_valid_from:from||null,p_valid_until:until||null,p_note:null});setBusy(false);if(error){setMessage(`Yetki güncellenemedi: ${error.message}`);return;}setMessage(enabled?"Görev/yetki verildi.":"Görev/yetki kaldırıldı.");await load();}
+ async function applyBundle(codes:readonly string[]){if(!selected)return;setBusy(true);for(const code of codes){const {error}=await supabase.rpc("set_user_permission",{p_user_id:selected,p_permission_code:code,p_enabled:true,p_scope:{},p_valid_from:from||null,p_valid_until:until||null,p_note:"Hızlı görev paketi"});if(error){setBusy(false);setMessage(`Paket tamamlanamadı: ${error.message}`);await load();return;}}setBusy(false);setMessage("Görev paketi atandı.");await load();}
+ return <AppShell title="Görev ve Yetki Atama" subtitle="Rol ayrı · operasyon yetkisi ayrı · kullanıcı bazlı delegasyon" action={<KeyRound className="size-5"/>}>
+  <div className="grid gap-2 sm:grid-cols-3"><Link to="/settings"><Button variant="outline" className="w-full">Nöbet Ayarları</Button></Link><Link to="/management"><Button variant="outline" className="w-full">Yönetim Merkezi</Button></Link><Button variant="outline" onClick={()=>void load()}><RefreshCw className="mr-2 size-4"/>Yenile</Button></div>
+  {message?<div className="mt-3 rounded-xl border bg-muted/40 p-3 text-sm">{message}</div>:null}
+  <section className="mt-4 rounded-xl border bg-card p-4"><div className="flex items-center gap-2"><UserCog className="size-4"/><h2 className="font-semibold">Personel Seç</h2></div><select className="mt-3 h-11 w-full rounded-md border bg-background px-3" value={selected} onChange={e=>setSelected(e.target.value)}><option value="">Personel seçiniz</option>{people.map(p=><option key={p.user_id} value={p.user_id}>{p.full_name??"Personel"} · {p.role}</option>)}</select><div className="mt-3 grid gap-3 sm:grid-cols-2"><div><p className="mb-1 text-xs text-muted-foreground">Başlangıç (opsiyonel)</p><Input type="date" value={from} onChange={e=>setFrom(e.target.value)}/></div><div><p className="mb-1 text-xs text-muted-foreground">Bitiş (opsiyonel)</p><Input type="date" value={until} onChange={e=>setUntil(e.target.value)}/></div></div><p className="mt-2 text-xs text-muted-foreground">Kadro rolü değişmez. Buradaki görevler yalnız sistemdeki iş ve işlem yetkilerini belirler.</p></section>
+  {selectedPerson?<section className="mt-4 rounded-xl border bg-card p-4"><h2 className="font-semibold">Hızlı Görev Paketleri</h2><div className="mt-3 flex flex-wrap gap-2">{bundles.map(b=><Button key={b.name} variant="outline" disabled={busy} onClick={()=>void applyBundle(b.codes)}>{b.name}</Button>)}</div></section>:null}
+  <div className="mt-4 space-y-4">{groups.map(g=><section key={g.label} className="rounded-xl border bg-card p-4"><h2 className="font-semibold">{g.label}</h2><div className="mt-3 grid gap-2 md:grid-cols-2">{g.items.map(p=>{const on=granted.has(p.code);return <button key={p.code} type="button" disabled={!selected||busy} onClick={()=>void setPermission(p.code,!on)} className={`flex items-start gap-3 rounded-xl border p-3 text-left transition ${on?"border-emerald-300 bg-emerald-50":"border-border bg-background hover:border-primary/40"}`}><span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded ${on?"bg-emerald-600 text-white":"border"}`}>{on?<Check className="size-3.5"/>:null}</span><span><span className="text-sm font-medium">{p.label}</span>{p.description?<span className="mt-1 block text-xs text-muted-foreground">{p.description}</span>:null}{p.dangerous?<span className="mt-1 block text-[10px] font-medium text-amber-700">Kritik işlem yetkisi</span>:null}</span></button>})}</div></section>)}</div>
+  <div className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50 p-3 text-xs text-indigo-950"><ShieldCheck className="mr-2 inline size-4"/>Yetki atama/kaldırma işlemleri denetim günlüğüne kaydedilir. Süreli görevlerin süresi dolunca yetki otomatik geçersiz olur.</div>
+ </AppShell>;
+}
