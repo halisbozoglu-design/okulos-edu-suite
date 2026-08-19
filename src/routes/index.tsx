@@ -9,6 +9,14 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { supabase } from "@/lib/supabase";
 import { getPasswordStrength, isValidEmail, isValidTckn, isValidTrMobile, normalizeDigits, normalizeTrPhone } from "@/lib/auth-validation";
 
+function AppleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M17.05 20.28c-.98 1.4-2.06 1.4-3.04.6-1.08-.9-1.87-.8-3.04 0-1.35.9-2.13.7-3.04-.6-2.17-3.1-1.84-7.7 1.04-9.4 1.44-.8 2.68-.6 3.64.2.96-.8 2.2-1 3.64-.2 1.47.9 2.03 2.9 1.68 4.9-.15.9-.46 1.8-.88 2.5zm-4.47-13.5c.05-1.9 1.6-3.5 3.4-3.55-.2 2.05-1.85 3.6-3.4 3.55z" />
+    </svg>
+  );
+}
+
 export const Route = createFileRoute("/")({ component: AuthScreen });
 
 const SUPER_ADMIN_EMAIL = "halisbozoglu@yahoo.com";
