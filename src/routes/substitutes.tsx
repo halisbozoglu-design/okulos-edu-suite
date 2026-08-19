@@ -99,13 +99,13 @@ function SubstituteManager() {
 
     const crisisRows = (crisisRes.data ?? []) as Crisis[];
     const lessonRows = (lessonRes.data ?? []) as Lesson[];
-    const assignmentRows = (assignmentRes.data ?? []).map((row) => ({
+    const assignmentRows = (assignmentRes.data ?? []).map((row: Assignment) => ({
       id: row.id,
       absence_lesson_id: row.absence_lesson_id,
       substitute_user_id: row.substitute_user_id,
       notified_at: row.notified_at,
     })) as Assignment[];
-    const dutyIds = (dutyRes.data ?? []).map((row) => row.teacher_id);
+    const dutyIds = (dutyRes.data ?? []).map((row: { teacher_id: string }) => row.teacher_id);
 
     setCrises(crisisRows);
     setLessons(lessonRows);
@@ -113,7 +113,7 @@ function SubstituteManager() {
     setDutyTeacherIds(dutyIds);
 
     const profileIds = Array.from(new Set([
-      ...crisisRows.map((row) => row.teacher_id),
+      ...crisisRows.map((row: { teacher_id: string }) => row.teacher_id),
       ...assignmentRows.map((row) => row.substitute_user_id),
       ...dutyIds,
     ]));

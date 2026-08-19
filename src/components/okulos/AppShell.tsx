@@ -150,7 +150,7 @@ export function AppShell({
             table: "notifications",
             filter: `user_id=eq.${userId}`,
           },
-          (payload) => {
+          (payload: { new: RealtimeNotification }) => {
             const incoming = payload.new as RealtimeNotification;
             setNotifications((current) => [incoming, ...current.filter((item) => item.id !== incoming.id)].slice(0, 20));
             setLiveAlert(incoming);
@@ -167,7 +167,7 @@ export function AppShell({
             table: "notifications",
             filter: `user_id=eq.${userId}`,
           },
-          (payload) => {
+          (payload: { new: RealtimeNotification }) => {
             const updated = payload.new as RealtimeNotification;
             setNotifications((current) => current.map((item) => (item.id === updated.id ? updated : item)));
           },
