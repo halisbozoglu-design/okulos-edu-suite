@@ -4790,6 +4790,15 @@ export type Database = {
           severity: string
         }[]
       }
+      get_schedule_integrity_report_parallel_core_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
       get_schedule_preparation_readiness: {
         Args: never
         Returns: {
@@ -4828,6 +4837,14 @@ export type Database = {
           same_day_revision_no: number
           schedule_hash: string
           title: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_parallel_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
         }[]
       }
       get_schedule_scenario_hard_issues_v2: {
