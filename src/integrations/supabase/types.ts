@@ -355,19 +355,172 @@ export type Database = {
           },
         ]
       }
+      duty_day_notes: {
+        Row: {
+          closed_at: string | null
+          closed_by: string | null
+          duty_date: string
+          empty_lesson_resolution: string | null
+          end_time: string | null
+          general_note: string | null
+          principal_approval_note: string | null
+          start_time: string | null
+          teaching_mode: string
+          updated_at: string
+        }
+        Insert: {
+          closed_at?: string | null
+          closed_by?: string | null
+          duty_date: string
+          empty_lesson_resolution?: string | null
+          end_time?: string | null
+          general_note?: string | null
+          principal_approval_note?: string | null
+          start_time?: string | null
+          teaching_mode?: string
+          updated_at?: string
+        }
+        Update: {
+          closed_at?: string | null
+          closed_by?: string | null
+          duty_date?: string
+          empty_lesson_resolution?: string | null
+          end_time?: string | null
+          general_note?: string | null
+          principal_approval_note?: string | null
+          start_time?: string | null
+          teaching_mode?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duty_day_notes_closed_by_fkey"
+            columns: ["closed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      duty_incident_logs: {
+        Row: {
+          action_taken: string | null
+          created_at: string
+          description: string
+          duty_date: string
+          duty_location: string | null
+          id: string
+          occurred_at: string
+          reporter_id: string | null
+        }
+        Insert: {
+          action_taken?: string | null
+          created_at?: string
+          description: string
+          duty_date: string
+          duty_location?: string | null
+          id?: string
+          occurred_at?: string
+          reporter_id?: string | null
+        }
+        Update: {
+          action_taken?: string | null
+          created_at?: string
+          description?: string
+          duty_date?: string
+          duty_location?: string | null
+          id?: string
+          occurred_at?: string
+          reporter_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duty_incident_logs_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      duty_locations: {
+        Row: {
+          active: boolean
+          critical: boolean
+          id: string
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          critical?: boolean
+          id?: string
+          name: string
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          critical?: boolean
+          id?: string
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      duty_month_locks: {
+        Row: {
+          generated_at: string
+          generated_by: string | null
+          locked: boolean
+          month_start: string
+          note: string | null
+          schedule_signature: string | null
+        }
+        Insert: {
+          generated_at?: string
+          generated_by?: string | null
+          locked?: boolean
+          month_start: string
+          note?: string | null
+          schedule_signature?: string | null
+        }
+        Update: {
+          generated_at?: string
+          generated_by?: string | null
+          locked?: boolean
+          month_start?: string
+          note?: string | null
+          schedule_signature?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duty_month_locks_generated_by_fkey"
+            columns: ["generated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       duty_rotation: {
         Row: {
+          assignment_source: string
           created_at: string
+          cycle_month: string | null
           duty_date: string
           vice_principal_id: string
         }
         Insert: {
+          assignment_source?: string
           created_at?: string
+          cycle_month?: string | null
           duty_date: string
           vice_principal_id: string
         }
         Update: {
+          assignment_source?: string
           created_at?: string
+          cycle_month?: string | null
           duty_date?: string
           vice_principal_id?: string
         }
@@ -377,6 +530,57 @@ export type Database = {
             columns: ["vice_principal_id"]
             isOneToOne: false
             referencedRelation: "vice_principals"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      duty_tardiness_logs: {
+        Row: {
+          class_name: string | null
+          created_at: string
+          duty_date: string
+          id: string
+          minutes_late: number
+          note: string | null
+          period: number | null
+          recorded_by: string | null
+          teacher_id: string
+        }
+        Insert: {
+          class_name?: string | null
+          created_at?: string
+          duty_date: string
+          id?: string
+          minutes_late: number
+          note?: string | null
+          period?: number | null
+          recorded_by?: string | null
+          teacher_id: string
+        }
+        Update: {
+          class_name?: string | null
+          created_at?: string
+          duty_date?: string
+          id?: string
+          minutes_late?: number
+          note?: string | null
+          period?: number | null
+          recorded_by?: string | null
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duty_tardiness_logs_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "duty_tardiness_logs_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
         ]
@@ -768,6 +972,104 @@ export type Database = {
         }
         Relationships: []
       }
+      quran_split_plans: {
+        Row: {
+          academic_year: string
+          class_id: string
+          created_at: string
+          created_by: string | null
+          enabled: boolean
+          group_1_id: string | null
+          group_2_id: string | null
+          id: string
+          source_note: string
+          teacher_1_id: string | null
+          teacher_2_id: string | null
+          threshold: number
+          updated_at: string
+        }
+        Insert: {
+          academic_year: string
+          class_id: string
+          created_at?: string
+          created_by?: string | null
+          enabled?: boolean
+          group_1_id?: string | null
+          group_2_id?: string | null
+          id?: string
+          source_note?: string
+          teacher_1_id?: string | null
+          teacher_2_id?: string | null
+          threshold?: number
+          updated_at?: string
+        }
+        Update: {
+          academic_year?: string
+          class_id?: string
+          created_at?: string
+          created_by?: string | null
+          enabled?: boolean
+          group_1_id?: string | null
+          group_2_id?: string | null
+          id?: string
+          source_note?: string
+          teacher_1_id?: string | null
+          teacher_2_id?: string | null
+          threshold?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quran_split_plans_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_group_1_id_fkey"
+            columns: ["group_1_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_group_2_id_fkey"
+            columns: ["group_2_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_teacher_1_id_fkey"
+            columns: ["teacher_1_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_teacher_2_id_fkey"
+            columns: ["teacher_2_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       schedule_audit_log: {
         Row: {
           action: string
@@ -1019,15 +1321,24 @@ export type Database = {
       }
       teacher_duty_assignments: {
         Row: {
+          assignment_source: string
+          created_at: string
           duty_date: string
+          duty_location: string | null
           teacher_id: string
         }
         Insert: {
+          assignment_source?: string
+          created_at?: string
           duty_date: string
+          duty_location?: string | null
           teacher_id: string
         }
         Update: {
+          assignment_source?: string
+          created_at?: string
           duty_date?: string
+          duty_location?: string | null
           teacher_id?: string
         }
         Relationships: [
@@ -1035,6 +1346,38 @@ export type Database = {
             foreignKeyName: "teacher_duty_assignments_teacher_id_fkey"
             columns: ["teacher_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      teacher_duty_cycle_members: {
+        Row: {
+          active: boolean
+          rotation_offset: number
+          teacher_id: string
+          updated_at: string
+          weekday: number
+        }
+        Insert: {
+          active?: boolean
+          rotation_offset?: number
+          teacher_id: string
+          updated_at?: string
+          weekday: number
+        }
+        Update: {
+          active?: boolean
+          rotation_offset?: number
+          teacher_id?: string
+          updated_at?: string
+          weekday?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_duty_cycle_members_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
@@ -1413,6 +1756,18 @@ export type Database = {
         Args: { p_month: number; p_year: number }
         Returns: number
       }
+      assign_quran_parallel_lesson: {
+        Args: {
+          p_academic_year: string
+          p_class_id: string
+          p_classroom_1?: string
+          p_classroom_2?: string
+          p_period: number
+          p_subject: string
+          p_weekday: number
+        }
+        Returns: number
+      }
       assign_substitutes_for_day: {
         Args: { p_date?: string }
         Returns: {
@@ -1426,7 +1781,32 @@ export type Database = {
         }[]
       }
       create_telegram_link_token: { Args: never; Returns: string }
+      current_schedule_signature: { Args: never; Returns: string }
       disable_telegram_notifications: { Args: never; Returns: undefined }
+      generate_monthly_teacher_duties: {
+        Args: { p_month: string; p_overwrite?: boolean }
+        Returns: number
+      }
+      generate_monthly_vp_rotation: {
+        Args: {
+          p_month: string
+          p_overwrite?: boolean
+          p_vice_principal_ids: string[]
+        }
+        Returns: number
+      }
+      get_daily_duty_book: { Args: { p_date: string }; Returns: Json }
+      get_duty_month_state: {
+        Args: { p_month: string }
+        Returns: {
+          current_schedule_signature: string
+          generated_at: string
+          locked: boolean
+          month_start: string
+          schedule_changed: boolean
+          stored_schedule_signature: string
+        }[]
+      }
       import_eokul_roster: {
         Args: { p_file_name: string; p_file_type: string; p_rows: Json }
         Returns: {
@@ -1484,9 +1864,42 @@ export type Database = {
           work_date: string
         }[]
       }
+      prepare_quran_split: {
+        Args: {
+          p_academic_year: string
+          p_class_id: string
+          p_teacher_1: string
+          p_teacher_2: string
+        }
+        Returns: {
+          academic_year: string
+          class_id: string
+          created_at: string
+          created_by: string | null
+          enabled: boolean
+          group_1_id: string | null
+          group_2_id: string | null
+          id: string
+          source_note: string
+          teacher_1_id: string | null
+          teacher_2_id: string | null
+          threshold: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "quran_split_plans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
         Returns: string
+      }
+      set_duty_month_lock: {
+        Args: { p_locked: boolean; p_month: string }
+        Returns: undefined
       }
       student_count_for_schedule: {
         Args: { p_class_id: string; p_subgroup_id: string }
