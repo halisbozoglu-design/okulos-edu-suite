@@ -38,6 +38,9 @@ jobs:
       - name: Check timetable migration authority
         run: node scripts/check-timetable-authority.mjs
 
+      - name: Check auth flow
+        run: node scripts/check-auth-flow.mjs
+
       - name: TypeScript check
         run: bunx tsc --noEmit
 
