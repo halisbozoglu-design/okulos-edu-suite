@@ -2302,6 +2302,24 @@ export type Database = {
           },
         ]
       }
+      schedule_engine_state: {
+        Row: {
+          id: boolean
+          revision: number
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          revision?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          revision?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       schedule_generation_settings: {
         Row: {
           gap_penalty: number
@@ -2663,6 +2681,86 @@ export type Database = {
           },
         ]
       }
+      schedule_rule_overrides: {
+        Row: {
+          active: boolean
+          avoid_last_period: boolean
+          block_pattern: number[]
+          class_course_requirement_id: string | null
+          id: string
+          max_per_day: number | null
+          min_distinct_days: number | null
+          note: string | null
+          preferred_days: number[]
+          preferred_periods: number[]
+          prohibited_days: number[]
+          prohibited_periods: number[]
+          teacher_assignment_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          avoid_last_period?: boolean
+          block_pattern?: number[]
+          class_course_requirement_id?: string | null
+          id?: string
+          max_per_day?: number | null
+          min_distinct_days?: number | null
+          note?: string | null
+          preferred_days?: number[]
+          preferred_periods?: number[]
+          prohibited_days?: number[]
+          prohibited_periods?: number[]
+          teacher_assignment_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          avoid_last_period?: boolean
+          block_pattern?: number[]
+          class_course_requirement_id?: string | null
+          id?: string
+          max_per_day?: number | null
+          min_distinct_days?: number | null
+          note?: string | null
+          preferred_days?: number[]
+          preferred_periods?: number[]
+          prohibited_days?: number[]
+          prohibited_periods?: number[]
+          teacher_assignment_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_rule_overrides_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["teacher_assignment_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schedule_scenario_integrity_issues: {
         Row: {
           affected_count: number
@@ -2893,6 +2991,7 @@ export type Database = {
       }
       schedule_scenarios: {
         Row: {
+          basis_revision: number | null
           generated_at: string
           generated_by: string | null
           generation_group: string
@@ -2905,6 +3004,7 @@ export type Database = {
           unplaced_count: number
         }
         Insert: {
+          basis_revision?: number | null
           generated_at?: string
           generated_by?: string | null
           generation_group: string
@@ -2917,6 +3017,7 @@ export type Database = {
           unplaced_count?: number
         }
         Update: {
+          basis_revision?: number | null
           generated_at?: string
           generated_by?: string | null
           generation_group?: string
@@ -4295,6 +4396,8 @@ export type Database = {
       schedule_scenario_status_v2: {
         Row: {
           applicable: boolean | null
+          basis_revision: number | null
+          current_revision: number | null
           generation_group: string | null
           hard_issue_count: number | null
           room_issue_count: number | null
@@ -4302,29 +4405,9 @@ export type Database = {
           scenario_id: string | null
           scenario_no: number | null
           score: number | null
+          stale: boolean | null
+          status: string | null
           unplaced_count: number | null
-        }
-        Insert: {
-          applicable?: never
-          generation_group?: string | null
-          hard_issue_count?: never
-          room_issue_count?: never
-          row_count?: number | null
-          scenario_id?: string | null
-          scenario_no?: number | null
-          score?: number | null
-          unplaced_count?: number | null
-        }
-        Update: {
-          applicable?: never
-          generation_group?: string | null
-          hard_issue_count?: never
-          room_issue_count?: never
-          row_count?: number | null
-          scenario_id?: string | null
-          scenario_no?: number | null
-          score?: number | null
-          unplaced_count?: number | null
         }
         Relationships: []
       }
@@ -4436,7 +4519,18 @@ export type Database = {
       }
       assert_schedule_preparation_ready: { Args: never; Returns: boolean }
       assert_schedule_publishable: { Args: never; Returns: boolean }
+      assert_schedule_scenario_fresh_v2: {
+        Args: { p_scenario_id: string }
+        Returns: undefined
+      }
       assign_classrooms_to_scenario: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          assigned_count: number
+          unassigned_count: number
+        }[]
+      }
+      assign_classrooms_to_scenario_core_v2: {
         Args: { p_scenario_id: string }
         Returns: {
           assigned_count: number
@@ -4546,6 +4640,15 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      finalize_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          applicable: boolean
+          hard_issue_count: number
+          repaired_count: number
+          score: number
+        }[]
       }
       generate_monthly_teacher_duties: {
         Args: { p_month: string; p_overwrite?: boolean }
@@ -4661,6 +4764,34 @@ export type Database = {
           schedule_changed: boolean
           stored_schedule_signature: string
         }[]
+      }
+      get_effective_schedule_rule_scope_v2: {
+        Args: { p_requirement_id: string; p_teacher_assignment_id?: string }
+        Returns: string
+      }
+      get_effective_schedule_rule_v2: {
+        Args: { p_requirement_id: string; p_teacher_assignment_id?: string }
+        Returns: {
+          active: boolean
+          avoid_last_period: boolean
+          block_pattern: number[]
+          course_id: string
+          id: string
+          max_per_day: number | null
+          min_distinct_days: number | null
+          note: string | null
+          preferred_days: number[]
+          preferred_periods: number[]
+          prohibited_days: number[]
+          prohibited_periods: number[]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "course_schedule_rules"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       get_formal_norm_analysis: {
         Args: { p_on_date?: string }
@@ -4781,6 +4912,15 @@ export type Database = {
           severity: string
         }[]
       }
+      get_schedule_integrity_report_parallel_core_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
       get_schedule_preparation_readiness: {
         Args: never
         Returns: {
@@ -4819,6 +4959,22 @@ export type Database = {
           same_day_revision_no: number
           schedule_hash: string
           title: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_parallel_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
         }[]
       }
       get_super_admin_personnel: {
@@ -4876,6 +5032,10 @@ export type Database = {
         Args: { p_class_name: string; p_program_type: string }
         Returns: string
       }
+      normalize_schedule_block_pattern_v2: {
+        Args: { p_hours: number; p_pattern: number[] }
+        Returns: number[]
+      }
       payroll_month_is_locked: {
         Args: { p_month: number; p_year: number }
         Returns: boolean
@@ -4932,6 +5092,15 @@ export type Database = {
         }
         Returns: string
       }
+      publish_current_schedule_core_v2: {
+        Args: {
+          p_academic_year?: string
+          p_effective_from: string
+          p_note?: string
+          p_title?: string
+        }
+        Returns: string
+      }
       quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
@@ -4954,6 +5123,10 @@ export type Database = {
           p_user_agent?: string
         }
         Returns: string
+      }
+      repair_schedule_scenario_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
       }
       repair_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
