@@ -1,5 +1,6 @@
--- Fail early when assigned teacher load cannot fit the configured timetable capacity.
+-- Fail early when assigned educator load cannot fit the configured timetable capacity.
 -- Final scenario/runtime validation remains authoritative; this is a solver preflight guard.
+-- Capacity is derived from actual teaching assignments, not cadre role, because managers/admins may also teach.
 
 alter function public.get_schedule_preparation_readiness()
 rename to get_schedule_preparation_readiness_before_teacher_capacity_v2;
@@ -18,11 +19,16 @@ profile as (
   where active=true
   limit 1
 ),
+assignment_loads as (
+  select a.teacher_id,sum(a.assigned_hours)::integer as assigned_hours
+  from public.teacher_course_assignments a
+  group by a.teacher_id
+),
 loads as (
   select
     p.user_id as teacher_id,
     p.full_name,
-    coalesce(sum(a.assigned_hours),0)::integer as assigned_hours,
+    al.assigned_hours,
     c.max_weekly_hours,
     c.max_daily_hours,
     c.max_working_days,
@@ -30,12 +36,10 @@ loads as (
     pr.school_days,
     least(coalesce(c.max_working_days,pr.school_days),pr.school_days) as effective_days,
     coalesce(c.max_daily_hours,pr.periods_per_day) as effective_daily_hours
-  from public.profiles p
-  join public.teacher_schedule_constraints c on c.teacher_id=p.user_id
+  from assignment_loads al
+  join public.profiles p on p.user_id=al.teacher_id
+  join public.teacher_schedule_constraints c on c.teacher_id=al.teacher_id
   cross join profile pr
-  left join public.teacher_course_assignments a on a.teacher_id=p.user_id
-  where p.role='teacher'
-  group by p.user_id,p.full_name,c.max_weekly_hours,c.max_daily_hours,c.max_working_days,pr.periods_per_day,pr.school_days
 ),
 weekly_bad as (
   select count(*)::integer n
@@ -54,7 +58,7 @@ select
   'TEACHER_ASSIGNED_HOURS_EXCEED_WEEKLY_LIMIT'::text,
   'error'::text,
   n,
-  'Bir veya daha fazla öğretmenin toplam atanmış ders saati, tanımlı haftalık üst sınırını aşıyor.'::text
+  'Ders ataması bulunan bir veya daha fazla personelin toplam ders saati, tanımlı haftalık üst sınırını aşıyor.'::text
 from weekly_bad where n>0
 union all
 select
@@ -62,7 +66,7 @@ select
   'TEACHER_ASSIGNED_HOURS_EXCEED_DAY_CAPACITY'::text,
   'error'::text,
   n,
-  'Bir veya daha fazla öğretmenin atanmış ders saati; günlük saat × çalışabileceği gün sayısı kapasitesine sığmıyor.'::text
+  'Ders ataması bulunan bir veya daha fazla personelin ders saati; günlük saat × çalışabileceği gün sayısı kapasitesine sığmıyor.'::text
 from capacity_bad where n>0;
 $$;
 
