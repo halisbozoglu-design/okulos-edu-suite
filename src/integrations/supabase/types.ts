@@ -2053,6 +2053,60 @@ export type Database = {
           },
         ]
       }
+      push_subscriptions: {
+        Row: {
+          active: boolean
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          platform: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          platform?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          platform?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       quran_split_plans: {
         Row: {
           academic_year: string
@@ -2064,6 +2118,7 @@ export type Database = {
           group_2_id: string | null
           id: string
           source_note: string
+          sync_group_id: string | null
           teacher_1_id: string | null
           teacher_2_id: string | null
           threshold: number
@@ -2079,6 +2134,7 @@ export type Database = {
           group_2_id?: string | null
           id?: string
           source_note?: string
+          sync_group_id?: string | null
           teacher_1_id?: string | null
           teacher_2_id?: string | null
           threshold?: number
@@ -2094,6 +2150,7 @@ export type Database = {
           group_2_id?: string | null
           id?: string
           source_note?: string
+          sync_group_id?: string | null
           teacher_1_id?: string | null
           teacher_2_id?: string | null
           threshold?: number
@@ -2147,6 +2204,13 @@ export type Database = {
             columns: ["group_2_id"]
             isOneToOne: false
             referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quran_split_plans_sync_group_id_fkey"
+            columns: ["sync_group_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sync_groups"
             referencedColumns: ["id"]
           },
           {
@@ -4262,6 +4326,7 @@ export type Database = {
         Args: { p_date: string }
         Returns: boolean
       }
+      assert_schedule_preparation_ready: { Args: never; Returns: boolean }
       assert_schedule_publishable: { Args: never; Returns: boolean }
       assign_classrooms_to_scenario: {
         Args: { p_scenario_id: string }
@@ -4343,6 +4408,10 @@ export type Database = {
       }
       create_telegram_link_token: { Args: never; Returns: string }
       current_schedule_signature: { Args: never; Returns: string }
+      disable_push_subscription: {
+        Args: { p_endpoint: string }
+        Returns: boolean
+      }
       disable_telegram_notifications: { Args: never; Returns: undefined }
       finalize_my_registration: {
         Args: { p_email: string; p_tckn: string }
@@ -4572,6 +4641,16 @@ export type Database = {
           severity: string
         }[]
       }
+      get_schedule_preparation_readiness: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
       get_schedule_publication_for_date: {
         Args: { p_date: string }
         Returns: string
@@ -4681,6 +4760,7 @@ export type Database = {
           group_2_id: string | null
           id: string
           source_note: string
+          sync_group_id: string | null
           teacher_1_id: string | null
           teacher_2_id: string | null
           threshold: number
@@ -4713,6 +4793,20 @@ export type Database = {
       refresh_class_curriculum_status: {
         Args: { p_class_id: string }
         Returns: string
+      }
+      register_push_subscription: {
+        Args: {
+          p_auth: string
+          p_endpoint: string
+          p_p256dh: string
+          p_platform?: string
+          p_user_agent?: string
+        }
+        Returns: string
+      }
+      repair_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
       }
       restore_schedule_restore_point: {
         Args: { p_restore_point_id: string }
@@ -4793,9 +4887,20 @@ export type Database = {
         }
         Returns: string
       }
+      sync_all_quran_plans_to_timetable: {
+        Args: never
+        Returns: {
+          failed: number
+          synced: number
+        }[]
+      }
       sync_payroll_calendar_from_academic_year: {
         Args: { p_month: number; p_year: number }
         Returns: number
+      }
+      sync_quran_plan_to_timetable: {
+        Args: { p_plan_id: string }
+        Returns: string
       }
       teacher_course_permission_status: {
         Args: { p_course_id: string; p_on_date?: string; p_teacher_id: string }
