@@ -2951,6 +2951,9 @@ export type Database = {
           name: string
           note: string | null
           required_simultaneous: boolean
+          source_block_index: number | null
+          source_id: string | null
+          source_type: string | null
         }
         Insert: {
           active?: boolean
@@ -2960,6 +2963,9 @@ export type Database = {
           name: string
           note?: string | null
           required_simultaneous?: boolean
+          source_block_index?: number | null
+          source_id?: string | null
+          source_type?: string | null
         }
         Update: {
           active?: boolean
@@ -2969,6 +2975,9 @@ export type Database = {
           name?: string
           note?: string | null
           required_simultaneous?: boolean
+          source_block_index?: number | null
+          source_id?: string | null
+          source_type?: string | null
         }
         Relationships: [
           {
@@ -4372,6 +4381,10 @@ export type Database = {
         Args: { p_rule_set_id: string; p_total_hours: number }
         Returns: number
       }
+      calculate_schedule_scenario_score_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       claim_super_admin_profile: {
         Args: never
         Returns: {
@@ -4448,6 +4461,17 @@ export type Database = {
         Returns: number
       }
       generate_schedule_scenarios: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
+      }
+      generate_schedule_scenarios_v2: {
         Args: never
         Returns: {
           generation_group: string
@@ -4782,6 +4806,7 @@ export type Database = {
         }
         Returns: string
       }
+      quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
         Returns: string
@@ -4805,6 +4830,10 @@ export type Database = {
         Returns: string
       }
       repair_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      rescore_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
         Returns: number
       }
