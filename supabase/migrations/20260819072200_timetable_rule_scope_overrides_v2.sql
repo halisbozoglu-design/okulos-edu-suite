@@ -36,8 +36,6 @@ for select to authenticated using(true);
 create policy "managers manage schedule rule overrides" on public.schedule_rule_overrides
 for all to authenticated using(public.is_manager_or_admin()) with check(public.is_manager_or_admin());
 
--- A scoped rule may only reference an assignment/requirement that actually exists,
--- and all array values must be valid scheduling coordinates.
 create or replace function public.validate_schedule_rule_override_v2()
 returns trigger
 language plpgsql
@@ -80,7 +78,6 @@ create trigger trg_validate_schedule_rule_override_v2
 before insert or update on public.schedule_rule_overrides
 for each row execute function public.validate_schedule_rule_override_v2();
 
--- Convert a block template to the exact hours of an assignment.
 create or replace function public.normalize_schedule_block_pattern_v2(p_pattern smallint[],p_hours integer)
 returns smallint[]
 language plpgsql
@@ -107,8 +104,6 @@ begin
 end;
 $$;
 
--- Return the effective rule using the existing course_schedule_rules row type so
--- older solver/validation code can migrate to this helper without a second rule model.
 create or replace function public.get_effective_schedule_rule_v2(
   p_requirement_id uuid,
   p_teacher_assignment_id uuid default null
@@ -124,6 +119,7 @@ declare
   v_base public.course_schedule_rules%rowtype;
   v_override public.schedule_rule_overrides%rowtype;
   v_result public.course_schedule_rules%rowtype;
+  v_override_found boolean:=false;
 begin
   select course_id into v_course from public.class_course_requirements where id=p_requirement_id;
   if v_course is null then return null;end if;
@@ -131,13 +127,15 @@ begin
   if p_teacher_assignment_id is not null then
     select * into v_override from public.schedule_rule_overrides
     where teacher_assignment_id=p_teacher_assignment_id and active=true limit 1;
+    v_override_found:=found;
   end if;
-  if not found then
+  if not v_override_found then
     select * into v_override from public.schedule_rule_overrides
     where class_course_requirement_id=p_requirement_id and active=true limit 1;
+    v_override_found:=found;
   end if;
 
-  if found then
+  if v_override_found then
     v_result.id:=v_override.id;
     v_result.course_id:=v_course;
     v_result.block_pattern:=v_override.block_pattern;
@@ -162,8 +160,6 @@ $$;
 revoke all on function public.get_effective_schedule_rule_v2(uuid,uuid) from public;
 grant execute on function public.get_effective_schedule_rule_v2(uuid,uuid) to authenticated;
 
--- Legacy strict equality made a global block rule unusable when the same course
--- had different weekly hours in different classes. Keep only structural validation.
 create or replace function public.validate_course_block_pattern_against_assignments()
 returns trigger
 language plpgsql
@@ -185,13 +181,10 @@ security definer
 set search_path=public
 as $$
 begin
-  -- Assignment hours no longer need to equal the global template sum.
-  -- normalize_schedule_block_pattern_v2() derives the exact effective pattern.
   return new;
 end;
 $$;
 
--- Scoped overrides are scenario inputs and therefore invalidate older scenarios.
 drop trigger if exists trg_schedule_revision_schedule_rule_overrides on public.schedule_rule_overrides;
 create trigger trg_schedule_revision_schedule_rule_overrides
 after insert or update or delete on public.schedule_rule_overrides
