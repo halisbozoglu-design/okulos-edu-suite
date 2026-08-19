@@ -124,7 +124,7 @@ function PermissionBoundary({ children }: { children: ReactNode }) {
     let alive = true;
     if (!rule?.superOnly) { setSuperChecked(true); return; }
     setSuperChecked(false);
-    void supabase.rpc("is_super_admin").then(({ data }) => {
+    void supabase.rpc("is_super_admin").then(({ data }: { data: unknown }) => {
       if (!alive) return;
       setIsSuper(Boolean(data));
       setSuperChecked(true);

@@ -29,7 +29,7 @@ function PermissionSettings(){
  const load=useCallback(async()=>{setMessage(null);const [m,c,a]=await Promise.all([supabase.rpc("get_permission_admin_matrix"),supabase.from("permission_catalog").select("code,module_code,module_label,label,action,description,dangerous,sort_order").eq("active",true).order("sort_order"),supabase.from("permission_audit_log").select("id,target_user_id,permission_code,operation,scope,note,actor_user_id,created_at").order("created_at",{ascending:false}).limit(60)]);if(m.error||c.error){setMessage("Görev/yetki bilgileri yüklenemedi. Bu ekran yalnız yetki yöneticileri tarafından kullanılabilir.");return;}setRows((m.data??[]) as Person[]);setCatalog((c.data??[]) as Permission[]);setAudit((a.data??[]) as Audit[]);},[]);useEffect(()=>{void load()},[load]);
  const people=useMemo(()=>Array.from(new Map(rows.map(r=>[r.user_id,{user_id:r.user_id,full_name:r.full_name,role:r.role,permission_mode:r.permission_mode}])).values()),[rows]);
  const personMap=useMemo(()=>Object.fromEntries(people.map(p=>[p.user_id,p.full_name??"Personel"])),[people]);
- useEffect(()=>{if(!selected&&people.length)setSelected(people[0].user_id)},[people,selected]);
+ useEffect(()=>{const first=people[0];if(!selected&&first)setSelected(first.user_id)},[people,selected]);
  const grants=useMemo(()=>rows.filter(r=>r.user_id===selected&&r.permission_code),[rows,selected]);
  const granted=useMemo(()=>new Set(grants.map(r=>r.permission_code as string)),[grants]);
  const grantMap=useMemo(()=>Object.fromEntries(grants.map(r=>[r.permission_code as string,r])),[grants]);
