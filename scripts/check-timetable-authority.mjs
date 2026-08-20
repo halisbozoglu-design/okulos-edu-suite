@@ -5,12 +5,12 @@ const dir = join(process.cwd(), "supabase", "migrations");
 const files = readdirSync(dir).filter((f) => f.endsWith(".sql")).sort();
 
 const protectedDefinitions = {
-  "function:generate_schedule_scenarios_v2": "20260820193800_schedule_edge_slot_repair_return_contract.sql",
+  "function:generate_schedule_scenarios_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql",
   "function:apply_schedule_scenario": "20260821015500_schedule_phase3_authority_closure.sql",
-  "function:validate_schedule_scenario_v2": "20260819220922_a4c09d54-71d0-4cea-b33c-b6e815f5d7f1.sql",
-  "function:rescore_schedule_scenario_v2": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
-  "function:repair_schedule_scenario_v2": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
-  "function:assign_classrooms_to_scenario": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
+  "function:validate_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql",
+  "function:rescore_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql",
+  "function:repair_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql",
+  "function:assign_classrooms_to_scenario": "20260821021000_schedule_phase3_rpc_tenant_guards.sql",
   "function:publish_current_schedule": "20260821015500_schedule_phase3_authority_closure.sql",
   "function:validate_schedule_semantics_v2": "20260819232413_2c256a7d-e97f-46c1-8629-75b7c47e1c54.sql",
   "function:upsert_schedule_slot_v2": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
