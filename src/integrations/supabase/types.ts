@@ -608,6 +608,79 @@ export type Database = {
         }
         Relationships: []
       }
+      course_pedagogy_profiles: {
+        Row: {
+          academic_load: number
+          attention_load: number
+          avoid_early: boolean
+          course_id: string
+          difficulty: number
+          is_vocational_practice: boolean
+          is_workshop: boolean
+          lesson_family: string | null
+          physical_load: number
+          practical_load: number
+          prefer_early: boolean
+          prefer_weekdays: number[]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          academic_load?: number
+          attention_load?: number
+          avoid_early?: boolean
+          course_id: string
+          difficulty?: number
+          is_vocational_practice?: boolean
+          is_workshop?: boolean
+          lesson_family?: string | null
+          physical_load?: number
+          practical_load?: number
+          prefer_early?: boolean
+          prefer_weekdays?: number[]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          academic_load?: number
+          attention_load?: number
+          avoid_early?: boolean
+          course_id?: string
+          difficulty?: number
+          is_vocational_practice?: boolean
+          is_workshop?: boolean
+          lesson_family?: string | null
+          physical_load?: number
+          practical_load?: number
+          prefer_early?: boolean
+          prefer_weekdays?: number[]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_pedagogy_profiles_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_pedagogy_profiles_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "course_pedagogy_profiles_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       course_schedule_rules: {
         Row: {
           active: boolean
@@ -2406,6 +2479,57 @@ export type Database = {
           },
         ]
       }
+      schedule_duty_optimization: {
+        Row: {
+          adjacent_weight: number
+          anchor_period: number | null
+          hard_max: boolean
+          max_duty_day_hours: number
+          overload_weight: number
+          source: string
+          teacher_id: string
+          updated_at: string
+          weekday: number
+        }
+        Insert: {
+          adjacent_weight?: number
+          anchor_period?: number | null
+          hard_max?: boolean
+          max_duty_day_hours?: number
+          overload_weight?: number
+          source?: string
+          teacher_id: string
+          updated_at?: string
+          weekday: number
+        }
+        Update: {
+          adjacent_weight?: number
+          anchor_period?: number | null
+          hard_max?: boolean
+          max_duty_day_hours?: number
+          overload_weight?: number
+          source?: string
+          teacher_id?: string
+          updated_at?: string
+          weekday?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_duty_optimization_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_duty_optimization_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       schedule_engine_state: {
         Row: {
           id: boolean
@@ -2493,6 +2617,91 @@ export type Database = {
           {
             foreignKeyName: "schedule_import_batches_imported_by_fkey"
             columns: ["imported_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      schedule_optimization_profiles: {
+        Row: {
+          active: boolean
+          created_at: string
+          defaults: Json
+          description: string | null
+          name: string
+          profile_key: string
+          system_profile: boolean
+          updated_at: string
+          weights: Json
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          defaults?: Json
+          description?: string | null
+          name: string
+          profile_key: string
+          system_profile?: boolean
+          updated_at?: string
+          weights?: Json
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          defaults?: Json
+          description?: string | null
+          name?: string
+          profile_key?: string
+          system_profile?: boolean
+          updated_at?: string
+          weights?: Json
+        }
+        Relationships: []
+      }
+      schedule_optimization_settings: {
+        Row: {
+          active_profile_key: string
+          explain_scenarios: boolean
+          id: boolean
+          record_repairs: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          active_profile_key?: string
+          explain_scenarios?: boolean
+          id?: boolean
+          record_repairs?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          active_profile_key?: string
+          explain_scenarios?: boolean
+          id?: boolean
+          record_repairs?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_optimization_settings_active_profile_key_fkey"
+            columns: ["active_profile_key"]
+            isOneToOne: false
+            referencedRelation: "schedule_optimization_profiles"
+            referencedColumns: ["profile_key"]
+          },
+          {
+            foreignKeyName: "schedule_optimization_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_optimization_settings_updated_by_fkey"
+            columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
@@ -2668,6 +2877,63 @@ export type Database = {
           },
         ]
       }
+      schedule_repair_audit: {
+        Row: {
+          action_no: number
+          after_state: Json | null
+          before_state: Json | null
+          created_at: string
+          description: string
+          hard_issues_after: number | null
+          hard_issues_before: number | null
+          id: string
+          issue_code: string
+          scenario_id: string
+          score_delta: number | null
+        }
+        Insert: {
+          action_no: number
+          after_state?: Json | null
+          before_state?: Json | null
+          created_at?: string
+          description: string
+          hard_issues_after?: number | null
+          hard_issues_before?: number | null
+          id?: string
+          issue_code: string
+          scenario_id: string
+          score_delta?: number | null
+        }
+        Update: {
+          action_no?: number
+          after_state?: Json | null
+          before_state?: Json | null
+          created_at?: string
+          description?: string
+          hard_issues_after?: number | null
+          hard_issues_before?: number | null
+          id?: string
+          issue_code?: string
+          scenario_id?: string
+          score_delta?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_repair_audit_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_repair_audit_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schedule_restore_point_rows: {
         Row: {
           id: number
@@ -2785,6 +3051,57 @@ export type Database = {
           },
         ]
       }
+      schedule_rule_modes: {
+        Row: {
+          category: string
+          config: Json
+          label: string
+          mode: string
+          rule_code: string
+          system_rule: boolean
+          updated_at: string
+          updated_by: string | null
+          weight: number
+        }
+        Insert: {
+          category: string
+          config?: Json
+          label: string
+          mode?: string
+          rule_code: string
+          system_rule?: boolean
+          updated_at?: string
+          updated_by?: string | null
+          weight?: number
+        }
+        Update: {
+          category?: string
+          config?: Json
+          label?: string
+          mode?: string
+          rule_code?: string
+          system_rule?: boolean
+          updated_at?: string
+          updated_by?: string | null
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_rule_modes_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_modes_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       schedule_rule_overrides: {
         Row: {
           active: boolean
@@ -2861,6 +3178,63 @@ export type Database = {
             columns: ["teacher_assignment_id"]
             isOneToOne: false
             referencedRelation: "teacher_course_assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_scenario_explanations: {
+        Row: {
+          duty_score: number
+          generated_at: string
+          metrics: Json
+          negatives: Json
+          pedagogic_score: number
+          positives: Json
+          room_score: number
+          scenario_id: string
+          teacher_score: number
+          total_score: number
+          workshop_score: number
+        }
+        Insert: {
+          duty_score?: number
+          generated_at?: string
+          metrics?: Json
+          negatives?: Json
+          pedagogic_score?: number
+          positives?: Json
+          room_score?: number
+          scenario_id: string
+          teacher_score?: number
+          total_score?: number
+          workshop_score?: number
+        }
+        Update: {
+          duty_score?: number
+          generated_at?: string
+          metrics?: Json
+          negatives?: Json
+          pedagogic_score?: number
+          positives?: Json
+          room_score?: number
+          scenario_id?: string
+          teacher_score?: number
+          total_score?: number
+          workshop_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_scenario_explanations_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: true
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_explanations_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: true
+            referencedRelation: "schedule_scenarios"
             referencedColumns: ["id"]
           },
         ]
@@ -3411,6 +3785,61 @@ export type Database = {
           {
             foreignKeyName: "schedule_unplaced_items_teacher_id_fkey"
             columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      schedule_workshop_policies: {
+        Row: {
+          active: boolean
+          course_id: string
+          max_block: number
+          min_block: number
+          preferred_block: number
+          preferred_patterns: number[]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          active?: boolean
+          course_id: string
+          max_block?: number
+          min_block?: number
+          preferred_block?: number
+          preferred_patterns?: number[]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          active?: boolean
+          course_id?: string
+          max_block?: number
+          min_block?: number
+          preferred_block?: number
+          preferred_patterns?: number[]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_workshop_policies_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_workshop_policies_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_workshop_policies_updated_by_fkey"
+            columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
@@ -5914,6 +6343,10 @@ export type Database = {
       sync_quran_plan_to_timetable: {
         Args: { p_plan_id: string }
         Returns: string
+      }
+      sync_schedule_duty_optimization_from_cycle: {
+        Args: never
+        Returns: number
       }
       teacher_course_permission_status: {
         Args: { p_course_id: string; p_on_date?: string; p_teacher_id: string }
