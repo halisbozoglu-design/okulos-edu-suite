@@ -5265,6 +5265,10 @@ export type Database = {
         Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
         Returns: number
       }
+      apply_schedule_optimization_profile_v1: {
+        Args: { p_profile_key: string }
+        Returns: undefined
+      }
       apply_schedule_scenario: {
         Args: { p_scenario_id: string }
         Returns: number
@@ -5399,6 +5403,10 @@ export type Database = {
       }
       calculate_norm_from_rule: {
         Args: { p_rule_set_id: string; p_total_hours: number }
+        Returns: number
+      }
+      calculate_schedule_scenario_score_base_v3: {
+        Args: { p_scenario_id: string }
         Returns: number
       }
       calculate_schedule_scenario_score_v2: {
@@ -5907,7 +5915,23 @@ export type Database = {
           title: string
         }[]
       }
+      get_schedule_scenario_advanced_hard_issues_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_scenario_hard_issues_parallel_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_pre_advanced_v2: {
         Args: { p_scenario_id: string }
         Returns: {
           affected_count: number
@@ -5921,6 +5945,14 @@ export type Database = {
           affected_count: number
           code: string
           detail: string
+        }[]
+      }
+      get_schedule_scenario_quality_breakdown_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          detail: string
+          metric: string
+          score: number
         }[]
       }
       get_super_admin_personnel: {
@@ -5986,6 +6018,10 @@ export type Database = {
           hours: number
           tckn: string
         }[]
+      }
+      materialize_workshop_block_rule_v1: {
+        Args: { p_course_id: string }
+        Returns: undefined
       }
       max_consecutive_with_candidate: {
         Args: {
@@ -6139,6 +6175,10 @@ export type Database = {
         Args: { p_class_id: string }
         Returns: string
       }
+      refresh_schedule_scenario_explanation_v1: {
+        Args: { p_scenario_id: string }
+        Returns: undefined
+      }
       register_push_subscription: {
         Args: {
           p_auth: string
@@ -6162,6 +6202,10 @@ export type Database = {
         Returns: number
       }
       rescore_schedule_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      rescore_schedule_scenario_score_core_v3: {
         Args: { p_scenario_id: string }
         Returns: number
       }
@@ -6232,6 +6276,15 @@ export type Database = {
       schedule_assignment_run_lengths: {
         Args: { p_assignment: string }
         Returns: number[]
+      }
+      schedule_rule_mode_v1: { Args: { p_rule_code: string }; Returns: string }
+      schedule_rule_weight_v1: {
+        Args: {
+          p_default: number
+          p_profile_weight_key: string
+          p_rule_code: string
+        }
+        Returns: number
       }
       set_active_academic_year: {
         Args: { p_academic_year_id: string }
