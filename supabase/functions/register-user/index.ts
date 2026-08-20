@@ -42,12 +42,12 @@ Deno.serve(async (req) => {
     const { tckn, institutionCode, email, phone, password, redirectTo } = await req.json();
     const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
     const normalizedPhone = typeof phone === "string" ? phone.replace(/\D/g, "") : "";
-    const code = typeof institutionCode === "string" ? institutionCode.replace(/\D/g, "") : "";
+    const suppliedCode = typeof institutionCode === "string" ? institutionCode.replace(/\D/g, "") : "";
 
     if (typeof tckn !== "string" || !isValidTckn(tckn)) {
       return Response.json({ ok: false, code: "INVALID_IDENTITY" }, { status: 400, headers: corsHeaders });
     }
-    if (!/^\d{5,10}$/.test(code)) {
+    if (suppliedCode && !/^\d{5,10}$/.test(suppliedCode)) {
       return Response.json({ ok: false, code: "INVALID_INSTITUTION_CODE" }, { status: 400, headers: corsHeaders });
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
@@ -66,6 +66,23 @@ Deno.serve(async (req) => {
       { auth: { persistSession: false, autoRefreshToken: false } },
     );
 
+    let preQuery = admin
+      .from("pre_registered_teachers")
+      .select("id,email,full_name,role,institution_code")
+      .eq("tckn", tckn)
+      .eq("active", true);
+    if (suppliedCode) preQuery = preQuery.eq("institution_code", suppliedCode);
+    const { data: candidates, error: preError } = await preQuery.limit(2);
+    if (preError) throw preError;
+    if (!candidates?.length) return Response.json({ ok: false, code: "NOT_PRE_REGISTERED" }, { status: 403, headers: corsHeaders });
+    if (!suppliedCode && candidates.length > 1) {
+      return Response.json({ ok: false, code: "INSTITUTION_CODE_REQUIRED" }, { status: 409, headers: corsHeaders });
+    }
+
+    const pre = candidates[0];
+    const code = pre.institution_code ?? suppliedCode;
+    if (!code) return Response.json({ ok: false, code: "INSTITUTION_CODE_REQUIRED" }, { status: 409, headers: corsHeaders });
+
     const { data: institution, error: institutionError } = await admin
       .from("institutions")
       .select("institution_code,status,approval_status")
@@ -78,16 +95,6 @@ Deno.serve(async (req) => {
     if (institution.approval_status !== "approved") {
       return Response.json({ ok: false, code: "INSTITUTION_NOT_APPROVED" }, { status: 403, headers: corsHeaders });
     }
-
-    const { data: pre, error: preError } = await admin
-      .from("pre_registered_teachers")
-      .select("id,email,full_name,role,institution_code")
-      .eq("tckn", tckn)
-      .eq("institution_code", code)
-      .eq("active", true)
-      .maybeSingle();
-    if (preError) throw preError;
-    if (!pre) return Response.json({ ok: false, code: "NOT_PRE_REGISTERED" }, { status: 403, headers: corsHeaders });
     if (pre.email && pre.email.trim().toLowerCase() !== normalizedEmail) {
       return Response.json({ ok: false, code: "EMAIL_MISMATCH" }, { status: 403, headers: corsHeaders });
     }
