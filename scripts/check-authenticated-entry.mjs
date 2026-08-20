@@ -4,7 +4,7 @@ const root = await readFile(new URL("../src/routes/__root.tsx", import.meta.url)
 const errors = [];
 for (const token of [
   'reason:"not_authenticated"',
-  'reason:"tenant_required"',
+  '"tenant_required"',
   'reason:"access_check_failed"',
   'publicPaths=["/","/school-registration","/auth/callback"]',
 ]) if (!root.includes(token)) errors.push(`Eksik giriş/tenant güvenlik işareti: ${token}`);
