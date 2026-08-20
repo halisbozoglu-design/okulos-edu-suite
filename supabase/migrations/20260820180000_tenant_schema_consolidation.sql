@@ -21,6 +21,7 @@ insert into public.tenant_scope_registry(table_name,scope,note) values
  ('tenant_scope_registry','global','Tenant metadata'),
  ('teaching_areas','global','MEB/TTKB teaching-area catalog'),
  ('course_catalog','global','Central course catalog'),
+ ('responsibility_catalog','global','System responsibility/sub-duty catalog'),
  ('legal_rule_sources','global','Central legal source catalog'),
  ('area_course_permissions','global','Central TTKB mapping'),
  ('norm_rule_sets','global','Central norm rules'),
@@ -35,6 +36,14 @@ insert into public.tenant_scope_registry(table_name,scope,note) values
  ('telegram_link_tokens','user','User-owned temporary token'),
  ('web_push_subscriptions','user','User-owned push endpoint')
 on conflict(table_name) do update set scope=excluded.scope,note=excluded.note,updated_at=now();
+
+-- Catalog tables created by older feature migrations are centrally shared by default.
+-- This catches KBS/scope/etc. catalogs without maintaining another migration per catalog.
+insert into public.tenant_scope_registry(table_name,scope,note)
+select p.tablename,'global','Shared catalog discovered during tenant consolidation'
+from pg_tables p
+where p.schemaname='public' and p.tablename like '%\_catalog' escape '\'
+on conflict(table_name) do update set scope='global',note=excluded.note,updated_at=now();
 
 create or replace function public.current_tenant_code()
 returns text
