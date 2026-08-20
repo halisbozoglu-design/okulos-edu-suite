@@ -5,7 +5,7 @@ const dir = join(process.cwd(), "supabase", "migrations");
 const files = readdirSync(dir).filter((f) => f.endsWith(".sql")).sort();
 
 const protectedDefinitions = {
-  "function:generate_schedule_scenarios_v2": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
+  "function:generate_schedule_scenarios_v2": "20260820193800_schedule_edge_slot_repair_return_contract.sql",
   "function:apply_schedule_scenario": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
   "function:validate_schedule_scenario_v2": "20260819220922_a4c09d54-71d0-4cea-b33c-b6e815f5d7f1.sql",
   "function:rescore_schedule_scenario_v2": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
