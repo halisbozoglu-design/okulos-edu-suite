@@ -65,6 +65,20 @@ function statusOf(year: AcademicYear) {
   return { label: "Arşiv", icon: Archive, className: "border-border bg-muted/40 text-muted-foreground" };
 }
 
+function validateChronology(draft: YearDraft): string | null {
+  if (draft.startsOn >= draft.endsOn) return "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.";
+  const inside = (value: string) => !value || (value >= draft.startsOn && value <= draft.endsOn);
+  if (![draft.teacherStart, draft.teachingStart, draft.firstTermEnd, draft.secondTermStart, draft.teachingEnd].every(inside)) {
+    return "İşbaşı, dönem ve ders tarihleri eğitim-öğretim yılının başlangıç/bitiş aralığında olmalıdır.";
+  }
+  if (draft.teacherStart && draft.teachingStart && draft.teacherStart > draft.teachingStart) return "Öğretmen işbaşı tarihi ders başlangıcından sonra olamaz.";
+  if (draft.teachingStart && draft.firstTermEnd && draft.teachingStart >= draft.firstTermEnd) return "1. dönem sonu ders başlangıcından sonra olmalıdır.";
+  if (draft.firstTermEnd && draft.secondTermStart && draft.firstTermEnd >= draft.secondTermStart) return "2. dönem başlangıcı 1. dönem sonundan sonra olmalıdır.";
+  if (draft.secondTermStart && draft.teachingEnd && draft.secondTermStart >= draft.teachingEnd) return "Ders yılı sonu 2. dönem başlangıcından sonra olmalıdır.";
+  if (draft.teachingStart && draft.teachingEnd && draft.teachingStart >= draft.teachingEnd) return "Ders yılı sonu ders başlangıcından sonra olmalıdır.";
+  return null;
+}
+
 function AcademicYearsPage() {
   const { can, loading: permissionLoading } = usePermissions();
   const editable = can("settings.manage");
@@ -96,18 +110,24 @@ function AcademicYearsPage() {
     if (!editable) return;
     if (!draft.code.trim() || !draft.title.trim() || !draft.startsOn || !draft.endsOn) { setMessage("Yıl kodu, başlık, başlangıç ve bitiş tarihi zorunludur."); return; }
     if (!/^\d{4}-\d{4}$/.test(draft.code.trim())) { setMessage("Yıl kodu 2026-2027 biçiminde olmalıdır."); return; }
-    if (draft.startsOn >= draft.endsOn) { setMessage("Bitiş tarihi başlangıç tarihinden sonra olmalıdır."); return; }
+    const [codeStart, codeEnd] = draft.code.trim().split("-").map(Number);
+    if (codeEnd !== codeStart + 1) { setMessage("Eğitim-öğretim yılı kodunda ikinci yıl ilk yıldan bir büyük olmalıdır."); return; }
+    if (!draft.startsOn.startsWith(String(codeStart)) || !draft.endsOn.startsWith(String(codeEnd))) { setMessage("Yıl kodu ile başlangıç/bitiş tarihleri aynı eğitim-öğretim dönemini göstermelidir."); return; }
+    const chronologyError = validateChronology(draft);
+    if (chronologyError) { setMessage(chronologyError); return; }
+    if (years.some((year) => year.code === draft.code.trim())) { setMessage("Bu eğitim-öğretim yılı kurumunuz için zaten kayıtlıdır."); return; }
+
     setBusy(true); setMessage(null);
     const { data: userData } = await supabase.auth.getUser();
-    const { error } = await supabase.from("academic_years").upsert({
+    const { error } = await supabase.from("academic_years").insert({
       code: draft.code.trim(), title: draft.title.trim(), starts_on: draft.startsOn, ends_on: draft.endsOn,
       teacher_work_starts_on: draft.teacherStart || null, teaching_starts_on: draft.teachingStart || null,
       first_term_ends_on: draft.firstTermEnd || null, second_term_starts_on: draft.secondTermStart || null,
       teaching_ends_on: draft.teachingEnd || null, source_note: draft.sourceNote || null,
       created_by: userData.user?.id ?? null,
-    }, { onConflict: "code" });
+    });
     setBusy(false);
-    if (error) { setMessage("Eğitim-öğretim yılı kaydedilemedi."); return; }
+    if (error) { setMessage("Eğitim-öğretim yılı kaydedilemedi. Tarih sırası, kurum kapsamı ve yetkinizi kontrol edin."); return; }
     setMessage(`${draft.code} yılı açıldı. Aktif çalışma yılı yapılmadan hiçbir programı kendiliğinden değiştirmez.`);
     setFormOpen(false); setDraft(EMPTY); await load();
   }
@@ -117,7 +137,7 @@ function AcademicYearsPage() {
     setBusy(true); setMessage(null);
     const { error } = await supabase.rpc("set_active_academic_year", { p_academic_year_id: id });
     setBusy(false);
-    if (error) { setMessage("Aktif çalışma yılı değiştirilemedi."); return; }
+    if (error) { setMessage("Aktif çalışma yılı değiştirilemedi. Yalnız kendi kurumunuzdaki bir yıl aktif yapılabilir."); return; }
     setMessage("Aktif eğitim-öğretim yılı değiştirildi. Yıl bağımlı modüller bu merkezi yılı kullanır.");
     await load();
   }
@@ -126,7 +146,7 @@ function AcademicYearsPage() {
     {message ? <div className="mb-4 rounded-xl border bg-muted/40 p-3 text-sm">{message}</div> : null}
     <section className="rounded-2xl border bg-card p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div><h2 className="font-semibold">Çalışma yılı</h2><p className="mt-1 text-xs text-muted-foreground">Program, nöbet, sınav, ek ders, takvim ve görevler aktif yıl kapsamında değerlendirilir.</p></div>
+        <div><h2 className="font-semibold">Çalışma yılı</h2><p className="mt-1 text-xs text-muted-foreground">Program, nöbet, sınav, ek ders, takvim ve görevler kurumunuzun aktif yılı kapsamında değerlendirilir.</p></div>
         <div className="flex gap-2"><Button variant="outline" size="sm" onClick={() => void load()}><RefreshCw className="mr-1 size-4"/>Yenile</Button>{editable ? <Button size="sm" onClick={openNewYear}><Plus className="mr-1 size-4"/>Yeni Yıl Aç</Button> : null}</div>
       </div>
       {activeYear ? <div className="mt-4 flex items-center gap-3 rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-emerald-950 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100"><CalendarRange className="size-5"/><div><p className="font-semibold">{activeYear.title}</p><p className="text-xs opacity-80">{activeYear.starts_on} → {activeYear.ends_on}</p></div></div> : <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">Henüz aktif eğitim-öğretim yılı seçilmedi. Önce yılı açın, sonra “Aktif Yap” deyin.</div>}
