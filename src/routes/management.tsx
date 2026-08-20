@@ -16,7 +16,8 @@ const groups:Record<Group,{title:string;desc:string}>={
 const items:readonly ManagementItem[]=[
  {group:"data",to:'/calendar',title:'Çalışma Takvimi',desc:'MEB PDF/XLS içe aktarma, okul türüne göre kapsam ve merkezi tarih kaynağı',icon:CalendarDays,permissions:['settings.manage']},
  {group:"data",to:'/classes',title:'Sınıflar & Şubeler',desc:'MEB/e-Okul sınıf-şube raporları, program ve mevcut bilgileri',icon:Users,permissions:['classes.manage']},
- {group:"data",to:'/personnel-admin',title:'Öğretmenler & Personel',desc:'MEB personel aktarımı, branş, ana görev ve birden fazla alt sorumluluk',icon:UserCog,permissions:['personnel.view','personnel.manage']},
+ {group:"data",to:'/personnel-admin',title:'Öğretmenler & Personel',desc:'Branş, ana görev, hesap ilişkisi ve birden fazla alt sorumluluk',icon:UserCog,permissions:['personnel.view','personnel.manage']},
+ {group:"data",to:'/personnel-import',title:'Personel Veri İçe Aktarma',desc:'Personel Özet Bilgi Excel/PDF dosyasındaki bütün sütunları kaybetmeden aktar',icon:UserCog,permissions:['personnel.manage']},
  {group:"data",to:'/curriculum',title:'Ders Havuzu & Ders Atamaları',desc:'Ders kataloğu, sınıf ders yükleri ve öğretmen atamaları',icon:BookOpenCheck,permissions:['curriculum.manage']},
  {group:"data",to:'/classrooms',title:'Derslikler / Salonlar',desc:'Kapasite, derslik tipi, bölüm ve gerekli donanım',icon:Building2,permissions:['classrooms.manage']},
 
@@ -40,6 +41,7 @@ const items:readonly ManagementItem[]=[
  {group:"system",to:'/legislation',title:'Mevzuat Kütüphanesi',desc:'Mevzuatı kaydet, ara, oku ve personele gönder',icon:BookOpen,permissions:['settings.manage']},
  {group:"system",to:'/settings-permissions',title:'Görev ve Yetki Atama',desc:'Personel bazlı modül, işlem, süre ve delegasyon',icon:KeyRound,permissions:['permissions.manage']},
  {group:"system",to:'/settings-task-roles',title:'Görev Şablonları',desc:'Okula özel tekrar kullanılabilir görev/rol paketleri',icon:BriefcaseBusiness,permissions:['permissions.manage']},
+ {group:"system",to:'/personnel-field-settings',title:'Personel Sütun Kullanımı',desc:'Süper Admin: hangi MEB sütununun hangi modüllerde kullanılacağını belirle',icon:Crown,permissions:[],superOnly:true},
  {group:"system",to:'/super-admin',title:'Süper Admin',desc:'Personel, atama alanı, TTKB, norm ve kaynak girdileri',icon:Crown,permissions:[],superOnly:true},
 ];
 function ManagementHub(){
