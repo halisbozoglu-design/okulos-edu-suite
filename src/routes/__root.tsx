@@ -83,6 +83,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 type RouteRule = { prefix: string; any: string[]; superOnly?: boolean };
 const protectedRoutes: RouteRule[] = [
+  { prefix: "/super-admin-tenants", any: [], superOnly: true },
   { prefix: "/settings-permissions", any: ["permissions.manage"] },
   { prefix: "/settings-task-roles", any: ["permissions.manage"] },
   { prefix: "/personnel-admin", any: ["personnel.view", "personnel.manage"] },
@@ -143,8 +144,21 @@ function PermissionBoundary({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+type AccessState={allowed:boolean;reason?:string;approval_status?:string;maintenance?:boolean;message?:string;feature_label?:string;super_admin?:boolean};
+const publicPaths=["/","/school-registration","/auth/callback"];
+function SystemAccessBoundary({children}:{children:ReactNode}){
+  const pathname=useRouterState({select:s=>s.location.pathname});
+  const [state,setState]=useState<AccessState|null>(null);
+  useEffect(()=>{let alive=true;if(publicPaths.includes(pathname)){setState({allowed:true});return()=>{alive=false}};setState(null);void(async()=>{const {data:userData}=await supabase.auth.getUser();if(!alive)return;if(!userData.user){setState({allowed:true});return;}const {data,error}=await supabase.rpc("get_system_access_state",{p_path:pathname});if(!alive)return;if(error){setState({allowed:true});return;}setState((data??{allowed:true}) as AccessState)})();return()=>{alive=false}},[pathname]);
+  if(publicPaths.includes(pathname))return <>{children}</>;
+  if(state===null)return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="rounded-xl border bg-card px-5 py-4 text-sm text-muted-foreground">Sistem erişimi kontrol ediliyor…</div></div>;
+  if(state.allowed)return <>{children}</>;
+  const pending=state.reason==="tenant_pending",rejected=state.reason==="tenant_rejected",maintenance=state.reason==="system_maintenance"||state.reason==="feature_maintenance";
+  return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="w-full max-w-xl rounded-2xl border bg-card p-7 text-center shadow-sm"><div className="mx-auto grid size-12 place-items-center rounded-2xl bg-amber-100 text-amber-800">{maintenance?"🛠️":pending?"⏳":rejected?"✕":"!"}</div><h1 className="mt-4 text-xl font-semibold">{maintenance?(state.feature_label?`${state.feature_label} bakımda / kapalı`:`Sistem bakımı yapılmaktadır`):pending?"Kurum onayı bekleniyor":rejected?"Kurum kaydı onaylanmadı":"Erişim geçici olarak kapalı"}</h1><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{state.message??(pending?"Okul kaydınız Süper Admin onayına gönderildi. Onay tamamlandığında müdüre bildirim gönderilecek ve sistem kullanıma açılacaktır.":rejected?"Kurum kaydınız Süper Admin tarafından reddedildi. Ayrıntı için sistem bildirimini veya yöneticinizle iletişimi kontrol edin.":"Sistem bakımı yapılmaktadır. En kısa sürede tekrar hizmete açılacaktır.")}</p><div className="mt-5 flex justify-center gap-2"><Link to="/notifications" className="rounded-md border px-4 py-2 text-sm font-medium">Bildirimleri Kontrol Et</Link><Link to="/" className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">Giriş Ekranı</Link></div></div></div>;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useEffect(() => { void registerPwaServiceWorker(); }, []);
-  return <QueryClientProvider client={queryClient}><PermissionBoundary><Outlet /></PermissionBoundary></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><SystemAccessBoundary><PermissionBoundary><Outlet /></PermissionBoundary></SystemAccessBoundary></QueryClientProvider>;
 }
