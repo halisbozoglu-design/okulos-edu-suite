@@ -1,3 +1,11 @@
+export type PersonnelNormalizedFields = {
+  province: string; district: string; institutionName: string; institutionCode: string;
+  fullName: string; tcIdentityNo: string; personnelStatus: string; gradeStep: string;
+  baseTitle: string; dutyTitle: string; teachingArea: string; careerStage: string;
+  educationStatus: string; institutionRegistryNo: string; retirementRegistryNo: string;
+  archiveNo: string; gender: string; bloodGroup: string; birthDate: string; firstServiceDate: string;
+};
+
 export type PersonnelImportRow = {
   fullName: string;
   title: string;
@@ -5,156 +13,56 @@ export type PersonnelImportRow = {
   teachingArea: string;
   employmentStatus: string;
   systemRole: "teacher" | "principal" | "vice_principal" | "other";
+  derivedRoles: string[];
+  normalized: PersonnelNormalizedFields;
   rawFields: Record<string, string>;
   rawLabels: Record<string, string>;
 };
 
-function clean(value: unknown) {
-  return String(value ?? "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
-}
-function lower(value: unknown) { return clean(value).toLocaleLowerCase("tr-TR"); }
-function ascii(value: string) {
-  return value.toLocaleLowerCase("tr-TR")
-    .replace(/[ç]/g,"c").replace(/[ğ]/g,"g").replace(/[ıİi]/g,"i")
-    .replace(/[ö]/g,"o").replace(/[ş]/g,"s").replace(/[ü]/g,"u")
-    .normalize("NFKD").replace(/[\u0300-\u036f]/g,"");
-}
-function makeFieldKey(label: string, index: number, used: Set<string>) {
-  const base = ascii(clean(label)).replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"") || `sutun_${index+1}`;
-  let key=base, n=2;
-  while(used.has(key)) key=`${base}_${n++}`;
-  used.add(key);
-  return key;
-}
-function roleOf(title: string, duty: string): PersonnelImportRow["systemRole"] {
-  const v=lower(`${title} ${duty}`);
-  if(/müdür yardım|mudur yardim/.test(v)) return "vice_principal";
-  if(/(^|\s)müdür($|\s)|(^|\s)mudur($|\s)/.test(v)) return "principal";
-  if(/öğretmen|ogretmen|başöğretmen|basogretmen|uzman öğretmen|uzman ogretmen/.test(v)) return "teacher";
-  return "other";
-}
-function findIndex(headers:string[], re:RegExp){return headers.findIndex(x=>re.test(lower(x)));}
-function isHeaderCandidate(row: unknown[]) {
-  const values=row.map(clean).filter(Boolean);
-  if(values.length<2) return false;
-  const joined=lower(values.join(" | "));
-  const hasName=/(ad.*soyad|adı.*soyadı|adi.*soyadi|personel.*ad)/.test(joined);
-  return hasName && values.length>=3;
-}
-function headerRowIndex(rows:unknown[][]){
-  for(let i=0;i<Math.min(rows.length,80);i+=1) if(isHeaderCandidate(rows[i]??[])) return i;
-  return -1;
-}
-function mapRow(headers:string[], keys:string[], row:unknown[]) {
-  const rawFields:Record<string,string>={}, rawLabels:Record<string,string>={};
-  keys.forEach((key,i)=>{rawFields[key]=clean(row[i]);rawLabels[key]=headers[i]||`Sütun ${i+1}`;});
-  return {rawFields,rawLabels};
-}
+const PHYSICAL_LABELS = [
+  "Bulunduğu İl / İlçe", "Çalıştığı Kurumun Adı / Kodu", "Adı Soyadı / T.C. Kimlik No + Durumu / Kademe-Derecesi",
+  "Unvanı / Görevi", "Bakanlık Atama Alanı / Kariyer Basamağı", "Öğrenim Durumu", "Kurum Sicil No",
+  "Emekli Sicil No", "Arşiv No", "Cinsiyet", "Kan Grubu", "Doğum Tarihi", "İlk Göreve Başlama Tarihi",
+] as const;
+const PHYSICAL_KEYS = ["il_ilce","kurum_adi_kodu","ad_soyad_tc_durum_kademe","unvani_gorevi","bakanlik_atama_alani_kariyer","ogrenim_durumu","kurum_sicil_no","emekli_sicil_no","arsiv_no","cinsiyet","kan_grubu","dogum_tarihi","ilk_goreve_baslama_tarihi"] as const;
 
-async function parseExcel(file:File):Promise<PersonnelImportRow[]> {
-  const XLSX=await import("xlsx");
-  const workbook=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:false,raw:false});
-  const result:PersonnelImportRow[]=[]; const seen=new Set<string>();
-  for(const sheetName of workbook.SheetNames){
-    const sheet=workbook.Sheets[sheetName]; if(!sheet) continue;
-    const rows=XLSX.utils.sheet_to_json<unknown[]>(sheet,{header:1,defval:"",raw:false});
-    const h=headerRowIndex(rows); if(h<0) continue;
-    const headerCells=rows[h]??[];
-    const width=Math.max(headerCells.length,...rows.slice(h+1).map(r=>r.length));
-    const headers=Array.from({length:width},(_,i)=>clean(headerCells[i])||`Sütun ${i+1}`);
-    const used=new Set<string>(); const keys=headers.map((label,i)=>makeFieldKey(label,i,used));
-    const nameIdx=findIndex(headers,/(ad.*soyad|adı.*soyadı|adi.*soyadi|personel.*ad)/i);
-    const titleIdx=findIndex(headers,/^\s*(unvan|ünvan)|kadro.*unvan/i);
-    const dutyIdx=findIndex(headers,/görev|gorev/i);
-    const areaIdx=findIndex(headers,/atama.*alan|branş|brans|öğretmenlik.*alan|ogretmenlik.*alan/i);
-    const statusIdx=findIndex(headers,/kadro|statü|statu|sözleş|sozles|ücretli|ucretli|istihdam/i);
-    if(nameIdx<0) continue;
-    for(let i=h+1;i<rows.length;i+=1){
-      const row=rows[i]??[]; const fullName=clean(row[nameIdx]);
-      if(!fullName||fullName.length<3||/toplam|sayfa|rapor tarihi|kurum adı|kurum adi/i.test(fullName)) continue;
-      const title=titleIdx>=0?clean(row[titleIdx]):"";
-      const dutyTitle=dutyIdx>=0?clean(row[dutyIdx]):title;
-      const teachingArea=areaIdx>=0?clean(row[areaIdx]):"";
-      const employmentStatus=statusIdx>=0?clean(row[statusIdx]):"";
-      const {rawFields,rawLabels}=mapRow(headers,keys,row);
-      const unique=`${lower(fullName)}|${lower(teachingArea)}|${lower(dutyTitle)}`;
-      if(seen.has(unique)) continue; seen.add(unique);
-      result.push({fullName,title,dutyTitle,teachingArea,employmentStatus,systemRole:roleOf(title,dutyTitle),rawFields,rawLabels});
-    }
-  }
-  return result;
-}
+function clean(value: unknown) { return String(value ?? "").replace(/\u00a0/g," ").replace(/\s+/g," ").trim(); }
+function lower(value: unknown) { return clean(value).toLocaleLowerCase("tr-TR"); }
+function ascii(value: string) { return value.toLocaleLowerCase("tr-TR").replace(/[ç]/g,"c").replace(/[ğ]/g,"g").replace(/[ıİi]/g,"i").replace(/[ö]/g,"o").replace(/[ş]/g,"s").replace(/[ü]/g,"u").normalize("NFKD").replace(/[\u0300-\u036f]/g,""); }
+function makeFieldKey(label:string,index:number,used:Set<string>){const base=ascii(clean(label)).replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"")||`sutun_${index+1}`;let key=base,n=2;while(used.has(key))key=`${base}_${n++}`;used.add(key);return key;}
+function isoDate(v:string){const m=clean(v).match(/\b(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})\b/);return m?`${m[3]}-${m[2]!.padStart(2,"0")}-${m[1]!.padStart(2,"0")}`:"";}
+function splitSlash(v:string){const p=clean(v).split(/\s*\/\s*/);return [clean(p[0]),clean(p.slice(1).join(" / "))] as const;}
+function splitPersonCell(v:string){const raw=clean(v);const tc=raw.match(/\((\d{11})\)/)?.[1]??"";const name=clean(raw.replace(/\(\d{11}\)/g,"").replace(/\bGörevde\b.*$/i,"").replace(/\bGorevde\b.*$/i,""));const status=raw.match(/\b(Görevde|Gorevde)\s+([^\s]+(?:\s*[-/]\s*[^\s]+)?)/i);return {fullName:name,tcIdentityNo:tc,personnelStatus:status?status[1]:"",gradeStep:status?clean(status[2]):""};}
+function splitTitleDuty(v:string){const raw=clean(v);const known=["Müdür Yardımcısı","Müdür","Sözleşmeli Öğretmen(657 S.K. 4/B)","Öğretmen"];
+  for(const duty of known){const pos=lower(raw).lastIndexOf(lower(`/ ${duty}`));if(pos>=0)return {baseTitle:clean(raw.slice(0,pos)),dutyTitle:duty};}
+  const parts=raw.split(/\s*\/\s*/);if(parts.length>=2)return {baseTitle:clean(parts[0]),dutyTitle:clean(parts.slice(1).join(" / "))};return {baseTitle:raw,dutyTitle:raw};}
+function splitAreaCareer(v:string){const raw=clean(v);const m=raw.match(/^(.*?)(?:\s*\/\s*)?(Başöğretmen|Basogretmen|Uzman Öğretmen|Uzman Ogretmen)$/i);return m?{teachingArea:clean(m[1]),careerStage:clean(m[2])}:{teachingArea:raw.replace(/\s*\/\s*$/,""),careerStage:""};}
+function roleInfo(baseTitle:string,dutyTitle:string,teachingArea:string){const v=lower(`${baseTitle} ${dutyTitle}`),a=lower(teachingArea);let systemRole:PersonnelImportRow["systemRole"]="other";const tags:string[]=[];
+  if(/müdür yardım|mudur yardim/.test(v)){systemRole="vice_principal";tags.push("vice_principal");}
+  else if(/(^|\W)müdür($|\W)|(^|\W)mudur($|\W)/.test(v)){systemRole="principal";tags.push("principal");}
+  else if(/öğretmen|ogretmen/.test(v)){systemRole="teacher";tags.push("teacher");}
+  if(/rehberlik|\bpdr\b/.test(a)||/rehber öğretmen|rehber ogretmen/.test(v)){if(!tags.includes("teacher"))tags.push("teacher");tags.push("guidance_teacher");}
+  return {systemRole,derivedRoles:tags};}
+function splitInstitution(v:string){const raw=clean(v);const m=raw.match(/^(.*?)(?:\s*\/\s*)(\d{5,})$/);return m?{institutionName:clean(m[1]),institutionCode:m[2]??""}:{institutionName:raw,institutionCode:""};}
+function normalizedFromPhysical(c:string[]):PersonnelNormalizedFields{const [province,district]=splitSlash(c[0]??"");const inst=splitInstitution(c[1]??"");const person=splitPersonCell(c[2]??"");const title=splitTitleDuty(c[3]??"");const area=splitAreaCareer(c[4]??"");return {province,district,institutionName:inst.institutionName,institutionCode:inst.institutionCode,fullName:person.fullName,tcIdentityNo:person.tcIdentityNo,personnelStatus:person.personnelStatus,gradeStep:person.gradeStep,baseTitle:title.baseTitle,dutyTitle:title.dutyTitle,teachingArea:area.teachingArea,careerStage:area.careerStage,educationStatus:clean(c[5]),institutionRegistryNo:clean(c[6]),retirementRegistryNo:clean(c[7]),archiveNo:clean(c[8]),gender:clean(c[9]),bloodGroup:clean(c[10]),birthDate:isoDate(c[11]??""),firstServiceDate:isoDate(c[12]??"")};}
+function addNormalized(rawFields:Record<string,string>,rawLabels:Record<string,string>,n:PersonnelNormalizedFields){const labels:Record<keyof PersonnelNormalizedFields,string>={province:"İl",district:"İlçe",institutionName:"Kurum Adı",institutionCode:"Kurum Kodu",fullName:"Ad Soyad",tcIdentityNo:"T.C. Kimlik No",personnelStatus:"Personel Durumu",gradeStep:"Kademe-Derece",baseTitle:"Temel Unvan",dutyTitle:"Fiilî Görev",teachingArea:"Bakanlık Atama Alanı / Branş",careerStage:"Kariyer Basamağı",educationStatus:"Öğrenim Durumu",institutionRegistryNo:"Kurum Sicil No",retirementRegistryNo:"Emekli Sicil No",archiveNo:"Arşiv No",gender:"Cinsiyet",bloodGroup:"Kan Grubu",birthDate:"Doğum Tarihi",firstServiceDate:"İlk Göreve Başlama Tarihi"};for(const [k,label] of Object.entries(labels)){const key=`normalized_${k}`;rawFields[key]=String(n[k as keyof PersonnelNormalizedFields]??"");rawLabels[key]=label;}}
+function buildRow(cells:string[],extra?:{rawFields:Record<string,string>;rawLabels:Record<string,string>}):PersonnelImportRow|null{if(cells.length<13)return null;const normalized=normalizedFromPhysical(cells);if(!normalized.fullName||normalized.fullName.length<3)return null;const rawFields=extra?.rawFields??{},rawLabels=extra?.rawLabels??{};PHYSICAL_KEYS.forEach((k,i)=>{rawFields[k]=clean(cells[i]);rawLabels[k]=PHYSICAL_LABELS[i];});addNormalized(rawFields,rawLabels,normalized);const roles=roleInfo(normalized.baseTitle,normalized.dutyTitle,normalized.teachingArea);return {fullName:normalized.fullName,title:normalized.baseTitle,dutyTitle:normalized.dutyTitle,teachingArea:normalized.teachingArea,employmentStatus:normalized.personnelStatus,systemRole:roles.systemRole,derivedRoles:roles.derivedRoles,normalized,rawFields,rawLabels};}
+
+function isHeaderCandidate(row:unknown[]){const joined=lower(row.map(clean).join(" | "));return /ad.*soyad/.test(joined)&&/(unvan|ünvan)/.test(joined)&&/(atama.*alan|bakanlık.*atama)/.test(joined);}
+function findHeader(rows:unknown[][]){for(let i=0;i<Math.min(rows.length,80);i++)if(isHeaderCandidate(rows[i]??[]))return i;return -1;}
+function excelPhysicalRow(row:unknown[],headers:string[]){const values=row.map(clean);const idx=(re:RegExp)=>headers.findIndex(h=>re.test(lower(h)));const nameIdx=idx(/ad.*soyad/),provinceIdx=idx(/bulunduğu.*il|bulundugu.*il/),instIdx=idx(/çalıştığı.*kurum|calistigi.*kurum/),titleIdx=idx(/unvan|ünvan/),areaIdx=idx(/bakanlık.*atama|bakanlik.*atama/),eduIdx=idx(/öğrenim|ogrenim/),kurumSicilIdx=idx(/kurum.*sicil/),emekliIdx=idx(/emekli.*sicil/),arsivIdx=idx(/arşiv|arsiv/),genderIdx=idx(/cinsiyet/),bloodIdx=idx(/kan.*gr/),birthIdx=idx(/doğum|dogum/),firstIdx=idx(/ilk.*göreve|ilk.*goreve/);
+  const picks=[provinceIdx,instIdx,nameIdx,titleIdx,areaIdx,eduIdx,kurumSicilIdx,emekliIdx,arsivIdx,genderIdx,bloodIdx,birthIdx,firstIdx];if(picks.some(i=>i<0))return null;return picks.map(i=>values[i]??"");}
+async function parseExcel(file:File){const XLSX=await import("xlsx");const wb=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:false,raw:false});const result:PersonnelImportRow[]=[];const seen=new Set<string>();for(const name of wb.SheetNames){const sh=wb.Sheets[name];if(!sh)continue;const rows=XLSX.utils.sheet_to_json<unknown[]>(sh,{header:1,defval:"",raw:false});const h=findHeader(rows);if(h<0)continue;const width=Math.max(...rows.map(r=>r.length));const mergedHeaders=Array.from({length:width},(_,i)=>clean(rows[h]?.[i]));
+    for(let i=h+1;i<Math.min(rows.length,h+4);i++){for(let j=0;j<width;j++){const v=clean(rows[i]?.[j]);if(v&&(/durumu.*kademe|görev|gorev|alan|öğrenim|sicil|arşiv|cinsiyet|kan|doğum|ilk/i.test(v)))mergedHeaders[j]=clean(`${mergedHeaders[j]} ${v}`);}}
+    const used=new Set<string>();const keys=mergedHeaders.map((x,i)=>makeFieldKey(x||`Sütun ${i+1}`,i,used));
+    for(let i=h+1;i<rows.length;i++){const raw=rows[i]??[];const physical=excelPhysicalRow(raw,mergedHeaders);if(!physical)continue;const extra={rawFields:{} as Record<string,string>,rawLabels:{} as Record<string,string>};keys.forEach((k,j)=>{extra.rawFields[k]=clean(raw[j]);extra.rawLabels[k]=mergedHeaders[j]||`Sütun ${j+1}`;});const row=buildRow(physical,extra);if(!row)continue;const key=`${lower(row.normalized.tcIdentityNo||row.fullName)}|${row.normalized.institutionCode}`;if(seen.has(key))continue;seen.add(key);result.push(row);}}
+  return result;}
 
 type PdfItem={x:number;y:number;str:string};
-async function pdfRows(file:File):Promise<{headers:string[];rows:string[][]}[]> {
-  const pdfjs=await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const pdf=await pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
-  const pages:{headers:string[];rows:string[][]}[]=[];
-  let rememberedHeaders:string[]|null=null, rememberedXs:number[]|null=null;
-  for(let pageNo=1;pageNo<=pdf.numPages;pageNo+=1){
-    const page=await pdf.getPage(pageNo); const content=await page.getTextContent();
-    const items=(content.items as Array<{str?:string;transform?:number[]}>).filter(i=>i.str?.trim()).map(i=>({x:i.transform?.[4]??0,y:i.transform?.[5]??0,str:clean(i.str)} as PdfItem));
-    const lineMap=new Map<number,PdfItem[]>();
-    for(const item of items){const y=Math.round(item.y/3)*3;const arr=lineMap.get(y)??[];arr.push(item);lineMap.set(y,arr);}
-    const lines=[...lineMap.entries()].sort((a,b)=>b[0]-a[0]).map(([,arr])=>arr.sort((a,b)=>a.x-b.x));
-    const headerLine=lines.find(line=>isHeaderCandidate(line.map(i=>i.str)));
-    let headers:string[]|null=rememberedHeaders;
-    let xs:number[]|null=rememberedXs;
-    if(headerLine){
-      const groups:{x:number;str:string}[]=[];
-      for(const item of headerLine){
-        const prev=groups[groups.length-1];
-        if(prev && item.x-prev.x<32) prev.str=`${prev.str} ${item.str}`.trim(); else groups.push({x:item.x,str:item.str});
-      }
-      headers=groups.map(g=>g.str); xs=groups.map(g=>g.x); rememberedHeaders=headers; rememberedXs=xs;
-    }
-    if(!headers||!xs||headers.length<2) continue;
-    const dataRows:string[][]=[];
-    for(const line of lines){
-      if(line===headerLine||isHeaderCandidate(line.map(i=>i.str))) continue;
-      const row=Array(headers.length).fill("") as string[];
-      for(const item of line){
-        let idx=0,best=Infinity;
-        xs.forEach((x:number,i:number)=>{const d=Math.abs(item.x-x);if(d<best){best=d;idx=i;}});
-        row[idx]=clean(`${row[idx]} ${item.str}`);
-      }
-      if(row.some(Boolean)) dataRows.push(row);
-    }
-    pages.push({headers,rows:dataRows});
-  }
-  return pages;
-}
-async function parsePdf(file:File):Promise<PersonnelImportRow[]> {
-  const tables=await pdfRows(file); const result:PersonnelImportRow[]=[]; const seen=new Set<string>();
-  for(const table of tables){
-    const headers=table.headers; const used=new Set<string>(); const keys=headers.map((h,i)=>makeFieldKey(h,i,used));
-    const nameIdx=findIndex(headers,/(ad.*soyad|adı.*soyadı|adi.*soyadi|personel.*ad)/i);
-    const titleIdx=findIndex(headers,/^\s*(unvan|ünvan)|kadro.*unvan/i);
-    const dutyIdx=findIndex(headers,/görev|gorev/i);
-    const areaIdx=findIndex(headers,/atama.*alan|branş|brans|öğretmenlik.*alan|ogretmenlik.*alan/i);
-    const statusIdx=findIndex(headers,/kadro|statü|statu|sözleş|sozles|ücretli|ucretli|istihdam/i);
-    if(nameIdx<0) continue;
-    for(const row of table.rows){
-      const fullName=clean(row[nameIdx]); if(!fullName||fullName.length<3||/toplam|sayfa|rapor/i.test(fullName)) continue;
-      const title=titleIdx>=0?clean(row[titleIdx]):"", dutyTitle=dutyIdx>=0?clean(row[dutyIdx]):title;
-      const teachingArea=areaIdx>=0?clean(row[areaIdx]):"", employmentStatus=statusIdx>=0?clean(row[statusIdx]):"";
-      const {rawFields,rawLabels}=mapRow(headers,keys,row);
-      const unique=`${lower(fullName)}|${lower(teachingArea)}|${lower(dutyTitle)}`; if(seen.has(unique)) continue; seen.add(unique);
-      result.push({fullName,title,dutyTitle,teachingArea,employmentStatus,systemRole:roleOf(title,dutyTitle),rawFields,rawLabels});
-    }
-  }
-  return result;
-}
+const PDF_BOUNDS=[0.014,0.118,0.244,0.444,0.545,0.602,0.659,0.703,0.760,0.817,0.839,0.886,0.939,1.001];
+async function parsePdf(file:File){const pdfjs=await import("pdfjs-dist/legacy/build/pdf.mjs");const pdf=await pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;const result:PersonnelImportRow[]=[];const seen=new Set<string>();for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const viewport=page.getViewport({scale:1});const content=await page.getTextContent();const items=(content.items as Array<{str?:string;transform?:number[]}>).filter(i=>i.str?.trim()).map(i=>({x:i.transform?.[4]??0,y:i.transform?.[5]??0,str:clean(i.str)} as PdfItem));const col=(x:number)=>{const r=x/viewport.width;for(let i=0;i<13;i++)if(r>=PDF_BOUNDS[i]!&&r<PDF_BOUNDS[i+1]!)return i;return -1;};
+    const starts=items.filter(i=>col(i.x)===2&&/\(\d{11}\)/.test(i.str)).sort((a,b)=>b.y-a.y);for(let s=0;s<starts.length;s++){const top=starts[s]!.y+8,bottom=s+1<starts.length?starts[s+1]!.y+8:25;const cells=Array.from({length:13},()=>[] as PdfItem[]);for(const item of items){if(item.y>top||item.y<=bottom)continue;const c=col(item.x);if(c>=0)cells[c]!.push(item);}const physical=cells.map(arr=>arr.sort((a,b)=>Math.abs(b.y-a.y)>2?b.y-a.y:a.x-b.x).map(i=>i.str).join(" ").replace(/\s+/g," ").trim());const row=buildRow(physical);if(!row)continue;const key=`${lower(row.normalized.tcIdentityNo||row.fullName)}|${row.normalized.institutionCode}`;if(seen.has(key))continue;seen.add(key);result.push(row);}}
+  return result;}
 
-export async function parsePersonnelSummaryReport(file:File):Promise<PersonnelImportRow[]> {
-  const ext=file.name.split(".").pop()?.toLowerCase();
-  const rows=ext==="xls"||ext==="xlsx"?await parseExcel(file):ext==="pdf"?await parsePdf(file):[];
-  if(!rows.length) throw new Error(ext==="pdf"?"MEB_PERSONNEL_PDF_LAYOUT_NOT_RECOGNIZED":"MEB_PERSONNEL_LAYOUT_NOT_RECOGNIZED");
-  return rows;
-}
-
-export function getPersonnelColumns(rows:PersonnelImportRow[]){
-  const map=new Map<string,string>();
-  for(const row of rows) for(const [key,label] of Object.entries(row.rawLabels)) if(!map.has(key)) map.set(key,label);
-  return [...map.entries()].map(([key,label])=>({key,label}));
-}
+export async function parsePersonnelSummaryReport(file:File):Promise<PersonnelImportRow[]>{const ext=file.name.split(".").pop()?.toLowerCase();const rows=ext==="xls"||ext==="xlsx"?await parseExcel(file):ext==="pdf"?await parsePdf(file):[];if(!rows.length)throw new Error(ext==="pdf"?"MEB_PERSONNEL_PDF_LAYOUT_NOT_RECOGNIZED":"MEB_PERSONNEL_LAYOUT_NOT_RECOGNIZED");return rows;}
+export function getPersonnelColumns(rows:PersonnelImportRow[]){const map=new Map<string,string>();for(const row of rows)for(const [key,label] of Object.entries(row.rawLabels))if(!map.has(key))map.set(key,label);return [...map.entries()].map(([key,label])=>({key,label}));}
