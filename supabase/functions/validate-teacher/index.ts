@@ -21,11 +21,12 @@ Deno.serve(async (req) => {
 
   try {
     const { tckn, institutionCode, email } = await req.json();
-    const code = typeof institutionCode === "string" ? institutionCode.replace(/\D/g, "") : "";
     if (typeof tckn !== "string" || !isValidTckn(tckn)) {
       return Response.json({ valid: false, reason: "INVALID_TCKN" }, { status: 400, headers: corsHeaders });
     }
-    if (!/^\d{5,10}$/.test(code)) {
+
+    const suppliedCode = typeof institutionCode === "string" ? institutionCode.replace(/\D/g, "") : "";
+    if (suppliedCode && !/^\d{5,10}$/.test(suppliedCode)) {
       return Response.json({ valid: false, reason: "INVALID_INSTITUTION_CODE" }, { status: 400, headers: corsHeaders });
     }
 
@@ -34,6 +35,23 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
       { auth: { persistSession: false, autoRefreshToken: false } },
     );
+
+    let query = supabase
+      .from("pre_registered_teachers")
+      .select("id,email,institution_code")
+      .eq("tckn", tckn)
+      .eq("active", true);
+    if (suppliedCode) query = query.eq("institution_code", suppliedCode);
+    const { data: candidates, error } = await query.limit(2);
+    if (error) throw error;
+    if (!candidates?.length) return Response.json({ valid: false, reason: "NOT_FOUND" }, { headers: corsHeaders });
+    if (!suppliedCode && candidates.length > 1) {
+      return Response.json({ valid: false, reason: "INSTITUTION_CODE_REQUIRED" }, { headers: corsHeaders });
+    }
+
+    const data = candidates[0];
+    const code = data.institution_code ?? suppliedCode;
+    if (!code) return Response.json({ valid: false, reason: "INSTITUTION_CODE_REQUIRED" }, { headers: corsHeaders });
 
     const { data: institution, error: institutionError } = await supabase
       .from("institutions")
@@ -47,17 +65,6 @@ Deno.serve(async (req) => {
     if (institution.approval_status !== "approved") {
       return Response.json({ valid: false, reason: "INSTITUTION_NOT_APPROVED" }, { headers: corsHeaders });
     }
-
-    const { data, error } = await supabase
-      .from("pre_registered_teachers")
-      .select("id,email,institution_code")
-      .eq("tckn", tckn)
-      .eq("institution_code", code)
-      .eq("active", true)
-      .maybeSingle();
-
-    if (error) throw error;
-    if (!data) return Response.json({ valid: false, reason: "NOT_FOUND" }, { headers: corsHeaders });
 
     if (typeof email === "string" && email.trim() && data.email) {
       const expected = data.email.trim().toLowerCase();
