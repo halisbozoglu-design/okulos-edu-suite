@@ -5826,6 +5826,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_user_permission_bundle: {
+        Args: {
+          p_note?: string
+          p_permission_codes: string[]
+          p_user_id: string
+          p_valid_from?: string
+          p_valid_until?: string
+        }
+        Returns: number
+      }
       set_user_permission_mode: {
         Args: { p_mode: string; p_user_id: string }
         Returns: boolean
