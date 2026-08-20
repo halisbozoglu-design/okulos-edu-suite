@@ -53,6 +53,9 @@ jobs:
       - name: Check timetable Phase 2 closure
         run: node scripts/check-schedule-phase2.mjs
 
+      - name: Check timetable Phase 3 closure
+        run: node scripts/check-schedule-phase3.mjs
+
       - name: Check auth flow
         run: node scripts/check-auth-flow.mjs
 
