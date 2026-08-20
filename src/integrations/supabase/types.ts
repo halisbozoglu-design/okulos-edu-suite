@@ -4686,11 +4686,23 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      apply_schedule_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       approve_payroll_activity: {
         Args: { p_activity_id: string; p_approve?: boolean }
         Returns: boolean
       }
+      approve_payroll_activity_permission_core_v2: {
+        Args: { p_activity_id: string; p_approve?: boolean }
+        Returns: boolean
+      }
       approve_payroll_month: {
+        Args: { p_month: number; p_year: number }
+        Returns: number
+      }
+      approve_payroll_month_permission_core_v2: {
         Args: { p_month: number; p_year: number }
         Returns: number
       }
@@ -4713,6 +4725,13 @@ export type Database = {
         }[]
       }
       assign_classrooms_to_scenario_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          assigned_count: number
+          unassigned_count: number
+        }[]
+      }
+      assign_classrooms_to_scenario_permission_core_v2: {
         Args: { p_scenario_id: string }
         Returns: {
           assigned_count: number
@@ -4797,6 +4816,7 @@ export type Database = {
         Returns: string
       }
       create_telegram_link_token: { Args: never; Returns: string }
+      current_permission_context: { Args: never; Returns: string }
       current_schedule_signature: { Args: never; Returns: string }
       disable_push_subscription: {
         Args: { p_endpoint: string }
@@ -4839,6 +4859,10 @@ export type Database = {
         Args: { p_month: string; p_overwrite?: boolean }
         Returns: number
       }
+      generate_monthly_teacher_duties_permission_core_v2: {
+        Args: { p_month: string; p_overwrite?: boolean }
+        Returns: number
+      }
       generate_monthly_vp_rotation: {
         Args: {
           p_month: string
@@ -4847,7 +4871,26 @@ export type Database = {
         }
         Returns: number
       }
+      generate_monthly_vp_rotation_permission_core_v2: {
+        Args: {
+          p_month: string
+          p_overwrite?: boolean
+          p_vice_principal_ids: string[]
+        }
+        Returns: number
+      }
       generate_schedule_scenarios: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
+      }
+      generate_schedule_scenarios_permission_core_v2: {
         Args: never
         Returns: {
           generation_group: string
@@ -5255,6 +5298,16 @@ export type Database = {
           tckn: string
         }[]
       }
+      kbs_payroll_export_permission_core_v2: {
+        Args: { p_month: number; p_year: number }
+        Returns: {
+          data_type: string
+          explanation: string
+          full_name: string
+          hours: number
+          tckn: string
+        }[]
+      }
       max_consecutive_with_candidate: {
         Args: {
           p_exclude_id?: string
@@ -5272,11 +5325,25 @@ export type Database = {
         Args: { p_hours: number; p_pattern: number[] }
         Returns: number[]
       }
+      open_permission_context: { Args: { p_code: string }; Returns: undefined }
       payroll_month_is_locked: {
         Args: { p_month: number; p_year: number }
         Returns: boolean
       }
       payroll_month_matrix: {
+        Args: { p_month: number; p_year: number }
+        Returns: {
+          approved: boolean
+          category: string
+          full_name: string
+          hours: number
+          kbs_data_type: string
+          role: Database["public"]["Enums"]["app_role"]
+          teacher_id: string
+          work_date: string
+        }[]
+      }
+      payroll_month_matrix_permission_core_v2: {
         Args: { p_month: number; p_year: number }
         Returns: {
           approved: boolean
@@ -5337,8 +5404,21 @@ export type Database = {
         }
         Returns: string
       }
+      publish_current_schedule_permission_core_v2: {
+        Args: {
+          p_academic_year?: string
+          p_effective_from: string
+          p_note?: string
+          p_title?: string
+        }
+        Returns: string
+      }
       quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
       recalculate_payroll_month: {
+        Args: { p_month: number; p_year: number }
+        Returns: string
+      }
+      recalculate_payroll_month_permission_core_v2: {
         Args: { p_month: number; p_year: number }
         Returns: string
       }
@@ -5364,7 +5444,15 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      repair_schedule_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       repair_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      rescore_schedule_scenario_permission_core_v2: {
         Args: { p_scenario_id: string }
         Returns: number
       }
@@ -5428,6 +5516,10 @@ export type Database = {
         Returns: boolean
       }
       set_duty_month_lock: {
+        Args: { p_locked: boolean; p_month: string }
+        Returns: undefined
+      }
+      set_duty_month_lock_permission_core_v2: {
         Args: { p_locked: boolean; p_month: string }
         Returns: undefined
       }
@@ -5526,6 +5618,19 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      upsert_schedule_slot_permission_core_v2: {
+        Args: {
+          p_classroom_id?: string
+          p_locked?: boolean
+          p_period: number
+          p_schedule_id?: string
+          p_source_kind?: string
+          p_subgroup_id?: string
+          p_teacher_assignment_id: string
+          p_weekday: number
+        }
+        Returns: string
       }
       upsert_schedule_slot_v2: {
         Args: {
