@@ -38,6 +38,9 @@ jobs:
       - name: Check existing module tenant wiring
         run: node scripts/check-existing-module-tenant-wiring.mjs
 
+      - name: Block unclassified active routes
+        run: node scripts/check-no-unclassified-routes.mjs
+
       - name: Check authenticated entry gate
         run: node scripts/check-authenticated-entry.mjs
 
