@@ -47,6 +47,9 @@ jobs:
       - name: Check timetable migration authority
         run: node scripts/check-timetable-authority.mjs
 
+      - name: Check timetable edge-slot policy
+        run: node scripts/check-schedule-edge-slots.mjs
+
       - name: Check auth flow
         run: node scripts/check-auth-flow.mjs
 
