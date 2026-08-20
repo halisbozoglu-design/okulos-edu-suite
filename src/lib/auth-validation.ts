@@ -18,7 +18,10 @@ export function isValidEmail(value: string) {
 }
 
 export function normalizeTrPhone(value: string) {
-  return normalizeDigits(value).slice(0, 11);
+  const digits = normalizeDigits(value);
+  if (/^90\d{10}$/.test(digits)) return `0${digits.slice(2)}`;
+  if (/^5\d{9}$/.test(digits)) return `0${digits}`;
+  return digits.slice(0, 11);
 }
 
 export function isValidTrMobile(value: string) {
