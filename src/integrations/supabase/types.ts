@@ -5027,6 +5027,10 @@ export type Database = {
         }[]
       }
       get_daily_duty_book: { Args: { p_date: string }; Returns: Json }
+      get_daily_duty_book_permission_core_v2: {
+        Args: { p_date: string }
+        Returns: Json
+      }
       get_duty_month_state: {
         Args: { p_month: string }
         Returns: {
@@ -5604,6 +5608,10 @@ export type Database = {
         Returns: number[]
       }
       set_active_academic_year: {
+        Args: { p_academic_year_id: string }
+        Returns: boolean
+      }
+      set_active_academic_year_permission_core_v2: {
         Args: { p_academic_year_id: string }
         Returns: boolean
       }
