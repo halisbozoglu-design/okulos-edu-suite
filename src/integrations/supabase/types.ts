@@ -2111,6 +2111,7 @@ export type Database = {
           emergency_contact: string | null
           full_name: string | null
           is_super_admin: boolean
+          permission_mode: string
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string | null
@@ -2124,6 +2125,7 @@ export type Database = {
           emergency_contact?: string | null
           full_name?: string | null
           is_super_admin?: boolean
+          permission_mode?: string
           phone?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           tckn?: string | null
@@ -2137,6 +2139,7 @@ export type Database = {
           emergency_contact?: string | null
           full_name?: string | null
           is_super_admin?: boolean
+          permission_mode?: string
           phone?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           tckn?: string | null
@@ -4766,6 +4769,7 @@ export type Database = {
           emergency_contact: string | null
           full_name: string | null
           is_super_admin: boolean
+          permission_mode: string
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string | null
@@ -4807,6 +4811,7 @@ export type Database = {
           emergency_contact: string | null
           full_name: string | null
           is_super_admin: boolean
+          permission_mode: string
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string | null
@@ -5043,6 +5048,7 @@ export type Database = {
         Returns: {
           full_name: string
           permission_code: string
+          permission_mode: string
           role: Database["public"]["Enums"]["app_role"]
           scope: Json
           user_id: string
@@ -5437,6 +5443,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_user_permission_mode: {
+        Args: { p_mode: string; p_user_id: string }
+        Returns: boolean
+      }
       student_count_for_schedule: {
         Args: { p_class_id: string; p_subgroup_id: string }
         Returns: number
@@ -5502,6 +5512,7 @@ export type Database = {
           emergency_contact: string | null
           full_name: string | null
           is_super_admin: boolean
+          permission_mode: string
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string | null
