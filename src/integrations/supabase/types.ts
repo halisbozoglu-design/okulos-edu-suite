@@ -3713,6 +3713,84 @@ export type Database = {
         }
         Relationships: []
       }
+      task_role_template_permissions: {
+        Row: {
+          permission_code: string
+          scope: Json
+          template_id: string
+        }
+        Insert: {
+          permission_code: string
+          scope?: Json
+          template_id: string
+        }
+        Update: {
+          permission_code?: string
+          scope?: Json
+          template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_role_template_permissions_permission_code_fkey"
+            columns: ["permission_code"]
+            isOneToOne: false
+            referencedRelation: "permission_catalog"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "task_role_template_permissions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "task_role_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_role_templates: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_role_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "task_role_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       teacher_course_assignments: {
         Row: {
           assigned_hours: number
@@ -4423,6 +4501,78 @@ export type Database = {
           },
         ]
       }
+      user_task_role_assignments: {
+        Row: {
+          active: boolean
+          assigned_at: string
+          assigned_by: string | null
+          id: string
+          note: string | null
+          template_id: string
+          user_id: string
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          active?: boolean
+          assigned_at?: string
+          assigned_by?: string | null
+          id?: string
+          note?: string | null
+          template_id: string
+          user_id: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          active?: boolean
+          assigned_at?: string
+          assigned_by?: string | null
+          id?: string
+          note?: string | null
+          template_id?: string
+          user_id?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_task_role_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_task_role_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "user_task_role_assignments_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "task_role_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_task_role_assignments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_task_role_assignments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       vice_principals: {
         Row: {
           active: boolean
@@ -4789,6 +4939,16 @@ export type Database = {
           substitute_name: string
           substitute_user_id: string
         }[]
+      }
+      assign_task_role_template: {
+        Args: {
+          p_note?: string
+          p_template_id: string
+          p_user_id: string
+          p_valid_from?: string
+          p_valid_until?: string
+        }
+        Returns: number
       }
       assign_teacher_to_class_course: {
         Args: {
@@ -5559,6 +5719,19 @@ export type Database = {
       restore_schedule_restore_point: {
         Args: { p_restore_point_id: string }
         Returns: number
+      }
+      revoke_task_role_template: {
+        Args: { p_template_id: string; p_user_id: string }
+        Returns: number
+      }
+      save_task_role_template: {
+        Args: {
+          p_description?: string
+          p_name: string
+          p_permission_codes?: string[]
+          p_template_id: string
+        }
+        Returns: string
       }
       scenario_assignment_run_lengths: {
         Args: { p_assignment: string; p_scenario: string }
