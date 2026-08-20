@@ -4682,6 +4682,10 @@ export type Database = {
         Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
         Returns: number
       }
+      apply_curriculum_template_permission_core_v2: {
+        Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
+        Returns: number
+      }
       apply_schedule_scenario: {
         Args: { p_scenario_id: string }
         Returns: number
@@ -4750,6 +4754,18 @@ export type Database = {
         }
         Returns: number
       }
+      assign_quran_parallel_lesson_permission_core_v2: {
+        Args: {
+          p_academic_year: string
+          p_class_id: string
+          p_classroom_1?: string
+          p_classroom_2?: string
+          p_period: number
+          p_subject: string
+          p_weekday: number
+        }
+        Returns: number
+      }
       assign_substitutes_for_day: {
         Args: { p_date?: string }
         Returns: {
@@ -4762,7 +4778,28 @@ export type Database = {
           substitute_user_id: string
         }[]
       }
+      assign_substitutes_permission_core_v2: {
+        Args: { p_date?: string }
+        Returns: {
+          absence_lesson_id: string
+          assignment_id: string
+          class_name: string
+          period: number
+          subject: string
+          substitute_name: string
+          substitute_user_id: string
+        }[]
+      }
       assign_teacher_to_class_course: {
+        Args: {
+          p_group?: string
+          p_hours?: number
+          p_requirement_id: string
+          p_teacher_id: string
+        }
+        Returns: string
+      }
+      assign_teacher_to_class_course_permission_core_v2: {
         Args: {
           p_group?: string
           p_hours?: number
@@ -4804,6 +4841,14 @@ export type Database = {
         }
       }
       clone_class_curriculum: {
+        Args: {
+          p_copy_teachers?: boolean
+          p_source_class_id: string
+          p_target_class_id: string
+        }
+        Returns: number
+      }
+      clone_class_curriculum_permission_core_v2: {
         Args: {
           p_copy_teachers?: boolean
           p_source_class_id: string
@@ -5386,6 +5431,36 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      prepare_quran_split_permission_core_v2: {
+        Args: {
+          p_academic_year: string
+          p_class_id: string
+          p_teacher_1: string
+          p_teacher_2: string
+        }
+        Returns: {
+          academic_year: string
+          class_id: string
+          created_at: string
+          created_by: string | null
+          enabled: boolean
+          group_1_id: string | null
+          group_2_id: string | null
+          id: string
+          source_note: string
+          sync_group_id: string | null
+          teacher_1_id: string | null
+          teacher_2_id: string | null
+          threshold: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "quran_split_plans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       publish_current_schedule: {
         Args: {
           p_academic_year?: string
@@ -5544,6 +5619,22 @@ export type Database = {
         Returns: number
       }
       suggest_substitutes_for_day: {
+        Args: { p_date?: string }
+        Returns: {
+          absence_lesson_id: string
+          candidate_name: string
+          candidate_role: Database["public"]["Enums"]["app_role"]
+          candidate_user_id: string
+          class_id: string
+          class_name: string
+          period: number
+          priority: number
+          reason: string
+          subject: string
+          weekly_load: number
+        }[]
+      }
+      suggest_substitutes_permission_core_v2: {
         Args: { p_date?: string }
         Returns: {
           absence_lesson_id: string
