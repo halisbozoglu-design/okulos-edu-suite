@@ -35,6 +35,9 @@ jobs:
       - name: Check Supabase migrations
         run: node scripts/check-migrations.mjs
 
+      - name: Check existing module tenant wiring
+        run: node scripts/check-existing-module-tenant-wiring.mjs
+
       - name: Check timetable migration authority
         run: node scripts/check-timetable-authority.mjs
 
