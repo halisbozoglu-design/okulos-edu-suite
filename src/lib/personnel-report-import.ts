@@ -97,8 +97,9 @@ async function pdfRows(file:File):Promise<{headers:string[];rows:string[][]}[]> 
     const lineMap=new Map<number,PdfItem[]>();
     for(const item of items){const y=Math.round(item.y/3)*3;const arr=lineMap.get(y)??[];arr.push(item);lineMap.set(y,arr);}
     const lines=[...lineMap.entries()].sort((a,b)=>b[0]-a[0]).map(([,arr])=>arr.sort((a,b)=>a.x-b.x));
-    let headerLine=lines.find(line=>isHeaderCandidate(line.map(i=>i.str)));
-    let headers=rememberedHeaders, xs=rememberedXs;
+    const headerLine=lines.find(line=>isHeaderCandidate(line.map(i=>i.str)));
+    let headers:string[]|null=rememberedHeaders;
+    let xs:number[]|null=rememberedXs;
     if(headerLine){
       const groups:{x:number;str:string}[]=[];
       for(const item of headerLine){
@@ -114,7 +115,7 @@ async function pdfRows(file:File):Promise<{headers:string[];rows:string[][]}[]> 
       const row=Array(headers.length).fill("") as string[];
       for(const item of line){
         let idx=0,best=Infinity;
-        xs.forEach((x,i)=>{const d=Math.abs(item.x-x);if(d<best){best=d;idx=i;}});
+        xs.forEach((x:number,i:number)=>{const d=Math.abs(item.x-x);if(d<best){best=d;idx=i;}});
         row[idx]=clean(`${row[idx]} ${item.str}`);
       }
       if(row.some(Boolean)) dataRows.push(row);
