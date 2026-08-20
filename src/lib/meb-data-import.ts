@@ -63,7 +63,11 @@ function parseDate(value: unknown, defaultYear?: number): string | null {
   let m = raw.match(/\b(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})\b/);
   if (m) return normalizeDatePart(Number(m[3]), Number(m[2]), Number(m[1]));
   m = raw.match(/\b(\d{1,2})\s+([a-zçğıöşü]+)\s+(\d{4})\b/u);
-  if (m && MONTHS[m[2]]) return normalizeDatePart(Number(m[3]), MONTHS[m[2]], Number(m[1]));
+  if (m) {
+    const monthName = m[2] ?? "";
+    const month = MONTHS[monthName];
+    if (month) return normalizeDatePart(Number(m[3]), month, Number(m[1]));
+  }
   m = raw.match(/\b(\d{1,2})[.\/-](\d{1,2})\b/);
   if (m && defaultYear) return normalizeDatePart(defaultYear, Number(m[2]), Number(m[1]));
   return null;
@@ -110,11 +114,11 @@ async function pdfLines(file: File): Promise<string[]> {
   return result;
 }
 
-function parseClassToken(value: unknown) {
+function parseClassToken(value: unknown): { className:string; gradeLevel:number; section:string } | null {
   const raw = upper(value).replace(/SINIFI|SINIF|ŞUBE|SUBE/g, " ");
   const m = raw.match(/\b(\d{1,2})\s*[\/-]?\s*([A-ZÇĞİÖŞÜ])\b/u);
   if (!m) return null;
-  return { className: `${m[1]}/${m[2]}`, gradeLevel: Number(m[1]), section: m[2] };
+  return { className: `${m[1]}/${m[2]}`, gradeLevel: Number(m[1]), section: m[2] ?? "" };
 }
 
 export async function parseMebClassSummary(file: File): Promise<ClassSummaryRow[]> {
