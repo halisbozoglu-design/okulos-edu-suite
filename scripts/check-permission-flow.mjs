@@ -54,7 +54,7 @@ requireTokens('capacity',['assignment_loads','TEACHER_ASSIGNED_HOURS_EXCEED_WEEK
 requireTokens('atomicBundle',['set_user_permission_bundle','set_user_permission_mode','perform public.set_user_permission','EMPTY_PERMISSION_BUNDLE','UNKNOWN_PERMISSION_IN_BUNDLE']);
 
 requireTokens('hook',['usePermissions','get_my_permissions','can','any','all']);
-const root=requireTokens('root',['PermissionBoundary','protectedRoutes','/settings/permissions','/schedule-solver','/schedule-history','schedule.restore','/payroll','/duty-book','/personnel-admin','superOnly']);
+const root=requireTokens('root',['PermissionBoundary','protectedRoutes','/settings-permissions','/schedule-solver','/schedule-history','schedule.restore','/payroll','/duty-book','/personnel-admin','superOnly']);
 if(!root.includes('rule.any.some((code) => codes.has(code))'))errors.push('root: route permission matching eksik');
 requireTokens('appShell',['usePermissions','permissionCodes','substitutes.view','payroll.view','classes.manage','managementCodes','gridTemplateColumns']);
 requireTokens('permissionUi',['Görev ve Yetki Atama','Ders Programı Sorumlusu','Nöbet Sorumlusu','Ek Ders Sorumlusu','schedule.restore','set_user_permission_bundle','Görev Bazlı','Yetki Denetim Geçmişi']);
@@ -67,7 +67,7 @@ const dutyBook=requireTokens('dutyBookUi',['usePermissions','can("duty.manage")'
 if(!dutyBook.includes('{canManage ? <>'))errors.push('dutyBookUi: düzenleme formları duty.manage arkasında değil');
 requireTokens('substitutesUi',['substitutes.view','substitutes.manage','Salt okunur']);
 requireTokens('preparationUi',['TEACHER_ASSIGNED_HOURS_EXCEED_WEEKLY_LIMIT','TEACHER_ASSIGNED_HOURS_EXCEED_DAY_CAPACITY']);
-const management=requireTokens('managementUi',['/settings/permissions','/settings-task-roles','permissions.manage']);
+const management=requireTokens('managementUi',['/settings-permissions','/settings-task-roles','permissions.manage']);
 if(management.includes("to:'/notifications'"))errors.push('managementUi: kişisel PWA/bildirim ayarı kurumsal görev delegasyonu kartı olarak gösterilmemeli');
 
 if(errors.length){console.error('Permission flow check FAILED:\n'+errors.map(e=>`- ${e}`).join('\n'));process.exit(1);}
