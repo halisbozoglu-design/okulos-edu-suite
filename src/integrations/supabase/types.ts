@@ -5144,6 +5144,19 @@ export type Database = {
           valid_until: string
         }[]
       }
+      get_personnel_admin_list: {
+        Args: never
+        Returns: {
+          email: string
+          full_name: string
+          is_super_admin: boolean
+          permission_mode: string
+          role: Database["public"]["Enums"]["app_role"]
+          teaching_area_id: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
       get_published_schedule_rows: {
         Args: {
           p_class_id?: string
@@ -5597,6 +5610,10 @@ export type Database = {
       set_duty_month_lock_permission_core_v2: {
         Args: { p_locked: boolean; p_month: string }
         Returns: undefined
+      }
+      set_personnel_teaching_area: {
+        Args: { p_teaching_area_id?: string; p_user_id: string }
+        Returns: boolean
       }
       set_user_permission: {
         Args: {
