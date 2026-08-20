@@ -5428,6 +5428,16 @@ export type Database = {
           status: string
         }[]
       }
+      get_schedule_preparation_readiness_before_teacher_capacity_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
       get_schedule_preparation_readiness_core_v2: {
         Args: never
         Returns: {
