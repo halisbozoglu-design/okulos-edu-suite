@@ -2111,6 +2111,7 @@ export type Database = {
           emergency_contact: string | null
           full_name: string | null
           is_super_admin: boolean
+          permission_mode: string
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string | null
@@ -2124,6 +2125,7 @@ export type Database = {
           emergency_contact?: string | null
           full_name?: string | null
           is_super_admin?: boolean
+          permission_mode?: string
           phone?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           tckn?: string | null
@@ -2137,6 +2139,7 @@ export type Database = {
           emergency_contact?: string | null
           full_name?: string | null
           is_super_admin?: boolean
+          permission_mode?: string
           phone?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           tckn?: string | null
@@ -4679,7 +4682,15 @@ export type Database = {
         Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
         Returns: number
       }
+      apply_curriculum_template_permission_core_v2: {
+        Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
+        Returns: number
+      }
       apply_schedule_scenario: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      apply_schedule_scenario_permission_core_v2: {
         Args: { p_scenario_id: string }
         Returns: number
       }
@@ -4687,7 +4698,15 @@ export type Database = {
         Args: { p_activity_id: string; p_approve?: boolean }
         Returns: boolean
       }
+      approve_payroll_activity_permission_core_v2: {
+        Args: { p_activity_id: string; p_approve?: boolean }
+        Returns: boolean
+      }
       approve_payroll_month: {
+        Args: { p_month: number; p_year: number }
+        Returns: number
+      }
+      approve_payroll_month_permission_core_v2: {
         Args: { p_month: number; p_year: number }
         Returns: number
       }
@@ -4716,7 +4735,26 @@ export type Database = {
           unassigned_count: number
         }[]
       }
+      assign_classrooms_to_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          assigned_count: number
+          unassigned_count: number
+        }[]
+      }
       assign_quran_parallel_lesson: {
+        Args: {
+          p_academic_year: string
+          p_class_id: string
+          p_classroom_1?: string
+          p_classroom_2?: string
+          p_period: number
+          p_subject: string
+          p_weekday: number
+        }
+        Returns: number
+      }
+      assign_quran_parallel_lesson_permission_core_v2: {
         Args: {
           p_academic_year: string
           p_class_id: string
@@ -4740,7 +4778,28 @@ export type Database = {
           substitute_user_id: string
         }[]
       }
+      assign_substitutes_permission_core_v2: {
+        Args: { p_date?: string }
+        Returns: {
+          absence_lesson_id: string
+          assignment_id: string
+          class_name: string
+          period: number
+          subject: string
+          substitute_name: string
+          substitute_user_id: string
+        }[]
+      }
       assign_teacher_to_class_course: {
+        Args: {
+          p_group?: string
+          p_hours?: number
+          p_requirement_id: string
+          p_teacher_id: string
+        }
+        Returns: string
+      }
+      assign_teacher_to_class_course_permission_core_v2: {
         Args: {
           p_group?: string
           p_hours?: number
@@ -4766,6 +4825,7 @@ export type Database = {
           emergency_contact: string | null
           full_name: string | null
           is_super_admin: boolean
+          permission_mode: string
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string | null
@@ -4788,11 +4848,20 @@ export type Database = {
         }
         Returns: number
       }
+      clone_class_curriculum_permission_core_v2: {
+        Args: {
+          p_copy_teachers?: boolean
+          p_source_class_id: string
+          p_target_class_id: string
+        }
+        Returns: number
+      }
       create_schedule_restore_point: {
         Args: { p_label?: string; p_reason?: string }
         Returns: string
       }
       create_telegram_link_token: { Args: never; Returns: string }
+      current_permission_context: { Args: never; Returns: string }
       current_schedule_signature: { Args: never; Returns: string }
       disable_push_subscription: {
         Args: { p_endpoint: string }
@@ -4807,6 +4876,7 @@ export type Database = {
           emergency_contact: string | null
           full_name: string | null
           is_super_admin: boolean
+          permission_mode: string
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string | null
@@ -4834,6 +4904,10 @@ export type Database = {
         Args: { p_month: string; p_overwrite?: boolean }
         Returns: number
       }
+      generate_monthly_teacher_duties_permission_core_v2: {
+        Args: { p_month: string; p_overwrite?: boolean }
+        Returns: number
+      }
       generate_monthly_vp_rotation: {
         Args: {
           p_month: string
@@ -4842,7 +4916,26 @@ export type Database = {
         }
         Returns: number
       }
+      generate_monthly_vp_rotation_permission_core_v2: {
+        Args: {
+          p_month: string
+          p_overwrite?: boolean
+          p_vice_principal_ids: string[]
+        }
+        Returns: number
+      }
       generate_schedule_scenarios: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
+      }
+      generate_schedule_scenarios_permission_core_v2: {
         Args: never
         Returns: {
           generation_group: string
@@ -5043,6 +5136,7 @@ export type Database = {
         Returns: {
           full_name: string
           permission_code: string
+          permission_mode: string
           role: Database["public"]["Enums"]["app_role"]
           scope: Json
           user_id: string
@@ -5249,6 +5343,16 @@ export type Database = {
           tckn: string
         }[]
       }
+      kbs_payroll_export_permission_core_v2: {
+        Args: { p_month: number; p_year: number }
+        Returns: {
+          data_type: string
+          explanation: string
+          full_name: string
+          hours: number
+          tckn: string
+        }[]
+      }
       max_consecutive_with_candidate: {
         Args: {
           p_exclude_id?: string
@@ -5266,6 +5370,7 @@ export type Database = {
         Args: { p_hours: number; p_pattern: number[] }
         Returns: number[]
       }
+      open_permission_context: { Args: { p_code: string }; Returns: undefined }
       payroll_month_is_locked: {
         Args: { p_month: number; p_year: number }
         Returns: boolean
@@ -5283,7 +5388,50 @@ export type Database = {
           work_date: string
         }[]
       }
+      payroll_month_matrix_permission_core_v2: {
+        Args: { p_month: number; p_year: number }
+        Returns: {
+          approved: boolean
+          category: string
+          full_name: string
+          hours: number
+          kbs_data_type: string
+          role: Database["public"]["Enums"]["app_role"]
+          teacher_id: string
+          work_date: string
+        }[]
+      }
       prepare_quran_split: {
+        Args: {
+          p_academic_year: string
+          p_class_id: string
+          p_teacher_1: string
+          p_teacher_2: string
+        }
+        Returns: {
+          academic_year: string
+          class_id: string
+          created_at: string
+          created_by: string | null
+          enabled: boolean
+          group_1_id: string | null
+          group_2_id: string | null
+          id: string
+          source_note: string
+          sync_group_id: string | null
+          teacher_1_id: string | null
+          teacher_2_id: string | null
+          threshold: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "quran_split_plans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      prepare_quran_split_permission_core_v2: {
         Args: {
           p_academic_year: string
           p_class_id: string
@@ -5331,8 +5479,21 @@ export type Database = {
         }
         Returns: string
       }
+      publish_current_schedule_permission_core_v2: {
+        Args: {
+          p_academic_year?: string
+          p_effective_from: string
+          p_note?: string
+          p_title?: string
+        }
+        Returns: string
+      }
       quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
       recalculate_payroll_month: {
+        Args: { p_month: number; p_year: number }
+        Returns: string
+      }
+      recalculate_payroll_month_permission_core_v2: {
         Args: { p_month: number; p_year: number }
         Returns: string
       }
@@ -5358,7 +5519,15 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      repair_schedule_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       repair_schedule_scenario_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      rescore_schedule_scenario_permission_core_v2: {
         Args: { p_scenario_id: string }
         Returns: number
       }
@@ -5425,6 +5594,10 @@ export type Database = {
         Args: { p_locked: boolean; p_month: string }
         Returns: undefined
       }
+      set_duty_month_lock_permission_core_v2: {
+        Args: { p_locked: boolean; p_month: string }
+        Returns: undefined
+      }
       set_user_permission: {
         Args: {
           p_enabled: boolean
@@ -5437,11 +5610,31 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_user_permission_mode: {
+        Args: { p_mode: string; p_user_id: string }
+        Returns: boolean
+      }
       student_count_for_schedule: {
         Args: { p_class_id: string; p_subgroup_id: string }
         Returns: number
       }
       suggest_substitutes_for_day: {
+        Args: { p_date?: string }
+        Returns: {
+          absence_lesson_id: string
+          candidate_name: string
+          candidate_role: Database["public"]["Enums"]["app_role"]
+          candidate_user_id: string
+          class_id: string
+          class_name: string
+          period: number
+          priority: number
+          reason: string
+          subject: string
+          weekly_load: number
+        }[]
+      }
+      suggest_substitutes_permission_core_v2: {
         Args: { p_date?: string }
         Returns: {
           absence_lesson_id: string
@@ -5502,6 +5695,7 @@ export type Database = {
           emergency_contact: string | null
           full_name: string | null
           is_super_admin: boolean
+          permission_mode: string
           phone: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string | null
@@ -5515,6 +5709,19 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      upsert_schedule_slot_permission_core_v2: {
+        Args: {
+          p_classroom_id?: string
+          p_locked?: boolean
+          p_period: number
+          p_schedule_id?: string
+          p_source_kind?: string
+          p_subgroup_id?: string
+          p_teacher_assignment_id: string
+          p_weekday: number
+        }
+        Returns: string
       }
       upsert_schedule_slot_v2: {
         Args: {
