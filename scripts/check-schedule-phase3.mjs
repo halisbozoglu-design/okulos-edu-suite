@@ -37,9 +37,17 @@ for(const token of [
   "guard_schedule_row_tenant_phase3_v1",
   "CROSS_TENANT_SCHEDULE_WRITE",
   "get_schedule_phase3_scoped_preference_score_v1",
+  "assert_schedule_scenario_tenant_phase3_v1",
+  "SCENARIO_NOT_FOUND_IN_TENANT",
+  "REPAIR_WORSENED_HARD_ISSUES",
 ]) if(!joined.includes(token)){console.error(`Faz 3 migration sözleşmesi eksik: ${token}`);process.exit(1);}
 
 for(const token of [
+  '"function:generate_schedule_scenarios_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
+  '"function:validate_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
+  '"function:repair_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
+  '"function:rescore_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
+  '"function:assign_classrooms_to_scenario": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
   '"function:apply_schedule_scenario": "20260821015500_schedule_phase3_authority_closure.sql"',
   '"function:publish_current_schedule": "20260821015500_schedule_phase3_authority_closure.sql"',
   '"function:get_schedule_preparation_readiness": "20260821015500_schedule_phase3_authority_closure.sql"',
@@ -48,7 +56,6 @@ for(const token of [
   '"function:calculate_schedule_scenario_score_v2": "20260821020500_schedule_phase3_scoped_quality_score.sql"',
 ]) if(!authority.includes(token)){console.error(`Faz 3 authority kaydı eksik: ${token}`);process.exit(1);}
 
-// Guard semantic intent: apply validates before mutating; publish checks the same current integrity authority.
 const phase3=texts.find((x)=>x.file==="20260821015500_schedule_phase3_authority_closure.sql")?.text??"";
 const applyPos=phase3.indexOf("create or replace function public.apply_schedule_scenario");
 const publishPos=phase3.indexOf("create or replace function public.publish_current_schedule");
@@ -59,4 +66,15 @@ if(!applyBody.includes("get_schedule_integrity_report()")){console.error("Apply 
 const publishBody=phase3.slice(publishPos);
 if(!(publishBody.indexOf("get_schedule_integrity_report()")<publishBody.indexOf("publish_current_schedule_pre_phase3"))){console.error("Publish öncesi final integrity gate eksik.");process.exit(1);}
 
-console.log("Faz 3 tamamlık guardı geçti: preflight, scoped hard rules, blok, locked/sync, manual edit, apply ve publish aynı doğrulama zincirinde.");
+const rpcGuard=texts.find((x)=>x.file==="20260821021000_schedule_phase3_rpc_tenant_guards.sql")?.text??"";
+for(const fn of ["validate_schedule_scenario_v2","repair_schedule_scenario_v2","rescore_schedule_scenario_v2","assign_classrooms_to_scenario","generate_schedule_scenarios_v2"]){
+  const pos=rpcGuard.indexOf(`create or replace function public.${fn}`);
+  if(pos<0){console.error(`Tenant RPC guard eksik: ${fn}`);process.exit(1);}
+  const next=rpcGuard.indexOf("create or replace function public.",pos+20);
+  const body=rpcGuard.slice(pos,next<0?undefined:next);
+  if(!body.includes("assert_schedule_scenario_tenant_phase3_v1")&&fn!=="generate_schedule_scenarios_v2"){
+    console.error(`${fn}: scenario tenant assertion eksik.`);process.exit(1);
+  }
+}
+
+console.log("Faz 3 tamamlık guardı geçti: preflight, scoped hard/soft, blok, locked/sync, tenant RPC, repair, manual edit, apply ve publish tek doğrulama zincirinde.");
