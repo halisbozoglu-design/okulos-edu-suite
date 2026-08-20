@@ -20,9 +20,13 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
 
   try {
-    const { tckn, email } = await req.json();
+    const { tckn, institutionCode, email } = await req.json();
+    const code = typeof institutionCode === "string" ? institutionCode.replace(/\D/g, "") : "";
     if (typeof tckn !== "string" || !isValidTckn(tckn)) {
       return Response.json({ valid: false, reason: "INVALID_TCKN" }, { status: 400, headers: corsHeaders });
+    }
+    if (!/^\d{5,10}$/.test(code)) {
+      return Response.json({ valid: false, reason: "INVALID_INSTITUTION_CODE" }, { status: 400, headers: corsHeaders });
     }
 
     const supabase = createClient(
@@ -31,10 +35,24 @@ Deno.serve(async (req) => {
       { auth: { persistSession: false, autoRefreshToken: false } },
     );
 
+    const { data: institution, error: institutionError } = await supabase
+      .from("institutions")
+      .select("institution_code,approval_status,status")
+      .eq("institution_code", code)
+      .maybeSingle();
+    if (institutionError) throw institutionError;
+    if (!institution || institution.status !== "active") {
+      return Response.json({ valid: false, reason: "INSTITUTION_NOT_FOUND" }, { headers: corsHeaders });
+    }
+    if (institution.approval_status !== "approved") {
+      return Response.json({ valid: false, reason: "INSTITUTION_NOT_APPROVED" }, { headers: corsHeaders });
+    }
+
     const { data, error } = await supabase
       .from("pre_registered_teachers")
-      .select("id,email")
+      .select("id,email,institution_code")
       .eq("tckn", tckn)
+      .eq("institution_code", code)
       .eq("active", true)
       .maybeSingle();
 
@@ -49,7 +67,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return Response.json({ valid: true, emailLocked: Boolean(data.email) }, { headers: corsHeaders });
+    return Response.json({ valid: true, emailLocked: Boolean(data.email), institutionCode: code }, { headers: corsHeaders });
   } catch {
     return Response.json({ valid: false, reason: "SERVER_ERROR" }, { status: 500, headers: corsHeaders });
   }
