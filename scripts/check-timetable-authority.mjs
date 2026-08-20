@@ -6,19 +6,21 @@ const files = readdirSync(dir).filter((f) => f.endsWith(".sql")).sort();
 
 const protectedDefinitions = {
   "function:generate_schedule_scenarios_v2": "20260820193800_schedule_edge_slot_repair_return_contract.sql",
-  "function:apply_schedule_scenario": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
+  "function:apply_schedule_scenario": "20260821015500_schedule_phase3_authority_closure.sql",
   "function:validate_schedule_scenario_v2": "20260819220922_a4c09d54-71d0-4cea-b33c-b6e815f5d7f1.sql",
   "function:rescore_schedule_scenario_v2": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
   "function:repair_schedule_scenario_v2": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
   "function:assign_classrooms_to_scenario": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
-  "function:publish_current_schedule": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
+  "function:publish_current_schedule": "20260821015500_schedule_phase3_authority_closure.sql",
   "function:validate_schedule_semantics_v2": "20260819232413_2c256a7d-e97f-46c1-8629-75b7c47e1c54.sql",
   "function:upsert_schedule_slot_v2": "20260820004859_5461dc36-66dd-4a52-99c6-942da6ffe6b8.sql",
   "function:create_schedule_restore_point": "20260820070022_f45563b6-c4ac-481c-8724-7cb6c3e1832b.sql",
   "function:restore_schedule_restore_point": "20260820070022_f45563b6-c4ac-481c-8724-7cb6c3e1832b.sql",
-  "function:get_schedule_preparation_readiness": "20260820070132_645dfff4-6b77-41ba-a140-c4ab9cfb0bdb.sql",
+  "function:get_schedule_preparation_readiness": "20260821015500_schedule_phase3_authority_closure.sql",
   "function:get_schedule_integrity_report_core_v2": "20260819220922_a4c09d54-71d0-4cea-b33c-b6e815f5d7f1.sql",
-  "function:get_schedule_scenario_hard_issues_v2": "20260820192500_schedule_edge_slot_policy.sql",
+  "function:get_schedule_scenario_hard_issues_v2": "20260821015500_schedule_phase3_authority_closure.sql",
+  "function:get_schedule_integrity_report": "20260821015500_schedule_phase3_authority_closure.sql",
+  "function:calculate_schedule_scenario_score_v2": "20260821020500_schedule_phase3_scoped_quality_score.sql",
   "view:schedule_scenario_status_v2": "20260819214719_d99727ed-5f70-4c00-8e01-20b68d28c926.sql",
 };
 
