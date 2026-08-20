@@ -36,14 +36,12 @@ jobs:
         run: node scripts/check-migrations.mjs
 
       - name: Check timetable migration authority
-        continue-on-error: true
         run: node scripts/check-timetable-authority.mjs
 
       - name: Check auth flow
         run: node scripts/check-auth-flow.mjs
 
       - name: Check delegated permission flow
-        continue-on-error: true
         run: node scripts/check-permission-flow.mjs
 
       - name: Production build and generate routes
