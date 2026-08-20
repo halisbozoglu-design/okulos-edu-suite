@@ -5322,6 +5322,10 @@ export type Database = {
         Args: { p_module: string }
         Returns: boolean
       }
+      has_module_operation_permission: {
+        Args: { p_module: string }
+        Returns: boolean
+      }
       has_permission: {
         Args: { p_code: string; p_scope?: Json }
         Returns: boolean
