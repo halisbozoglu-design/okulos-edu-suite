@@ -10,6 +10,9 @@ const required=[
   ["/classrooms","classrooms.manage"],
   ["/norm-analysis","norm.view"],
   ["/timetable","schedule.view"],
+  ["/schedule-optimization","schedule.rules"],
+  ["/schedule-scoped-rules","schedule.rules"],
+  ["/schedule-scenario-comparison","schedule.view"],
   ["/schedule-rules","schedule.rules"],
   ["/schedule-preparation","schedule.generate"],
   ["/schedule-solver","schedule.generate"],
@@ -28,5 +31,9 @@ for(const [route,marker] of required){
     console.error(`${route}: erişim kuralı eksik (${marker}).`);
     process.exit(1);
   }
+}
+for(const route of ["/schedule-optimization","/schedule-scoped-rules","/schedule-scenario-comparison"]){
+  const exact=root.split("\n").filter(x=>x.includes(`prefix: \"${route}\"`));
+  if(exact.length!==1){console.error(`${route}: özel route kuralı tekil değil.`);process.exit(1);}
 }
 console.log(`Mevcut modül giriş haritası tamam: ${required.length} kritik route korumalı.`);
