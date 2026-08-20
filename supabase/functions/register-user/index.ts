@@ -37,13 +37,18 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
 
+  let createdUserId: string | null = null;
   try {
-    const { tckn, email, phone, password, redirectTo } = await req.json();
+    const { tckn, institutionCode, email, phone, password, redirectTo } = await req.json();
     const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
     const normalizedPhone = typeof phone === "string" ? phone.replace(/\D/g, "") : "";
+    const code = typeof institutionCode === "string" ? institutionCode.replace(/\D/g, "") : "";
 
     if (typeof tckn !== "string" || !isValidTckn(tckn)) {
       return Response.json({ ok: false, code: "INVALID_IDENTITY" }, { status: 400, headers: corsHeaders });
+    }
+    if (!/^\d{5,10}$/.test(code)) {
+      return Response.json({ ok: false, code: "INVALID_INSTITUTION_CODE" }, { status: 400, headers: corsHeaders });
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       return Response.json({ ok: false, code: "INVALID_EMAIL" }, { status: 400, headers: corsHeaders });
@@ -61,10 +66,24 @@ Deno.serve(async (req) => {
       { auth: { persistSession: false, autoRefreshToken: false } },
     );
 
+    const { data: institution, error: institutionError } = await admin
+      .from("institutions")
+      .select("institution_code,status,approval_status")
+      .eq("institution_code", code)
+      .maybeSingle();
+    if (institutionError) throw institutionError;
+    if (!institution || institution.status !== "active") {
+      return Response.json({ ok: false, code: "INSTITUTION_NOT_FOUND" }, { status: 404, headers: corsHeaders });
+    }
+    if (institution.approval_status !== "approved") {
+      return Response.json({ ok: false, code: "INSTITUTION_NOT_APPROVED" }, { status: 403, headers: corsHeaders });
+    }
+
     const { data: pre, error: preError } = await admin
       .from("pre_registered_teachers")
-      .select("id,email")
+      .select("id,email,full_name,role,institution_code")
       .eq("tckn", tckn)
+      .eq("institution_code", code)
       .eq("active", true)
       .maybeSingle();
     if (preError) throw preError;
@@ -77,12 +96,35 @@ Deno.serve(async (req) => {
       email: normalizedEmail,
       password,
       email_confirm: false,
+      user_metadata: { institution_code: code, school_personnel_registration: true },
     });
     if (createError || !created.user) {
       return Response.json({ ok: false, code: "REGISTRATION_FAILED" }, { status: 400, headers: corsHeaders });
     }
+    createdUserId = created.user.id;
 
-    await admin.from("pre_registered_teachers").update({ email: normalizedEmail }).eq("id", pre.id);
+    const membershipRole = pre.role === "admin" ? "principal" : pre.role === "manager" ? "vice_principal" : "teacher";
+    const { error: profileError } = await admin.from("profiles").upsert({
+      user_id: created.user.id,
+      tckn,
+      email: normalizedEmail,
+      full_name: pre.full_name,
+      role: pre.role,
+      phone: normalizedPhone,
+      institution_code: code,
+    }, { onConflict: "user_id" });
+    if (profileError) throw profileError;
+
+    const { error: membershipError } = await admin.from("institution_memberships").upsert({
+      institution_code: code,
+      user_id: created.user.id,
+      membership_role: membershipRole,
+      is_owner: false,
+      active: true,
+    }, { onConflict: "institution_code,user_id" });
+    if (membershipError) throw membershipError;
+
+    await admin.from("pre_registered_teachers").update({ email: normalizedEmail }).eq("id", pre.id).eq("institution_code", code);
 
     const anon = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -97,13 +139,22 @@ Deno.serve(async (req) => {
       },
     });
 
-    if (otpError) {
-      await admin.auth.admin.deleteUser(created.user.id);
-      return Response.json({ ok: false, code: "OTP_SEND_FAILED" }, { status: 500, headers: corsHeaders });
+    if (otpError) throw otpError;
+    return Response.json({ ok: true, institutionCode: code }, { headers: corsHeaders });
+  } catch (error) {
+    console.error("register-user", error);
+    if (createdUserId) {
+      try {
+        const admin = createClient(
+          Deno.env.get("SUPABASE_URL")!,
+          Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+          { auth: { persistSession: false, autoRefreshToken: false } },
+        );
+        await admin.auth.admin.deleteUser(createdUserId);
+      } catch (cleanupError) {
+        console.error("register-user cleanup", cleanupError);
+      }
     }
-
-    return Response.json({ ok: true }, { headers: corsHeaders });
-  } catch {
     return Response.json({ ok: false, code: "SERVER_ERROR" }, { status: 500, headers: corsHeaders });
   }
 });
