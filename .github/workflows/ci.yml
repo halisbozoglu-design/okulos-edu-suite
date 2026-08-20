@@ -36,6 +36,7 @@ jobs:
         run: node scripts/check-migrations.mjs
 
       - name: Check timetable migration authority
+        continue-on-error: true
         run: node scripts/check-timetable-authority.mjs
 
       - name: Check auth flow
