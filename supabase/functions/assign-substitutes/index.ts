@@ -72,6 +72,19 @@ Deno.serve(async (req) => {
     const { data: userData, error: userError } = await userClient.auth.getUser();
     if (userError || !userData.user) return Response.json({ error: "UNAUTHORIZED" }, { status: 401, headers: corsHeaders });
 
+    const { data: membership, error: membershipError } = await admin
+      .from("institution_memberships")
+      .select("institution_code")
+      .eq("user_id", userData.user.id)
+      .eq("active", true)
+      .order("is_owner", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (membershipError || !membership?.institution_code) {
+      return Response.json({ error: "TENANT_CONTEXT_REQUIRED" }, { status: 403, headers: corsHeaders });
+    }
+    const institutionCode = membership.institution_code;
+
     const { date } = await req.json().catch(() => ({ date: null }));
     const dutyDate = typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)
       ? date
@@ -80,6 +93,7 @@ Deno.serve(async (req) => {
     const { data: beforeRows } = await admin
       .from("substitute_assignments")
       .select("id,absence_lessons!inner(lesson_date)")
+      .eq("institution_code", institutionCode)
       .eq("absence_lessons.lesson_date", dutyDate);
     const beforeIds = new Set((beforeRows ?? []).map((row) => row.id));
 
@@ -107,7 +121,11 @@ Deno.serve(async (req) => {
         anyDelivery = true;
       }
       if (anyDelivery) {
-        await admin.from("substitute_assignments").update({ notified_at: new Date().toISOString() }).eq("id", assignment.assignment_id);
+        await admin
+          .from("substitute_assignments")
+          .update({ notified_at: new Date().toISOString() })
+          .eq("id", assignment.assignment_id)
+          .eq("institution_code", institutionCode);
       }
     }
 
