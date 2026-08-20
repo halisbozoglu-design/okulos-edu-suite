@@ -5418,6 +5418,16 @@ export type Database = {
           status: string
         }[]
       }
+      get_schedule_preparation_readiness_before_assigned_educator_con: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
       get_schedule_preparation_readiness_before_flexible_blocks_v2: {
         Args: never
         Returns: {
