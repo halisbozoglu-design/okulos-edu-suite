@@ -5017,6 +5017,10 @@ export type Database = {
         Returns: number
       }
       create_schedule_restore_point: {
+        Args: { p_label: string; p_reason?: string }
+        Returns: string
+      }
+      create_schedule_restore_point_permission_core_v2: {
         Args: { p_label?: string; p_reason?: string }
         Returns: string
       }
