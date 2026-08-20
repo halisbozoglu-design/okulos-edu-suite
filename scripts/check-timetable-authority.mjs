@@ -18,7 +18,7 @@ const protectedDefinitions = {
   "function:restore_schedule_restore_point": "20260820070022_f45563b6-c4ac-481c-8724-7cb6c3e1832b.sql",
   "function:get_schedule_preparation_readiness": "20260820070132_645dfff4-6b77-41ba-a140-c4ab9cfb0bdb.sql",
   "function:get_schedule_integrity_report_core_v2": "20260819220922_a4c09d54-71d0-4cea-b33c-b6e815f5d7f1.sql",
-  "function:get_schedule_scenario_hard_issues_v2": "20260820070454_1fd83ac6-2961-4c1d-a8a7-3508d759597a.sql",
+  "function:get_schedule_scenario_hard_issues_v2": "20260820192500_schedule_edge_slot_policy.sql",
   "view:schedule_scenario_status_v2": "20260819214719_d99727ed-5f70-4c00-8e01-20b68d28c926.sql",
 };
 
