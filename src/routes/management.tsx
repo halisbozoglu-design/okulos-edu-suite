@@ -10,7 +10,7 @@ type ManagementItem={to:string;title:string;desc:string;icon:LucideIcon;permissi
 type Feature={feature_key:string;route_prefix:string|null;enabled:boolean;maintenance:boolean};
 const groups:Record<Group,{title:string;desc:string}>={
  data:{title:"Veri Girişi",desc:"Yıl → sınıf → öğretmen → ders havuzu → derslik. Aynı veri bütün modüllerce kullanılır."},
- schedule:{title:"Ders Programı",desc:"Dağınık alt ekranlar yerine hazırlıktan yayına tek çalışma alanı."},
+ schedule:{title:"Ders Programı",desc:"Dağınık alt ekranlar yerine hazırlıktan yayına, rapordan çıktıya tek çalışma alanı."},
  operations:{title:"İş ve İşlemler",desc:"Takvim, nöbet, ek ders, vekalet ve kurum operasyonları."},
  system:{title:"Sistem ve Yetkiler",desc:"Personel yetkileri, görev şablonları, mevzuat ve yönetim kaynakları."},
 };
@@ -24,6 +24,7 @@ const items:readonly ManagementItem[]=[
  {group:"data",to:'/classrooms',title:'Derslikler / Salonlar',desc:'Kapasite, derslik tipi, bölüm ve gerekli donanım',icon:Building2,permissions:['classrooms.manage']},
 
  {group:"schedule",to:'/timetable',title:'Ders Programı Çalışma Alanı',desc:'Yıl, veri hazırlığı, kurallar, program üretimi, senaryolar, kontrol, geçmiş ve yayın tek yerde',icon:GraduationCap,permissions:['schedule.view','schedule.edit','schedule.rules','schedule.generate','schedule.apply','schedule.publish','schedule.restore'],featured:true},
+ {group:"schedule",to:'/schedule-reports',title:'Raporlar & Çıktılar',desc:'Öğretmen, sınıf, derslik ve ders/branş özetleri; Excel, CSV, yazdırma ve PDF',icon:Table2,permissions:['schedule.view']},
 
  {group:"operations",to:'/norm-analysis',title:'Norm Kadro Analizi',desc:'Ders yükü, norm, mevcut öğretmen ve açık/fazla analizi',icon:Scale,permissions:['norm.view','norm.manage']},
  {group:"operations",to:'/norm-settings',title:'Norm Eşleştirmeleri',desc:'Ders → norm alanı ve yürürlükteki norm kuralı',icon:Settings,permissions:['norm.manage']},
