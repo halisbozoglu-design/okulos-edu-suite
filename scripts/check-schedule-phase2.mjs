@@ -66,11 +66,17 @@ for(const token of [
   "TENANT_CONTEXT_REQUIRED",
 ]) if(!joined.includes(token)){console.error(`Faz 2 tenant migration guard eksik: ${token}`);process.exit(1);}
 
-const edgeGuard=migrationTexts.find((x)=>x.text.includes("uq_schedule_time_profile_active_per_tenant"))?.text??"";
+// Edge-slot tenant hardening lives in the dedicated Phase 2 follow-up migration.
+// Do not select an arbitrary/first migration containing the active-time-profile index:
+// that made CI depend on file ordering even when the database contract was correct.
+const edgeGuard=migrationTexts.find((x)=>x.file==="20260821004000_schedule_phase2_tenant_edge_guards.sql")?.text??"";
+if(!edgeGuard){console.error("Faz 2 tenant edge-guard migration bulunamadı.");process.exit(1);}
 for(const token of [
-  "institution_code=v_tenant and s.id=p_scenario_id",
-  "institution_code=v_tenant and rule_code in('physical_education_edge_slots','music_edge_slots')",
-  "institution_code=v_tenant and r.active=true",
+  "s.id=p_scenario_id and s.institution_code=v_tenant",
+  "institution_code=v_tenant",
+  "rule_code in('physical_education_edge_slots','music_edge_slots')",
+  "r.institution_code=v_tenant",
+  "uq_schedule_time_profile_active_per_tenant",
 ]) if(!edgeGuard.includes(token)){console.error(`Kenar-saat tenant guard eksik: ${token}`);process.exit(1);}
 
 if(optimization.includes('onConflict:"course_id"')||scoped.includes('onConflict:"class_course_requirement_id"')||scoped.includes('onConflict:"teacher_assignment_id"')){
