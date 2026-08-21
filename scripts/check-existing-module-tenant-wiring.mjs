@@ -6,17 +6,27 @@ const routesDir = path.join(root, 'src', 'routes');
 const migrationPath = path.join(root, 'supabase', 'migrations', '20260820190000_existing_module_tenant_entry_hardening.sql');
 
 const publicRoutes = new Set(['/', '/school-registration', '/auth/callback']);
-const intentionallyUngated = new Set(['/notifications']); // approval/maintenance notices must remain reachable
+const intentionallyUngated = new Set(['/notifications']);
 
-// Current routes only. Adding a new route is deliberately release-blocking until its status is
-// explicitly decided. This protects the rule: no new active module silently appears in the product.
 const currentRoutePrefixes = new Set([
-  '/dashboard','/management','/calendar','/classes','/classrooms','/curriculum','/duty-book',
+  '/dashboard','/management','/calendar','/academic-years','/classes','/classrooms','/curriculum','/duty-book',
   '/legislation','/norm-analysis','/norm-settings','/payroll','/payroll-rules','/personnel-admin',
   '/personnel-field-settings','/personnel-import','/quran-groups','/room-assignment','/schedule',
+  '/timetable','/schedule-optimization','/schedule-scoped-rules','/schedule-scenario-comparison','/schedule-reports',
   '/schedule-archive','/schedule-history','/schedule-preparation','/schedule-rules','/schedule-solver',
   '/schedule-validation','/settings','/settings-permissions','/settings-task-roles','/substitutes',
   '/super-admin','/super-admin-tenants','/notifications',
+]);
+
+// Workflow pages inherit the existing system feature instead of forcing us to rewrite an
+// already-applied feature-catalogue migration whenever a new screen is added to that workflow.
+const featureFamily = new Map([
+  ['/academic-years','/calendar'],
+  ['/timetable','/schedule'],
+  ['/schedule-optimization','/schedule'],
+  ['/schedule-scoped-rules','/schedule'],
+  ['/schedule-scenario-comparison','/schedule'],
+  ['/schedule-reports','/schedule'],
 ]);
 
 function routeFromFile(file) {
@@ -31,7 +41,7 @@ const unknown = found.filter((r) => !publicRoutes.has(r) && !currentRoutePrefixe
 const missingFiles = [...currentRoutePrefixes].filter((r) => r !== '/notifications' && !found.includes(r));
 if (unknown.length) {
   console.error('New/unclassified route(s) detected:', unknown.join(', '));
-  console.error('Do not activate a new module silently. First classify it in Super Admin as passive/disabled or explicitly approve it as an existing route.');
+  console.error('Classify the route under an existing feature family or explicitly add a system feature before release.');
   process.exit(1);
 }
 if (missingFiles.length) {
@@ -42,9 +52,10 @@ if (missingFiles.length) {
 const migration = fs.readFileSync(migrationPath, 'utf8');
 const featureMissing = [...currentRoutePrefixes]
   .filter((r) => !intentionallyUngated.has(r))
-  .filter((r) => !migration.includes(`'${r}'`));
+  .map((route) => ({ route, feature: featureFamily.get(route) ?? route }))
+  .filter(({ feature }) => !migration.includes(`'${feature}'`));
 if (featureMissing.length) {
-  console.error('Existing route(s) not represented in the consolidated feature/tenant catalogue:', featureMissing.join(', '));
+  console.error('Existing route(s) not represented by a consolidated feature/tenant family:', featureMissing.map(({route,feature})=>`${route} -> ${feature}`).join(', '));
   process.exit(1);
 }
 
@@ -56,4 +67,4 @@ for (const required of ['SystemAccessBoundary', 'get_system_access_state', 'Perm
   }
 }
 
-console.log(`Existing module/tenant wiring OK: ${found.length} route files classified; no silent new module detected.`);
+console.log(`Existing module/tenant wiring OK: ${found.length} route files classified; workflow subroutes inherit canonical system features.`);
