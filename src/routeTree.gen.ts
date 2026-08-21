@@ -10,12 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcademicYearsRouteImport } from './routes/academic-years'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ClassesRouteImport } from './routes/classes'
 import { Route as ClassroomsRouteImport } from './routes/classrooms'
 import { Route as CurriculumRouteImport } from './routes/curriculum'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DutyBookRouteImport } from './routes/duty-book'
+import { Route as LegislationRouteImport } from './routes/legislation'
 import { Route as ManagementRouteImport } from './routes/management'
 import { Route as NormAnalysisRouteImport } from './routes/norm-analysis'
 import { Route as NormSettingsRouteImport } from './routes/norm-settings'
@@ -23,25 +25,39 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as PayrollRouteImport } from './routes/payroll'
 import { Route as PayrollRulesRouteImport } from './routes/payroll-rules'
 import { Route as PersonnelAdminRouteImport } from './routes/personnel-admin'
+import { Route as PersonnelFieldSettingsRouteImport } from './routes/personnel-field-settings'
+import { Route as PersonnelImportRouteImport } from './routes/personnel-import'
 import { Route as QuranGroupsRouteImport } from './routes/quran-groups'
 import { Route as RoomAssignmentRouteImport } from './routes/room-assignment'
 import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ScheduleArchiveRouteImport } from './routes/schedule-archive'
 import { Route as ScheduleHistoryRouteImport } from './routes/schedule-history'
+import { Route as ScheduleOptimizationRouteImport } from './routes/schedule-optimization'
 import { Route as SchedulePreparationRouteImport } from './routes/schedule-preparation'
+import { Route as ScheduleReportsRouteImport } from './routes/schedule-reports'
 import { Route as ScheduleRulesRouteImport } from './routes/schedule-rules'
+import { Route as ScheduleScenarioComparisonRouteImport } from './routes/schedule-scenario-comparison'
+import { Route as ScheduleScopedRulesRouteImport } from './routes/schedule-scoped-rules'
 import { Route as ScheduleSolverRouteImport } from './routes/schedule-solver'
 import { Route as ScheduleValidationRouteImport } from './routes/schedule-validation'
+import { Route as SchoolRegistrationRouteImport } from './routes/school-registration'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SettingsPermissionsRouteImport } from './routes/settings-permissions'
 import { Route as SettingsTaskRolesRouteImport } from './routes/settings-task-roles'
 import { Route as SubstitutesRouteImport } from './routes/substitutes'
 import { Route as SuperAdminRouteImport } from './routes/super-admin'
+import { Route as SuperAdminTenantsRouteImport } from './routes/super-admin-tenants'
+import { Route as TimetableRouteImport } from './routes/timetable'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcademicYearsRoute = AcademicYearsRouteImport.update({
+  id: '/academic-years',
+  path: '/academic-years',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalendarRoute = CalendarRouteImport.update({
@@ -72,6 +88,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const DutyBookRoute = DutyBookRouteImport.update({
   id: '/duty-book',
   path: '/duty-book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegislationRoute = LegislationRouteImport.update({
+  id: '/legislation',
+  path: '/legislation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ManagementRoute = ManagementRouteImport.update({
@@ -109,6 +130,16 @@ const PersonnelAdminRoute = PersonnelAdminRouteImport.update({
   path: '/personnel-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PersonnelFieldSettingsRoute = PersonnelFieldSettingsRouteImport.update({
+  id: '/personnel-field-settings',
+  path: '/personnel-field-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PersonnelImportRoute = PersonnelImportRouteImport.update({
+  id: '/personnel-import',
+  path: '/personnel-import',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuranGroupsRoute = QuranGroupsRouteImport.update({
   id: '/quran-groups',
   path: '/quran-groups',
@@ -134,14 +165,35 @@ const ScheduleHistoryRoute = ScheduleHistoryRouteImport.update({
   path: '/schedule-history',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleOptimizationRoute = ScheduleOptimizationRouteImport.update({
+  id: '/schedule-optimization',
+  path: '/schedule-optimization',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SchedulePreparationRoute = SchedulePreparationRouteImport.update({
   id: '/schedule-preparation',
   path: '/schedule-preparation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleReportsRoute = ScheduleReportsRouteImport.update({
+  id: '/schedule-reports',
+  path: '/schedule-reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScheduleRulesRoute = ScheduleRulesRouteImport.update({
   id: '/schedule-rules',
   path: '/schedule-rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleScenarioComparisonRoute =
+  ScheduleScenarioComparisonRouteImport.update({
+    id: '/schedule-scenario-comparison',
+    path: '/schedule-scenario-comparison',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ScheduleScopedRulesRoute = ScheduleScopedRulesRouteImport.update({
+  id: '/schedule-scoped-rules',
+  path: '/schedule-scoped-rules',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScheduleSolverRoute = ScheduleSolverRouteImport.update({
@@ -152,6 +204,11 @@ const ScheduleSolverRoute = ScheduleSolverRouteImport.update({
 const ScheduleValidationRoute = ScheduleValidationRouteImport.update({
   id: '/schedule-validation',
   path: '/schedule-validation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchoolRegistrationRoute = SchoolRegistrationRouteImport.update({
+  id: '/school-registration',
+  path: '/school-registration',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -179,6 +236,16 @@ const SuperAdminRoute = SuperAdminRouteImport.update({
   path: '/super-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuperAdminTenantsRoute = SuperAdminTenantsRouteImport.update({
+  id: '/super-admin-tenants',
+  path: '/super-admin-tenants',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimetableRoute = TimetableRouteImport.update({
+  id: '/timetable',
+  path: '/timetable',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
@@ -187,12 +254,14 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/academic-years': typeof AcademicYearsRoute
   '/calendar': typeof CalendarRoute
   '/classes': typeof ClassesRoute
   '/classrooms': typeof ClassroomsRoute
   '/curriculum': typeof CurriculumRoute
   '/dashboard': typeof DashboardRoute
   '/duty-book': typeof DutyBookRoute
+  '/legislation': typeof LegislationRoute
   '/management': typeof ManagementRoute
   '/norm-analysis': typeof NormAnalysisRoute
   '/norm-settings': typeof NormSettingsRoute
@@ -200,30 +269,41 @@ export interface FileRoutesByFullPath {
   '/payroll': typeof PayrollRoute
   '/payroll-rules': typeof PayrollRulesRoute
   '/personnel-admin': typeof PersonnelAdminRoute
+  '/personnel-field-settings': typeof PersonnelFieldSettingsRoute
+  '/personnel-import': typeof PersonnelImportRoute
   '/quran-groups': typeof QuranGroupsRoute
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
   '/schedule-history': typeof ScheduleHistoryRoute
+  '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
+  '/schedule-reports': typeof ScheduleReportsRoute
   '/schedule-rules': typeof ScheduleRulesRoute
+  '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
+  '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
   '/schedule-validation': typeof ScheduleValidationRoute
+  '/school-registration': typeof SchoolRegistrationRoute
   '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
+  '/super-admin-tenants': typeof SuperAdminTenantsRoute
+  '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/academic-years': typeof AcademicYearsRoute
   '/calendar': typeof CalendarRoute
   '/classes': typeof ClassesRoute
   '/classrooms': typeof ClassroomsRoute
   '/curriculum': typeof CurriculumRoute
   '/dashboard': typeof DashboardRoute
   '/duty-book': typeof DutyBookRoute
+  '/legislation': typeof LegislationRoute
   '/management': typeof ManagementRoute
   '/norm-analysis': typeof NormAnalysisRoute
   '/norm-settings': typeof NormSettingsRoute
@@ -231,31 +311,42 @@ export interface FileRoutesByTo {
   '/payroll': typeof PayrollRoute
   '/payroll-rules': typeof PayrollRulesRoute
   '/personnel-admin': typeof PersonnelAdminRoute
+  '/personnel-field-settings': typeof PersonnelFieldSettingsRoute
+  '/personnel-import': typeof PersonnelImportRoute
   '/quran-groups': typeof QuranGroupsRoute
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
   '/schedule-history': typeof ScheduleHistoryRoute
+  '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
+  '/schedule-reports': typeof ScheduleReportsRoute
   '/schedule-rules': typeof ScheduleRulesRoute
+  '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
+  '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
   '/schedule-validation': typeof ScheduleValidationRoute
+  '/school-registration': typeof SchoolRegistrationRoute
   '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
+  '/super-admin-tenants': typeof SuperAdminTenantsRoute
+  '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/academic-years': typeof AcademicYearsRoute
   '/calendar': typeof CalendarRoute
   '/classes': typeof ClassesRoute
   '/classrooms': typeof ClassroomsRoute
   '/curriculum': typeof CurriculumRoute
   '/dashboard': typeof DashboardRoute
   '/duty-book': typeof DutyBookRoute
+  '/legislation': typeof LegislationRoute
   '/management': typeof ManagementRoute
   '/norm-analysis': typeof NormAnalysisRoute
   '/norm-settings': typeof NormSettingsRoute
@@ -263,32 +354,43 @@ export interface FileRoutesById {
   '/payroll': typeof PayrollRoute
   '/payroll-rules': typeof PayrollRulesRoute
   '/personnel-admin': typeof PersonnelAdminRoute
+  '/personnel-field-settings': typeof PersonnelFieldSettingsRoute
+  '/personnel-import': typeof PersonnelImportRoute
   '/quran-groups': typeof QuranGroupsRoute
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
   '/schedule-history': typeof ScheduleHistoryRoute
+  '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
+  '/schedule-reports': typeof ScheduleReportsRoute
   '/schedule-rules': typeof ScheduleRulesRoute
+  '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
+  '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
   '/schedule-validation': typeof ScheduleValidationRoute
+  '/school-registration': typeof SchoolRegistrationRoute
   '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
+  '/super-admin-tenants': typeof SuperAdminTenantsRoute
+  '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/academic-years'
     | '/calendar'
     | '/classes'
     | '/classrooms'
     | '/curriculum'
     | '/dashboard'
     | '/duty-book'
+    | '/legislation'
     | '/management'
     | '/norm-analysis'
     | '/norm-settings'
@@ -296,30 +398,41 @@ export interface FileRouteTypes {
     | '/payroll'
     | '/payroll-rules'
     | '/personnel-admin'
+    | '/personnel-field-settings'
+    | '/personnel-import'
     | '/quran-groups'
     | '/room-assignment'
     | '/schedule'
     | '/schedule-archive'
     | '/schedule-history'
+    | '/schedule-optimization'
     | '/schedule-preparation'
+    | '/schedule-reports'
     | '/schedule-rules'
+    | '/schedule-scenario-comparison'
+    | '/schedule-scoped-rules'
     | '/schedule-solver'
     | '/schedule-validation'
+    | '/school-registration'
     | '/settings'
     | '/settings-permissions'
     | '/settings-task-roles'
     | '/substitutes'
     | '/super-admin'
+    | '/super-admin-tenants'
+    | '/timetable'
     | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/academic-years'
     | '/calendar'
     | '/classes'
     | '/classrooms'
     | '/curriculum'
     | '/dashboard'
     | '/duty-book'
+    | '/legislation'
     | '/management'
     | '/norm-analysis'
     | '/norm-settings'
@@ -327,30 +440,41 @@ export interface FileRouteTypes {
     | '/payroll'
     | '/payroll-rules'
     | '/personnel-admin'
+    | '/personnel-field-settings'
+    | '/personnel-import'
     | '/quran-groups'
     | '/room-assignment'
     | '/schedule'
     | '/schedule-archive'
     | '/schedule-history'
+    | '/schedule-optimization'
     | '/schedule-preparation'
+    | '/schedule-reports'
     | '/schedule-rules'
+    | '/schedule-scenario-comparison'
+    | '/schedule-scoped-rules'
     | '/schedule-solver'
     | '/schedule-validation'
+    | '/school-registration'
     | '/settings'
     | '/settings-permissions'
     | '/settings-task-roles'
     | '/substitutes'
     | '/super-admin'
+    | '/super-admin-tenants'
+    | '/timetable'
     | '/auth/callback'
   id:
     | '__root__'
     | '/'
+    | '/academic-years'
     | '/calendar'
     | '/classes'
     | '/classrooms'
     | '/curriculum'
     | '/dashboard'
     | '/duty-book'
+    | '/legislation'
     | '/management'
     | '/norm-analysis'
     | '/norm-settings'
@@ -358,31 +482,42 @@ export interface FileRouteTypes {
     | '/payroll'
     | '/payroll-rules'
     | '/personnel-admin'
+    | '/personnel-field-settings'
+    | '/personnel-import'
     | '/quran-groups'
     | '/room-assignment'
     | '/schedule'
     | '/schedule-archive'
     | '/schedule-history'
+    | '/schedule-optimization'
     | '/schedule-preparation'
+    | '/schedule-reports'
     | '/schedule-rules'
+    | '/schedule-scenario-comparison'
+    | '/schedule-scoped-rules'
     | '/schedule-solver'
     | '/schedule-validation'
+    | '/school-registration'
     | '/settings'
     | '/settings-permissions'
     | '/settings-task-roles'
     | '/substitutes'
     | '/super-admin'
+    | '/super-admin-tenants'
+    | '/timetable'
     | '/auth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcademicYearsRoute: typeof AcademicYearsRoute
   CalendarRoute: typeof CalendarRoute
   ClassesRoute: typeof ClassesRoute
   ClassroomsRoute: typeof ClassroomsRoute
   CurriculumRoute: typeof CurriculumRoute
   DashboardRoute: typeof DashboardRoute
   DutyBookRoute: typeof DutyBookRoute
+  LegislationRoute: typeof LegislationRoute
   ManagementRoute: typeof ManagementRoute
   NormAnalysisRoute: typeof NormAnalysisRoute
   NormSettingsRoute: typeof NormSettingsRoute
@@ -390,20 +525,29 @@ export interface RootRouteChildren {
   PayrollRoute: typeof PayrollRoute
   PayrollRulesRoute: typeof PayrollRulesRoute
   PersonnelAdminRoute: typeof PersonnelAdminRoute
+  PersonnelFieldSettingsRoute: typeof PersonnelFieldSettingsRoute
+  PersonnelImportRoute: typeof PersonnelImportRoute
   QuranGroupsRoute: typeof QuranGroupsRoute
   RoomAssignmentRoute: typeof RoomAssignmentRoute
   ScheduleRoute: typeof ScheduleRoute
   ScheduleArchiveRoute: typeof ScheduleArchiveRoute
   ScheduleHistoryRoute: typeof ScheduleHistoryRoute
+  ScheduleOptimizationRoute: typeof ScheduleOptimizationRoute
   SchedulePreparationRoute: typeof SchedulePreparationRoute
+  ScheduleReportsRoute: typeof ScheduleReportsRoute
   ScheduleRulesRoute: typeof ScheduleRulesRoute
+  ScheduleScenarioComparisonRoute: typeof ScheduleScenarioComparisonRoute
+  ScheduleScopedRulesRoute: typeof ScheduleScopedRulesRoute
   ScheduleSolverRoute: typeof ScheduleSolverRoute
   ScheduleValidationRoute: typeof ScheduleValidationRoute
+  SchoolRegistrationRoute: typeof SchoolRegistrationRoute
   SettingsRoute: typeof SettingsRoute
   SettingsPermissionsRoute: typeof SettingsPermissionsRoute
   SettingsTaskRolesRoute: typeof SettingsTaskRolesRoute
   SubstitutesRoute: typeof SubstitutesRoute
   SuperAdminRoute: typeof SuperAdminRoute
+  SuperAdminTenantsRoute: typeof SuperAdminTenantsRoute
+  TimetableRoute: typeof TimetableRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
@@ -414,6 +558,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/academic-years': {
+      id: '/academic-years'
+      path: '/academic-years'
+      fullPath: '/academic-years'
+      preLoaderRoute: typeof AcademicYearsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calendar': {
@@ -456,6 +607,13 @@ declare module '@tanstack/react-router' {
       path: '/duty-book'
       fullPath: '/duty-book'
       preLoaderRoute: typeof DutyBookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legislation': {
+      id: '/legislation'
+      path: '/legislation'
+      fullPath: '/legislation'
+      preLoaderRoute: typeof LegislationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/management': {
@@ -507,6 +665,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PersonnelAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/personnel-field-settings': {
+      id: '/personnel-field-settings'
+      path: '/personnel-field-settings'
+      fullPath: '/personnel-field-settings'
+      preLoaderRoute: typeof PersonnelFieldSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/personnel-import': {
+      id: '/personnel-import'
+      path: '/personnel-import'
+      fullPath: '/personnel-import'
+      preLoaderRoute: typeof PersonnelImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quran-groups': {
       id: '/quran-groups'
       path: '/quran-groups'
@@ -542,6 +714,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScheduleHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule-optimization': {
+      id: '/schedule-optimization'
+      path: '/schedule-optimization'
+      fullPath: '/schedule-optimization'
+      preLoaderRoute: typeof ScheduleOptimizationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedule-preparation': {
       id: '/schedule-preparation'
       path: '/schedule-preparation'
@@ -549,11 +728,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SchedulePreparationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule-reports': {
+      id: '/schedule-reports'
+      path: '/schedule-reports'
+      fullPath: '/schedule-reports'
+      preLoaderRoute: typeof ScheduleReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedule-rules': {
       id: '/schedule-rules'
       path: '/schedule-rules'
       fullPath: '/schedule-rules'
       preLoaderRoute: typeof ScheduleRulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule-scenario-comparison': {
+      id: '/schedule-scenario-comparison'
+      path: '/schedule-scenario-comparison'
+      fullPath: '/schedule-scenario-comparison'
+      preLoaderRoute: typeof ScheduleScenarioComparisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule-scoped-rules': {
+      id: '/schedule-scoped-rules'
+      path: '/schedule-scoped-rules'
+      fullPath: '/schedule-scoped-rules'
+      preLoaderRoute: typeof ScheduleScopedRulesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/schedule-solver': {
@@ -568,6 +768,13 @@ declare module '@tanstack/react-router' {
       path: '/schedule-validation'
       fullPath: '/schedule-validation'
       preLoaderRoute: typeof ScheduleValidationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/school-registration': {
+      id: '/school-registration'
+      path: '/school-registration'
+      fullPath: '/school-registration'
+      preLoaderRoute: typeof SchoolRegistrationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -605,6 +812,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/super-admin-tenants': {
+      id: '/super-admin-tenants'
+      path: '/super-admin-tenants'
+      fullPath: '/super-admin-tenants'
+      preLoaderRoute: typeof SuperAdminTenantsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/timetable': {
+      id: '/timetable'
+      path: '/timetable'
+      fullPath: '/timetable'
+      preLoaderRoute: typeof TimetableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
@@ -617,12 +838,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcademicYearsRoute: AcademicYearsRoute,
   CalendarRoute: CalendarRoute,
   ClassesRoute: ClassesRoute,
   ClassroomsRoute: ClassroomsRoute,
   CurriculumRoute: CurriculumRoute,
   DashboardRoute: DashboardRoute,
   DutyBookRoute: DutyBookRoute,
+  LegislationRoute: LegislationRoute,
   ManagementRoute: ManagementRoute,
   NormAnalysisRoute: NormAnalysisRoute,
   NormSettingsRoute: NormSettingsRoute,
@@ -630,20 +853,29 @@ const rootRouteChildren: RootRouteChildren = {
   PayrollRoute: PayrollRoute,
   PayrollRulesRoute: PayrollRulesRoute,
   PersonnelAdminRoute: PersonnelAdminRoute,
+  PersonnelFieldSettingsRoute: PersonnelFieldSettingsRoute,
+  PersonnelImportRoute: PersonnelImportRoute,
   QuranGroupsRoute: QuranGroupsRoute,
   RoomAssignmentRoute: RoomAssignmentRoute,
   ScheduleRoute: ScheduleRoute,
   ScheduleArchiveRoute: ScheduleArchiveRoute,
   ScheduleHistoryRoute: ScheduleHistoryRoute,
+  ScheduleOptimizationRoute: ScheduleOptimizationRoute,
   SchedulePreparationRoute: SchedulePreparationRoute,
+  ScheduleReportsRoute: ScheduleReportsRoute,
   ScheduleRulesRoute: ScheduleRulesRoute,
+  ScheduleScenarioComparisonRoute: ScheduleScenarioComparisonRoute,
+  ScheduleScopedRulesRoute: ScheduleScopedRulesRoute,
   ScheduleSolverRoute: ScheduleSolverRoute,
   ScheduleValidationRoute: ScheduleValidationRoute,
+  SchoolRegistrationRoute: SchoolRegistrationRoute,
   SettingsRoute: SettingsRoute,
   SettingsPermissionsRoute: SettingsPermissionsRoute,
   SettingsTaskRolesRoute: SettingsTaskRolesRoute,
   SubstitutesRoute: SubstitutesRoute,
   SuperAdminRoute: SuperAdminRoute,
+  SuperAdminTenantsRoute: SuperAdminTenantsRoute,
+  TimetableRoute: TimetableRoute,
   AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
