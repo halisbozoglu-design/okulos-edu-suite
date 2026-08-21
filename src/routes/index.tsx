@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { AlertCircle, ArrowLeft, ArrowRight, Building2, Check, Eye, EyeOff, GraduationCap, KeyRound, ShieldCheck, UserPlus } from "lucide-react";
+import { LoginThemeSurface } from "@/components/okulos/LoginThemeSurface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { supabase } from "@/lib/supabase";
 import { lovable } from "@/integrations/lovable";
 import { getPasswordStrength, isValidEmail, isValidTckn, isValidTrMobile, normalizeDigits, normalizeTrPhone } from "@/lib/auth-validation";
+import { fetchPublicLoginThemeSchedules, getLoginTheme, rememberTenantCode, resolveActiveLoginTheme, resolveLoginTenantCode, type LoginThemeSchedule } from "@/lib/login-theme";
 
 function GoogleIcon({ className }: { className?: string }) {
   return <svg className={className} viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-3.55 3.66-2.84z"/></svg>;
@@ -21,7 +23,11 @@ function callbackUrl(){return typeof window==="undefined"?undefined:`${window.lo
 
 function AuthScreen(){
  const [activationOpen,setActivationOpen]=useState(false);
- return <main className="min-h-screen bg-gradient-to-br from-slate-50 via-background to-indigo-50 px-4 py-8 lg:grid lg:place-items-center lg:py-12">
+ const [themeSchedules,setThemeSchedules]=useState<LoginThemeSchedule[]>([]);
+ const [theme,setTheme]=useState(()=>getLoginTheme("default"));
+ useEffect(()=>{let alive=true;async function loadTheme(){const tenantCode=resolveLoginTenantCode();const items=await fetchPublicLoginThemeSchedules(tenantCode);if(alive)setThemeSchedules(items)}void loadTheme();const handler=()=>void loadTheme();window.addEventListener("okulos-login-theme-change",handler);return()=>{alive=false;window.removeEventListener("okulos-login-theme-change",handler)}},[]);
+ useEffect(()=>{const apply=()=>setTheme(resolveActiveLoginTheme(new Date(),resolveLoginTenantCode(),themeSchedules));apply();const timer=window.setInterval(apply,30_000);return()=>window.clearInterval(timer)},[themeSchedules]);
+ return <main className={`min-h-screen ${theme.panelClass} px-4 py-8 transition-colors duration-700 lg:grid lg:place-items-center lg:py-12`}>
    <div className="mx-auto grid w-full max-w-5xl overflow-hidden rounded-[28px] border bg-card shadow-xl lg:grid-cols-[1.08fr_.92fr]">
      <section className="p-6 sm:p-8 lg:p-12">
        <div className="mx-auto w-full max-w-md">
@@ -34,8 +40,9 @@ function AuthScreen(){
          <p className="mt-5 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground"><ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-primary"/>Görev ve yetkiler girişten sonra kurum hesabınıza göre otomatik belirlenir.</p>
        </div>
      </section>
-     <aside className="relative hidden min-h-[620px] overflow-hidden bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-700 p-10 text-white lg:flex lg:flex-col lg:justify-between">
-       <div className="absolute -right-20 -top-20 size-72 rounded-full bg-white/10 blur-2xl"/><div className="absolute -bottom-24 -left-16 size-80 rounded-full bg-sky-300/10 blur-3xl"/>
+     <aside className={`relative hidden min-h-[620px] overflow-hidden bg-gradient-to-br ${theme.accentClass} p-10 text-white transition-colors duration-700 lg:flex lg:flex-col lg:justify-between`}>
+       <LoginThemeSurface theme={theme}/>
+       <div className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-white/10 blur-2xl"/><div className="pointer-events-none absolute -bottom-24 -left-16 size-80 rounded-full bg-sky-300/10 blur-3xl"/>
        <div className="relative"><div className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur">OkulOS</div><h2 className="mt-8 max-w-md text-4xl font-semibold leading-tight tracking-tight">Okulunuzun yönetim süreçleri tek yerde.</h2><p className="mt-4 max-w-sm text-sm leading-6 text-white/75">Personel, sınıf, takvim, norm, ek ders, nöbet ve ders programı aynı kurumsal veri yapısını kullanır.</p></div>
        <div className="relative rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm"><p className="text-sm font-medium">Güvenli kurum erişimi</p><p className="mt-2 text-xs leading-5 text-white/70">Tenant, rol ve yetki kontrolleri kullanıcı girişinden sonra otomatik uygulanır.</p></div>
      </aside>
@@ -48,7 +55,7 @@ function SuccessNotice({message}:{message:string}){return <div className="flex i
 function OtpFields({otp,setOtp,disabled=false}:{otp:string;setOtp:(value:string)=>void;disabled?:boolean}){return <InputOTP maxLength={6} value={otp} onChange={v=>setOtp(v.replace(/\D/g,"").slice(0,6))} disabled={disabled} autoComplete="one-time-code" inputMode="numeric" pattern="[0-9]*" autoFocus><InputOTPGroup>{[0,1,2,3,4,5].map(i=><InputOTPSlot key={i} index={i}/>)}</InputOTPGroup></InputOTP>}
 function PasswordChecklist({password}:{password:string}){const{checks}=getPasswordStrength(password);const items=[[checks.length,"En az 10 karakter"],[checks.upper,"Büyük harf"],[checks.lower,"Küçük harf"],[checks.number,"Rakam"],[checks.special,"Özel karakter"]] as const;return <div className="grid grid-cols-2 gap-1 text-[11px] text-muted-foreground">{items.map(([ok,label])=><span key={label} className={ok?"text-emerald-700":""}>{ok?"✓":"○"} {label}</span>)}</div>}
 async function validateTeacher(tckn:string,email?:string):Promise<ValidationResult>{const{data,error}=await supabase.functions.invoke("validate-teacher",{body:{tckn,email}});if(error)return{valid:false,reason:"SERVER_ERROR"};return(data??{valid:false}) as ValidationResult;}
-async function finalizeAuthenticatedUser(navigate:ReturnType<typeof useNavigate>){const{data:userData,error:userError}=await supabase.auth.getUser();if(userError||!userData.user)throw new Error("Oturum kullanıcısı doğrulanamadı.");if((userData.user.email??"").toLowerCase()===SUPER_ADMIN_EMAIL){const{error}=await supabase.rpc("claim_super_admin_profile");if(error)throw new Error("Yönetici profili doğrulanamadı.");}const{data:isSuper,error:roleError}=await supabase.rpc("is_super_admin");if(roleError)throw new Error("Kullanıcı yetkisi okunamadı.");await navigate({to:isSuper?"/super-admin":"/dashboard",replace:true});}
+async function finalizeAuthenticatedUser(navigate:ReturnType<typeof useNavigate>){const{data:userData,error:userError}=await supabase.auth.getUser();if(userError||!userData.user)throw new Error("Oturum kullanıcısı doğrulanamadı.");if((userData.user.email??"").toLowerCase()===SUPER_ADMIN_EMAIL){const{error}=await supabase.rpc("claim_super_admin_profile");if(error)throw new Error("Yönetici profili doğrulanamadı.");}const{data:tenantCode}=await supabase.rpc("get_my_institution_code");if(typeof tenantCode==="string"&&tenantCode)rememberTenantCode(tenantCode);const{data:isSuper,error:roleError}=await supabase.rpc("is_super_admin");if(roleError)throw new Error("Kullanıcı yetkisi okunamadı.");await navigate({to:isSuper?"/super-admin":"/dashboard",replace:true});}
 function useAutoOtp(otp:string,enabled:boolean,verify:()=>Promise<void>){const verifying=useRef(false),verifyRef=useRef(verify);verifyRef.current=verify;useEffect(()=>{if(!enabled||otp.length!==6||verifying.current)return;verifying.current=true;void verifyRef.current().finally(()=>{verifying.current=false})},[otp,enabled]);}
 
 function LoginForm(){
