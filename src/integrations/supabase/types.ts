@@ -827,7 +827,7 @@ export type Database = {
           avoid_early: boolean
           course_id: string
           difficulty: number
-          institution_code: string | null
+          institution_code: string
           is_vocational_practice: boolean
           is_workshop: boolean
           lesson_family: string | null
@@ -844,7 +844,7 @@ export type Database = {
           avoid_early?: boolean
           course_id: string
           difficulty?: number
-          institution_code?: string | null
+          institution_code?: string
           is_vocational_practice?: boolean
           is_workshop?: boolean
           lesson_family?: string | null
@@ -861,7 +861,7 @@ export type Database = {
           avoid_early?: boolean
           course_id?: string
           difficulty?: number
-          institution_code?: string | null
+          institution_code?: string
           is_vocational_practice?: boolean
           is_workshop?: boolean
           lesson_family?: string | null
@@ -876,7 +876,7 @@ export type Database = {
           {
             foreignKeyName: "course_pedagogy_profiles_course_id_fkey"
             columns: ["course_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "course_catalog"
             referencedColumns: ["id"]
           },
@@ -956,7 +956,7 @@ export type Database = {
           {
             foreignKeyName: "course_schedule_rules_course_id_fkey"
             columns: ["course_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "course_catalog"
             referencedColumns: ["id"]
           },
@@ -3679,7 +3679,7 @@ export type Database = {
           adjacent_weight: number
           anchor_period: number | null
           hard_max: boolean
-          institution_code: string | null
+          institution_code: string
           max_duty_day_hours: number
           overload_weight: number
           source: string
@@ -3691,7 +3691,7 @@ export type Database = {
           adjacent_weight?: number
           anchor_period?: number | null
           hard_max?: boolean
-          institution_code?: string | null
+          institution_code?: string
           max_duty_day_hours?: number
           overload_weight?: number
           source?: string
@@ -3703,7 +3703,7 @@ export type Database = {
           adjacent_weight?: number
           anchor_period?: number | null
           hard_max?: boolean
-          institution_code?: string | null
+          institution_code?: string
           max_duty_day_hours?: number
           overload_weight?: number
           source?: string
@@ -3757,7 +3757,7 @@ export type Database = {
         Row: {
           gap_penalty: number
           id: boolean
-          institution_code: string | null
+          institution_code: string
           late_period_penalty: number
           max_same_course_per_day: number
           periods_per_day: number
@@ -3768,7 +3768,7 @@ export type Database = {
         Insert: {
           gap_penalty?: number
           id?: boolean
-          institution_code?: string | null
+          institution_code?: string
           late_period_penalty?: number
           max_same_course_per_day?: number
           periods_per_day?: number
@@ -3779,7 +3779,7 @@ export type Database = {
         Update: {
           gap_penalty?: number
           id?: boolean
-          institution_code?: string | null
+          institution_code?: string
           late_period_penalty?: number
           max_same_course_per_day?: number
           periods_per_day?: number
@@ -3901,7 +3901,7 @@ export type Database = {
           active_profile_key: string
           explain_scenarios: boolean
           id: boolean
-          institution_code: string | null
+          institution_code: string
           record_repairs: boolean
           updated_at: string
           updated_by: string | null
@@ -3910,7 +3910,7 @@ export type Database = {
           active_profile_key?: string
           explain_scenarios?: boolean
           id?: boolean
-          institution_code?: string | null
+          institution_code?: string
           record_repairs?: boolean
           updated_at?: string
           updated_by?: string | null
@@ -3919,7 +3919,7 @@ export type Database = {
           active_profile_key?: string
           explain_scenarios?: boolean
           id?: boolean
-          institution_code?: string | null
+          institution_code?: string
           record_repairs?: boolean
           updated_at?: string
           updated_by?: string | null
@@ -4362,7 +4362,7 @@ export type Database = {
         Row: {
           category: string
           config: Json
-          institution_code: string | null
+          institution_code: string
           label: string
           mode: string
           rule_code: string
@@ -4374,7 +4374,7 @@ export type Database = {
         Insert: {
           category: string
           config?: Json
-          institution_code?: string | null
+          institution_code?: string
           label: string
           mode?: string
           rule_code: string
@@ -4386,7 +4386,7 @@ export type Database = {
         Update: {
           category?: string
           config?: Json
-          institution_code?: string | null
+          institution_code?: string
           label?: string
           mode?: string
           rule_code?: string
@@ -4426,7 +4426,7 @@ export type Database = {
           block_pattern: number[]
           class_course_requirement_id: string | null
           id: string
-          institution_code: string | null
+          institution_code: string
           max_per_day: number | null
           min_distinct_days: number | null
           note: string | null
@@ -4443,7 +4443,7 @@ export type Database = {
           block_pattern?: number[]
           class_course_requirement_id?: string | null
           id?: string
-          institution_code?: string | null
+          institution_code?: string
           max_per_day?: number | null
           min_distinct_days?: number | null
           note?: string | null
@@ -4460,7 +4460,7 @@ export type Database = {
           block_pattern?: number[]
           class_course_requirement_id?: string | null
           id?: string
-          institution_code?: string | null
+          institution_code?: string
           max_per_day?: number | null
           min_distinct_days?: number | null
           note?: string | null
@@ -5203,7 +5203,7 @@ export type Database = {
         Row: {
           active: boolean
           course_id: string
-          institution_code: string | null
+          institution_code: string
           max_block: number
           min_block: number
           preferred_block: number
@@ -5214,7 +5214,7 @@ export type Database = {
         Insert: {
           active?: boolean
           course_id: string
-          institution_code?: string | null
+          institution_code?: string
           max_block?: number
           min_block?: number
           preferred_block?: number
@@ -5225,7 +5225,7 @@ export type Database = {
         Update: {
           active?: boolean
           course_id?: string
-          institution_code?: string | null
+          institution_code?: string
           max_block?: number
           min_block?: number
           preferred_block?: number
@@ -5244,7 +5244,7 @@ export type Database = {
           {
             foreignKeyName: "schedule_workshop_policies_course_id_fkey"
             columns: ["course_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "course_catalog"
             referencedColumns: ["id"]
           },
@@ -7041,6 +7041,10 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      apply_schedule_scenario_pre_phase3: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       approve_payroll_activity: {
         Args: { p_activity_id: string; p_approve?: boolean }
         Returns: boolean
@@ -7068,6 +7072,10 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: undefined
       }
+      assert_schedule_scenario_tenant_phase3_v1: {
+        Args: { p_scenario_id: string }
+        Returns: undefined
+      }
       assign_classrooms_to_scenario: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -7083,6 +7091,13 @@ export type Database = {
         }[]
       }
       assign_classrooms_to_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          assigned_count: number
+          unassigned_count: number
+        }[]
+      }
+      assign_classrooms_to_scenario_pre_phase3_tenant: {
         Args: { p_scenario_id: string }
         Returns: {
           assigned_count: number
@@ -7173,6 +7188,10 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      calculate_schedule_scenario_score_pre_phase3: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       calculate_schedule_scenario_score_v2: {
         Args: { p_scenario_id: string }
         Returns: number
@@ -7245,6 +7264,10 @@ export type Database = {
       }
       disable_telegram_notifications: { Args: never; Returns: undefined }
       drop_unique_constraint_by_columns: {
+        Args: { p_columns: string[]; p_table: string }
+        Returns: undefined
+      }
+      ensure_tenant_composite_pk_v1: {
         Args: { p_columns: string[]; p_table: string }
         Returns: undefined
       }
@@ -7328,6 +7351,17 @@ export type Database = {
         }[]
       }
       generate_schedule_scenarios_pre_edge_v2: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
+      }
+      generate_schedule_scenarios_pre_phase3_tenant: {
         Args: never
         Returns: {
           generation_group: string
@@ -7680,6 +7714,46 @@ export type Database = {
           severity: string
         }[]
       }
+      get_schedule_integrity_report_pre_phase3: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_phase3_current_issues_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_phase3_preflight_issues_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
+      get_schedule_phase3_scenario_issues_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_phase3_scoped_preference_score_v1: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       get_schedule_preparation_readiness: {
         Args: never
         Returns: {
@@ -7721,6 +7795,16 @@ export type Database = {
         }[]
       }
       get_schedule_preparation_readiness_core_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
+      get_schedule_preparation_readiness_pre_phase3: {
         Args: never
         Returns: {
           affected_count: number
@@ -7783,6 +7867,14 @@ export type Database = {
         }[]
       }
       get_schedule_scenario_hard_issues_pre_edge_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_pre_phase3: {
         Args: { p_scenario_id: string }
         Returns: {
           affected_count: number
@@ -8048,6 +8140,15 @@ export type Database = {
         }
         Returns: string
       }
+      publish_current_schedule_pre_phase3: {
+        Args: {
+          p_academic_year?: string
+          p_effective_from: string
+          p_note?: string
+          p_title?: string
+        }
+        Returns: string
+      }
       quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
@@ -8087,11 +8188,19 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      repair_schedule_scenario_pre_phase3_tenant: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       repair_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
         Returns: number
       }
       rescore_schedule_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      rescore_schedule_scenario_pre_phase3_tenant: {
         Args: { p_scenario_id: string }
         Returns: number
       }
@@ -8176,6 +8285,10 @@ export type Database = {
         Args: { p_assignment: string }
         Returns: number[]
       }
+      schedule_current_block_matches_phase3_v1: {
+        Args: { p_assignment_id: string }
+        Returns: boolean
+      }
       schedule_rule_mode_v1: { Args: { p_rule_code: string }; Returns: string }
       schedule_rule_weight_v1: {
         Args: {
@@ -8185,9 +8298,17 @@ export type Database = {
         }
         Returns: number
       }
+      schedule_scenario_block_matches_phase3_v1: {
+        Args: { p_assignment_id: string; p_scenario_id: string }
+        Returns: boolean
+      }
       schedule_subject_matches_edge_rule_v1: {
         Args: { p_rule_code: string; p_subject: string }
         Returns: boolean
+      }
+      seed_timetable_defaults_for_tenant_v1: {
+        Args: { p_code: string }
+        Returns: undefined
       }
       set_active_academic_year: {
         Args: { p_academic_year_id: string }
@@ -8469,6 +8590,10 @@ export type Database = {
           p_weekday: number
         }
         Returns: string
+      }
+      validate_schedule_scenario_pre_phase3_tenant: {
+        Args: { p_scenario_id: string }
+        Returns: number
       }
       validate_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
