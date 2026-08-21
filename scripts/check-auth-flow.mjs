@@ -12,19 +12,25 @@ if (existsSync(indexPath)) {
   if (source.includes('value="superadmin"') || source.includes("function SuperAdminLogin")) {
     errors.push("Ayrı Süper Admin giriş ekranı yeniden eklenmiş.");
   }
-  if (!source.includes("emailRedirectTo:callbackUrl()")) {
-    errors.push("OTP/magic-link dönüş adresi auth callback'e bağlı değil.");
-  }
-  if (!source.includes("claim_super_admin_profile")) {
-    errors.push("Tek giriş akışında Süper Admin profil claim adımı yok.");
+  for (const token of [
+    'functions.invoke("password-login"',
+    'auth.setSession',
+    'functions.invoke("school-recovery"',
+    'auth.verifyOtp',
+    'lovable.auth.signInWithOAuth("google"',
+    'callbackUrl()',
+    'claim_super_admin_profile',
+    'is_super_admin',
+  ]) {
+    if (!source.includes(token)) errors.push(`Güncel giriş akışı işareti eksik: ${token}`);
   }
 }
 
 if (existsSync(callbackPath)) {
   const source = readFileSync(callbackPath, "utf8");
   if (!source.includes('createFileRoute("/auth/callback")')) errors.push("Auth callback route yolu yanlış.");
-  if (!source.includes("exchangeCodeForSession") || !source.includes("verifyOtp") || !source.includes("setSession")) {
-    errors.push("Callback PKCE/token_hash/hash session dönüşlerinin tamamını işlemiyor.");
+  for (const token of ["exchangeCodeForSession", "verifyOtp", "setSession", "claim_super_admin_profile", "is_super_admin"]) {
+    if (!source.includes(token)) errors.push(`Callback oturum dönüş işareti eksik: ${token}`);
   }
 }
 
@@ -32,4 +38,4 @@ if (errors.length) {
   console.error("Auth flow check FAILED:\n" + errors.map((x) => `- ${x}`).join("\n"));
   process.exit(1);
 }
-console.log("Auth flow check OK.");
+console.log("Auth flow check OK: password, recovery OTP, Google OAuth callback and role claim paths are wired.");
