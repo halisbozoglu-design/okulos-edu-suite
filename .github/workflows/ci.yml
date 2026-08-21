@@ -16,13 +16,31 @@ concurrency:
 
 jobs:
   validate:
-    name: Build & Typecheck
+    name: Build, tests & static guards
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Protect applied migration history
+        if: github.event_name != 'workflow_dispatch'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE_SHA" ] || echo "$BASE_SHA" | grep -Eq '^0+$'; then
+            echo "No usable base SHA; migration history diff guard skipped."
+            exit 0
+          fi
+          CHANGED="$(git diff --name-status "$BASE_SHA" "$GITHUB_SHA" -- supabase/migrations | awk '$1 !~ /^A/ {print}')"
+          if [ -n "$CHANGED" ]; then
+            echo "Existing migration files are immutable. Add a new forward migration instead:"
+            echo "$CHANGED"
+            exit 1
+          fi
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -31,6 +49,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Run unit and parser regression tests
+        run: bun test
 
       - name: Check Supabase migrations
         run: node scripts/check-migrations.mjs
@@ -70,3 +91,37 @@ jobs:
 
       - name: TypeScript check
         run: bunx tsc --noEmit
+
+  database:
+    name: Clean database migration & RLS integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: validate
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update -qq && sudo apt-get install -y postgresql-client
+
+      - name: Start clean local Supabase
+        run: supabase start
+
+      - name: Rebuild database from migration zero
+        run: supabase db reset --local --no-seed
+
+      - name: Run migrated schema contract
+        run: psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -v ON_ERROR_STOP=1 -f tests/sql/phase4_schema_contract.sql
+
+      - name: Run tenant isolation integration test
+        run: psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -v ON_ERROR_STOP=1 -f tests/sql/phase4_tenant_isolation.sql
+
+      - name: Stop local Supabase
+        if: always()
+        run: supabase stop --no-backup
