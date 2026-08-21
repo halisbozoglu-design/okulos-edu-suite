@@ -1,12 +1,13 @@
 import { readFile, readdir } from "node:fs/promises";
 
 const read=(p)=>readFile(new URL(`../${p}`,import.meta.url),"utf8");
-const [ci,pkg,parserTest,schemaSql,tenantSql]=await Promise.all([
+const [ci,pkg,parserTest,schemaSql,tenantSql,rpcSql]=await Promise.all([
   read(".github/workflows/ci.yml"),
   read("package.json"),
   read("tests/schedule-import.test.ts"),
   read("tests/sql/phase4_schema_contract.sql"),
   read("tests/sql/phase4_tenant_isolation.sql"),
+  read("tests/sql/phase4_timetable_rpc_boundaries.sql"),
 ]);
 
 for(const token of [
@@ -16,6 +17,7 @@ for(const token of [
   "supabase db reset --local --no-seed",
   "phase4_schema_contract.sql",
   "phase4_tenant_isolation.sql",
+  "phase4_timetable_rpc_boundaries.sql",
 ]) if(!ci.includes(token)){console.error(`Phase 4 CI contract missing: ${token}`);process.exit(1);}
 
 if(!pkg.includes('"test": "bun test"')){console.error("Bun test script missing.");process.exit(1);}
@@ -40,6 +42,17 @@ for(const token of [
   "foreign membership visible",
 ]) if(!tenantSql.includes(token)){console.error(`Tenant isolation behavior test missing: ${token}`);process.exit(1);}
 
+for(const token of [
+  "validate_schedule_scenario_v2",
+  "apply_schedule_scenario",
+  "repair_schedule_scenario_v2",
+  "rescore_schedule_scenario_v2",
+  "generate_schedule_scenarios_v2",
+  "publish_current_schedule",
+  "SCENARIO_NOT_FOUND_IN_TENANT",
+  "PERMISSION_DENIED",
+]) if(!rpcSql.includes(token)){console.error(`Timetable RPC smoke contract missing: ${token}`);process.exit(1);}
+
 const migrations=(await readdir(new URL("../supabase/migrations/",import.meta.url))).filter((x)=>x.endsWith(".sql")).sort();
 if(!migrations.length){console.error("No migrations found.");process.exit(1);}
 const timestamps=new Set();
@@ -50,4 +63,4 @@ for(const file of migrations){
   timestamps.add(m[1]);
 }
 
-console.log(`Phase 4 testing guard OK: ${migrations.length} forward migrations, parser regressions, clean DB rebuild and tenant RLS integration are wired.`);
+console.log(`Phase 4 testing guard OK: ${migrations.length} forward migrations, parser regressions, clean DB rebuild, tenant RLS and timetable RPC boundaries are wired.`);
