@@ -10,10 +10,11 @@ const [route,management,ci]=await Promise.all([
 for(const token of [
   'createFileRoute("/schedule-reports")',
   'can("schedule.view")',
+  'if (!permissionLoading && can("schedule.view")) void load()',
   'from("teacher_schedule")',
   'from("schedule_assignment_options")',
   'rpc("get_active_schedule_time_profile")',
-  'rpc("get_active_academic_year")',
+  'from("academic_years")',
   'teacherSummary',
   'classSummary',
   'roomSummary',
@@ -31,4 +32,4 @@ for(const token of [
 ]) if(!management.includes(token)){console.error(`Phase 5 management link missing: ${token}`);process.exit(1);}
 
 if(!ci.includes("Check Phase 5 reporting closure")){console.error("Phase 5 CI step missing.");process.exit(1);}
-console.log("Phase 5 reporting guard OK: timetable summaries, filters and Excel/CSV/print-PDF outputs are wired.");
+console.log("Phase 5 reporting guard OK: permission-gated timetable summaries, filters and Excel/CSV/print-PDF outputs are wired.");
