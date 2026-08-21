@@ -28,7 +28,8 @@ for(const token of [
   "apply_schedule_scenario(uuid)",
   "publish_current_schedule(date,text,text,text)",
   "uq_schedule_time_profile_active_per_tenant",
-  "SCENARIO_NOT_IN_ACTIVE_TENANT",
+  "assert_schedule_scenario_tenant_phase3_v1",
+  "validate_schedule_scenario_v2",
 ]) if(!schemaSql.includes(token)){console.error(`DB schema contract missing: ${token}`);process.exit(1);}
 
 for(const token of [
