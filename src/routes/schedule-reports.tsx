@@ -89,7 +89,7 @@ function ScheduleReports() {
       supabase.from("schedule_assignment_options").select("teacher_assignment_id,teacher_id,teacher_name,class_id,class_name,composite_key,course_name").order("teacher_name"),
       supabase.from("teacher_schedule").select("id,teacher_id,class_id,weekday,period,class_name,subject,classroom_id,classroom,locked,teacher_assignment_id").eq("active", true).order("weekday").order("period"),
       supabase.rpc("get_active_schedule_time_profile"),
-      supabase.rpc("get_active_academic_year"),
+      supabase.from("academic_years").select("code,title").eq("active", true).maybeSingle(),
     ]);
     setBusy(false);
     if (a.error || s.error) {
@@ -102,7 +102,9 @@ function ScheduleReports() {
     if (!y.error) setYear((y.data ?? null) as ActiveYear);
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    if (!permissionLoading && can("schedule.view")) void load();
+  }, [load, permissionLoading, can]);
 
   const optionMap = useMemo(() => Object.fromEntries(assignments.map((a) => [a.teacher_assignment_id, a])), [assignments]);
   const teacherName = useCallback((row: ScheduleRow) => optionMap[row.teacher_assignment_id ?? ""]?.teacher_name ?? "—", [optionMap]);
@@ -209,7 +211,7 @@ function ScheduleReports() {
     {error ? <div className="mt-3 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</div> : null}
 
     <section className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-      {[['Toplam Ders', filtered.length], ['Öğretmen', new Set(filtered.map(teacherName)).size], ['Sınıf', new Set(filtered.map((r) => r.class_name)).size], ['Öğretmen Boşluğu', totalGaps], ['Dersliksiz', unassignedRooms]].map(([label, value]) => <div key={String(label)} className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 text-2xl font-bold">{value}</p></div>)}
+      {[["Toplam Ders", filtered.length], ["Öğretmen", new Set(filtered.map(teacherName)).size], ["Sınıf", new Set(filtered.map((r) => r.class_name)).size], ["Öğretmen Boşluğu", totalGaps], ["Dersliksiz", unassignedRooms]].map(([label, value]) => <div key={String(label)} className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 text-2xl font-bold">{value}</p></div>)}
     </section>
 
     <section className="print:hidden mt-4 rounded-2xl border bg-card p-4">
