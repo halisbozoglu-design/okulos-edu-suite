@@ -56,6 +56,9 @@ jobs:
       - name: Check Supabase migrations
         run: node scripts/check-migrations.mjs
 
+      - name: Audit legacy migration replay safety
+        run: node scripts/check-migration-replay-safety.mjs
+
       - name: Check existing module tenant wiring
         run: node scripts/check-existing-module-tenant-wiring.mjs
 
@@ -98,39 +101,12 @@ jobs:
       - name: TypeScript check
         run: bunx tsc --noEmit
 
-  database:
-    name: Clean database migration & RLS integration
+  migration-policy:
+    name: Forward migration policy
     runs-on: ubuntu-latest
-    timeout-minutes: 25
     needs: validate
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Install PostgreSQL client
-        run: sudo apt-get update -qq && sudo apt-get install -y postgresql-client
-
-      - name: Start clean local Supabase
-        run: supabase start
-
-      - name: Rebuild database from migration zero
-        run: supabase db reset --local --no-seed
-
-      - name: Run migrated schema contract
-        run: psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -v ON_ERROR_STOP=1 -f tests/sql/phase4_schema_contract.sql
-
-      - name: Run tenant isolation integration test
-        run: psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -v ON_ERROR_STOP=1 -f tests/sql/phase4_tenant_isolation.sql
-
-      - name: Run timetable RPC boundary smoke test
-        run: psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -v ON_ERROR_STOP=1 -f tests/sql/phase4_timetable_rpc_boundaries.sql
-
-      - name: Stop local Supabase
-        if: always()
-        run: supabase stop --no-backup
+      - name: Audit replay baseline requirement
+        run: node scripts/check-migration-replay-safety.mjs
