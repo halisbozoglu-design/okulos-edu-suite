@@ -1,3 +1,5 @@
+import { supabase } from "@/lib/supabase";
+
 export type LoginThemeKey = "default" | "aurora" | "orbit" | "waves";
 
 export type LoginTheme = {
@@ -27,29 +29,11 @@ export const LOGIN_THEME_CATALOG: LoginTheme[] = [
   { key: "waves", label: "Dalgalar", description: "Yavaş kayan katmanlı dalga efekti.", accentClass: "from-violet-500 via-fuchsia-600 to-indigo-700", panelClass: "bg-gradient-to-br from-violet-50 via-background to-fuchsia-50", animation: "waves" },
 ];
 
-const STORAGE_KEY = "okulos.loginThemeSchedule.v1";
+const CACHE_KEY = "okulos.loginThemeSchedule.v2";
 const TENANT_KEY = "okulos.lastTenantCode";
 
 export function getLoginTheme(key: LoginThemeKey): LoginTheme {
   return LOGIN_THEME_CATALOG.find((x) => x.key === key) ?? LOGIN_THEME_CATALOG[0];
-}
-
-export function readLoginThemeSchedules(): LoginThemeSchedule[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as LoginThemeSchedule[];
-    return Array.isArray(parsed) ? parsed.filter(isValidSchedule) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function writeLoginThemeSchedules(items: LoginThemeSchedule[]) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  window.dispatchEvent(new CustomEvent("okulos-login-theme-change"));
 }
 
 export function rememberTenantCode(code: string | null | undefined) {
@@ -64,7 +48,56 @@ export function resolveLoginTenantCode(): string | null {
   return window.localStorage.getItem(TENANT_KEY);
 }
 
-export function resolveActiveLoginTheme(now = new Date(), tenantCode = resolveLoginTenantCode(), schedules = readLoginThemeSchedules()): LoginTheme {
+export function readCachedLoginThemeSchedules(): LoginThemeSchedule[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(CACHE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as LoginThemeSchedule[];
+    return Array.isArray(parsed) ? parsed.filter(isValidSchedule) : [];
+  } catch {
+    return [];
+  }
+}
+
+function cacheSchedules(items: LoginThemeSchedule[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(CACHE_KEY, JSON.stringify(items));
+}
+
+export async function fetchPublicLoginThemeSchedules(tenantCode = resolveLoginTenantCode()): Promise<LoginThemeSchedule[]> {
+  const { data, error } = await supabase.functions.invoke("password-login", {
+    body: { action: "get-login-theme-config", tenantCode: tenantCode ?? null },
+  });
+  if (!error && data?.ok && Array.isArray(data.schedules)) {
+    const schedules = (data.schedules as LoginThemeSchedule[]).filter(isValidSchedule);
+    cacheSchedules(schedules);
+    return schedules;
+  }
+  return readCachedLoginThemeSchedules();
+}
+
+export async function fetchAdminLoginThemeSchedules(): Promise<LoginThemeSchedule[]> {
+  const { data, error } = await supabase.functions.invoke("password-login", {
+    body: { action: "get-login-theme-admin" },
+  });
+  if (error || !data?.ok || !Array.isArray(data.schedules)) throw new Error("Giriş teması ayarları okunamadı.");
+  const schedules = (data.schedules as LoginThemeSchedule[]).filter(isValidSchedule);
+  cacheSchedules(schedules);
+  return schedules;
+}
+
+export async function saveAdminLoginThemeSchedules(items: LoginThemeSchedule[]): Promise<void> {
+  const schedules = items.filter(isValidSchedule).slice(0, 200);
+  const { data, error } = await supabase.functions.invoke("password-login", {
+    body: { action: "set-login-theme-config", schedules },
+  });
+  if (error || !data?.ok) throw new Error("Giriş teması ayarları kaydedilemedi.");
+  cacheSchedules(schedules);
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("okulos-login-theme-change"));
+}
+
+export function resolveActiveLoginTheme(now = new Date(), tenantCode = resolveLoginTenantCode(), schedules = readCachedLoginThemeSchedules()): LoginTheme {
   const ts = now.getTime();
   const applicable = schedules
     .filter((x) => x.enabled)
@@ -85,7 +118,7 @@ export function resolveActiveLoginTheme(now = new Date(), tenantCode = resolveLo
 }
 
 export function parseLoginThemeCommand(command: string): Omit<LoginThemeSchedule, "id"> | null {
-  // Example: tema aurora | tenant * | 2026-10-29T00:00 | 2026-10-29T23:59 | 100
+  // örnek: tema aurora | tenant * | 2026-10-29 00:00 | 2026-10-29 23:59 | 100
   const parts = command.split("|").map((x) => x.trim()).filter(Boolean);
   if (parts.length < 4) return null;
   const themeMatch = parts[0].match(/^tema\s+(default|aurora|orbit|waves)$/i);
@@ -105,13 +138,37 @@ export function parseLoginThemeCommand(command: string): Omit<LoginThemeSchedule
   };
 }
 
+export function toLocalDateTimeInput(iso: string) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 16);
+}
+
+export function fromLocalDateTimeInput(value: string) {
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
+
 function normalizeDateTime(value: string) {
   const normalized = value.includes("T") ? value : value.replace(" ", "T");
   const date = new Date(normalized);
   if (Number.isNaN(date.getTime())) return null;
-  return normalized;
+  return date.toISOString();
 }
 
 function isValidSchedule(x: LoginThemeSchedule) {
-  return Boolean(x && typeof x.id === "string" && LOGIN_THEME_CATALOG.some((t) => t.key === x.theme) && typeof x.tenantCode === "string" && typeof x.startsAt === "string" && typeof x.endsAt === "string" && typeof x.priority === "number" && typeof x.enabled === "boolean");
+  return Boolean(
+    x &&
+    typeof x.id === "string" &&
+    LOGIN_THEME_CATALOG.some((t) => t.key === x.theme) &&
+    typeof x.tenantCode === "string" &&
+    typeof x.startsAt === "string" &&
+    typeof x.endsAt === "string" &&
+    Number.isFinite(Date.parse(x.startsAt)) &&
+    Number.isFinite(Date.parse(x.endsAt)) &&
+    typeof x.priority === "number" &&
+    Number.isFinite(x.priority) &&
+    typeof x.enabled === "boolean"
+  );
 }
