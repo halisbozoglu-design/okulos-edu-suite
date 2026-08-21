@@ -99,6 +99,7 @@ const protectedRoutes: RouteRule[] = [
   { prefix: "/schedule-optimization", any: ["schedule.view", "schedule.rules"] },
   { prefix: "/schedule-scoped-rules", any: ["schedule.view", "schedule.rules"] },
   { prefix: "/schedule-scenario-comparison", any: ["schedule.view", "schedule.generate", "schedule.apply"] },
+  { prefix: "/schedule-reports", any: ["schedule.view"] },
   { prefix: "/schedule-rules", any: ["schedule.rules"] },
   { prefix: "/schedule-preparation", any: ["schedule.rules", "schedule.generate"] },
   { prefix: "/schedule-solver", any: ["schedule.generate", "schedule.apply"] },
