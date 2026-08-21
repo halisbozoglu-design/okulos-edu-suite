@@ -1,3 +1,4 @@
+# CI diagnostic probe branch; no production behavior change.
 name: CI
 
 on:
