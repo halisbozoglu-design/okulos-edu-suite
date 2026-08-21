@@ -391,6 +391,117 @@ export type Database = {
           },
         ]
       }
+      calendar_event_tasks: {
+        Row: {
+          assigned_personnel_id: string | null
+          assigned_responsibility_id: string | null
+          assigned_user_id: string | null
+          calendar_event_id: string
+          created_at: string
+          due_on: string | null
+          file_required: boolean
+          id: string
+          note: string | null
+          recurrence: string
+          report_frequency: string | null
+          report_required: boolean
+          starts_on: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_personnel_id?: string | null
+          assigned_responsibility_id?: string | null
+          assigned_user_id?: string | null
+          calendar_event_id: string
+          created_at?: string
+          due_on?: string | null
+          file_required?: boolean
+          id?: string
+          note?: string | null
+          recurrence?: string
+          report_frequency?: string | null
+          report_required?: boolean
+          starts_on?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_personnel_id?: string | null
+          assigned_responsibility_id?: string | null
+          assigned_user_id?: string | null
+          calendar_event_id?: string
+          created_at?: string
+          due_on?: string | null
+          file_required?: boolean
+          id?: string
+          note?: string | null
+          recurrence?: string
+          report_frequency?: string | null
+          report_required?: boolean
+          starts_on?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_event_tasks_assigned_personnel_id_fkey"
+            columns: ["assigned_personnel_id"]
+            isOneToOne: false
+            referencedRelation: "personnel_registry"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_event_tasks_assigned_responsibility_id_fkey"
+            columns: ["assigned_responsibility_id"]
+            isOneToOne: false
+            referencedRelation: "responsibility_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_event_tasks_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
+            isOneToOne: false
+            referencedRelation: "school_calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calendar_task_files: {
+        Row: {
+          file_name: string | null
+          file_url: string
+          id: string
+          task_id: string
+          uploaded_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          file_name?: string | null
+          file_url: string
+          id?: string
+          task_id: string
+          uploaded_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          file_name?: string | null
+          file_url?: string
+          id?: string
+          task_id?: string
+          uploaded_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_task_files_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_event_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_course_requirements: {
         Row: {
           category: string
@@ -1304,6 +1415,104 @@ export type Database = {
           },
         ]
       }
+      institution_memberships: {
+        Row: {
+          active: boolean
+          created_at: string
+          institution_code: string
+          is_owner: boolean
+          membership_role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          institution_code: string
+          is_owner?: boolean
+          membership_role: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          institution_code?: string
+          is_owner?: boolean
+          membership_role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_memberships_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      institution_principals: {
+        Row: {
+          active: boolean
+          assigned_at: string
+          institution_code: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          assigned_at?: string
+          institution_code: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          assigned_at?: string
+          institution_code?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      institutions: {
+        Row: {
+          approval_note: string | null
+          approval_status: string
+          created_at: string
+          created_by: string | null
+          institution_code: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          school_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          approval_note?: string | null
+          approval_status?: string
+          created_at?: string
+          created_by?: string | null
+          institution_code: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          school_name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          approval_note?: string | null
+          approval_status?: string
+          created_at?: string
+          created_by?: string | null
+          institution_code?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          school_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       legal_rule_sources: {
         Row: {
           active: boolean
@@ -1345,6 +1554,98 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      legislation_library: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          effective_on: string | null
+          file_url: string | null
+          id: string
+          legislation_type: string
+          notes: string | null
+          school_levels: string[]
+          school_types: string[]
+          source_url: string | null
+          tags: string[]
+          title: string
+          topic: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          effective_on?: string | null
+          file_url?: string | null
+          id?: string
+          legislation_type?: string
+          notes?: string | null
+          school_levels?: string[]
+          school_types?: string[]
+          source_url?: string | null
+          tags?: string[]
+          title: string
+          topic?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          effective_on?: string | null
+          file_url?: string | null
+          id?: string
+          legislation_type?: string
+          notes?: string | null
+          school_levels?: string[]
+          school_types?: string[]
+          source_url?: string | null
+          tags?: string[]
+          title?: string
+          topic?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      legislation_shares: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          legislation_id: string
+          message: string | null
+          read_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          legislation_id: string
+          message?: string | null
+          read_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          legislation_id?: string
+          message?: string | null
+          read_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legislation_shares_legislation_id_fkey"
+            columns: ["legislation_id"]
+            isOneToOne: false
+            referencedRelation: "legislation_library"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lesson_room_rules: {
         Row: {
@@ -2136,6 +2437,329 @@ export type Database = {
         }
         Relationships: []
       }
+      personnel_field_catalog: {
+        Row: {
+          data_class: string
+          display_name: string
+          enabled: boolean
+          field_key: string
+          first_seen_at: string
+          last_seen_at: string
+          module_keys: string[]
+          source_headers: string[]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          data_class?: string
+          display_name: string
+          enabled?: boolean
+          field_key: string
+          first_seen_at?: string
+          last_seen_at?: string
+          module_keys?: string[]
+          source_headers?: string[]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          data_class?: string
+          display_name?: string
+          enabled?: boolean
+          field_key?: string
+          first_seen_at?: string
+          last_seen_at?: string
+          module_keys?: string[]
+          source_headers?: string[]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      personnel_field_overrides: {
+        Row: {
+          enabled: boolean | null
+          field_key: string
+          institution_code: string
+          module_keys: string[] | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          enabled?: boolean | null
+          field_key: string
+          institution_code: string
+          module_keys?: string[] | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          enabled?: boolean | null
+          field_key?: string
+          institution_code?: string
+          module_keys?: string[] | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personnel_field_overrides_field_key_fkey"
+            columns: ["field_key"]
+            isOneToOne: false
+            referencedRelation: "personnel_field_catalog"
+            referencedColumns: ["field_key"]
+          },
+        ]
+      }
+      personnel_import_payloads: {
+        Row: {
+          id: string
+          imported_at: string
+          is_current: boolean
+          personnel_id: string
+          raw_data: Json
+          source_file_name: string | null
+          source_format: string | null
+        }
+        Insert: {
+          id?: string
+          imported_at?: string
+          is_current?: boolean
+          personnel_id: string
+          raw_data?: Json
+          source_file_name?: string | null
+          source_format?: string | null
+        }
+        Update: {
+          id?: string
+          imported_at?: string
+          is_current?: boolean
+          personnel_id?: string
+          raw_data?: Json
+          source_file_name?: string | null
+          source_format?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personnel_import_payloads_personnel_id_fkey"
+            columns: ["personnel_id"]
+            isOneToOne: false
+            referencedRelation: "personnel_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personnel_private_details: {
+        Row: {
+          archive_no: string | null
+          base_title: string | null
+          birth_date: string | null
+          blood_group: string | null
+          career_stage: string | null
+          district: string | null
+          duty_title: string | null
+          education_status: string | null
+          first_service_date: string | null
+          gender: string | null
+          grade_step: string | null
+          imported_at: string
+          institution_code: string | null
+          institution_name: string | null
+          institution_registry_no: string | null
+          personnel_id: string
+          personnel_status: string | null
+          province: string | null
+          raw_data: Json
+          raw_labels: Json
+          retirement_registry_no: string | null
+          source_file_name: string | null
+          source_format: string | null
+          tc_identity_no: string | null
+          teaching_area: string | null
+          updated_at: string
+        }
+        Insert: {
+          archive_no?: string | null
+          base_title?: string | null
+          birth_date?: string | null
+          blood_group?: string | null
+          career_stage?: string | null
+          district?: string | null
+          duty_title?: string | null
+          education_status?: string | null
+          first_service_date?: string | null
+          gender?: string | null
+          grade_step?: string | null
+          imported_at?: string
+          institution_code?: string | null
+          institution_name?: string | null
+          institution_registry_no?: string | null
+          personnel_id: string
+          personnel_status?: string | null
+          province?: string | null
+          raw_data?: Json
+          raw_labels?: Json
+          retirement_registry_no?: string | null
+          source_file_name?: string | null
+          source_format?: string | null
+          tc_identity_no?: string | null
+          teaching_area?: string | null
+          updated_at?: string
+        }
+        Update: {
+          archive_no?: string | null
+          base_title?: string | null
+          birth_date?: string | null
+          blood_group?: string | null
+          career_stage?: string | null
+          district?: string | null
+          duty_title?: string | null
+          education_status?: string | null
+          first_service_date?: string | null
+          gender?: string | null
+          grade_step?: string | null
+          imported_at?: string
+          institution_code?: string | null
+          institution_name?: string | null
+          institution_registry_no?: string | null
+          personnel_id?: string
+          personnel_status?: string | null
+          province?: string | null
+          raw_data?: Json
+          raw_labels?: Json
+          retirement_registry_no?: string | null
+          source_file_name?: string | null
+          source_format?: string | null
+          tc_identity_no?: string | null
+          teaching_area?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personnel_private_details_personnel_id_fkey"
+            columns: ["personnel_id"]
+            isOneToOne: true
+            referencedRelation: "personnel_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personnel_registry: {
+        Row: {
+          active: boolean
+          derived_roles: string[]
+          duty_title: string | null
+          employment_status: string | null
+          full_name: string
+          id: string
+          imported_at: string
+          institution_code: string | null
+          linked_user_id: string | null
+          source_file_name: string | null
+          system_role: string | null
+          teaching_area_id: string | null
+          teaching_area_raw: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          derived_roles?: string[]
+          duty_title?: string | null
+          employment_status?: string | null
+          full_name: string
+          id?: string
+          imported_at?: string
+          institution_code?: string | null
+          linked_user_id?: string | null
+          source_file_name?: string | null
+          system_role?: string | null
+          teaching_area_id?: string | null
+          teaching_area_raw?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          derived_roles?: string[]
+          duty_title?: string | null
+          employment_status?: string | null
+          full_name?: string
+          id?: string
+          imported_at?: string
+          institution_code?: string | null
+          linked_user_id?: string | null
+          source_file_name?: string | null
+          system_role?: string | null
+          teaching_area_id?: string | null
+          teaching_area_raw?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personnel_registry_teaching_area_id_fkey"
+            columns: ["teaching_area_id"]
+            isOneToOne: false
+            referencedRelation: "teaching_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personnel_responsibilities: {
+        Row: {
+          active: boolean
+          assignment_document_url: string | null
+          created_at: string
+          ends_on: string | null
+          id: string
+          legal_basis: string | null
+          personnel_id: string | null
+          responsibility_id: string
+          starts_on: string | null
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          assignment_document_url?: string | null
+          created_at?: string
+          ends_on?: string | null
+          id?: string
+          legal_basis?: string | null
+          personnel_id?: string | null
+          responsibility_id: string
+          starts_on?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          assignment_document_url?: string | null
+          created_at?: string
+          ends_on?: string | null
+          id?: string
+          legal_basis?: string | null
+          personnel_id?: string | null
+          responsibility_id?: string
+          starts_on?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personnel_responsibilities_personnel_id_fkey"
+            columns: ["personnel_id"]
+            isOneToOne: false
+            referencedRelation: "personnel_registry"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "personnel_responsibilities_responsibility_id_fkey"
+            columns: ["responsibility_id"]
+            isOneToOne: false
+            referencedRelation: "responsibility_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pre_registered_teachers: {
         Row: {
           active: boolean
@@ -2177,12 +2801,78 @@ export type Database = {
           },
         ]
       }
+      principal_recovery_identity: {
+        Row: {
+          created_at: string
+          email: string
+          institution_code: string
+          phone: string
+          tckn_hmac: string
+          tckn_masked: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          institution_code: string
+          phone: string
+          tckn_hmac: string
+          tckn_masked: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          institution_code?: string
+          phone?: string
+          tckn_hmac?: string
+          tckn_masked?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "principal_recovery_identity_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      profile_role_tags: {
+        Row: {
+          active: boolean
+          role_tag: string
+          source: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          role_tag: string
+          source?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          role_tag?: string
+          source?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           blood_type: string | null
           email: string | null
           emergency_contact: string | null
           full_name: string | null
+          institution_code: string | null
           is_super_admin: boolean
           permission_mode: string
           phone: string | null
@@ -2197,6 +2887,7 @@ export type Database = {
           email?: string | null
           emergency_contact?: string | null
           full_name?: string | null
+          institution_code?: string | null
           is_super_admin?: boolean
           permission_mode?: string
           phone?: string | null
@@ -2211,6 +2902,7 @@ export type Database = {
           email?: string | null
           emergency_contact?: string | null
           full_name?: string | null
+          institution_code?: string | null
           is_super_admin?: boolean
           permission_mode?: string
           phone?: string | null
@@ -2221,6 +2913,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "profiles_teaching_area_id_fkey"
             columns: ["teaching_area_id"]
@@ -2419,6 +3118,39 @@ export type Database = {
             referencedColumns: ["teacher_id"]
           },
         ]
+      }
+      responsibility_catalog: {
+        Row: {
+          active: boolean
+          applicable_school_types: string[]
+          code: string
+          id: string
+          legal_basis: string | null
+          name: string
+          parent_title: string | null
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          applicable_school_types?: string[]
+          code: string
+          id?: string
+          legal_basis?: string | null
+          name: string
+          parent_title?: string | null
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          applicable_school_types?: string[]
+          code?: string
+          id?: string
+          legal_basis?: string | null
+          name?: string
+          parent_title?: string | null
+          sort_order?: number
+        }
+        Relationships: []
       }
       schedule_audit_log: {
         Row: {
@@ -3850,14 +4582,21 @@ export type Database = {
         Row: {
           academic_year_id: string
           all_day: boolean
+          audiences: string[]
           blocks_teaching: boolean
+          conditional: boolean
           counts_as_workday: boolean
           created_at: string
           created_by: string | null
           ends_on: string
           event_type: string
+          grade_levels: string[]
           id: string
           note: string | null
+          parsed_from_source: boolean
+          school_levels: string[]
+          school_types: string[]
+          source_file_name: string | null
           source_note: string | null
           starts_on: string
           title: string
@@ -3866,14 +4605,21 @@ export type Database = {
         Insert: {
           academic_year_id: string
           all_day?: boolean
+          audiences?: string[]
           blocks_teaching?: boolean
+          conditional?: boolean
           counts_as_workday?: boolean
           created_at?: string
           created_by?: string | null
           ends_on: string
           event_type: string
+          grade_levels?: string[]
           id?: string
           note?: string | null
+          parsed_from_source?: boolean
+          school_levels?: string[]
+          school_types?: string[]
+          source_file_name?: string | null
           source_note?: string | null
           starts_on: string
           title: string
@@ -3882,14 +4628,21 @@ export type Database = {
         Update: {
           academic_year_id?: string
           all_day?: boolean
+          audiences?: string[]
           blocks_teaching?: boolean
+          conditional?: boolean
           counts_as_workday?: boolean
           created_at?: string
           created_by?: string | null
           ends_on?: string
           event_type?: string
+          grade_levels?: string[]
           id?: string
           note?: string | null
+          parsed_from_source?: boolean
+          school_levels?: string[]
+          school_types?: string[]
+          source_file_name?: string | null
           source_note?: string | null
           starts_on?: string
           title?: string
@@ -3922,43 +4675,52 @@ export type Database = {
       school_classes: {
         Row: {
           active: boolean
+          advisor_teacher_id: string | null
           class_name: string
           composite_key: string | null
           curriculum_status: string
           expected_weekly_hours: number | null
           grade_level: number | null
           id: string
+          imported_student_count: number | null
           program_type: string | null
           section: string | null
           source: string
+          source_file_name: string | null
           split_threshold: number
           updated_at: string
         }
         Insert: {
           active?: boolean
+          advisor_teacher_id?: string | null
           class_name: string
           composite_key?: string | null
           curriculum_status?: string
           expected_weekly_hours?: number | null
           grade_level?: number | null
           id?: string
+          imported_student_count?: number | null
           program_type?: string | null
           section?: string | null
           source?: string
+          source_file_name?: string | null
           split_threshold?: number
           updated_at?: string
         }
         Update: {
           active?: boolean
+          advisor_teacher_id?: string | null
           class_name?: string
           composite_key?: string | null
           curriculum_status?: string
           expected_weekly_hours?: number | null
           grade_level?: number | null
           id?: string
+          imported_student_count?: number | null
           program_type?: string | null
           section?: string | null
           source?: string
+          source_file_name?: string | null
           split_threshold?: number
           updated_at?: string
         }
@@ -4139,6 +4901,77 @@ export type Database = {
           created_at?: string
           email?: string
           full_name?: string
+        }
+        Relationships: []
+      }
+      system_feature_catalog: {
+        Row: {
+          enabled: boolean
+          feature_key: string
+          label: string
+          maintenance: boolean
+          maintenance_message: string | null
+          parent_key: string | null
+          route_prefix: string | null
+          sort_order: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          enabled?: boolean
+          feature_key: string
+          label: string
+          maintenance?: boolean
+          maintenance_message?: string | null
+          parent_key?: string | null
+          route_prefix?: string | null
+          sort_order?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          enabled?: boolean
+          feature_key?: string
+          label?: string
+          maintenance?: boolean
+          maintenance_message?: string | null
+          parent_key?: string | null
+          route_prefix?: string | null
+          sort_order?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_feature_catalog_parent_key_fkey"
+            columns: ["parent_key"]
+            isOneToOne: false
+            referencedRelation: "system_feature_catalog"
+            referencedColumns: ["feature_key"]
+          },
+        ]
+      }
+      system_runtime_settings: {
+        Row: {
+          maintenance: boolean
+          maintenance_message: string
+          singleton: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          maintenance?: boolean
+          maintenance_message?: string
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          maintenance?: boolean
+          maintenance_message?: string
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -4852,6 +5685,44 @@ export type Database = {
           },
         ]
       }
+      tenant_messages: {
+        Row: {
+          created_at: string
+          id: string
+          institution_code: string
+          message: string
+          sender_user_id: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          institution_code: string
+          message: string
+          sender_user_id?: string | null
+          severity?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          institution_code?: string
+          message?: string
+          sender_user_id?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_messages_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
       user_permission_grants: {
         Row: {
           active: boolean
@@ -5413,7 +6284,16 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      can_access_institution: {
+        Args: { p_institution_code: string }
+        Returns: boolean
+      }
+      can_manage_institution_personnel: {
+        Args: { p_institution_code: string }
+        Returns: boolean
+      }
       can_manage_permissions: { Args: never; Returns: boolean }
+      can_manage_personnel_private_data: { Args: never; Returns: boolean }
       claim_super_admin_profile: {
         Args: never
         Returns: {
@@ -5421,6 +6301,7 @@ export type Database = {
           email: string | null
           emergency_contact: string | null
           full_name: string | null
+          institution_code: string | null
           is_super_admin: boolean
           permission_mode: string
           phone: string | null
@@ -5476,6 +6357,7 @@ export type Database = {
           email: string | null
           emergency_contact: string | null
           full_name: string | null
+          institution_code: string | null
           is_super_admin: boolean
           permission_mode: string
           phone: string | null
@@ -5685,6 +6567,7 @@ export type Database = {
           total_weekly_hours: number
         }[]
       }
+      get_my_institution_code: { Args: never; Returns: string }
       get_my_permissions: {
         Args: never
         Returns: {
@@ -5697,6 +6580,7 @@ export type Database = {
           scope: Json
         }[]
       }
+      get_my_principal_institution_code: { Args: never; Returns: string }
       get_my_published_schedule: {
         Args: { p_date?: string }
         Returns: {
@@ -5717,6 +6601,7 @@ export type Database = {
           weekday: number
         }[]
       }
+      get_my_role_tags: { Args: never; Returns: string[] }
       get_norm_missing_mappings: {
         Args: { p_on_date?: string }
         Returns: {
@@ -5761,6 +6646,24 @@ export type Database = {
           updated_at: string
           user_id: string
         }[]
+      }
+      get_personnel_field_settings: {
+        Args: never
+        Returns: {
+          default_enabled: boolean
+          default_module_keys: string[]
+          display_name: string
+          effective_enabled: boolean
+          effective_module_keys: string[]
+          field_key: string
+          institution_code: string
+          mode: string
+          source_headers: string[]
+        }[]
+      }
+      get_personnel_module_fields: {
+        Args: { p_module_key: string; p_personnel_id: string }
+        Returns: Json
       }
       get_published_schedule_rows: {
         Args: {
@@ -5967,6 +6870,20 @@ export type Database = {
           teaching_area_id: string
         }[]
       }
+      get_system_access_state: { Args: { p_path?: string }; Returns: Json }
+      get_system_feature_matrix: {
+        Args: never
+        Returns: {
+          enabled: boolean
+          feature_key: string
+          label: string
+          maintenance: boolean
+          maintenance_message: string
+          parent_key: string
+          route_prefix: string
+          sort_order: number
+        }[]
+      }
       has_any_module_permission: {
         Args: { p_module: string }
         Returns: boolean
@@ -5975,9 +6892,15 @@ export type Database = {
         Args: { p_module: string }
         Returns: boolean
       }
-      has_permission: {
-        Args: { p_code: string; p_scope?: Json }
-        Returns: boolean
+      has_permission:
+        | { Args: { p_code: string; p_scope?: Json }; Returns: boolean }
+        | {
+            Args: { p_code: string; p_scope?: Json; p_user_id: string }
+            Returns: boolean
+          }
+      import_class_summaries: {
+        Args: { p_file_name: string; p_rows: Json }
+        Returns: Json
       }
       import_eokul_roster: {
         Args: { p_file_name: string; p_file_type: string; p_rows: Json }
@@ -5987,6 +6910,10 @@ export type Database = {
           imported_students: number
         }[]
       }
+      import_personnel_registry: {
+        Args: { p_file_name: string; p_rows: Json }
+        Returns: Json
+      }
       import_weekly_schedule: {
         Args: { p_file_name: string; p_file_type: string; p_rows: Json }
         Returns: {
@@ -5995,7 +6922,9 @@ export type Database = {
         }[]
       }
       is_admin: { Args: never; Returns: boolean }
+      is_institution_principal: { Args: never; Returns: boolean }
       is_manager_or_admin: { Args: never; Returns: boolean }
+      is_principal_user: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
       is_teaching_day: { Args: { p_date: string }; Returns: boolean }
       is_valid_tckn: { Args: { p_tckn: string }; Returns: boolean }
@@ -6039,6 +6968,15 @@ export type Database = {
       normalize_schedule_block_pattern_v2: {
         Args: { p_hours: number; p_pattern: number[] }
         Returns: number[]
+      }
+      notify_tenant_principals: {
+        Args: {
+          p_institution_code: string
+          p_message: string
+          p_priority?: string
+          p_title: string
+        }
+        Returns: undefined
       }
       open_permission_context: { Args: { p_code: string }; Returns: undefined }
       payroll_month_is_locked: {
@@ -6302,6 +7240,22 @@ export type Database = {
         Args: { p_locked: boolean; p_month: string }
         Returns: undefined
       }
+      set_personnel_field_override: {
+        Args: {
+          p_enabled: boolean
+          p_field_key: string
+          p_module_keys: string[]
+        }
+        Returns: undefined
+      }
+      set_personnel_field_rule: {
+        Args: {
+          p_enabled: boolean
+          p_field_key: string
+          p_module_keys: string[]
+        }
+        Returns: undefined
+      }
       set_personnel_teaching_area: {
         Args: { p_teaching_area_id?: string; p_user_id: string }
         Returns: boolean
@@ -6368,9 +7322,52 @@ export type Database = {
           weekly_load: number
         }[]
       }
+      super_admin_list_tenants: {
+        Args: never
+        Returns: {
+          approval_note: string
+          approval_status: string
+          institution_code: string
+          principal_email: string
+          principal_name: string
+          principal_phone: string
+          reviewed_at: string
+          school_name: string
+        }[]
+      }
+      super_admin_review_tenant: {
+        Args: {
+          p_decision: string
+          p_institution_code: string
+          p_note?: string
+        }
+        Returns: undefined
+      }
+      super_admin_send_tenant_message: {
+        Args: {
+          p_institution_code: string
+          p_message: string
+          p_severity?: string
+          p_title: string
+        }
+        Returns: undefined
+      }
+      super_admin_set_feature: {
+        Args: {
+          p_enabled: boolean
+          p_feature_key: string
+          p_maintenance?: boolean
+          p_message?: string
+        }
+        Returns: undefined
+      }
       super_admin_set_profile_teaching_area: {
         Args: { p_teaching_area_id: string; p_user_id: string }
         Returns: boolean
+      }
+      super_admin_set_system_maintenance: {
+        Args: { p_maintenance: boolean; p_message?: string }
+        Returns: undefined
       }
       super_admin_upsert_personnel: {
         Args: {
@@ -6416,6 +7413,7 @@ export type Database = {
           email: string | null
           emergency_contact: string | null
           full_name: string | null
+          institution_code: string | null
           is_super_admin: boolean
           permission_mode: string
           phone: string | null
