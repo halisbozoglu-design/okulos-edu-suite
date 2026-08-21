@@ -31,9 +31,10 @@ export const LOGIN_THEME_CATALOG: LoginTheme[] = [
 
 const CACHE_KEY = "okulos.loginThemeSchedule.v2";
 const TENANT_KEY = "okulos.lastTenantCode";
+const DEFAULT_LOGIN_THEME: LoginTheme = LOGIN_THEME_CATALOG[0]!;
 
 export function getLoginTheme(key: LoginThemeKey): LoginTheme {
-  return LOGIN_THEME_CATALOG.find((x) => x.key === key) ?? LOGIN_THEME_CATALOG[0];
+  return LOGIN_THEME_CATALOG.find((x) => x.key === key) ?? DEFAULT_LOGIN_THEME;
 }
 
 export function rememberTenantCode(code: string | null | undefined) {
@@ -118,19 +119,25 @@ export function resolveActiveLoginTheme(now = new Date(), tenantCode = resolveLo
 }
 
 export function parseLoginThemeCommand(command: string): Omit<LoginThemeSchedule, "id"> | null {
-  // örnek: tema aurora | tenant * | 2026-10-29 00:00 | 2026-10-29 23:59 | 100
   const parts = command.split("|").map((x) => x.trim()).filter(Boolean);
   if (parts.length < 4) return null;
-  const themeMatch = parts[0].match(/^tema\s+(default|aurora|orbit|waves)$/i);
-  const tenantMatch = parts[1].match(/^tenant\s+(.+)$/i);
+  const themePart = parts[0] ?? "";
+  const tenantPart = parts[1] ?? "";
+  const startPart = parts[2] ?? "";
+  const endPart = parts[3] ?? "";
+  const themeMatch = themePart.match(/^tema\s+(default|aurora|orbit|waves)$/i);
+  const tenantMatch = tenantPart.match(/^tenant\s+(.+)$/i);
   if (!themeMatch || !tenantMatch) return null;
-  const startsAt = normalizeDateTime(parts[2]);
-  const endsAt = normalizeDateTime(parts[3]);
+  const themeValue = themeMatch[1];
+  const tenantValue = tenantMatch[1];
+  if (!themeValue || !tenantValue) return null;
+  const startsAt = normalizeDateTime(startPart);
+  const endsAt = normalizeDateTime(endPart);
   const priority = parts[4] ? Number(parts[4]) : 100;
   if (!startsAt || !endsAt || !Number.isFinite(priority) || Date.parse(startsAt) > Date.parse(endsAt)) return null;
   return {
-    theme: themeMatch[1].toLowerCase() as LoginThemeKey,
-    tenantCode: tenantMatch[1] === "*" ? "*" : tenantMatch[1],
+    theme: themeValue.toLowerCase() as LoginThemeKey,
+    tenantCode: tenantValue === "*" ? "*" : tenantValue,
     startsAt,
     endsAt,
     priority,

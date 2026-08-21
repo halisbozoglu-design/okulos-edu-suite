@@ -18,22 +18,19 @@ for(const token of [
   "check-migration-replay-safety.mjs",
 ]) if(!ci.includes(token)){console.error(`Phase 4 CI contract missing: ${token}`);process.exit(1);}
 
-// Historical Lovable migrations are not clean-replayable until a canonical baseline exists.
-// Running `supabase db reset` here would be a deterministic false-red, not a useful integration test.
+// The canonical Cloud baseline is authoritative; the legacy Lovable chain stays immutable.
 if(ci.includes("supabase db reset --local --no-seed")){
   console.error("CI still tries to replay non-replayable legacy migrations from zero. Use the baseline-aware replay audit instead.");
   process.exit(1);
 }
-if(!replayAudit.includes("LEGACY_MIGRATION_REPLAY_BLOCKED_UNTIL_BASELINE")){
-  console.error("Migration replay safety audit marker missing.");process.exit(1);
+if(!replayAudit.includes("Cloud baseline 20260821153000 is canonical")||!replayAudit.includes("forward-only changes are required")){
+  console.error("Canonical baseline replay-safety audit marker missing.");process.exit(1);
 }
 
 if(!pkg.includes('"test": "bun test"')){console.error("Bun test script missing.");process.exit(1);}
 for(const token of ["parseScheduleImport","normalizeRows","PROGRAM_SATIRI_GECERSIZ","REQUIRED_COLUMNS_NOT_FOUND"])
   if(!parserTest.includes(token)){console.error(`Parser regression contract missing: ${token}`);process.exit(1);}
 
-// Keep the SQL integration contracts in-repo so they can be activated against the canonical
-// baseline without recreating them later.
 for(const token of [
   "current_tenant_code()","generate_schedule_scenarios_v2()","apply_schedule_scenario(uuid)",
   "publish_current_schedule(date,text,text,text)","assert_schedule_scenario_tenant_phase3_v1",
@@ -53,4 +50,4 @@ for(const file of migrations){
   timestamps.add(m[1]);
 }
 
-console.log(`Phase 4 guard OK: ${migrations.length} forward migrations, parser tests, replay-safety policy and retained DB integration contracts are wired.`);
+console.log(`Phase 4 guard OK: ${migrations.length} forward migrations, parser tests, canonical-baseline policy and retained DB integration contracts are wired.`);

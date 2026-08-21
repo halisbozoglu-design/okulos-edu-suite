@@ -43,7 +43,7 @@ for(const token of [
 ]) if(!joined.includes(token)){console.error(`Faz 3 migration sözleşmesi eksik: ${token}`);process.exit(1);}
 
 for(const token of [
-  '"function:generate_schedule_scenarios_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
+  '"function:generate_schedule_scenarios_v2": "20260821094620_dd216589-7cc9-42b0-86bd-576c5074d9f7.sql"',
   '"function:validate_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
   '"function:repair_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
   '"function:rescore_schedule_scenario_v2": "20260821021000_schedule_phase3_rpc_tenant_guards.sql"',
@@ -51,8 +51,8 @@ for(const token of [
   '"function:apply_schedule_scenario": "20260821015500_schedule_phase3_authority_closure.sql"',
   '"function:publish_current_schedule": "20260821015500_schedule_phase3_authority_closure.sql"',
   '"function:get_schedule_preparation_readiness": "20260821015500_schedule_phase3_authority_closure.sql"',
-  '"function:get_schedule_scenario_hard_issues_v2": "20260821015500_schedule_phase3_authority_closure.sql"',
-  '"function:get_schedule_integrity_report": "20260821015500_schedule_phase3_authority_closure.sql"',
+  '"function:get_schedule_scenario_hard_issues_v2": "20260822002000_placement_matrices_relation_rules_and_block_priorities.sql"',
+  '"function:get_schedule_integrity_report": "20260822002000_placement_matrices_relation_rules_and_block_priorities.sql"',
   '"function:calculate_schedule_scenario_score_v2": "20260821020500_schedule_phase3_scoped_quality_score.sql"',
 ]) if(!authority.includes(token)){console.error(`Faz 3 authority kaydı eksik: ${token}`);process.exit(1);}
 
