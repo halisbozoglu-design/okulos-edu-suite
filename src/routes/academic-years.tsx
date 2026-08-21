@@ -110,7 +110,9 @@ function AcademicYearsPage() {
     if (!editable) return;
     if (!draft.code.trim() || !draft.title.trim() || !draft.startsOn || !draft.endsOn) { setMessage("Yıl kodu, başlık, başlangıç ve bitiş tarihi zorunludur."); return; }
     if (!/^\d{4}-\d{4}$/.test(draft.code.trim())) { setMessage("Yıl kodu 2026-2027 biçiminde olmalıdır."); return; }
-    const [codeStart, codeEnd] = draft.code.trim().split("-").map(Number);
+    const [codeStartRaw, codeEndRaw] = draft.code.trim().split("-").map(Number);
+    const codeStart = codeStartRaw ?? Number.NaN;
+    const codeEnd = codeEndRaw ?? Number.NaN;
     if (codeEnd !== codeStart + 1) { setMessage("Eğitim-öğretim yılı kodunda ikinci yıl ilk yıldan bir büyük olmalıdır."); return; }
     if (!draft.startsOn.startsWith(String(codeStart)) || !draft.endsOn.startsWith(String(codeEnd))) { setMessage("Yıl kodu ile başlangıç/bitiş tarihleri aynı eğitim-öğretim dönemini göstermelidir."); return; }
     const chronologyError = validateChronology(draft);
