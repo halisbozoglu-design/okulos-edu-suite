@@ -50,8 +50,9 @@ end $$;
 
 do $$
 begin
-  -- Phase 3 tenant/RPC hardening must be physically present in the migrated database.
-  if pg_get_functiondef('public.apply_schedule_scenario(uuid)'::regprocedure) not ilike '%SCENARIO_NOT_IN_ACTIVE_TENANT%' then raise exception 'apply scenario tenant gate missing'; end if;
+  -- Phase 3 hardening must be physically present in the final migrated definitions.
+  if pg_get_functiondef('public.validate_schedule_scenario_v2(uuid)'::regprocedure) not ilike '%assert_schedule_scenario_tenant_phase3_v1%' then raise exception 'scenario validation tenant gate missing'; end if;
+  if pg_get_functiondef('public.apply_schedule_scenario(uuid)'::regprocedure) not ilike '%validate_schedule_scenario_v2%' then raise exception 'apply scenario validation gate missing'; end if;
   if pg_get_functiondef('public.publish_current_schedule(date,text,text,text)'::regprocedure) not ilike '%PUBLISH_BLOCKED_BY_HARD_ISSUES%' then raise exception 'publish hard gate missing'; end if;
   if pg_get_functiondef('public.get_schedule_preparation_readiness()'::regprocedure) not ilike '%SYNC_GROUP_NO_COMMON_WINDOW%' then raise exception 'Phase 3 sync preflight missing'; end if;
 end $$;
