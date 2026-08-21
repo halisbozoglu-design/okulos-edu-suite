@@ -20,6 +20,7 @@ export type Database = {
           class_name: string
           crisis_report_id: string
           id: string
+          institution_code: string | null
           lesson_date: string
           period: number
           subject: string
@@ -30,6 +31,7 @@ export type Database = {
           class_name: string
           crisis_report_id: string
           id?: string
+          institution_code?: string | null
           lesson_date: string
           period: number
           subject: string
@@ -40,6 +42,7 @@ export type Database = {
           class_name?: string
           crisis_report_id?: string
           id?: string
+          institution_code?: string | null
           lesson_date?: string
           period?: number
           subject?: string
@@ -88,6 +91,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_absence_lessons_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       absences: {
@@ -100,6 +110,7 @@ export type Database = {
           crisis_report_id: string
           has_medical_report: boolean
           id: string
+          institution_code: string | null
           note: string | null
           status: string
           teacher_id: string
@@ -113,6 +124,7 @@ export type Database = {
           crisis_report_id: string
           has_medical_report?: boolean
           id?: string
+          institution_code?: string | null
           note?: string | null
           status?: string
           teacher_id: string
@@ -126,6 +138,7 @@ export type Database = {
           crisis_report_id?: string
           has_medical_report?: boolean
           id?: string
+          institution_code?: string | null
           note?: string | null
           status?: string
           teacher_id?: string
@@ -166,6 +179,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_absences_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       academic_years: {
@@ -177,6 +197,7 @@ export type Database = {
           ends_on: string
           first_term_ends_on: string | null
           id: string
+          institution_code: string | null
           second_term_starts_on: string | null
           source_note: string | null
           starts_on: string
@@ -194,6 +215,7 @@ export type Database = {
           ends_on: string
           first_term_ends_on?: string | null
           id?: string
+          institution_code?: string | null
           second_term_starts_on?: string | null
           source_note?: string | null
           starts_on: string
@@ -211,6 +233,7 @@ export type Database = {
           ends_on?: string
           first_term_ends_on?: string | null
           id?: string
+          institution_code?: string | null
           second_term_starts_on?: string | null
           source_note?: string | null
           starts_on?: string
@@ -234,6 +257,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "fk_academic_years_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
           },
         ]
       }
@@ -306,6 +336,7 @@ export type Database = {
           assignment_id: string | null
           created_at: string
           id: number
+          institution_code: string | null
           metadata: Json
           new_substitute_user_id: string | null
           old_substitute_user_id: string | null
@@ -317,6 +348,7 @@ export type Database = {
           assignment_id?: string | null
           created_at?: string
           id?: never
+          institution_code?: string | null
           metadata?: Json
           new_substitute_user_id?: string | null
           old_substitute_user_id?: string | null
@@ -328,6 +360,7 @@ export type Database = {
           assignment_id?: string | null
           created_at?: string
           id?: never
+          institution_code?: string | null
           metadata?: Json
           new_substitute_user_id?: string | null
           old_substitute_user_id?: string | null
@@ -389,6 +422,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_assignment_audit_log_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       calendar_event_tasks: {
@@ -401,6 +441,7 @@ export type Database = {
           due_on: string | null
           file_required: boolean
           id: string
+          institution_code: string | null
           note: string | null
           recurrence: string
           report_frequency: string | null
@@ -418,6 +459,7 @@ export type Database = {
           due_on?: string | null
           file_required?: boolean
           id?: string
+          institution_code?: string | null
           note?: string | null
           recurrence?: string
           report_frequency?: string | null
@@ -435,6 +477,7 @@ export type Database = {
           due_on?: string | null
           file_required?: boolean
           id?: string
+          institution_code?: string | null
           note?: string | null
           recurrence?: string
           report_frequency?: string | null
@@ -465,6 +508,13 @@ export type Database = {
             referencedRelation: "school_calendar_events"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_calendar_event_tasks_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       calendar_task_files: {
@@ -472,6 +522,7 @@ export type Database = {
           file_name: string | null
           file_url: string
           id: string
+          institution_code: string | null
           task_id: string
           uploaded_at: string
           uploaded_by: string | null
@@ -480,6 +531,7 @@ export type Database = {
           file_name?: string | null
           file_url: string
           id?: string
+          institution_code?: string | null
           task_id: string
           uploaded_at?: string
           uploaded_by?: string | null
@@ -488,6 +540,7 @@ export type Database = {
           file_name?: string | null
           file_url?: string
           id?: string
+          institution_code?: string | null
           task_id?: string
           uploaded_at?: string
           uploaded_by?: string | null
@@ -500,6 +553,13 @@ export type Database = {
             referencedRelation: "calendar_event_tasks"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_calendar_task_files_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       class_course_requirements: {
@@ -509,6 +569,7 @@ export type Database = {
           course_id: string
           created_at: string
           id: string
+          institution_code: string | null
           locked: boolean
           note: string | null
           source_template_id: string | null
@@ -521,6 +582,7 @@ export type Database = {
           course_id: string
           created_at?: string
           id?: string
+          institution_code?: string | null
           locked?: boolean
           note?: string | null
           source_template_id?: string | null
@@ -533,6 +595,7 @@ export type Database = {
           course_id?: string
           created_at?: string
           id?: string
+          institution_code?: string | null
           locked?: boolean
           note?: string | null
           source_template_id?: string | null
@@ -575,18 +638,28 @@ export type Database = {
             referencedRelation: "curriculum_templates"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_class_course_requirements_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       class_subgroup_students: {
         Row: {
+          institution_code: string | null
           student_id: string
           subgroup_id: string
         }
         Insert: {
+          institution_code?: string | null
           student_id: string
           subgroup_id: string
         }
         Update: {
+          institution_code?: string | null
           student_id?: string
           subgroup_id?: string
         }
@@ -605,6 +678,13 @@ export type Database = {
             referencedRelation: "class_subgroups"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_class_subgroup_students_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       class_subgroups: {
@@ -612,6 +692,7 @@ export type Database = {
           active: boolean
           class_id: string
           id: string
+          institution_code: string | null
           label: string | null
           subgroup_key: string
         }
@@ -619,6 +700,7 @@ export type Database = {
           active?: boolean
           class_id: string
           id?: string
+          institution_code?: string | null
           label?: string | null
           subgroup_key: string
         }
@@ -626,6 +708,7 @@ export type Database = {
           active?: boolean
           class_id?: string
           id?: string
+          institution_code?: string | null
           label?: string | null
           subgroup_key?: string
         }
@@ -651,6 +734,13 @@ export type Database = {
             referencedRelation: "school_classes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_class_subgroups_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       classrooms: {
@@ -661,6 +751,7 @@ export type Database = {
           department: string | null
           hardware: Json
           id: string
+          institution_code: string | null
           name: string
           room_type: string
           updated_at: string
@@ -672,6 +763,7 @@ export type Database = {
           department?: string | null
           hardware?: Json
           id?: string
+          institution_code?: string | null
           name: string
           room_type?: string
           updated_at?: string
@@ -683,11 +775,20 @@ export type Database = {
           department?: string | null
           hardware?: Json
           id?: string
+          institution_code?: string | null
           name?: string
           room_type?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_classrooms_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       course_catalog: {
         Row: {
@@ -726,6 +827,7 @@ export type Database = {
           avoid_early: boolean
           course_id: string
           difficulty: number
+          institution_code: string
           is_vocational_practice: boolean
           is_workshop: boolean
           lesson_family: string | null
@@ -742,6 +844,7 @@ export type Database = {
           avoid_early?: boolean
           course_id: string
           difficulty?: number
+          institution_code?: string
           is_vocational_practice?: boolean
           is_workshop?: boolean
           lesson_family?: string | null
@@ -758,6 +861,7 @@ export type Database = {
           avoid_early?: boolean
           course_id?: string
           difficulty?: number
+          institution_code?: string
           is_vocational_practice?: boolean
           is_workshop?: boolean
           lesson_family?: string | null
@@ -772,7 +876,7 @@ export type Database = {
           {
             foreignKeyName: "course_pedagogy_profiles_course_id_fkey"
             columns: ["course_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "course_catalog"
             referencedColumns: ["id"]
           },
@@ -790,6 +894,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_course_pedagogy_profiles_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       course_schedule_rules: {
@@ -799,6 +910,7 @@ export type Database = {
           block_pattern: number[]
           course_id: string
           id: string
+          institution_code: string | null
           max_per_day: number | null
           min_distinct_days: number | null
           note: string | null
@@ -814,6 +926,7 @@ export type Database = {
           block_pattern?: number[]
           course_id: string
           id?: string
+          institution_code?: string | null
           max_per_day?: number | null
           min_distinct_days?: number | null
           note?: string | null
@@ -829,6 +942,7 @@ export type Database = {
           block_pattern?: number[]
           course_id?: string
           id?: string
+          institution_code?: string | null
           max_per_day?: number | null
           min_distinct_days?: number | null
           note?: string | null
@@ -842,9 +956,16 @@ export type Database = {
           {
             foreignKeyName: "course_schedule_rules_course_id_fkey"
             columns: ["course_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "course_catalog"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_course_schedule_rules_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
           },
         ]
       }
@@ -853,6 +974,7 @@ export type Database = {
           created_at: string
           has_medical_report: boolean
           id: string
+          institution_code: string | null
           note: string | null
           report_date: string
           status: string
@@ -862,6 +984,7 @@ export type Database = {
           created_at?: string
           has_medical_report?: boolean
           id?: string
+          institution_code?: string | null
           note?: string | null
           report_date?: string
           status?: string
@@ -871,6 +994,7 @@ export type Database = {
           created_at?: string
           has_medical_report?: boolean
           id?: string
+          institution_code?: string | null
           note?: string | null
           report_date?: string
           status?: string
@@ -891,6 +1015,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_crisis_reports_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       curriculum_template_courses: {
@@ -898,6 +1029,7 @@ export type Database = {
           category: string
           course_id: string
           id: string
+          institution_code: string | null
           sort_order: number
           template_id: string
           weekly_hours: number
@@ -906,6 +1038,7 @@ export type Database = {
           category?: string
           course_id: string
           id?: string
+          institution_code?: string | null
           sort_order?: number
           template_id: string
           weekly_hours: number
@@ -914,6 +1047,7 @@ export type Database = {
           category?: string
           course_id?: string
           id?: string
+          institution_code?: string | null
           sort_order?: number
           template_id?: string
           weekly_hours?: number
@@ -933,6 +1067,13 @@ export type Database = {
             referencedRelation: "curriculum_templates"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_curriculum_template_courses_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       curriculum_templates: {
@@ -944,6 +1085,7 @@ export type Database = {
           expected_weekly_hours: number | null
           grade_level: number | null
           id: string
+          institution_code: string | null
           name: string
           program_type: string | null
           school_level: string | null
@@ -957,6 +1099,7 @@ export type Database = {
           expected_weekly_hours?: number | null
           grade_level?: number | null
           id?: string
+          institution_code?: string | null
           name: string
           program_type?: string | null
           school_level?: string | null
@@ -970,6 +1113,7 @@ export type Database = {
           expected_weekly_hours?: number | null
           grade_level?: number | null
           id?: string
+          institution_code?: string | null
           name?: string
           program_type?: string | null
           school_level?: string | null
@@ -990,6 +1134,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_curriculum_templates_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       duty_assignment_history: {
@@ -1003,6 +1154,7 @@ export type Database = {
           effective_end_date: string | null
           effective_start_date: string
           id: number
+          institution_code: string | null
           new_record: Json | null
           previous_record: Json | null
           source: string
@@ -1018,6 +1170,7 @@ export type Database = {
           effective_end_date?: string | null
           effective_start_date: string
           id?: never
+          institution_code?: string | null
           new_record?: Json | null
           previous_record?: Json | null
           source?: string
@@ -1033,6 +1186,7 @@ export type Database = {
           effective_end_date?: string | null
           effective_start_date?: string
           id?: never
+          institution_code?: string | null
           new_record?: Json | null
           previous_record?: Json | null
           source?: string
@@ -1067,6 +1221,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_duty_assignment_history_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       duty_day_notes: {
@@ -1077,6 +1238,7 @@ export type Database = {
           empty_lesson_resolution: string | null
           end_time: string | null
           general_note: string | null
+          institution_code: string | null
           principal_approval_note: string | null
           start_time: string | null
           teaching_mode: string
@@ -1089,6 +1251,7 @@ export type Database = {
           empty_lesson_resolution?: string | null
           end_time?: string | null
           general_note?: string | null
+          institution_code?: string | null
           principal_approval_note?: string | null
           start_time?: string | null
           teaching_mode?: string
@@ -1101,6 +1264,7 @@ export type Database = {
           empty_lesson_resolution?: string | null
           end_time?: string | null
           general_note?: string | null
+          institution_code?: string | null
           principal_approval_note?: string | null
           start_time?: string | null
           teaching_mode?: string
@@ -1121,6 +1285,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_duty_day_notes_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       duty_incident_logs: {
@@ -1131,6 +1302,7 @@ export type Database = {
           duty_date: string
           duty_location: string | null
           id: string
+          institution_code: string | null
           occurred_at: string
           reporter_id: string | null
         }
@@ -1141,6 +1313,7 @@ export type Database = {
           duty_date: string
           duty_location?: string | null
           id?: string
+          institution_code?: string | null
           occurred_at?: string
           reporter_id?: string | null
         }
@@ -1151,6 +1324,7 @@ export type Database = {
           duty_date?: string
           duty_location?: string | null
           id?: string
+          institution_code?: string | null
           occurred_at?: string
           reporter_id?: string | null
         }
@@ -1169,6 +1343,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_duty_incident_logs_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       duty_locations: {
@@ -1176,6 +1357,7 @@ export type Database = {
           active: boolean
           critical: boolean
           id: string
+          institution_code: string | null
           name: string
           sort_order: number
         }
@@ -1183,6 +1365,7 @@ export type Database = {
           active?: boolean
           critical?: boolean
           id?: string
+          institution_code?: string | null
           name: string
           sort_order?: number
         }
@@ -1190,15 +1373,25 @@ export type Database = {
           active?: boolean
           critical?: boolean
           id?: string
+          institution_code?: string | null
           name?: string
           sort_order?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_duty_locations_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       duty_month_locks: {
         Row: {
           generated_at: string
           generated_by: string | null
+          institution_code: string | null
           locked: boolean
           month_start: string
           note: string | null
@@ -1207,6 +1400,7 @@ export type Database = {
         Insert: {
           generated_at?: string
           generated_by?: string | null
+          institution_code?: string | null
           locked?: boolean
           month_start: string
           note?: string | null
@@ -1215,6 +1409,7 @@ export type Database = {
         Update: {
           generated_at?: string
           generated_by?: string | null
+          institution_code?: string | null
           locked?: boolean
           month_start?: string
           note?: string | null
@@ -1235,6 +1430,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_duty_month_locks_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       duty_rotation: {
@@ -1243,6 +1445,7 @@ export type Database = {
           created_at: string
           cycle_month: string | null
           duty_date: string
+          institution_code: string
           vice_principal_id: string
         }
         Insert: {
@@ -1250,6 +1453,7 @@ export type Database = {
           created_at?: string
           cycle_month?: string | null
           duty_date: string
+          institution_code?: string
           vice_principal_id: string
         }
         Update: {
@@ -1257,6 +1461,7 @@ export type Database = {
           created_at?: string
           cycle_month?: string | null
           duty_date?: string
+          institution_code?: string
           vice_principal_id?: string
         }
         Relationships: [
@@ -1267,6 +1472,13 @@ export type Database = {
             referencedRelation: "vice_principals"
             referencedColumns: ["user_id"]
           },
+          {
+            foreignKeyName: "fk_duty_rotation_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       duty_tardiness_logs: {
@@ -1275,6 +1487,7 @@ export type Database = {
           created_at: string
           duty_date: string
           id: string
+          institution_code: string | null
           minutes_late: number
           note: string | null
           period: number | null
@@ -1286,6 +1499,7 @@ export type Database = {
           created_at?: string
           duty_date: string
           id?: string
+          institution_code?: string | null
           minutes_late: number
           note?: string | null
           period?: number | null
@@ -1297,6 +1511,7 @@ export type Database = {
           created_at?: string
           duty_date?: string
           id?: string
+          institution_code?: string | null
           minutes_late?: number
           note?: string | null
           period?: number | null
@@ -1332,6 +1547,13 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_duty_tardiness_logs_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       eokul_import_batches: {
@@ -1341,6 +1563,7 @@ export type Database = {
           id: string
           imported_at: string
           imported_by: string
+          institution_code: string | null
           row_count: number
         }
         Insert: {
@@ -1349,6 +1572,7 @@ export type Database = {
           id?: string
           imported_at?: string
           imported_by: string
+          institution_code?: string | null
           row_count?: number
         }
         Update: {
@@ -1357,6 +1581,7 @@ export type Database = {
           id?: string
           imported_at?: string
           imported_by?: string
+          institution_code?: string | null
           row_count?: number
         }
         Relationships: [
@@ -1374,11 +1599,19 @@ export type Database = {
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
+          {
+            foreignKeyName: "fk_eokul_import_batches_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
         ]
       }
       fcm_tokens: {
         Row: {
           id: string
+          institution_code: string | null
           platform: string
           token: string
           updated_at: string
@@ -1386,6 +1619,7 @@ export type Database = {
         }
         Insert: {
           id?: string
+          institution_code?: string | null
           platform?: string
           token: string
           updated_at?: string
@@ -1393,6 +1627,7 @@ export type Database = {
         }
         Update: {
           id?: string
+          institution_code?: string | null
           platform?: string
           token?: string
           updated_at?: string
@@ -1412,6 +1647,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "fk_fcm_tokens_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
           },
         ]
       }
@@ -1563,6 +1805,7 @@ export type Database = {
           effective_on: string | null
           file_url: string | null
           id: string
+          institution_code: string | null
           legislation_type: string
           notes: string | null
           school_levels: string[]
@@ -1580,6 +1823,7 @@ export type Database = {
           effective_on?: string | null
           file_url?: string | null
           id?: string
+          institution_code?: string | null
           legislation_type?: string
           notes?: string | null
           school_levels?: string[]
@@ -1597,6 +1841,7 @@ export type Database = {
           effective_on?: string | null
           file_url?: string | null
           id?: string
+          institution_code?: string | null
           legislation_type?: string
           notes?: string | null
           school_levels?: string[]
@@ -1607,13 +1852,22 @@ export type Database = {
           topic?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_legislation_library_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       legislation_shares: {
         Row: {
           created_at: string
           created_by: string | null
           id: string
+          institution_code: string | null
           legislation_id: string
           message: string | null
           read_at: string | null
@@ -1623,6 +1877,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          institution_code?: string | null
           legislation_id: string
           message?: string | null
           read_at?: string | null
@@ -1632,12 +1887,20 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          institution_code?: string | null
           legislation_id?: string
           message?: string | null
           read_at?: string | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_legislation_shares_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "legislation_shares_legislation_id_fkey"
             columns: ["legislation_id"]
@@ -1651,6 +1914,7 @@ export type Database = {
         Row: {
           active: boolean
           id: string
+          institution_code: string | null
           required_department: string | null
           required_hardware: Json
           required_room_type: string | null
@@ -1659,6 +1923,7 @@ export type Database = {
         Insert: {
           active?: boolean
           id?: string
+          institution_code?: string | null
           required_department?: string | null
           required_hardware?: Json
           required_room_type?: string | null
@@ -1667,12 +1932,21 @@ export type Database = {
         Update: {
           active?: boolean
           id?: string
+          institution_code?: string | null
           required_department?: string | null
           required_hardware?: Json
           required_room_type?: string | null
           subject_pattern?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_lesson_room_rules_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       norm_area_rule_assignments: {
         Row: {
@@ -1681,6 +1955,7 @@ export type Database = {
           effective_from: string
           effective_to: string | null
           id: string
+          institution_code: string | null
           note: string | null
           rule_set_id: string
           source_id: string | null
@@ -1692,6 +1967,7 @@ export type Database = {
           effective_from: string
           effective_to?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           rule_set_id: string
           source_id?: string | null
@@ -1703,12 +1979,20 @@ export type Database = {
           effective_from?: string
           effective_to?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           rule_set_id?: string
           source_id?: string | null
           teaching_area_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_norm_area_rule_assignments_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "norm_area_rule_assignments_rule_set_id_fkey"
             columns: ["rule_set_id"]
@@ -1740,6 +2024,7 @@ export type Database = {
           effective_from: string
           effective_to: string | null
           id: string
+          institution_code: string | null
           note: string | null
           source_id: string | null
           teaching_area_id: string
@@ -1751,6 +2036,7 @@ export type Database = {
           effective_from: string
           effective_to?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           source_id?: string | null
           teaching_area_id: string
@@ -1762,11 +2048,19 @@ export type Database = {
           effective_from?: string
           effective_to?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           source_id?: string | null
           teaching_area_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_norm_course_area_rules_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "norm_course_area_rules_course_id_fkey"
             columns: ["course_id"]
@@ -1944,6 +2238,7 @@ export type Database = {
           explanation: string | null
           hours: number
           id: string
+          institution_code: string | null
           rule_id: string | null
           status: string
           teacher_id: string
@@ -1960,6 +2255,7 @@ export type Database = {
           explanation?: string | null
           hours: number
           id?: string
+          institution_code?: string | null
           rule_id?: string | null
           status?: string
           teacher_id: string
@@ -1976,12 +2272,20 @@ export type Database = {
           explanation?: string | null
           hours?: number
           id?: string
+          institution_code?: string | null
           rule_id?: string | null
           status?: string
           teacher_id?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_payroll_activity_entries_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "payroll_activity_entries_approved_by_fkey"
             columns: ["approved_by"]
@@ -2038,6 +2342,7 @@ export type Database = {
           calculated_by: string
           created_at: string
           id: string
+          institution_code: string | null
           period_end: string
           period_start: string
           rule_version: string
@@ -2047,6 +2352,7 @@ export type Database = {
           calculated_by: string
           created_at?: string
           id?: string
+          institution_code?: string | null
           period_end: string
           period_start: string
           rule_version?: string
@@ -2056,12 +2362,20 @@ export type Database = {
           calculated_by?: string
           created_at?: string
           id?: string
+          institution_code?: string | null
           period_end?: string
           period_start?: string
           rule_version?: string
           status?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_payroll_calculation_runs_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "payroll_calculation_runs_calculated_by_fkey"
             columns: ["calculated_by"]
@@ -2087,6 +2401,7 @@ export type Database = {
           deemed_guidance_performed: boolean
           deemed_regular_performed: boolean
           duty_payable: boolean
+          institution_code: string | null
           source_note: string | null
           title: string
         }
@@ -2098,6 +2413,7 @@ export type Database = {
           deemed_guidance_performed?: boolean
           deemed_regular_performed?: boolean
           duty_payable?: boolean
+          institution_code?: string | null
           source_note?: string | null
           title: string
         }
@@ -2109,10 +2425,18 @@ export type Database = {
           deemed_guidance_performed?: boolean
           deemed_regular_performed?: boolean
           duty_payable?: boolean
+          institution_code?: string | null
           source_note?: string | null
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_payroll_calendar_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "payroll_calendar_approved_by_fkey"
             columns: ["approved_by"]
@@ -2141,6 +2465,7 @@ export type Database = {
           explanation: string | null
           hours: number
           id: string
+          institution_code: string | null
           kbs_data_type: string
           rate_multiplier: number
           rule_code: string | null
@@ -2160,6 +2485,7 @@ export type Database = {
           explanation?: string | null
           hours?: number
           id?: string
+          institution_code?: string | null
           kbs_data_type?: string
           rate_multiplier?: number
           rule_code?: string | null
@@ -2179,6 +2505,7 @@ export type Database = {
           explanation?: string | null
           hours?: number
           id?: string
+          institution_code?: string | null
           kbs_data_type?: string
           rate_multiplier?: number
           rule_code?: string | null
@@ -2188,6 +2515,13 @@ export type Database = {
           work_date?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_payroll_day_entries_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "payroll_day_entries_approved_by_fkey"
             columns: ["approved_by"]
@@ -2220,6 +2554,7 @@ export type Database = {
       }
       payroll_dirty_periods: {
         Row: {
+          institution_code: string | null
           marked_at: string
           month: number
           reason: string
@@ -2227,6 +2562,7 @@ export type Database = {
           year: number
         }
         Insert: {
+          institution_code?: string | null
           marked_at?: string
           month: number
           reason: string
@@ -2234,6 +2570,7 @@ export type Database = {
           year: number
         }
         Update: {
+          institution_code?: string | null
           marked_at?: string
           month?: number
           reason?: string
@@ -2241,6 +2578,13 @@ export type Database = {
           year?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_payroll_dirty_periods_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "payroll_dirty_periods_teacher_id_fkey"
             columns: ["teacher_id"]
@@ -2268,6 +2612,7 @@ export type Database = {
           effective_from: string
           effective_to: string | null
           id: string
+          institution_code: string | null
           kbs_data_type: string
           monthly_cap_hours: number | null
           name: string
@@ -2286,6 +2631,7 @@ export type Database = {
           effective_from: string
           effective_to?: string | null
           id?: string
+          institution_code?: string | null
           kbs_data_type: string
           monthly_cap_hours?: number | null
           name: string
@@ -2304,6 +2650,7 @@ export type Database = {
           effective_from?: string
           effective_to?: string | null
           id?: string
+          institution_code?: string | null
           kbs_data_type?: string
           monthly_cap_hours?: number | null
           name?: string
@@ -2313,6 +2660,13 @@ export type Database = {
           weekly_cap_hours?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_payroll_rule_registry_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "payroll_rule_registry_created_by_fkey"
             columns: ["created_by"]
@@ -2341,6 +2695,7 @@ export type Database = {
           actor_user_id: string | null
           created_at: string
           id: string
+          institution_code: string | null
           note: string | null
           operation: string
           permission_code: string
@@ -2351,6 +2706,7 @@ export type Database = {
           actor_user_id?: string | null
           created_at?: string
           id?: string
+          institution_code?: string | null
           note?: string | null
           operation: string
           permission_code: string
@@ -2361,6 +2717,7 @@ export type Database = {
           actor_user_id?: string | null
           created_at?: string
           id?: string
+          institution_code?: string | null
           note?: string | null
           operation?: string
           permission_code?: string
@@ -2368,6 +2725,13 @@ export type Database = {
           target_user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_permission_audit_log_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "permission_audit_log_actor_user_id_fkey"
             columns: ["actor_user_id"]
@@ -2488,7 +2852,7 @@ export type Database = {
         Insert: {
           enabled?: boolean | null
           field_key: string
-          institution_code: string
+          institution_code?: string
           module_keys?: string[] | null
           updated_at?: string
           updated_by?: string | null
@@ -2503,6 +2867,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_personnel_field_overrides_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
             foreignKeyName: "personnel_field_overrides_field_key_fkey"
             columns: ["field_key"]
             isOneToOne: false
@@ -2515,6 +2886,7 @@ export type Database = {
         Row: {
           id: string
           imported_at: string
+          institution_code: string | null
           is_current: boolean
           personnel_id: string
           raw_data: Json
@@ -2524,6 +2896,7 @@ export type Database = {
         Insert: {
           id?: string
           imported_at?: string
+          institution_code?: string | null
           is_current?: boolean
           personnel_id: string
           raw_data?: Json
@@ -2533,6 +2906,7 @@ export type Database = {
         Update: {
           id?: string
           imported_at?: string
+          institution_code?: string | null
           is_current?: boolean
           personnel_id?: string
           raw_data?: Json
@@ -2540,6 +2914,13 @@ export type Database = {
           source_format?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_personnel_import_payloads_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "personnel_import_payloads_personnel_id_fkey"
             columns: ["personnel_id"]
@@ -2636,6 +3017,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_personnel_private_details_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
             foreignKeyName: "personnel_private_details_personnel_id_fkey"
             columns: ["personnel_id"]
             isOneToOne: true
@@ -2698,6 +3086,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_personnel_registry_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
             foreignKeyName: "personnel_registry_teaching_area_id_fkey"
             columns: ["teaching_area_id"]
             isOneToOne: false
@@ -2713,6 +3108,7 @@ export type Database = {
           created_at: string
           ends_on: string | null
           id: string
+          institution_code: string | null
           legal_basis: string | null
           personnel_id: string | null
           responsibility_id: string
@@ -2725,6 +3121,7 @@ export type Database = {
           created_at?: string
           ends_on?: string | null
           id?: string
+          institution_code?: string | null
           legal_basis?: string | null
           personnel_id?: string | null
           responsibility_id: string
@@ -2737,6 +3134,7 @@ export type Database = {
           created_at?: string
           ends_on?: string | null
           id?: string
+          institution_code?: string | null
           legal_basis?: string | null
           personnel_id?: string | null
           responsibility_id?: string
@@ -2744,6 +3142,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_personnel_responsibilities_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "personnel_responsibilities_personnel_id_fkey"
             columns: ["personnel_id"]
@@ -2767,6 +3172,7 @@ export type Database = {
           email: string | null
           full_name: string
           id: string
+          institution_code: string | null
           role: Database["public"]["Enums"]["app_role"]
           tckn: string
           teaching_area_id: string | null
@@ -2777,6 +3183,7 @@ export type Database = {
           email?: string | null
           full_name: string
           id?: string
+          institution_code?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           tckn: string
           teaching_area_id?: string | null
@@ -2787,11 +3194,19 @@ export type Database = {
           email?: string | null
           full_name?: string
           id?: string
+          institution_code?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           tckn?: string
           teaching_area_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_pre_registered_teachers_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "pre_registered_teachers_teaching_area_id_fkey"
             columns: ["teaching_area_id"]
@@ -2845,6 +3260,7 @@ export type Database = {
       profile_role_tags: {
         Row: {
           active: boolean
+          institution_code: string | null
           role_tag: string
           source: string
           updated_at: string
@@ -2852,6 +3268,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          institution_code?: string | null
           role_tag: string
           source?: string
           updated_at?: string
@@ -2859,12 +3276,21 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          institution_code?: string | null
           role_tag?: string
           source?: string
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_profile_role_tags_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -2914,6 +3340,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_profiles_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
             foreignKeyName: "profiles_institution_code_fkey"
             columns: ["institution_code"]
             isOneToOne: false
@@ -2936,6 +3369,7 @@ export type Database = {
           created_at: string
           endpoint: string
           id: string
+          institution_code: string | null
           p256dh: string
           platform: string
           updated_at: string
@@ -2948,6 +3382,7 @@ export type Database = {
           created_at?: string
           endpoint: string
           id?: string
+          institution_code?: string | null
           p256dh: string
           platform?: string
           updated_at?: string
@@ -2960,6 +3395,7 @@ export type Database = {
           created_at?: string
           endpoint?: string
           id?: string
+          institution_code?: string | null
           p256dh?: string
           platform?: string
           updated_at?: string
@@ -2967,6 +3403,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_push_subscriptions_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "push_subscriptions_user_id_fkey"
             columns: ["user_id"]
@@ -2993,6 +3436,7 @@ export type Database = {
           group_1_id: string | null
           group_2_id: string | null
           id: string
+          institution_code: string | null
           source_note: string
           sync_group_id: string | null
           teacher_1_id: string | null
@@ -3009,6 +3453,7 @@ export type Database = {
           group_1_id?: string | null
           group_2_id?: string | null
           id?: string
+          institution_code?: string | null
           source_note?: string
           sync_group_id?: string | null
           teacher_1_id?: string | null
@@ -3025,6 +3470,7 @@ export type Database = {
           group_1_id?: string | null
           group_2_id?: string | null
           id?: string
+          institution_code?: string | null
           source_note?: string
           sync_group_id?: string | null
           teacher_1_id?: string | null
@@ -3033,6 +3479,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_quran_split_plans_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "quran_split_plans_class_id_fkey"
             columns: ["class_id"]
@@ -3158,6 +3611,7 @@ export type Database = {
           actor_user_id: string | null
           created_at: string
           id: number
+          institution_code: string | null
           new_row: Json | null
           old_row: Json | null
           schedule_id: string | null
@@ -3167,6 +3621,7 @@ export type Database = {
           actor_user_id?: string | null
           created_at?: string
           id?: never
+          institution_code?: string | null
           new_row?: Json | null
           old_row?: Json | null
           schedule_id?: string | null
@@ -3176,11 +3631,19 @@ export type Database = {
           actor_user_id?: string | null
           created_at?: string
           id?: never
+          institution_code?: string | null
           new_row?: Json | null
           old_row?: Json | null
           schedule_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_audit_log_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_audit_log_actor_user_id_fkey"
             columns: ["actor_user_id"]
@@ -3216,6 +3679,7 @@ export type Database = {
           adjacent_weight: number
           anchor_period: number | null
           hard_max: boolean
+          institution_code: string
           max_duty_day_hours: number
           overload_weight: number
           source: string
@@ -3227,6 +3691,7 @@ export type Database = {
           adjacent_weight?: number
           anchor_period?: number | null
           hard_max?: boolean
+          institution_code?: string
           max_duty_day_hours?: number
           overload_weight?: number
           source?: string
@@ -3238,6 +3703,7 @@ export type Database = {
           adjacent_weight?: number
           anchor_period?: number | null
           hard_max?: boolean
+          institution_code?: string
           max_duty_day_hours?: number
           overload_weight?: number
           source?: string
@@ -3246,6 +3712,13 @@ export type Database = {
           weekday?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_duty_optimization_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_duty_optimization_teacher_id_fkey"
             columns: ["teacher_id"]
@@ -3284,6 +3757,7 @@ export type Database = {
         Row: {
           gap_penalty: number
           id: boolean
+          institution_code: string
           late_period_penalty: number
           max_same_course_per_day: number
           periods_per_day: number
@@ -3294,6 +3768,7 @@ export type Database = {
         Insert: {
           gap_penalty?: number
           id?: boolean
+          institution_code?: string
           late_period_penalty?: number
           max_same_course_per_day?: number
           periods_per_day?: number
@@ -3304,6 +3779,7 @@ export type Database = {
         Update: {
           gap_penalty?: number
           id?: boolean
+          institution_code?: string
           late_period_penalty?: number
           max_same_course_per_day?: number
           periods_per_day?: number
@@ -3311,7 +3787,15 @@ export type Database = {
           teaching_days?: number[]
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_schedule_generation_settings_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       schedule_import_batches: {
         Row: {
@@ -3320,6 +3804,7 @@ export type Database = {
           id: string
           imported_at: string
           imported_by: string
+          institution_code: string | null
           row_count: number
         }
         Insert: {
@@ -3328,6 +3813,7 @@ export type Database = {
           id?: string
           imported_at?: string
           imported_by: string
+          institution_code?: string | null
           row_count?: number
         }
         Update: {
@@ -3336,9 +3822,17 @@ export type Database = {
           id?: string
           imported_at?: string
           imported_by?: string
+          institution_code?: string | null
           row_count?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_import_batches_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_import_batches_imported_by_fkey"
             columns: ["imported_by"]
@@ -3361,6 +3855,7 @@ export type Database = {
           created_at: string
           defaults: Json
           description: string | null
+          institution_code: string | null
           name: string
           profile_key: string
           system_profile: boolean
@@ -3372,6 +3867,7 @@ export type Database = {
           created_at?: string
           defaults?: Json
           description?: string | null
+          institution_code?: string | null
           name: string
           profile_key: string
           system_profile?: boolean
@@ -3383,19 +3879,29 @@ export type Database = {
           created_at?: string
           defaults?: Json
           description?: string | null
+          institution_code?: string | null
           name?: string
           profile_key?: string
           system_profile?: boolean
           updated_at?: string
           weights?: Json
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_schedule_optimization_profiles_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       schedule_optimization_settings: {
         Row: {
           active_profile_key: string
           explain_scenarios: boolean
           id: boolean
+          institution_code: string
           record_repairs: boolean
           updated_at: string
           updated_by: string | null
@@ -3404,6 +3910,7 @@ export type Database = {
           active_profile_key?: string
           explain_scenarios?: boolean
           id?: boolean
+          institution_code?: string
           record_repairs?: boolean
           updated_at?: string
           updated_by?: string | null
@@ -3412,11 +3919,19 @@ export type Database = {
           active_profile_key?: string
           explain_scenarios?: boolean
           id?: boolean
+          institution_code?: string
           record_repairs?: boolean
           updated_at?: string
           updated_by?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_optimization_settings_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_optimization_settings_active_profile_key_fkey"
             columns: ["active_profile_key"]
@@ -3447,6 +3962,7 @@ export type Database = {
           classroom: string | null
           classroom_id: string | null
           id: number
+          institution_code: string | null
           is_group_split: boolean
           period: number
           publication_id: string
@@ -3464,6 +3980,7 @@ export type Database = {
           classroom?: string | null
           classroom_id?: string | null
           id?: never
+          institution_code?: string | null
           is_group_split?: boolean
           period: number
           publication_id: string
@@ -3481,6 +3998,7 @@ export type Database = {
           classroom?: string | null
           classroom_id?: string | null
           id?: never
+          institution_code?: string | null
           is_group_split?: boolean
           period?: number
           publication_id?: string
@@ -3493,6 +4011,13 @@ export type Database = {
           weekday?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_publication_rows_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_publication_rows_class_id_fkey"
             columns: ["class_id"]
@@ -3563,6 +4088,7 @@ export type Database = {
           academic_year: string | null
           effective_from: string
           id: string
+          institution_code: string | null
           note: string | null
           published_at: string
           published_by: string | null
@@ -3574,6 +4100,7 @@ export type Database = {
           academic_year?: string | null
           effective_from: string
           id?: string
+          institution_code?: string | null
           note?: string | null
           published_at?: string
           published_by?: string | null
@@ -3585,6 +4112,7 @@ export type Database = {
           academic_year?: string | null
           effective_from?: string
           id?: string
+          institution_code?: string | null
           note?: string | null
           published_at?: string
           published_by?: string | null
@@ -3593,6 +4121,13 @@ export type Database = {
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_publications_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_publications_published_by_fkey"
             columns: ["published_by"]
@@ -3619,6 +4154,7 @@ export type Database = {
           hard_issues_after: number | null
           hard_issues_before: number | null
           id: string
+          institution_code: string | null
           issue_code: string
           scenario_id: string
           score_delta: number | null
@@ -3632,6 +4168,7 @@ export type Database = {
           hard_issues_after?: number | null
           hard_issues_before?: number | null
           id?: string
+          institution_code?: string | null
           issue_code: string
           scenario_id: string
           score_delta?: number | null
@@ -3645,11 +4182,19 @@ export type Database = {
           hard_issues_after?: number | null
           hard_issues_before?: number | null
           id?: string
+          institution_code?: string | null
           issue_code?: string
           scenario_id?: string
           score_delta?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_repair_audit_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_repair_audit_scenario_id_fkey"
             columns: ["scenario_id"]
@@ -3669,20 +4214,30 @@ export type Database = {
       schedule_restore_point_rows: {
         Row: {
           id: number
+          institution_code: string | null
           restore_point_id: string
           snapshot: Json
         }
         Insert: {
           id?: never
+          institution_code?: string | null
           restore_point_id: string
           snapshot: Json
         }
         Update: {
           id?: never
+          institution_code?: string | null
           restore_point_id?: string
           snapshot?: Json
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_restore_point_rows_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_restore_point_rows_restore_point_id_fkey"
             columns: ["restore_point_id"]
@@ -3697,6 +4252,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          institution_code: string | null
           label: string
           reason: string
           row_count: number
@@ -3705,6 +4261,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          institution_code?: string | null
           label: string
           reason?: string
           row_count?: number
@@ -3713,11 +4270,19 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          institution_code?: string | null
           label?: string
           reason?: string
           row_count?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_restore_points_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_restore_points_created_by_fkey"
             columns: ["created_by"]
@@ -3739,6 +4304,7 @@ export type Database = {
           created_at: string
           detail: string | null
           id: string
+          institution_code: string | null
           reason: string
           scenario_id: string
           scenario_row_id: string
@@ -3747,6 +4313,7 @@ export type Database = {
           created_at?: string
           detail?: string | null
           id?: string
+          institution_code?: string | null
           reason: string
           scenario_id: string
           scenario_row_id: string
@@ -3755,11 +4322,19 @@ export type Database = {
           created_at?: string
           detail?: string | null
           id?: string
+          institution_code?: string | null
           reason?: string
           scenario_id?: string
           scenario_row_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_room_assignment_issues_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_room_assignment_issues_scenario_id_fkey"
             columns: ["scenario_id"]
@@ -3787,6 +4362,7 @@ export type Database = {
         Row: {
           category: string
           config: Json
+          institution_code: string
           label: string
           mode: string
           rule_code: string
@@ -3798,6 +4374,7 @@ export type Database = {
         Insert: {
           category: string
           config?: Json
+          institution_code?: string
           label: string
           mode?: string
           rule_code: string
@@ -3809,6 +4386,7 @@ export type Database = {
         Update: {
           category?: string
           config?: Json
+          institution_code?: string
           label?: string
           mode?: string
           rule_code?: string
@@ -3818,6 +4396,13 @@ export type Database = {
           weight?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_rule_modes_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_rule_modes_updated_by_fkey"
             columns: ["updated_by"]
@@ -3841,6 +4426,7 @@ export type Database = {
           block_pattern: number[]
           class_course_requirement_id: string | null
           id: string
+          institution_code: string
           max_per_day: number | null
           min_distinct_days: number | null
           note: string | null
@@ -3857,6 +4443,7 @@ export type Database = {
           block_pattern?: number[]
           class_course_requirement_id?: string | null
           id?: string
+          institution_code?: string
           max_per_day?: number | null
           min_distinct_days?: number | null
           note?: string | null
@@ -3873,6 +4460,7 @@ export type Database = {
           block_pattern?: number[]
           class_course_requirement_id?: string | null
           id?: string
+          institution_code?: string
           max_per_day?: number | null
           min_distinct_days?: number | null
           note?: string | null
@@ -3884,6 +4472,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_rule_overrides_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_rule_overrides_class_course_requirement_id_fkey"
             columns: ["class_course_requirement_id"]
@@ -3918,6 +4513,7 @@ export type Database = {
         Row: {
           duty_score: number
           generated_at: string
+          institution_code: string | null
           metrics: Json
           negatives: Json
           pedagogic_score: number
@@ -3931,6 +4527,7 @@ export type Database = {
         Insert: {
           duty_score?: number
           generated_at?: string
+          institution_code?: string | null
           metrics?: Json
           negatives?: Json
           pedagogic_score?: number
@@ -3944,6 +4541,7 @@ export type Database = {
         Update: {
           duty_score?: number
           generated_at?: string
+          institution_code?: string | null
           metrics?: Json
           negatives?: Json
           pedagogic_score?: number
@@ -3955,6 +4553,13 @@ export type Database = {
           workshop_score?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_scenario_explanations_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_scenario_explanations_scenario_id_fkey"
             columns: ["scenario_id"]
@@ -3978,6 +4583,7 @@ export type Database = {
           created_at: string
           detail: string
           id: string
+          institution_code: string | null
           scenario_id: string
         }
         Insert: {
@@ -3986,6 +4592,7 @@ export type Database = {
           created_at?: string
           detail: string
           id?: string
+          institution_code?: string | null
           scenario_id: string
         }
         Update: {
@@ -3994,9 +4601,17 @@ export type Database = {
           created_at?: string
           detail?: string
           id?: string
+          institution_code?: string | null
           scenario_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_scenario_integrity_issues_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_scenario_integrity_issues_scenario_id_fkey"
             columns: ["scenario_id"]
@@ -4021,6 +4636,7 @@ export type Database = {
           classroom_id: string | null
           course_id: string | null
           id: string
+          institution_code: string | null
           is_group_split: boolean
           locked: boolean
           period: number
@@ -4042,6 +4658,7 @@ export type Database = {
           classroom_id?: string | null
           course_id?: string | null
           id?: string
+          institution_code?: string | null
           is_group_split?: boolean
           locked?: boolean
           period: number
@@ -4063,6 +4680,7 @@ export type Database = {
           classroom_id?: string | null
           course_id?: string | null
           id?: string
+          institution_code?: string | null
           is_group_split?: boolean
           locked?: boolean
           period?: number
@@ -4078,6 +4696,13 @@ export type Database = {
           weekday?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_scenario_rows_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_scenario_rows_class_id_fkey"
             columns: ["class_id"]
@@ -4206,6 +4831,7 @@ export type Database = {
           generated_by: string | null
           generation_group: string
           id: string
+          institution_code: string | null
           row_count: number
           scenario_no: number
           score: number
@@ -4219,6 +4845,7 @@ export type Database = {
           generated_by?: string | null
           generation_group: string
           id?: string
+          institution_code?: string | null
           row_count?: number
           scenario_no: number
           score?: number
@@ -4232,6 +4859,7 @@ export type Database = {
           generated_by?: string | null
           generation_group?: string
           id?: string
+          institution_code?: string | null
           row_count?: number
           scenario_no?: number
           score?: number
@@ -4240,6 +4868,13 @@ export type Database = {
           unplaced_count?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_scenarios_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_scenarios_generated_by_fkey"
             columns: ["generated_by"]
@@ -4260,6 +4895,7 @@ export type Database = {
         Row: {
           block_hours: number
           id: string
+          institution_code: string | null
           subgroup_id: string | null
           sync_group_id: string
           teacher_assignment_id: string
@@ -4267,6 +4903,7 @@ export type Database = {
         Insert: {
           block_hours?: number
           id?: string
+          institution_code?: string | null
           subgroup_id?: string | null
           sync_group_id: string
           teacher_assignment_id: string
@@ -4274,11 +4911,19 @@ export type Database = {
         Update: {
           block_hours?: number
           id?: string
+          institution_code?: string | null
           subgroup_id?: string | null
           sync_group_id?: string
           teacher_assignment_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_sync_group_members_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_sync_group_members_subgroup_id_fkey"
             columns: ["subgroup_id"]
@@ -4315,6 +4960,7 @@ export type Database = {
           class_id: string | null
           created_at: string
           id: string
+          institution_code: string | null
           name: string
           note: string | null
           required_simultaneous: boolean
@@ -4327,6 +4973,7 @@ export type Database = {
           class_id?: string | null
           created_at?: string
           id?: string
+          institution_code?: string | null
           name: string
           note?: string | null
           required_simultaneous?: boolean
@@ -4339,6 +4986,7 @@ export type Database = {
           class_id?: string | null
           created_at?: string
           id?: string
+          institution_code?: string | null
           name?: string
           note?: string | null
           required_simultaneous?: boolean
@@ -4347,6 +4995,13 @@ export type Database = {
           source_type?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_sync_groups_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_sync_groups_class_id_fkey"
             columns: ["class_id"]
@@ -4375,6 +5030,7 @@ export type Database = {
           active: boolean
           created_at: string
           id: string
+          institution_code: string | null
           lunch_after_period: number | null
           name: string
           periods_per_day: number
@@ -4385,6 +5041,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           id?: string
+          institution_code?: string | null
           lunch_after_period?: number | null
           name: string
           periods_per_day?: number
@@ -4395,13 +5052,22 @@ export type Database = {
           active?: boolean
           created_at?: string
           id?: string
+          institution_code?: string | null
           lunch_after_period?: number | null
           name?: string
           periods_per_day?: number
           teaching_days?: number[]
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_schedule_time_profiles_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       schedule_unplaced_items: {
         Row: {
@@ -4410,6 +5076,7 @@ export type Database = {
           created_at: string
           diagnostic: Json
           id: string
+          institution_code: string | null
           reason: string
           requirement_id: string | null
           scenario_id: string
@@ -4423,6 +5090,7 @@ export type Database = {
           created_at?: string
           diagnostic?: Json
           id?: string
+          institution_code?: string | null
           reason: string
           requirement_id?: string | null
           scenario_id: string
@@ -4436,6 +5104,7 @@ export type Database = {
           created_at?: string
           diagnostic?: Json
           id?: string
+          institution_code?: string | null
           reason?: string
           requirement_id?: string | null
           scenario_id?: string
@@ -4444,6 +5113,13 @@ export type Database = {
           teacher_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_schedule_unplaced_items_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "schedule_unplaced_items_class_id_fkey"
             columns: ["class_id"]
@@ -4527,6 +5203,7 @@ export type Database = {
         Row: {
           active: boolean
           course_id: string
+          institution_code: string
           max_block: number
           min_block: number
           preferred_block: number
@@ -4537,6 +5214,7 @@ export type Database = {
         Insert: {
           active?: boolean
           course_id: string
+          institution_code?: string
           max_block?: number
           min_block?: number
           preferred_block?: number
@@ -4547,6 +5225,7 @@ export type Database = {
         Update: {
           active?: boolean
           course_id?: string
+          institution_code?: string
           max_block?: number
           min_block?: number
           preferred_block?: number
@@ -4556,9 +5235,16 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_schedule_workshop_policies_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
             foreignKeyName: "schedule_workshop_policies_course_id_fkey"
             columns: ["course_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "course_catalog"
             referencedColumns: ["id"]
           },
@@ -4592,6 +5278,7 @@ export type Database = {
           event_type: string
           grade_levels: string[]
           id: string
+          institution_code: string | null
           note: string | null
           parsed_from_source: boolean
           school_levels: string[]
@@ -4615,6 +5302,7 @@ export type Database = {
           event_type: string
           grade_levels?: string[]
           id?: string
+          institution_code?: string | null
           note?: string | null
           parsed_from_source?: boolean
           school_levels?: string[]
@@ -4638,6 +5326,7 @@ export type Database = {
           event_type?: string
           grade_levels?: string[]
           id?: string
+          institution_code?: string | null
           note?: string | null
           parsed_from_source?: boolean
           school_levels?: string[]
@@ -4649,6 +5338,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_school_calendar_events_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "school_calendar_events_academic_year_id_fkey"
             columns: ["academic_year_id"]
@@ -4683,6 +5379,7 @@ export type Database = {
           grade_level: number | null
           id: string
           imported_student_count: number | null
+          institution_code: string | null
           program_type: string | null
           section: string | null
           source: string
@@ -4700,6 +5397,7 @@ export type Database = {
           grade_level?: number | null
           id?: string
           imported_student_count?: number | null
+          institution_code?: string | null
           program_type?: string | null
           section?: string | null
           source?: string
@@ -4717,6 +5415,7 @@ export type Database = {
           grade_level?: number | null
           id?: string
           imported_student_count?: number | null
+          institution_code?: string | null
           program_type?: string | null
           section?: string | null
           source?: string
@@ -4724,7 +5423,15 @@ export type Database = {
           split_threshold?: number
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_school_classes_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       students: {
         Row: {
@@ -4734,6 +5441,7 @@ export type Database = {
           full_name: string
           id: string
           import_batch_id: string | null
+          institution_code: string | null
           school_number: string
           source: string
           updated_at: string
@@ -4745,6 +5453,7 @@ export type Database = {
           full_name: string
           id?: string
           import_batch_id?: string | null
+          institution_code?: string | null
           school_number: string
           source?: string
           updated_at?: string
@@ -4756,11 +5465,19 @@ export type Database = {
           full_name?: string
           id?: string
           import_batch_id?: string | null
+          institution_code?: string | null
           school_number?: string
           source?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_students_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "students_class_id_fkey"
             columns: ["class_id"]
@@ -4800,6 +5517,7 @@ export type Database = {
           assigned_at: string
           assigned_by: string
           id: string
+          institution_code: string | null
           notified_at: string | null
           substitute_user_id: string
         }
@@ -4811,6 +5529,7 @@ export type Database = {
           assigned_at?: string
           assigned_by: string
           id?: string
+          institution_code?: string | null
           notified_at?: string | null
           substitute_user_id: string
         }
@@ -4822,10 +5541,18 @@ export type Database = {
           assigned_at?: string
           assigned_by?: string
           id?: string
+          institution_code?: string | null
           notified_at?: string | null
           substitute_user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_substitute_assignments_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "substitute_assignments_absence_lesson_id_fkey"
             columns: ["absence_lesson_id"]
@@ -4885,6 +5612,7 @@ export type Database = {
           created_at: string
           email: string
           full_name: string
+          institution_code: string | null
         }
         Insert: {
           active?: boolean
@@ -4893,6 +5621,7 @@ export type Database = {
           created_at?: string
           email: string
           full_name?: string
+          institution_code?: string | null
         }
         Update: {
           active?: boolean
@@ -4901,8 +5630,17 @@ export type Database = {
           created_at?: string
           email?: string
           full_name?: string
+          institution_code?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_super_admin_bootstrap_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       system_feature_catalog: {
         Row: {
@@ -4977,21 +5715,31 @@ export type Database = {
       }
       task_role_template_permissions: {
         Row: {
+          institution_code: string | null
           permission_code: string
           scope: Json
           template_id: string
         }
         Insert: {
+          institution_code?: string | null
           permission_code: string
           scope?: Json
           template_id: string
         }
         Update: {
+          institution_code?: string | null
           permission_code?: string
           scope?: Json
           template_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_task_role_template_permissions_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "task_role_template_permissions_permission_code_fkey"
             columns: ["permission_code"]
@@ -5015,6 +5763,7 @@ export type Database = {
           created_by: string | null
           description: string | null
           id: string
+          institution_code: string | null
           name: string
           updated_at: string
         }
@@ -5024,6 +5773,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           id?: string
+          institution_code?: string | null
           name: string
           updated_at?: string
         }
@@ -5033,10 +5783,18 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           id?: string
+          institution_code?: string | null
           name?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_task_role_templates_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "task_role_templates_created_by_fkey"
             columns: ["created_by"]
@@ -5061,6 +5819,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          institution_code: string | null
           note: string | null
           teacher_id: string
           updated_at: string
@@ -5072,6 +5831,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           teacher_id: string
           updated_at?: string
@@ -5083,11 +5843,19 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           teacher_id?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_teacher_course_assignments_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "teacher_course_assignments_class_course_requirement_id_fkey"
             columns: ["class_course_requirement_id"]
@@ -5138,6 +5906,7 @@ export type Database = {
           created_at: string
           duty_date: string
           duty_location: string | null
+          institution_code: string | null
           teacher_id: string
         }
         Insert: {
@@ -5145,6 +5914,7 @@ export type Database = {
           created_at?: string
           duty_date: string
           duty_location?: string | null
+          institution_code?: string | null
           teacher_id: string
         }
         Update: {
@@ -5152,9 +5922,17 @@ export type Database = {
           created_at?: string
           duty_date?: string
           duty_location?: string | null
+          institution_code?: string | null
           teacher_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_teacher_duty_assignments_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "teacher_duty_assignments_teacher_id_fkey"
             columns: ["teacher_id"]
@@ -5174,6 +5952,7 @@ export type Database = {
       teacher_duty_cycle_members: {
         Row: {
           active: boolean
+          institution_code: string | null
           rotation_offset: number
           teacher_id: string
           updated_at: string
@@ -5181,6 +5960,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          institution_code?: string | null
           rotation_offset?: number
           teacher_id: string
           updated_at?: string
@@ -5188,12 +5968,20 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          institution_code?: string | null
           rotation_offset?: number
           teacher_id?: string
           updated_at?: string
           weekday?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_teacher_duty_cycle_members_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "teacher_duty_cycle_members_teacher_id_fkey"
             columns: ["teacher_id"]
@@ -5215,6 +6003,7 @@ export type Database = {
           active: boolean
           gunduz_kbs_data_type: string
           has_class_guidance: boolean
+          institution_code: string | null
           nobet_kbs_data_type: string
           rehberlik_kbs_data_type: string
           teacher_id: string
@@ -5225,6 +6014,7 @@ export type Database = {
           active?: boolean
           gunduz_kbs_data_type?: string
           has_class_guidance?: boolean
+          institution_code?: string | null
           nobet_kbs_data_type?: string
           rehberlik_kbs_data_type?: string
           teacher_id: string
@@ -5235,6 +6025,7 @@ export type Database = {
           active?: boolean
           gunduz_kbs_data_type?: string
           has_class_guidance?: boolean
+          institution_code?: string | null
           nobet_kbs_data_type?: string
           rehberlik_kbs_data_type?: string
           teacher_id?: string
@@ -5242,6 +6033,13 @@ export type Database = {
           weekly_salary_obligation?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_teacher_payroll_config_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "teacher_payroll_config_teacher_id_fkey"
             columns: ["teacher_id"]
@@ -5269,6 +6067,7 @@ export type Database = {
           classroom_id: string | null
           course_id: string | null
           id: string
+          institution_code: string | null
           is_group_split: boolean
           locked: boolean
           period: number
@@ -5292,6 +6091,7 @@ export type Database = {
           classroom_id?: string | null
           course_id?: string | null
           id?: string
+          institution_code?: string | null
           is_group_split?: boolean
           locked?: boolean
           period: number
@@ -5315,6 +6115,7 @@ export type Database = {
           classroom_id?: string | null
           course_id?: string | null
           id?: string
+          institution_code?: string | null
           is_group_split?: boolean
           locked?: boolean
           period?: number
@@ -5329,6 +6130,13 @@ export type Database = {
           weekday?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_teacher_schedule_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "teacher_schedule_class_course_requirement_id_fkey"
             columns: ["class_course_requirement_id"]
@@ -5424,6 +6232,7 @@ export type Database = {
       }
       teacher_schedule_constraints: {
         Row: {
+          institution_code: string | null
           max_consecutive_hours: number
           max_daily_hours: number | null
           max_weekly_hours: number | null
@@ -5434,6 +6243,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          institution_code?: string | null
           max_consecutive_hours?: number
           max_daily_hours?: number | null
           max_weekly_hours?: number | null
@@ -5444,6 +6254,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          institution_code?: string | null
           max_consecutive_hours?: number
           max_daily_hours?: number | null
           max_weekly_hours?: number | null
@@ -5454,6 +6265,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_teacher_schedule_constraints_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "teacher_schedule_constraints_teacher_id_fkey"
             columns: ["teacher_id"]
@@ -5474,6 +6292,7 @@ export type Database = {
         Row: {
           active: boolean
           id: string
+          institution_code: string | null
           note: string | null
           period: number
           preference: string
@@ -5484,6 +6303,7 @@ export type Database = {
         Insert: {
           active?: boolean
           id?: string
+          institution_code?: string | null
           note?: string | null
           period: number
           preference: string
@@ -5494,6 +6314,7 @@ export type Database = {
         Update: {
           active?: boolean
           id?: string
+          institution_code?: string | null
           note?: string | null
           period?: number
           preference?: string
@@ -5502,6 +6323,13 @@ export type Database = {
           weight?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_teacher_schedule_preferences_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "teacher_schedule_preferences_teacher_id_fkey"
             columns: ["teacher_id"]
@@ -5524,6 +6352,7 @@ export type Database = {
           approved_at: string | null
           approved_by: string | null
           id: string
+          institution_code: string | null
           period: number
           reason: string
           teacher_id: string
@@ -5534,6 +6363,7 @@ export type Database = {
           approved_at?: string | null
           approved_by?: string | null
           id?: string
+          institution_code?: string | null
           period: number
           reason?: string
           teacher_id: string
@@ -5544,12 +6374,20 @@ export type Database = {
           approved_at?: string | null
           approved_by?: string | null
           id?: string
+          institution_code?: string | null
           period?: number
           reason?: string
           teacher_id?: string
           weekday?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_teacher_unavailability_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "teacher_unavailability_approved_by_fkey"
             columns: ["approved_by"]
@@ -5723,12 +6561,34 @@ export type Database = {
           },
         ]
       }
+      tenant_scope_registry: {
+        Row: {
+          note: string | null
+          scope: string
+          table_name: string
+          updated_at: string
+        }
+        Insert: {
+          note?: string | null
+          scope: string
+          table_name: string
+          updated_at?: string
+        }
+        Update: {
+          note?: string | null
+          scope?: string
+          table_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_permission_grants: {
         Row: {
           active: boolean
           created_at: string
           granted_by: string | null
           id: string
+          institution_code: string | null
           note: string | null
           permission_code: string
           scope: Json
@@ -5742,6 +6602,7 @@ export type Database = {
           created_at?: string
           granted_by?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           permission_code: string
           scope?: Json
@@ -5755,6 +6616,7 @@ export type Database = {
           created_at?: string
           granted_by?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           permission_code?: string
           scope?: Json
@@ -5764,6 +6626,13 @@ export type Database = {
           valid_until?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_user_permission_grants_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "user_permission_grants_granted_by_fkey"
             columns: ["granted_by"]
@@ -5807,6 +6676,7 @@ export type Database = {
           assigned_at: string
           assigned_by: string | null
           id: string
+          institution_code: string | null
           note: string | null
           template_id: string
           user_id: string
@@ -5818,6 +6688,7 @@ export type Database = {
           assigned_at?: string
           assigned_by?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           template_id: string
           user_id: string
@@ -5829,6 +6700,7 @@ export type Database = {
           assigned_at?: string
           assigned_by?: string | null
           id?: string
+          institution_code?: string | null
           note?: string | null
           template_id?: string
           user_id?: string
@@ -5836,6 +6708,13 @@ export type Database = {
           valid_until?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_user_task_role_assignments_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "user_task_role_assignments_assigned_by_fkey"
             columns: ["assigned_by"]
@@ -5876,17 +6755,27 @@ export type Database = {
       vice_principals: {
         Row: {
           active: boolean
+          institution_code: string | null
           user_id: string
         }
         Insert: {
           active?: boolean
+          institution_code?: string | null
           user_id: string
         }
         Update: {
           active?: boolean
+          institution_code?: string | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_vice_principals_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
           {
             foreignKeyName: "vice_principals_user_id_fkey"
             columns: ["user_id"]
@@ -6136,6 +7025,10 @@ export type Database = {
         Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
         Returns: number
       }
+      apply_schedule_edge_slot_repairs_v1: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       apply_schedule_optimization_profile_v1: {
         Args: { p_profile_key: string }
         Returns: undefined
@@ -6145,6 +7038,10 @@ export type Database = {
         Returns: number
       }
       apply_schedule_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      apply_schedule_scenario_pre_phase3: {
         Args: { p_scenario_id: string }
         Returns: number
       }
@@ -6175,6 +7072,10 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: undefined
       }
+      assert_schedule_scenario_tenant_phase3_v1: {
+        Args: { p_scenario_id: string }
+        Returns: undefined
+      }
       assign_classrooms_to_scenario: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -6190,6 +7091,13 @@ export type Database = {
         }[]
       }
       assign_classrooms_to_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          assigned_count: number
+          unassigned_count: number
+        }[]
+      }
+      assign_classrooms_to_scenario_pre_phase3_tenant: {
         Args: { p_scenario_id: string }
         Returns: {
           assigned_count: number
@@ -6280,6 +7188,10 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      calculate_schedule_scenario_score_pre_phase3: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       calculate_schedule_scenario_score_v2: {
         Args: { p_scenario_id: string }
         Returns: number
@@ -6345,11 +7257,20 @@ export type Database = {
       create_telegram_link_token: { Args: never; Returns: string }
       current_permission_context: { Args: never; Returns: string }
       current_schedule_signature: { Args: never; Returns: string }
+      current_tenant_code: { Args: never; Returns: string }
       disable_push_subscription: {
         Args: { p_endpoint: string }
         Returns: boolean
       }
       disable_telegram_notifications: { Args: never; Returns: undefined }
+      drop_unique_constraint_by_columns: {
+        Args: { p_columns: string[]; p_table: string }
+        Returns: undefined
+      }
+      ensure_tenant_composite_pk_v1: {
+        Args: { p_columns: string[]; p_table: string }
+        Returns: undefined
+      }
       finalize_my_registration: {
         Args: { p_email: string; p_tckn: string }
         Returns: {
@@ -6429,6 +7350,28 @@ export type Database = {
           unplaced_count: number
         }[]
       }
+      generate_schedule_scenarios_pre_edge_v2: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
+      }
+      generate_schedule_scenarios_pre_phase3_tenant: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
+      }
       generate_schedule_scenarios_v2: {
         Args: never
         Returns: {
@@ -6450,6 +7393,7 @@ export type Database = {
           ends_on: string
           first_term_ends_on: string | null
           id: string
+          institution_code: string | null
           second_term_starts_on: string | null
           source_note: string | null
           starts_on: string
@@ -6472,6 +7416,7 @@ export type Database = {
           active: boolean
           created_at: string
           id: string
+          institution_code: string | null
           lunch_after_period: number | null
           name: string
           periods_per_day: number
@@ -6537,6 +7482,7 @@ export type Database = {
           block_pattern: number[]
           course_id: string
           id: string
+          institution_code: string | null
           max_per_day: number | null
           min_distinct_days: number | null
           note: string | null
@@ -6553,6 +7499,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_feature_access_state: { Args: { p_path: string }; Returns: Json }
       get_formal_norm_analysis: {
         Args: { p_on_date?: string }
         Returns: {
@@ -6567,6 +7514,7 @@ export type Database = {
           total_weekly_hours: number
         }[]
       }
+      get_my_active_institution_code: { Args: never; Returns: string }
       get_my_institution_code: { Args: never; Returns: string }
       get_my_permissions: {
         Args: never
@@ -6626,7 +7574,6 @@ export type Database = {
         Returns: {
           full_name: string
           permission_code: string
-          permission_mode: string
           role: Database["public"]["Enums"]["app_role"]
           scope: Json
           user_id: string
@@ -6677,6 +7624,7 @@ export type Database = {
           classroom: string | null
           classroom_id: string | null
           id: number
+          institution_code: string | null
           is_group_split: boolean
           period: number
           publication_id: string
@@ -6721,6 +7669,15 @@ export type Database = {
           detail: string
         }[]
       }
+      get_schedule_edge_slot_integrity_issues_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
       get_schedule_integrity_report: {
         Args: never
         Returns: {
@@ -6747,6 +7704,55 @@ export type Database = {
           detail: string
           severity: string
         }[]
+      }
+      get_schedule_integrity_report_pre_edge_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_integrity_report_pre_phase3: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_phase3_current_issues_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_phase3_preflight_issues_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
+      get_schedule_phase3_scenario_issues_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_phase3_scoped_preference_score_v1: {
+        Args: { p_scenario_id: string }
+        Returns: number
       }
       get_schedule_preparation_readiness: {
         Args: never
@@ -6798,6 +7804,16 @@ export type Database = {
           status: string
         }[]
       }
+      get_schedule_preparation_readiness_pre_phase3: {
+        Args: never
+        Returns: {
+          affected_count: number
+          category: string
+          code: string
+          detail: string
+          status: string
+        }[]
+      }
       get_schedule_publication_for_date: {
         Args: { p_date: string }
         Returns: string
@@ -6826,6 +7842,14 @@ export type Database = {
           detail: string
         }[]
       }
+      get_schedule_scenario_edge_slot_issues_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_scenario_hard_issues_parallel_core_v2: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -6835,6 +7859,22 @@ export type Database = {
         }[]
       }
       get_schedule_scenario_hard_issues_pre_advanced_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_pre_edge_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_pre_phase3: {
         Args: { p_scenario_id: string }
         Returns: {
           affected_count: number
@@ -6865,7 +7905,9 @@ export type Database = {
           email: string
           full_name: string
           id: string
+          institution_code: string
           role: Database["public"]["Enums"]["app_role"]
+          school_name: string
           tckn_masked: string
           teaching_area_id: string
         }[]
@@ -7025,6 +8067,7 @@ export type Database = {
           group_1_id: string | null
           group_2_id: string | null
           id: string
+          institution_code: string | null
           source_note: string
           sync_group_id: string | null
           teacher_1_id: string | null
@@ -7055,6 +8098,7 @@ export type Database = {
           group_1_id: string | null
           group_2_id: string | null
           id: string
+          institution_code: string | null
           source_note: string
           sync_group_id: string | null
           teacher_1_id: string | null
@@ -7088,6 +8132,15 @@ export type Database = {
         Returns: string
       }
       publish_current_schedule_permission_core_v2: {
+        Args: {
+          p_academic_year?: string
+          p_effective_from: string
+          p_note?: string
+          p_title?: string
+        }
+        Returns: string
+      }
+      publish_current_schedule_pre_phase3: {
         Args: {
           p_academic_year?: string
           p_effective_from: string
@@ -7135,11 +8188,19 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      repair_schedule_scenario_pre_phase3_tenant: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       repair_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
         Returns: number
       }
       rescore_schedule_scenario_permission_core_v2: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      rescore_schedule_scenario_pre_phase3_tenant: {
         Args: { p_scenario_id: string }
         Returns: number
       }
@@ -7151,6 +8212,15 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      resolve_pre_registered_teacher: {
+        Args: { p_institution_code: string; p_tckn: string }
+        Returns: {
+          email: string
+          id: string
+          institution_code: string
+        }[]
+      }
+      resolve_user_institution: { Args: { p_user_id: string }; Returns: string }
       restore_schedule_restore_point: {
         Args: { p_restore_point_id: string }
         Returns: number
@@ -7215,6 +8285,10 @@ export type Database = {
         Args: { p_assignment: string }
         Returns: number[]
       }
+      schedule_current_block_matches_phase3_v1: {
+        Args: { p_assignment_id: string }
+        Returns: boolean
+      }
       schedule_rule_mode_v1: { Args: { p_rule_code: string }; Returns: string }
       schedule_rule_weight_v1: {
         Args: {
@@ -7223,6 +8297,18 @@ export type Database = {
           p_rule_code: string
         }
         Returns: number
+      }
+      schedule_scenario_block_matches_phase3_v1: {
+        Args: { p_assignment_id: string; p_scenario_id: string }
+        Returns: boolean
+      }
+      schedule_subject_matches_edge_rule_v1: {
+        Args: { p_rule_code: string; p_subject: string }
+        Returns: boolean
+      }
+      seed_timetable_defaults_for_tenant_v1: {
+        Args: { p_code: string }
+        Returns: undefined
       }
       set_active_academic_year: {
         Args: { p_academic_year_id: string }
@@ -7322,6 +8408,17 @@ export type Database = {
           weekly_load: number
         }[]
       }
+      super_admin_feature_catalog_audit: {
+        Args: never
+        Returns: {
+          enabled: boolean
+          feature_key: string
+          label: string
+          maintenance: boolean
+          parent_key: string
+          route_prefix: string
+        }[]
+      }
       super_admin_list_tenants: {
         Args: never
         Returns: {
@@ -7369,10 +8466,31 @@ export type Database = {
         Args: { p_maintenance: boolean; p_message?: string }
         Returns: undefined
       }
+      super_admin_tenant_isolation_audit: { Args: never; Returns: Json }
+      super_admin_tenant_key_audit: {
+        Args: never
+        Returns: {
+          columns: string[]
+          constraint_name: string
+          constraint_type: string
+          table_name: string
+        }[]
+      }
       super_admin_upsert_personnel: {
         Args: {
           p_email?: string
           p_full_name: string
+          p_role?: Database["public"]["Enums"]["app_role"]
+          p_tckn: string
+          p_teaching_area_id?: string
+        }
+        Returns: string
+      }
+      super_admin_upsert_personnel_for_tenant: {
+        Args: {
+          p_email?: string
+          p_full_name: string
+          p_institution_code: string
           p_role?: Database["public"]["Enums"]["app_role"]
           p_tckn: string
           p_teaching_area_id?: string
@@ -7401,6 +8519,23 @@ export type Database = {
       teacher_course_permission_status: {
         Args: { p_course_id: string; p_on_date?: string; p_teacher_id: string }
         Returns: string
+      }
+      tenant_row_allowed: {
+        Args: { p_institution_code: string }
+        Returns: boolean
+      }
+      tenantize_public_table: {
+        Args: { p_legacy_code?: string; p_table: string }
+        Returns: undefined
+      }
+      try_schedule_edge_target_v1: {
+        Args: {
+          p_rule_code: string
+          p_scenario_id: string
+          p_target_period: number
+          p_target_weekday: number
+        }
+        Returns: boolean
       }
       update_my_profile_safe: {
         Args: {
@@ -7455,6 +8590,10 @@ export type Database = {
           p_weekday: number
         }
         Returns: string
+      }
+      validate_schedule_scenario_pre_phase3_tenant: {
+        Args: { p_scenario_id: string }
+        Returns: number
       }
       validate_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
