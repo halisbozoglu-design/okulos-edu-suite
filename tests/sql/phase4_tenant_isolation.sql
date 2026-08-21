@@ -2,10 +2,10 @@
 begin;
 
 -- Minimal authenticated identities for real RLS evaluation.
-insert into auth.users(id,aud,role,email,created_at,updated_at)
+insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
 values
- ('11111111-1111-4111-8111-111111111111','authenticated','authenticated','phase4-a@example.test',now(),now()),
- ('22222222-2222-4222-8222-222222222222','authenticated','authenticated','phase4-b@example.test',now(),now());
+ ('11111111-1111-4111-8111-111111111111','00000000-0000-0000-0000-000000000000','authenticated','authenticated','phase4-a@example.test','',now(),'{}','{}',now(),now()),
+ ('22222222-2222-4222-8222-222222222222','00000000-0000-0000-0000-000000000000','authenticated','authenticated','phase4-b@example.test','',now(),'{}','{}',now(),now());
 
 insert into public.institutions(institution_code,school_name,created_by)
 values
