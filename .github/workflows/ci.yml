@@ -1,3 +1,4 @@
+# CI verification branch: temporary comment used to expose PR workflow logs while closing red checks.
 name: CI
 
 on:
