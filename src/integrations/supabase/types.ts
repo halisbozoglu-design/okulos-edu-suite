@@ -7025,6 +7025,10 @@ export type Database = {
         Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
         Returns: number
       }
+      apply_schedule_edge_slot_repairs_v1: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       apply_schedule_optimization_profile_v1: {
         Args: { p_profile_key: string }
         Returns: undefined
@@ -7313,6 +7317,17 @@ export type Database = {
         }[]
       }
       generate_schedule_scenarios_permission_core_v2: {
+        Args: never
+        Returns: {
+          generation_group: string
+          row_count: number
+          scenario_id: string
+          scenario_no: number
+          score: number
+          unplaced_count: number
+        }[]
+      }
+      generate_schedule_scenarios_pre_edge_v2: {
         Args: never
         Returns: {
           generation_group: string
@@ -8391,6 +8406,15 @@ export type Database = {
       tenantize_public_table: {
         Args: { p_legacy_code?: string; p_table: string }
         Returns: undefined
+      }
+      try_schedule_edge_target_v1: {
+        Args: {
+          p_rule_code: string
+          p_scenario_id: string
+          p_target_period: number
+          p_target_weekday: number
+        }
+        Returns: boolean
       }
       update_my_profile_safe: {
         Args: {
