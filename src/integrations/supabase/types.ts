@@ -7620,6 +7620,15 @@ export type Database = {
           detail: string
         }[]
       }
+      get_schedule_edge_slot_integrity_issues_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
       get_schedule_integrity_report: {
         Args: never
         Returns: {
@@ -7639,6 +7648,15 @@ export type Database = {
         }[]
       }
       get_schedule_integrity_report_parallel_core_v2: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_integrity_report_pre_edge_v1: {
         Args: never
         Returns: {
           affected_count: number
@@ -7725,6 +7743,14 @@ export type Database = {
           detail: string
         }[]
       }
+      get_schedule_scenario_edge_slot_issues_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_scenario_hard_issues_parallel_core_v2: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -7734,6 +7760,14 @@ export type Database = {
         }[]
       }
       get_schedule_scenario_hard_issues_pre_advanced_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_pre_edge_v2: {
         Args: { p_scenario_id: string }
         Returns: {
           affected_count: number
@@ -8135,6 +8169,10 @@ export type Database = {
           p_rule_code: string
         }
         Returns: number
+      }
+      schedule_subject_matches_edge_rule_v1: {
+        Args: { p_rule_code: string; p_subject: string }
+        Returns: boolean
       }
       set_active_academic_year: {
         Args: { p_academic_year_id: string }
