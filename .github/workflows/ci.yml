@@ -80,6 +80,9 @@ jobs:
       - name: Check Phase 4 testing closure
         run: node scripts/check-phase4-testing.mjs
 
+      - name: Check Phase 5 reporting closure
+        run: node scripts/check-phase5-reporting.mjs
+
       - name: Check auth flow
         run: node scripts/check-auth-flow.mjs
 
