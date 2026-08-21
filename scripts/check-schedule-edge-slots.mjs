@@ -43,11 +43,20 @@ for (const token of [
   }
 }
 
-for (const token of ["Beden Eğitimi", "Müzik", "Pazartesi 1. ders + Cuma son ders", "Default açık ve HARD"]) {
+// Protect behavior and controls, not exact marketing/copy wording.
+for (const token of [
+  "physical_education_edge_slots",
+  "music_edge_slots",
+  "Beden Eğitimi",
+  "Müzik",
+  "Özel HARD Yerleşimler",
+  "Pazartesi 1. ders + Cuma son ders zorunlu",
+  'mode:enabled?"hard":"off"',
+]) {
   if (!workspace.includes(token)) {
-    console.error(`Kenar-saat UI işareti eksik: ${token}`);
+    console.error(`Kenar-saat UI/davranış işareti eksik: ${token}`);
     process.exit(1);
   }
 }
 
-console.log("Beden Eğitimi ve Müzik kenar-saat politikası placement + hard validator + final integrity + UI tarafından korunuyor.");
+console.log("Beden Eğitimi ve Müzik kenar-saat politikası placement + hard validator + final integrity + UI davranışı tarafından korunuyor.");
