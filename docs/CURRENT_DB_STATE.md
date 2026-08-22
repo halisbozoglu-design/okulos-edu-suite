@@ -35,8 +35,12 @@ Updated: 2026-08-23
 - MTAL Mobilya ve İç Mekân Tasarımı grade 9: 6 profiles / 90 rows; 41 + 4 = 45.
 - MTAL Moda Tasarım Teknolojileri grade 9: 6 profiles / 84 rows; 41 + 4 = 45.
 - MTAL Yiyecek İçecek Hizmetleri grade 9: 6 profiles / 90 rows; 41 + 4 = 45.
-- MTAL Yenilenebilir Enerji Teknolojileri grade 9 (2026): single branch, 3 profile variants (AMP / ATP / AMP enterprise-from-11), 42 real rows; 41 fixed + 4 elective = 45. Exact source `yenilenebilir_9.pdf`.
-- Tesisat Teknolojisi ve İklimlendirme 2026 PDF fetch timed out in the latest pass; no inferred data was persisted.
+- MTAL Yenilenebilir Enerji Teknolojileri grade 9: 3 profiles / 42 rows; 41 + 4 = 45.
+- MTAL Uçak Bakım grade 9: Uçak Gövde-Motor + Uçak Elektroniği, AMP/ATP only = 4 profiles / 60 rows; no enterprise-from-11 variant is present in the 2026 framework.
+- MTAL Gıda Teknolojisi grade 9: single branch × AMP/ATP/enterprise-from-11 = 3 profiles / 45 rows; 41 + 4 = 45.
+- MTAL İnşaat Teknolojisi grade 9: 2026 source uses Yapı Teknolojisi + Yapı Teknik Ressamlığı, each with AMP/ATP/enterprise-from-11 = 6 profiles / 90 rows. Older six-branch catalog is retained for upper-grade transition lineage.
+- MTAL Sağlık Hizmetleri grade 9: 2026 source uses Diş Protez Teknisyenliği + Sağlık Bakım Teknisyenliği, each with AMP/ATP/enterprise-from-11 = 6 profiles / 96 rows. Older Ebe Yardımcılığı/Hemşire Yardımcılığı branches are retained for transition lineage.
+- Tesisat Teknolojisi ve İklimlendirme 2026 PDF still times out; Tarım/Tekstil source fetch currently returns 404. No inferred rows were persisted for inaccessible sources.
 
 ## Scheduling rules already in DB
 - Class identity includes education unit/program/field/branch context.
@@ -49,9 +53,9 @@ Updated: 2026-08-23
 - Field lead: 10 h; workshop lead: 6 h; same teacher cannot hold both role types simultaneously.
 
 ## Next
-1. Continue 2026 grade-9 MTAL fields with exact PDFs; retry Tesisat without inferring missing rows.
-2. Parse 2023-40 academic-support packages and branch-scoped elective vocational tables.
-3. Fill living transition rows for other grades 10-12 from grade-specific portal sources.
+1. Continue accessible 2026 grade-9 MTAL fields with exact PDFs; retry Tesisat/Tarım/Tekstil without inferring missing rows.
+2. Start 10-12 living transition rows for Uçak, Gıda, İnşaat and Sağlık from grade-specific portal sources.
+3. Parse 2023-40 academic-support packages and branch-scoped elective vocational tables.
 4. Continue MESEM field-by-field with USTALIK/DIPLOMA semantics.
 5. Resolve source-name lineage changes.
 6. Build teacher teaching-area ↔ course eligibility mapping after curriculum rows are substantially complete.
