@@ -26,7 +26,12 @@ Updated: 2026-08-23
 - MESEM schedule variants are separate: `USTALIK` and `DIPLOMA`; parenthetical hours are diploma additional difference courses, not generic hour alternatives.
 - MTAL Elektrik-Elektronik Teknolojisi 2026 grade-9 profiles seeded for the exact branch/program combinations present in `elektrik_9.pdf` (12 profile variants).
 - MTAL Elektrik-Elektronik Teknolojisi grade-9 required rows seeded: 168 active rows = 12 variants × 14 required/application/guidance rows. The 4 elective hours remain profile quota, not a fake course row.
-- 2026 branch-name changes are source-preserved (e.g. `Asansör ve Elektromekanik Taşıyıcılar`); older living branch names are not deleted because upper-grade transition programs may still use them.
+- MTAL Makine ve Tasarım Teknolojisi 2026 grade-9: 19 exact branch/program variants seeded; 266 required/application/guidance rows. Mandatory row-hours = 41, elective quota = 4, total = 45 for every profile.
+- MTAL Metal Teknolojisi 2026 grade-9: 9 exact branch/program variants seeded; 135 required/application/guidance rows. Mandatory row-hours = 41, elective quota = 4, total = 45 for every profile.
+- MTAL Otomotiv Teknolojileri 2026 grade-9: 15 exact branch/program variants seeded; 195 required/application/guidance rows. Mandatory row-hours = 41, elective quota = 4, total = 45 for every profile.
+- Exact PDFs now pinned for Makine (`makine_9.pdf`), Metal (`metal_9.pdf`) and Otomotiv (`otomotiv_9.pdf`).
+- `Otomotiv Teknolojileri` remains review-required against the older live catalog name `Motorlu Araçlar Teknolojisi`; source names are not force-normalized.
+- 2026 branch-name changes are source-preserved; older living branch names are not deleted because upper-grade transition programs may still use them.
 
 ## Scheduling rules already in DB
 - Class identity includes education unit/program/field/branch context.
@@ -38,7 +43,8 @@ Updated: 2026-08-23
 - Field lead: 10 h; workshop lead: 6 h; same teacher cannot hold both role types simultaneously.
 
 ## Next
-1. Continue MTAL field-by-field: exact PDF URL → variants → category totals → course rows → explanations.
-2. Continue MESEM field-by-field: exact PDF URL → USTALIK/DIPLOMA semantics → rows/explanations.
-3. Resolve source-name lineage where 2026 field/branch names differ from still-living transition names.
-4. Build teacher teaching-area ↔ course eligibility mapping from official sources after curriculum rows are substantially complete.
+1. Continue 2026 grade-9 MTAL fields field-by-field: exact PDF → exact variants → category totals → course rows → explanations.
+2. Fill living transition rows for grades 10-12 from their grade-specific portal sources instead of applying 2026 PDFs blindly.
+3. Continue MESEM field-by-field: exact PDF → USTALIK/DIPLOMA semantics → rows/explanations.
+4. Resolve source-name lineage where 2026 field/branch names differ from still-living transition names.
+5. Build teacher teaching-area ↔ course eligibility mapping from official sources after curriculum rows are substantially complete.
