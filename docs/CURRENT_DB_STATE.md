@@ -24,13 +24,16 @@ Updated: 2026-08-23
 - MTAL Bilişim Teknolojileri: AMP / ATP / AMP enterprise-from-11 profiles seeded with current-vs-transition applicability.
 - MESEM Bilişim Teknolojileri: Bilgisayar Teknik Servisi and Yazılım Geliştirme profiles seeded for grades 9-12.
 - MESEM schedule variants are separate: `USTALIK` and `DIPLOMA`; parenthetical hours are diploma additional difference courses, not generic hour alternatives.
-- MTAL Elektrik-Elektronik Teknolojisi 2026 grade-9 profiles seeded for the exact branch/program combinations present in `elektrik_9.pdf` (12 profile variants).
-- MTAL Elektrik-Elektronik Teknolojisi grade-9 required rows seeded: 168 active rows = 12 variants × 14 required/application/guidance rows. The 4 elective hours remain profile quota, not a fake course row.
-- MTAL Makine ve Tasarım Teknolojisi 2026 grade-9: 19 exact branch/program variants seeded; 266 required/application/guidance rows. Mandatory row-hours = 41, elective quota = 4, total = 45 for every profile.
-- MTAL Metal Teknolojisi 2026 grade-9: 9 exact branch/program variants seeded; 135 required/application/guidance rows. Mandatory row-hours = 41, elective quota = 4, total = 45 for every profile.
-- MTAL Otomotiv Teknolojileri 2026 grade-9: 15 exact branch/program variants seeded; 195 required/application/guidance rows. Mandatory row-hours = 41, elective quota = 4, total = 45 for every profile.
-- Exact PDFs now pinned for Makine (`makine_9.pdf`), Metal (`metal_9.pdf`) and Otomotiv (`otomotiv_9.pdf`).
-- `Otomotiv Teknolojileri` remains review-required against the older live catalog name `Motorlu Araçlar Teknolojisi`; source names are not force-normalized.
+- MTAL Elektrik-Elektronik Teknolojisi 2026 grade-9 profiles seeded for the exact branch/program combinations present in `elektrik_9.pdf` (12 profile variants); 168 active required/application/guidance rows.
+- MTAL Elektrik-Elektronik Teknolojisi living transition: grade 10 = 16 profiles + 240 real course rows from `elektrik_10.pdf` (2024-41); every profile has 41 fixed row-hours + 4 elective = 45. Grade 11 = 16 transition profiles from `elektrik_11.pdf`, preserving AMP/ATP/enterprise-from-11 differences. Grade 12 source pinned to `elektrik_12.pdf` (2023-40) and awaits separate parse because the older framework includes additional academic-support structure.
+- MTAL Makine ve Tasarım Teknolojisi 2026 grade-9: 19 exact branch/program variants; 266 required/application/guidance rows. Fixed row-hours = 41, elective quota = 4, total = 45.
+- MTAL Metal Teknolojisi 2026 grade-9: 9 exact branch/program variants; 135 required/application/guidance rows. Fixed row-hours = 41, elective quota = 4, total = 45.
+- MTAL Otomotiv Teknolojileri 2026 grade-9: 15 exact branch/program variants; 195 required/application/guidance rows. Fixed row-hours = 41, elective quota = 4, total = 45.
+- MTAL Mobilya ve İç Mekân Tasarımı 2026 grade-9: 6 profiles (Mobilya Üretim Teknolojisi / İç Mekân Ressamlığı × AMP/ATP/enterprise-from-11); 90 real course rows; fixed row-hours = 41 + 4 elective = 45. Exact source `mobilya_9.pdf`.
+- MTAL Moda Tasarım Teknolojileri 2026 grade-9: 6 profiles (Giysi Kalıp Tasarımı ve Üretimi / Terzilik × AMP/ATP/enterprise-from-11); 84 real course rows; fixed row-hours = 41 + 4 elective = 45. Exact source `moda_9.pdf`.
+- MTAL Yiyecek İçecek Hizmetleri 2026 grade-9: 6 profiles (Aşçılık / Pastacılık × AMP/ATP/enterprise-from-11); 90 real course rows; fixed row-hours = 41 + 4 elective = 45. Exact source `yiyecek_9.pdf`.
+- Exact PDFs pinned for Makine, Metal, Otomotiv, Mobilya, Moda, Yiyecek-İçecek and Elektrik-Elektronik transition grades.
+- `Otomotiv Teknolojileri` remains review-required against older live catalog name `Motorlu Araçlar Teknolojisi`; source names are not force-normalized.
 - 2026 branch-name changes are source-preserved; older living branch names are not deleted because upper-grade transition programs may still use them.
 
 ## Scheduling rules already in DB
@@ -44,7 +47,8 @@ Updated: 2026-08-23
 
 ## Next
 1. Continue 2026 grade-9 MTAL fields field-by-field: exact PDF → exact variants → category totals → course rows → explanations.
-2. Fill living transition rows for grades 10-12 from their grade-specific portal sources instead of applying 2026 PDFs blindly.
-3. Continue MESEM field-by-field: exact PDF → USTALIK/DIPLOMA semantics → rows/explanations.
-4. Resolve source-name lineage where 2026 field/branch names differ from still-living transition names.
-5. Build teacher teaching-area ↔ course eligibility mapping from official sources after curriculum rows are substantially complete.
+2. Complete Elektrik-Elektronik grade-11 real course rows and separately parse grade-12 2023-40 academic-support variants.
+3. Fill living transition rows for other grades 10-12 from their grade-specific portal sources instead of applying 2026 PDFs blindly.
+4. Continue MESEM field-by-field: exact PDF → USTALIK/DIPLOMA semantics → rows/explanations.
+5. Resolve source-name lineage where 2026 field/branch names differ from still-living transition names.
+6. Build teacher teaching-area ↔ course eligibility mapping from official sources after curriculum rows are substantially complete.
