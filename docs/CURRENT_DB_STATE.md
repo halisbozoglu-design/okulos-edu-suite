@@ -24,14 +24,18 @@ Updated: 2026-08-23
 - MTAL Bilişim Teknolojileri: AMP / ATP / AMP enterprise-from-11 profiles seeded with current-vs-transition applicability.
 - MESEM Bilişim Teknolojileri: Bilgisayar Teknik Servisi and Yazılım Geliştirme profiles seeded for grades 9-12.
 - MESEM schedule variants are separate: `USTALIK` and `DIPLOMA`; parenthetical hours are diploma additional difference courses, not generic hour alternatives.
-- MTAL Elektrik-Elektronik Teknolojisi 2026 grade-9 profiles seeded for the exact branch/program combinations present in `elektrik_9.pdf` (12 profile variants); 168 active required/application/guidance rows.
-- MTAL Elektrik-Elektronik Teknolojisi living transition: grade 10 = 16 profiles + 240 real course rows from `elektrik_10.pdf` (2024-41); every profile has 41 fixed row-hours + 4 elective = 45. Grade 11 = 16 transition profiles from `elektrik_11.pdf`, preserving AMP/ATP/enterprise-from-11 differences. Grade 12 source pinned to `elektrik_12.pdf` (2023-40) and awaits separate parse because the older framework includes additional academic-support structure.
+- MTAL Elektrik-Elektronik Teknolojisi 2026 grade-9: 12 exact profile variants; 168 active required/application/guidance rows.
+- MTAL Elektrik-Elektronik living transition grade 10 (2024-41): 16 profiles + 240 real rows; fixed row-hours 41 + elective quota 4 = 45.
+- MTAL Elektrik-Elektronik living transition grade 11 (2024-41): 16 profiles + real course rows now complete. AMP standard fixed rows = 33 h, ATP fixed rows = 25 h, AMP enterprise-from-11 fixed rows = 41 h; profile quotas complete each schedule to 45 h.
+- MTAL Elektrik-Elektronik living transition grade 12 (2023-40): 11 profiles parsed from the actual table. AMP standard = 11 common + 24 enterprise + 7 elective vocational + 1 guidance = 43 h. ATP academic-support = 11 common + 31 academic support + 1 guidance = 43 h. Savunma Elektronik Sistemleri is ATP only. Exact source `elektrik_12.pdf`.
+- `official_curriculum_profiles.academic_support_hours` added via migration `20260823023500_academic_support_hours.sql` so academic support is not misclassified as elective/vocational hours.
+- For 2023-40 transition tables, extracted text can shift columns/totals. Validation rule: table visual + row arithmetic + explanation text must agree before persistence; text extraction alone is not authoritative.
 - MTAL Makine ve Tasarım Teknolojisi 2026 grade-9: 19 exact branch/program variants; 266 required/application/guidance rows. Fixed row-hours = 41, elective quota = 4, total = 45.
 - MTAL Metal Teknolojisi 2026 grade-9: 9 exact branch/program variants; 135 required/application/guidance rows. Fixed row-hours = 41, elective quota = 4, total = 45.
 - MTAL Otomotiv Teknolojileri 2026 grade-9: 15 exact branch/program variants; 195 required/application/guidance rows. Fixed row-hours = 41, elective quota = 4, total = 45.
-- MTAL Mobilya ve İç Mekân Tasarımı 2026 grade-9: 6 profiles (Mobilya Üretim Teknolojisi / İç Mekân Ressamlığı × AMP/ATP/enterprise-from-11); 90 real course rows; fixed row-hours = 41 + 4 elective = 45. Exact source `mobilya_9.pdf`.
-- MTAL Moda Tasarım Teknolojileri 2026 grade-9: 6 profiles (Giysi Kalıp Tasarımı ve Üretimi / Terzilik × AMP/ATP/enterprise-from-11); 84 real course rows; fixed row-hours = 41 + 4 elective = 45. Exact source `moda_9.pdf`.
-- MTAL Yiyecek İçecek Hizmetleri 2026 grade-9: 6 profiles (Aşçılık / Pastacılık × AMP/ATP/enterprise-from-11); 90 real course rows; fixed row-hours = 41 + 4 elective = 45. Exact source `yiyecek_9.pdf`.
+- MTAL Mobilya ve İç Mekân Tasarımı 2026 grade-9: 6 profiles; 90 real rows; fixed row-hours = 41 + 4 elective = 45. Exact source `mobilya_9.pdf`.
+- MTAL Moda Tasarım Teknolojileri 2026 grade-9: 6 profiles; 84 real rows; fixed row-hours = 41 + 4 elective = 45. Exact source `moda_9.pdf`.
+- MTAL Yiyecek İçecek Hizmetleri 2026 grade-9: 6 profiles; 90 real rows; fixed row-hours = 41 + 4 elective = 45. Exact source `yiyecek_9.pdf`.
 - Exact PDFs pinned for Makine, Metal, Otomotiv, Mobilya, Moda, Yiyecek-İçecek and Elektrik-Elektronik transition grades.
 - `Otomotiv Teknolojileri` remains review-required against older live catalog name `Motorlu Araçlar Teknolojisi`; source names are not force-normalized.
 - 2026 branch-name changes are source-preserved; older living branch names are not deleted because upper-grade transition programs may still use them.
@@ -43,11 +47,12 @@ Updated: 2026-08-23
 - AMP enterprise days are class-level movable full-day blocks derived from enterprise hours.
 - Workshop/practical lessons use resource-aware, minimum-fragmentation block generation; daily class capacity is the upper bound.
 - 2026 vocational framework rule: vocational lessons should be planned without breaking stated weekly-hour integrity or, where possible, in consecutive periods; stored as a strong solver constraint with provenance.
+- 2023-40 ATP grade-12 academic support is a separate 31-hour package requirement, not a generic elective bucket.
 - Field lead: 10 h; workshop lead: 6 h; same teacher cannot hold both role types simultaneously.
 
 ## Next
 1. Continue 2026 grade-9 MTAL fields field-by-field: exact PDF → exact variants → category totals → course rows → explanations.
-2. Complete Elektrik-Elektronik grade-11 real course rows and separately parse grade-12 2023-40 academic-support variants.
+2. Parse 2023-40 academic-support package tables and branch-scoped elective vocational tables without over-broadening eligibility.
 3. Fill living transition rows for other grades 10-12 from their grade-specific portal sources instead of applying 2026 PDFs blindly.
 4. Continue MESEM field-by-field: exact PDF → USTALIK/DIPLOMA semantics → rows/explanations.
 5. Resolve source-name lineage where 2026 field/branch names differ from still-living transition names.
