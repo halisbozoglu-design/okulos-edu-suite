@@ -9,7 +9,7 @@ export function categoryFromSection(section:string){const s=section.toLocaleUppe
 export function extractDecisionMeta(text:string){const t=text.replace(/\r/g,"");const no=t.match(/(?:Sayı|SAYI)\s*[:\-]?\s*(\d{1,3})\b/);const date=t.match(/(?:Tarih|TARİH)\s*[:\-]?\s*(\d{1,2}[\/.]\d{1,2}[\/.]\d{4})/);const year=t.match(/(20\d{2})-(20\d{2})\s+eğitim\s+(?:ve\s+)?öğretim/i);return{decisionNo:no?.[1],decisionDate:date?.[1]?.replaceAll(".","-").replace(/^(\d{2})-(\d{2})-(\d{4})$/,"$3-$2-$1"),academicYear:year?`${year[1]}-${year[2]}`:undefined};}
 
 export function parseExplanationConstraints(text:string):ParsedConstraint[]{const out:ParsedConstraint[]=[];const sentences=text.split(/(?<=[.!?])\s+/).map(tr).filter(Boolean);for(const s of sentences){const low=s.toLocaleLowerCase("tr-TR");
- const group=low.match(/(?:gruplarından|grubundan).*?en az\s+(?:bir|1)\s+ders/);if(group)out.push({type:"MIN_COURSE_FROM_GROUP",severity:"hard",params:{minCourses:1},sourceText:s});
+ const group=low.match(/(?:gruplarından|grubundan).*?en az\s+(?:bir(?:er)?|1)\s+ders/);if(group)out.push({type:"MIN_COURSE_FROM_GROUP",severity:"hard",params:{minCourses:1},sourceText:s});
  if(/farklı sınıf seviyelerinde.*aynı ders.*birlikte eğitim/.test(low))out.push({type:"CROSS_GRADE_GROUPING_ALLOWED",severity:"hard",params:{allowed:true},sourceText:s});
  if(/sınıf(?:lar)? birleştirilemez|sınıf birleştirmesi yapılamaz/.test(low))out.push({type:"NO_CLASS_MERGE",severity:"hard",params:{allowed:false},sourceText:s});
  const split=low.match(/(?:sınıf|şube) mevcudu\s*(\d+)['’]?(?:i|ı|u|ü)?\s*aş(?:ar|ması|tığı).*?(?:iki|2) grup/);if(split)out.push({type:"SPLIT_CLASS_THRESHOLD",severity:"hard",params:{threshold:Number(split[1]),groups:2},sourceText:s});
