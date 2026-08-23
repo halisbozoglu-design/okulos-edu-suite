@@ -22,18 +22,21 @@ Updated: 2026-08-23
 - Final completeness review separately checks missing field/branch/grade/source-lineage against 56/119 catalog and live portal.
 
 ## Current MTAL pull progress
-- Cloud: 42 distinct populated MTAL field names / 821 active curriculum profiles / 9530 active course-schedule rows.
+- Cloud: 45 distinct populated MTAL field names / 861 active curriculum profiles / 9784 active course-schedule rows.
 - Bilişim, Elektrik-Elektronik, Uçak Bakım, Gıda, Metal, Mobilya, Moda, Makine ve Tasarım, Denizcilik, İtfaiyecilik, Hasta ve Yaşlı, Yiyecek İçecek and several other chains are populated across their living grade ranges and audit-clean.
 - İnşaat and Sağlık retain current-vs-transition branch lineage rather than destructive normalization.
 - Motorlu Araçlar 10-12 is populated; 2026 grade 9 remains under new live name `Otomotiv Teknolojileri` as lineage/manual-review.
 - Aile ve Tüketici 10-12 is populated; 2026 portal `Sosyal Hizmetler` lineage remains review-required.
 - Kimya Teknolojisi 10-12 complete for Kimya Laboratuvarı / Petrol Endüstrisi / Proses.
 - Biyomedikal Cihaz Teknolojileri 10-12 complete for all four supplied branches.
-- Pazarlama ve Perakende is now complete across 9-12; Satış Danışmanlığı + Sigortacılık, including conditional enterprise-from-11 and grade-12 academic-support split.
+- Pazarlama ve Perakende is complete across 9-12; Satış Danışmanlığı + Sigortacılık, including conditional enterprise-from-11 and grade-12 academic-support split.
 - Hayvan Yetiştiriciliği ve Sağlığı 10-12 complete; enterprise-from-11 condition and grade-12 AMP/ATP split persisted.
-- Güzellik Hizmetleri 10-12 complete from `guzellik_10.pdf` / `guzellik_12.pdf`; 10=13 vocational, 11 AMP=17, ATP/enterprise core=9, grade-12 AMP enterprise / ATP academic support; audit clean.
-- Harita-Tapu-Kadastro 10-12 complete for `Tapu` + `Harita Kadastro`; branch-specific 10/11 courses, enterprise-from-11 condition and 2023-40 grade-12 split persisted; audit clean.
-- Gemi Yapımı 10-12 complete for `Gemi İnşa` + `Yat İnşa` + `Gemi Donatım`; branch-specific 10/11 rows, conditional enterprise-from-11 and 2023-40 grade-12 AMP/ATP split persisted; audit clean.
+- Güzellik Hizmetleri 10-12 complete; audit clean.
+- Harita-Tapu-Kadastro 10-12 complete for `Tapu` + `Harita Kadastro`; audit clean.
+- Gemi Yapımı 10-12 complete for `Gemi İnşa` + `Yat İnşa` + `Gemi Donatım`; audit clean.
+- Halkla İlişkiler 10-12 complete for supplied branch `Halkla İlişkiler`. Grade 10 vocational=13; grade 11 AMP=17 / ATP=9 / enterprise core=9+16 enterprise; grade 12 2023-40 AMP enterprise / ATP academic support. Audit clean.
+- Kuyumculuk Teknolojisi 10-12 complete for MTAL branch `Takı İmalatı`. Grade 10 vocational=13; grade 11 AMP=17 / ATP=9 / enterprise core=9+16 enterprise; grade 12 2023-40 AMP enterprise / ATP academic support. MESEM-only branches are not mixed into MTAL. Audit clean.
+- Laboratuvar Hizmetleri 10-12 complete for `Gıda, Tarım ve Hayvan Sağlığı Laboratuvarı`. Grade 10 vocational=13; grade 11 AMP=17 / ATP=9 / enterprise core=9+16 enterprise; grade 12 2023-40 AMP enterprise / ATP academic support. Audit clean.
 - Havacılık ve Uzay living grades 9-11 populated, protocol-scoped and ATP-only; portal has no living grade-12 entry.
 - Endüstriyel Kalite Kontrol grade 9 populated; living grade 10 confirmed under 2025-49 but exact file access remains source-retry/manual-review.
 - Konaklama grade 9 populated; standard upper-grade source access currently unstable and remains source-retry (protocol source is not substituted).
@@ -59,7 +62,7 @@ Updated: 2026-08-23
 - Final unresolved items listed as field -> branch -> grade -> reason for manual verification.
 
 ## Next
-1. Continue source-accessible empty MTAL fields first.
+1. Continue source-accessible empty MTAL fields first: Maden, Mikromekanik, El Sanatları, Geleneksel Türk Sanatları, Tarım, Tekstil, Tesisat, etc.
 2. Retry current-2026 grade-9 sources separately; never use stale old 44-hour PDFs as 2026.
 3. Keep unresolved 404/timeout/name-lineage cases in manual-review while pulling continues.
 4. Run final completeness audit and produce manual-control list.
