@@ -8,33 +8,45 @@ Updated: 2026-08-23
 - Source: MTEGM `alan_dal_listesi_08092025.pdf`.
 - MESEM telafi catalog excluded from normal live catalog.
 - Idempotent catalog/source-index batch importers are active.
-- Finalization rule: MTAL is NOT complete until an automated audit verifies field -> branch -> grade -> program/schedule variant -> profile -> row-level courses -> hours -> exact source chain with zero unresolved gaps. Only after MTAL audit passes do we proceed to MESEM, then run the same MESEM audit.
+- Finalization rule: MTAL is NOT complete until automated audit verifies field -> branch -> grade -> program/schedule variant -> profile -> row-level courses -> hours -> exact source chain. Unresolved source/name issues are kept for manual review; they do not block continued pulling.
 
 ## Framework applicability/source index
 - MTAL source index complete: grade 9 = 63, grade 10 = 61, grade 11 = 59, grade 12 = 59 active portal programs.
 - Grade 9 uses 2026 programs; grades 10-11 primarily living 2024-41; grade 12 living 2023-40, with field-specific exceptions resolved from portal.
 - MESEM source index complete: 38 active portal programs for each grade 9-12.
 - Exact PDF URLs are pinned as each framework is parsed.
-- If the live portal says 2026 but the PDF fetch times out or a stale cached PDF returns an older schedule, do not persist inferred data; mark for source retry/audit.
+- If live portal says 2026 but PDF fetch times out or stale cache returns older schedule, do not persist inferred data; keep manual-review/source-retry item.
 
-## Parsed/seeded highlights
-- MTAL Bilişim: AMP / ATP / enterprise-from-11 profiles with current-vs-transition applicability.
-- MESEM Bilişim: grades 9-12; USTALIK/DIPLOMA variants separate.
-- Elektrik-Elektronik: grades 9-12 populated; grade-12 AMP enterprise vs ATP academic-support separation.
-- Uçak Bakım: grades 9-12 populated; grade 10 = 4 profiles/60 rows, grade 11 = 4 profiles/58 rows, grade 12 = 4 profiles with AMP enterprise vs ATP academic support.
-- Gıda Teknolojisi: grades 9-12 populated; grade 12 AMP = 10 common + 24 enterprise + 7 elective-vocational + 4 elective = 45; ATP = 10 common + 31 academic support + 4 elective = 45.
-- İnşaat Teknolojisi: grade 9 = 6 profiles/90 rows using 2026 Yapı Teknolojisi + Yapı Teknik Ressamlığı. Living transition retains six older branches. Grade 10 = 18 profiles and row-level data COMPLETE: each profile 41 fixed + 4 elective = 45. Grade 11 = 18 profiles and row-level data COMPLETE: AMP standard 33 fixed + 12 elective-vocational, ATP 25 fixed + 20 elective, enterprise-from-11 41 fixed + 4 elective. Grade 12 = 12 profiles (2023-40), AMP enterprise vs ATP academic-support structure present.
-- Sağlık Hizmetleri field name remains unchanged. Grade 9 = 6 profiles/96 rows using 2026 Diş Protez Teknisyenliği + Sağlık Bakım Teknisyenliği. Living grade 10-11 transition retains Ebe Yardımcılığı, Hemşire Yardımcılığı, Sağlık Bakım Teknisyenliği. Grade 11 row-level data COMPLETE for all 9 profiles; grade 12 AMP/ATP fixed rows present.
+## Audit
+- `audit_mtal_curriculum_v1()` is active in Cloud and persisted by migration `20260823130500_mtal_curriculum_audit.sql`.
+- GitHub commit for audit migration: `a68b7774bc86f14f55666d0682c1e90ba6c18f25`.
+- Audit key includes field + branch + grade + program + schedule variant.
+- Current persisted profiles pass row/fixed-hour/total/source validation after repairs.
+- Manual completeness review will separately cover missing field/branch/grade/source-lineage cases.
+
+## Current MTAL pull progress
+- Current Cloud coverage: 30 distinct MTAL field names / 435 active curriculum profiles.
+- Bilişim 9-12 rebuilt/validated; wrong legacy grade-12 enterprise-from-11 profiles removed and living grade-12 source structure restored.
+- Elektrik-Elektronik 9-12 populated; grade-12 AMP enterprise vs ATP academic-support separation.
+- Uçak Bakım 9-12 populated.
+- Gıda Teknolojisi 9-12 populated.
+- İnşaat Teknolojisi 9-12 profile chain; grade 10-11 row-level data complete; 2026-vs-transition branch lineage preserved.
+- Sağlık Hizmetleri field name remains; 2026 grade 9 uses Diş Protez Teknisyenliği + Sağlık Bakım Teknisyenliği; living 10-11 keeps Ebe Yardımcılığı / Hemşire Yardımcılığı / Sağlık Bakım Teknisyenliği. Grade 11 row-level complete.
+- Metal Teknolojisi 9-12 populated.
+- Mobilya ve İç Mekân Tasarımı 9-12 populated; old/new branch-name lineage preserved.
+- Yiyecek İçecek Hizmetleri: 2026 grade 9 Aşçılık/Pastacılık structure retained; living 10-12 transition uses single `Yiyecek İçecek Hizmetleri` branch and is now populated. Grade 12 is 43-hour 2023-40 structure.
+- Aile ve Tüketici Hizmetleri: living grades 10-12 populated for Sosyal Destek Hizmetleri + Tüketici Hizmetleri. 2026 grade-9 portal name `Sosyal Hizmetler` remains manual-review lineage; not force-normalized.
+- Siber Güvenlik grade 9 populated from current 2026 source: ATP-only, 28 common + 11 vocational + 5 elective = 44 hours.
+- Denizcilik grade 9 populated: three branches, AMP/ATP only.
+- Konaklama ve Seyahat Hizmetleri grade 9 populated with current 2026 branch structure.
+- Havacılık ve Uzay Teknolojisi grade 9 populated as ATP-only/protocol structure.
+- Additional 2026 grade-9 profiles already populated include Adalet, Basım Teknolojileri, Büro Yönetimi, Çocuk Gelişimi, Endüstriyel Kalite Kontrol, Endüstriyel Otomasyon, Grafik ve Fotoğraf, Hasta ve Yaşlı Hizmetleri, İtfaiyecilik ve Yangın Güvenliği, Pazarlama ve Perakende, Ulaştırma Hizmetleri and Yapay Zekâ.
+- Adalet/Büro/Çocuk Gelişimi/Endüstriyel Otomasyon/Grafik-Fotoğraf living 10-11 transition rows populated; 12th-grade 2023-40 paths being closed from exact source tables.
 - Makine ve Tasarım grade 9: 19 profiles / 266 rows.
-- Metal Teknolojisi: grades 9-12 now populated. Grade 10 = 6 profiles with 41 fixed + 4 elective = 45. Grade 11 = 6 profiles with AMP standard 33, ATP 25, enterprise-from-11 41 fixed hours. Grade 12 = 4 profiles: AMP 34 fixed (10 common + 24 enterprise) plus 7 elective-vocational + 4 elective = 45; ATP 10 fixed + 31 academic support + 4 elective = 45.
-- Otomotiv grade 9: 15 profiles / 195 rows; lineage to old Motorlu Araçlar Teknolojisi remains review-required.
-- Mobilya ve İç Mekân Tasarımı: grades 9-12 now populated. 2026 grade 9 uses `İç Mekân Ressamlığı`; living 2024/2023 transition source uses `Mobilya İç Mekân Ressamlığı`, preserved for lineage. Grade 10 = 6 profiles with 41 fixed + 4 elective. Grade 11 = 6 profiles validated after detecting/fixing an omitted 2h `Tasarım ve Malzeme Bilgisi` row in ATP/enterprise variants; final fixed hours are 33 / 25 / 41. Grade 12 = 4 profiles: AMP 34 fixed + 7 elective-vocational + 4 elective = 45; ATP 10 fixed + 31 academic support + 4 elective = 45.
-- Moda grade 9: 6 profiles / 84 rows.
-- Yiyecek İçecek grade 9: 6 profiles / 90 rows.
+- Moda grade 9: 6 profiles / 84 rows; transition chain still pending.
+- Otomotiv grade 9: 15 profiles / 195 rows; lineage to old Motorlu Araçlar Teknolojisi remains manual review.
 - Yenilenebilir Enerji grade 9: 3 profiles / 42 rows.
-- Tesisat 9 live portal is 2026, but current live PDF fetch can time out while search cache returns an older 44-hour schedule; no stale/inferred 2026 rows persisted.
-- `academic_support_hours` exists from migration `20260823023500_academic_support_hours.sql`.
-- 2023-40 validation rule: table visual + row arithmetic + explanation text; extracted text alone is not authoritative where columns shift.
+- Tesisat/Tarım/Tekstil and other 2026 source-fetch problem fields remain source-retry/manual-review; no stale rows are accepted.
 
 ## Scheduling rules already in DB
 - Class identity includes education unit/program/field/branch context.
@@ -56,11 +68,11 @@ Updated: 2026-08-23
 - Validate exact PDF/decision provenance and unresolved source retries.
 - Validate 2026-vs-transition branch/field name lineage and no accidental normalization.
 - Detect stale-cache or source-year mismatches.
-- MTAL completion requires zero unresolved ERROR findings; warnings must be explicitly reviewed.
+- Final unresolved items will be listed field -> branch -> grade for manual verification before MESEM import.
 
 ## Next
-1. Continue MTAL field-by-field; prefer reliable living transition PDFs while retrying 2026 sources that are stale/timeout.
-2. Continue branch-scoped elective-vocational and academic-support package eligibility.
-3. Complete remaining 2026 grade-9 fields and all living 10-12 transition rows.
-4. Run final MTAL audit and repair every finding.
-5. Only then begin MESEM full import and equivalent MESEM audit.
+1. Continue remaining MTAL field-by-field and transition chains.
+2. Keep unresolved/renamed/404/timeout items in manual-review queue while pulling continues.
+3. Complete branch-scoped elective-vocational and academic-support eligibility.
+4. Run final MTAL completeness audit and produce manual-control list.
+5. Then begin MESEM full import and equivalent audit.
