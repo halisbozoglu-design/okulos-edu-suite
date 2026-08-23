@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'supabase/migrations/**'
+      - '.github/workflows/deploy-supabase-migrations.yml'
 
 permissions:
   contents: read
@@ -16,7 +17,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Dry-run and deploy production migrations
+    name: Verify and deploy production migrations
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -27,6 +28,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Require production credentials
         shell: bash
@@ -47,6 +50,16 @@ jobs:
             exit 1;
           }
 
+      - name: Detect migration change
+        id: change
+        shell: bash
+        run: |
+          if git diff --name-only HEAD^ HEAD | grep -q '^supabase/migrations/'; then
+            echo 'migration_changed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'migration_changed=false' >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Link production project
         run: supabase link --project-ref "$PROJECT_REF"
 
@@ -54,6 +67,7 @@ jobs:
         run: supabase db push --linked --dry-run
 
       - name: Apply pending migrations
+        if: steps.change.outputs.migration_changed == 'true'
         run: supabase db push --linked
 
       - name: Verify migration ledger
