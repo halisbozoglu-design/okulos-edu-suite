@@ -33,7 +33,7 @@ const CACHE_KEY = "okulos.loginThemeSchedule.v2";
 const TENANT_KEY = "okulos.lastTenantCode";
 
 export function getLoginTheme(key: LoginThemeKey): LoginTheme {
-  return LOGIN_THEME_CATALOG.find((x) => x.key === key) ?? LOGIN_THEME_CATALOG[0];
+  return LOGIN_THEME_CATALOG.find((x) => x.key === key) ?? (LOGIN_THEME_CATALOG[0] as LoginTheme);
 }
 
 export function rememberTenantCode(code: string | null | undefined) {
