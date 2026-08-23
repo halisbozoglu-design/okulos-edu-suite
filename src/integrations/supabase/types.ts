@@ -564,45 +564,67 @@ export type Database = {
       }
       class_course_requirements: {
         Row: {
+          academic_year_id: string | null
           category: string
           class_id: string
           course_id: string
           created_at: string
+          delivery_mode: string | null
           id: string
           institution_code: string | null
           locked: boolean
           note: string | null
+          offering_rule_id: string | null
+          source_kind: string
           source_template_id: string | null
           updated_at: string
           weekly_hours: number
+          workshop_required: boolean
         }
         Insert: {
+          academic_year_id?: string | null
           category?: string
           class_id: string
           course_id: string
           created_at?: string
+          delivery_mode?: string | null
           id?: string
           institution_code?: string | null
           locked?: boolean
           note?: string | null
+          offering_rule_id?: string | null
+          source_kind?: string
           source_template_id?: string | null
           updated_at?: string
           weekly_hours: number
+          workshop_required?: boolean
         }
         Update: {
+          academic_year_id?: string | null
           category?: string
           class_id?: string
           course_id?: string
           created_at?: string
+          delivery_mode?: string | null
           id?: string
           institution_code?: string | null
           locked?: boolean
           note?: string | null
+          offering_rule_id?: string | null
+          source_kind?: string
           source_template_id?: string | null
           updated_at?: string
           weekly_hours?: number
+          workshop_required?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "class_course_requirements_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "class_course_requirements_class_id_fkey"
             columns: ["class_id"]
@@ -632,6 +654,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "class_course_requirements_offering_rule_id_fkey"
+            columns: ["offering_rule_id"]
+            isOneToOne: false
+            referencedRelation: "course_offering_rules"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "class_course_requirements_source_template_id_fkey"
             columns: ["source_template_id"]
             isOneToOne: false
@@ -640,6 +669,124 @@ export type Database = {
           },
           {
             foreignKeyName: "fk_class_course_requirements_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      class_course_workshop_options: {
+        Row: {
+          active: boolean
+          classroom_id: string
+          institution_code: string
+          priority: number
+          requirement_id: string
+        }
+        Insert: {
+          active?: boolean
+          classroom_id: string
+          institution_code: string
+          priority?: number
+          requirement_id: string
+        }
+        Update: {
+          active?: boolean
+          classroom_id?: string
+          institution_code?: string
+          priority?: number
+          requirement_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_course_workshop_options_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_course_workshop_options_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "class_course_workshop_options_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_course_workshop_options_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+        ]
+      }
+      class_enterprise_week_patterns: {
+        Row: {
+          active: boolean
+          class_id: string
+          consecutive_days_required: boolean
+          enterprise_day_count: number | null
+          enterprise_hours_per_day: number
+          enterprise_weekly_hours: number
+          institution_code: string
+          movable_days: boolean
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          class_id: string
+          consecutive_days_required?: boolean
+          enterprise_day_count?: number | null
+          enterprise_hours_per_day?: number
+          enterprise_weekly_hours: number
+          institution_code: string
+          movable_days?: boolean
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          class_id?: string
+          consecutive_days_required?: boolean
+          enterprise_day_count?: number | null
+          enterprise_hours_per_day?: number
+          enterprise_weekly_hours?: number
+          institution_code?: string
+          movable_days?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_enterprise_week_patterns_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: true
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "class_enterprise_week_patterns_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: true
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_enterprise_week_patterns_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: true
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_enterprise_week_patterns_institution_code_fkey"
             columns: ["institution_code"]
             isOneToOne: false
             referencedRelation: "institutions"
@@ -746,43 +893,118 @@ export type Database = {
       classrooms: {
         Row: {
           active: boolean
+          branch_id: string | null
           capacity: number
           created_at: string
           department: string | null
+          field_id: string | null
           hardware: Json
           id: string
           institution_code: string | null
+          is_vocational_workshop: boolean
           name: string
           room_type: string
           updated_at: string
         }
         Insert: {
           active?: boolean
+          branch_id?: string | null
           capacity: number
           created_at?: string
           department?: string | null
+          field_id?: string | null
           hardware?: Json
           id?: string
           institution_code?: string | null
+          is_vocational_workshop?: boolean
           name: string
           room_type?: string
           updated_at?: string
         }
         Update: {
           active?: boolean
+          branch_id?: string | null
           capacity?: number
           created_at?: string
           department?: string | null
+          field_id?: string | null
           hardware?: Json
           id?: string
           institution_code?: string | null
+          is_vocational_workshop?: boolean
           name?: string
           room_type?: string
           updated_at?: string
         }
         Relationships: [
           {
+            foreignKeyName: "classrooms_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "institution_branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classrooms_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "institution_fields"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "fk_classrooms_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      course_block_preferences: {
+        Row: {
+          active: boolean
+          block_pattern: number[]
+          class_course_requirement_id: string
+          created_at: string
+          id: string
+          institution_code: string
+          priority: number
+        }
+        Insert: {
+          active?: boolean
+          block_pattern: number[]
+          class_course_requirement_id: string
+          created_at?: string
+          id?: string
+          institution_code?: string
+          priority: number
+        }
+        Update: {
+          active?: boolean
+          block_pattern?: number[]
+          class_course_requirement_id?: string
+          created_at?: string
+          id?: string
+          institution_code?: string
+          priority?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_block_preferences_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_block_preferences_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "course_block_preferences_institution_code_fkey"
             columns: ["institution_code"]
             isOneToOne: false
             referencedRelation: "institutions"
@@ -819,6 +1041,93 @@ export type Database = {
           short_name?: string | null
         }
         Relationships: []
+      }
+      course_offering_rules: {
+        Row: {
+          academic_year: string
+          active: boolean
+          branch_name: string | null
+          category: string
+          course_id: string
+          created_at: string
+          elective_group_key: string | null
+          field_name: string | null
+          grade_level: number
+          hour_options: number[]
+          id: string
+          institution_code: string
+          max_selections: number
+          parsed_constraints: Json
+          program_type: string | null
+          repeat_across_years: boolean
+          school_level: string | null
+          school_subtype: string | null
+          source_file_name: string | null
+          source_note: string | null
+          updated_at: string
+        }
+        Insert: {
+          academic_year: string
+          active?: boolean
+          branch_name?: string | null
+          category: string
+          course_id: string
+          created_at?: string
+          elective_group_key?: string | null
+          field_name?: string | null
+          grade_level: number
+          hour_options?: number[]
+          id?: string
+          institution_code?: string
+          max_selections?: number
+          parsed_constraints?: Json
+          program_type?: string | null
+          repeat_across_years?: boolean
+          school_level?: string | null
+          school_subtype?: string | null
+          source_file_name?: string | null
+          source_note?: string | null
+          updated_at?: string
+        }
+        Update: {
+          academic_year?: string
+          active?: boolean
+          branch_name?: string | null
+          category?: string
+          course_id?: string
+          created_at?: string
+          elective_group_key?: string | null
+          field_name?: string | null
+          grade_level?: number
+          hour_options?: number[]
+          id?: string
+          institution_code?: string
+          max_selections?: number
+          parsed_constraints?: Json
+          program_type?: string | null
+          repeat_across_years?: boolean
+          school_level?: string | null
+          school_subtype?: string | null
+          source_file_name?: string | null
+          source_note?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_offering_rules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_offering_rules_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
       }
       course_pedagogy_profiles: {
         Row: {
@@ -962,6 +1271,60 @@ export type Database = {
           },
           {
             foreignKeyName: "fk_course_schedule_rules_institution_code"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      course_time_preferences: {
+        Row: {
+          active: boolean
+          course_id: string
+          id: string
+          institution_code: string
+          mode: string
+          note: string | null
+          period: number
+          updated_at: string
+          weekday: number
+          weight: number
+        }
+        Insert: {
+          active?: boolean
+          course_id: string
+          id?: string
+          institution_code?: string
+          mode: string
+          note?: string | null
+          period: number
+          updated_at?: string
+          weekday: number
+          weight?: number
+        }
+        Update: {
+          active?: boolean
+          course_id?: string
+          id?: string
+          institution_code?: string
+          mode?: string
+          note?: string | null
+          period?: number
+          updated_at?: string
+          weekday?: number
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_time_preferences_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_time_preferences_institution_code_fkey"
             columns: ["institution_code"]
             isOneToOne: false
             referencedRelation: "institutions"
@@ -1657,6 +2020,126 @@ export type Database = {
           },
         ]
       }
+      institution_branches: {
+        Row: {
+          active: boolean
+          code: string | null
+          created_at: string
+          field_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          active?: boolean
+          code?: string | null
+          created_at?: string
+          field_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          active?: boolean
+          code?: string | null
+          created_at?: string
+          field_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_branches_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "institution_fields"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institution_education_units: {
+        Row: {
+          academic_year_id: string | null
+          active: boolean
+          created_at: string
+          education_mode: string
+          id: string
+          institution_code: string
+          program_type: string | null
+          school_subtype: string | null
+          school_type: string
+          session_scope: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id?: string | null
+          active?: boolean
+          created_at?: string
+          education_mode?: string
+          id?: string
+          institution_code: string
+          program_type?: string | null
+          school_subtype?: string | null
+          school_type: string
+          session_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string | null
+          active?: boolean
+          created_at?: string
+          education_mode?: string
+          id?: string
+          institution_code?: string
+          program_type?: string | null
+          school_subtype?: string | null
+          school_type?: string
+          session_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_education_units_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institution_fields: {
+        Row: {
+          active: boolean
+          code: string | null
+          created_at: string
+          id: string
+          name: string
+          unit_id: string
+        }
+        Insert: {
+          active?: boolean
+          code?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          unit_id: string
+        }
+        Update: {
+          active?: boolean
+          code?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          unit_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_fields_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "institution_education_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       institution_memberships: {
         Row: {
           active: boolean
@@ -1723,6 +2206,8 @@ export type Database = {
           created_at: string
           created_by: string | null
           institution_code: string
+          is_metropolitan_district: boolean | null
+          province_name: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           school_name: string
@@ -1735,6 +2220,8 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           institution_code: string
+          is_metropolitan_district?: boolean | null
+          province_name?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           school_name: string
@@ -1747,6 +2234,8 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           institution_code?: string
+          is_metropolitan_district?: boolean | null
+          province_name?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           school_name?: string
@@ -1947,6 +2436,24 @@ export type Database = {
             referencedColumns: ["institution_code"]
           },
         ]
+      }
+      metropolitan_provinces: {
+        Row: {
+          active: boolean
+          name: string
+          source_note: string | null
+        }
+        Insert: {
+          active?: boolean
+          name: string
+          source_note?: string | null
+        }
+        Update: {
+          active?: boolean
+          name?: string
+          source_note?: string | null
+        }
+        Relationships: []
       }
       norm_area_rule_assignments: {
         Row: {
@@ -2223,6 +2730,474 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      official_course_rule_annotations: {
+        Row: {
+          active: boolean
+          catalog_id: string | null
+          created_at: string
+          id: string
+          parameters: Json
+          rule_code: string
+          rule_type: string
+          severity: string
+          source_ref: string | null
+          source_text: string
+        }
+        Insert: {
+          active?: boolean
+          catalog_id?: string | null
+          created_at?: string
+          id?: string
+          parameters?: Json
+          rule_code: string
+          rule_type: string
+          severity?: string
+          source_ref?: string | null
+          source_text: string
+        }
+        Update: {
+          active?: boolean
+          catalog_id?: string | null
+          created_at?: string
+          id?: string
+          parameters?: Json
+          rule_code?: string
+          rule_type?: string
+          severity?: string
+          source_ref?: string | null
+          source_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_course_rule_annotations_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: false
+            referencedRelation: "official_course_schedule_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "official_course_rule_annotations_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: false
+            referencedRelation: "official_course_schedule_effective"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_course_schedule_catalog: {
+        Row: {
+          active: boolean
+          branch_name: string | null
+          category: string
+          course_id: string
+          effective_academic_year: string
+          elective_group_key: string | null
+          field_name: string | null
+          grade_level: number
+          hour_options: number[]
+          id: string
+          imported_at: string
+          max_selections: number
+          needs_review: boolean
+          parsed_constraints: Json
+          parser_confidence: number | null
+          program_type: string | null
+          repeat_across_years: boolean
+          schedule_variant: string
+          school_subtype: string | null
+          school_type: string
+          source_decision_date: string | null
+          source_decision_no: string | null
+          source_file_name: string | null
+          source_note: string | null
+          source_page: number | null
+          source_section: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          branch_name?: string | null
+          category: string
+          course_id: string
+          effective_academic_year: string
+          elective_group_key?: string | null
+          field_name?: string | null
+          grade_level: number
+          hour_options: number[]
+          id?: string
+          imported_at?: string
+          max_selections?: number
+          needs_review?: boolean
+          parsed_constraints?: Json
+          parser_confidence?: number | null
+          program_type?: string | null
+          repeat_across_years?: boolean
+          schedule_variant?: string
+          school_subtype?: string | null
+          school_type: string
+          source_decision_date?: string | null
+          source_decision_no?: string | null
+          source_file_name?: string | null
+          source_note?: string | null
+          source_page?: number | null
+          source_section?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          branch_name?: string | null
+          category?: string
+          course_id?: string
+          effective_academic_year?: string
+          elective_group_key?: string | null
+          field_name?: string | null
+          grade_level?: number
+          hour_options?: number[]
+          id?: string
+          imported_at?: string
+          max_selections?: number
+          needs_review?: boolean
+          parsed_constraints?: Json
+          parser_confidence?: number | null
+          program_type?: string | null
+          repeat_across_years?: boolean
+          schedule_variant?: string
+          school_subtype?: string | null
+          school_type?: string
+          source_decision_date?: string | null
+          source_decision_no?: string | null
+          source_file_name?: string | null
+          source_note?: string | null
+          source_page?: number | null
+          source_section?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_course_schedule_catalog_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_course_schedule_overrides: {
+        Row: {
+          active: boolean
+          branch_name: string | null
+          catalog_id: string
+          category: string | null
+          elective_group_key: string | null
+          field_name: string | null
+          grade_level: number | null
+          hour_options: number[] | null
+          id: string
+          max_selections: number | null
+          parsed_constraints: Json | null
+          program_type: string | null
+          reason: string
+          repeat_across_years: boolean | null
+          school_subtype: string | null
+          source_note: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          active?: boolean
+          branch_name?: string | null
+          catalog_id: string
+          category?: string | null
+          elective_group_key?: string | null
+          field_name?: string | null
+          grade_level?: number | null
+          hour_options?: number[] | null
+          id?: string
+          max_selections?: number | null
+          parsed_constraints?: Json | null
+          program_type?: string | null
+          reason: string
+          repeat_across_years?: boolean | null
+          school_subtype?: string | null
+          source_note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          active?: boolean
+          branch_name?: string | null
+          catalog_id?: string
+          category?: string | null
+          elective_group_key?: string | null
+          field_name?: string | null
+          grade_level?: number | null
+          hour_options?: number[] | null
+          id?: string
+          max_selections?: number | null
+          parsed_constraints?: Json | null
+          program_type?: string | null
+          reason?: string
+          repeat_across_years?: boolean | null
+          school_subtype?: string | null
+          source_note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_course_schedule_overrides_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: true
+            referencedRelation: "official_course_schedule_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "official_course_schedule_overrides_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: true
+            referencedRelation: "official_course_schedule_effective"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_curriculum_profiles: {
+        Row: {
+          academic_support_hours: number | null
+          active: boolean
+          applicability_status: string
+          branch_name: string | null
+          common_hours: number | null
+          effective_academic_year: string
+          elective_course_max: number | null
+          elective_course_min: number
+          elective_hour_max: number
+          elective_hour_min: number
+          elective_hours: number | null
+          elective_vocational_hours: number | null
+          enterprise_hours: number | null
+          field_name: string | null
+          grade_level: number
+          group_rules: Json
+          guidance_hours: number | null
+          id: string
+          parsed_constraints: Json
+          program_type: string | null
+          required_course_count: number
+          required_hour_total: number
+          schedule_variant: string | null
+          school_subtype: string | null
+          school_type: string
+          source_decision_no: string | null
+          source_file_name: string | null
+          source_note: string | null
+          source_page: number | null
+          total_hour_max: number
+          total_hour_min: number
+          total_hour_target: number | null
+          updated_at: string
+          vocational_hours: number | null
+        }
+        Insert: {
+          academic_support_hours?: number | null
+          active?: boolean
+          applicability_status?: string
+          branch_name?: string | null
+          common_hours?: number | null
+          effective_academic_year: string
+          elective_course_max?: number | null
+          elective_course_min?: number
+          elective_hour_max?: number
+          elective_hour_min?: number
+          elective_hours?: number | null
+          elective_vocational_hours?: number | null
+          enterprise_hours?: number | null
+          field_name?: string | null
+          grade_level: number
+          group_rules?: Json
+          guidance_hours?: number | null
+          id?: string
+          parsed_constraints?: Json
+          program_type?: string | null
+          required_course_count?: number
+          required_hour_total?: number
+          schedule_variant?: string | null
+          school_subtype?: string | null
+          school_type: string
+          source_decision_no?: string | null
+          source_file_name?: string | null
+          source_note?: string | null
+          source_page?: number | null
+          total_hour_max?: number
+          total_hour_min?: number
+          total_hour_target?: number | null
+          updated_at?: string
+          vocational_hours?: number | null
+        }
+        Update: {
+          academic_support_hours?: number | null
+          active?: boolean
+          applicability_status?: string
+          branch_name?: string | null
+          common_hours?: number | null
+          effective_academic_year?: string
+          elective_course_max?: number | null
+          elective_course_min?: number
+          elective_hour_max?: number
+          elective_hour_min?: number
+          elective_hours?: number | null
+          elective_vocational_hours?: number | null
+          enterprise_hours?: number | null
+          field_name?: string | null
+          grade_level?: number
+          group_rules?: Json
+          guidance_hours?: number | null
+          id?: string
+          parsed_constraints?: Json
+          program_type?: string | null
+          required_course_count?: number
+          required_hour_total?: number
+          schedule_variant?: string | null
+          school_subtype?: string | null
+          school_type?: string
+          source_decision_no?: string | null
+          source_file_name?: string | null
+          source_note?: string | null
+          source_page?: number | null
+          total_hour_max?: number
+          total_hour_min?: number
+          total_hour_target?: number | null
+          updated_at?: string
+          vocational_hours?: number | null
+        }
+        Relationships: []
+      }
+      official_vocational_branches: {
+        Row: {
+          active: boolean
+          branch_name: string
+          field_id: string
+          id: string
+          source_note: string | null
+          source_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          branch_name: string
+          field_id: string
+          id?: string
+          source_note?: string | null
+          source_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          branch_name?: string
+          field_id?: string
+          id?: string
+          source_note?: string | null
+          source_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_vocational_branches_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "official_vocational_fields"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_vocational_fields: {
+        Row: {
+          active: boolean
+          field_name: string
+          id: string
+          institution_type: string
+          source_note: string | null
+          source_scope: string
+          source_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          field_name: string
+          id?: string
+          institution_type: string
+          source_note?: string | null
+          source_scope?: string
+          source_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          field_name?: string
+          id?: string
+          institution_type?: string
+          source_note?: string | null
+          source_scope?: string
+          source_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      official_vocational_framework_sources: {
+        Row: {
+          active: boolean
+          applicability_status: string
+          decision_no: string | null
+          field_id: string | null
+          grade_level: number
+          id: string
+          institution_type: string
+          needs_review: boolean
+          portal_program_name: string
+          program_year: number | null
+          source_note: string | null
+          source_url: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          applicability_status?: string
+          decision_no?: string | null
+          field_id?: string | null
+          grade_level: number
+          id?: string
+          institution_type: string
+          needs_review?: boolean
+          portal_program_name: string
+          program_year?: number | null
+          source_note?: string | null
+          source_url: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          applicability_status?: string
+          decision_no?: string | null
+          field_id?: string | null
+          grade_level?: number
+          id?: string
+          institution_type?: string
+          needs_review?: boolean
+          portal_program_name?: string
+          program_year?: number | null
+          source_note?: string | null
+          source_url?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_vocational_framework_sources_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "official_vocational_fields"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -4144,6 +5119,87 @@ export type Database = {
           },
         ]
       }
+      schedule_relation_rules: {
+        Row: {
+          active: boolean
+          created_at: string
+          hard: boolean
+          id: string
+          institution_code: string
+          left_requirement_id: string
+          lunch_after_period: number | null
+          note: string | null
+          right_requirement_id: string | null
+          rule_type: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          hard?: boolean
+          id?: string
+          institution_code?: string
+          left_requirement_id: string
+          lunch_after_period?: number | null
+          note?: string | null
+          right_requirement_id?: string | null
+          rule_type: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          hard?: boolean
+          id?: string
+          institution_code?: string
+          left_requirement_id?: string
+          lunch_after_period?: number | null
+          note?: string | null
+          right_requirement_id?: string | null
+          rule_type?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_relation_rules_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "schedule_relation_rules_left_requirement_id_fkey"
+            columns: ["left_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_relation_rules_left_requirement_id_fkey"
+            columns: ["left_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "schedule_relation_rules_right_requirement_id_fkey"
+            columns: ["right_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_relation_rules_right_requirement_id_fkey"
+            columns: ["right_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+        ]
+      }
       schedule_repair_audit: {
         Row: {
           action_no: number
@@ -5029,33 +6085,39 @@ export type Database = {
         Row: {
           active: boolean
           created_at: string
+          education_mode: string
           id: string
           institution_code: string | null
           lunch_after_period: number | null
           name: string
           periods_per_day: number
+          session_scope: string
           teaching_days: number[]
           updated_at: string
         }
         Insert: {
           active?: boolean
           created_at?: string
+          education_mode?: string
           id?: string
           institution_code?: string | null
           lunch_after_period?: number | null
           name: string
           periods_per_day?: number
+          session_scope?: string
           teaching_days?: number[]
           updated_at?: string
         }
         Update: {
           active?: boolean
           created_at?: string
+          education_mode?: string
           id?: string
           institution_code?: string | null
           lunch_after_period?: number | null
           name?: string
           periods_per_day?: number
+          session_scope?: string
           teaching_days?: number[]
           updated_at?: string
         }
@@ -5203,33 +6265,45 @@ export type Database = {
         Row: {
           active: boolean
           course_id: string
+          forbid_all_small_blocks: boolean
           institution_code: string
           max_block: number
           min_block: number
+          minimize_fragmentation: boolean
           preferred_block: number
           preferred_patterns: number[]
+          resource_balance_weight: number
+          setup_cleanup_weight: number
           updated_at: string
           updated_by: string | null
         }
         Insert: {
           active?: boolean
           course_id: string
+          forbid_all_small_blocks?: boolean
           institution_code?: string
           max_block?: number
           min_block?: number
+          minimize_fragmentation?: boolean
           preferred_block?: number
           preferred_patterns?: number[]
+          resource_balance_weight?: number
+          setup_cleanup_weight?: number
           updated_at?: string
           updated_by?: string | null
         }
         Update: {
           active?: boolean
           course_id?: string
+          forbid_all_small_blocks?: boolean
           institution_code?: string
           max_block?: number
           min_block?: number
+          minimize_fragmentation?: boolean
           preferred_block?: number
           preferred_patterns?: number[]
+          resource_balance_weight?: number
+          setup_cleanup_weight?: number
           updated_at?: string
           updated_by?: string | null
         }
@@ -5370,17 +6444,24 @@ export type Database = {
       }
       school_classes: {
         Row: {
+          academic_year_id: string | null
           active: boolean
           advisor_teacher_id: string | null
+          branch_id: string | null
           class_name: string
           composite_key: string | null
           curriculum_status: string
+          education_unit_id: string | null
           expected_weekly_hours: number | null
+          field_id: string | null
           grade_level: number | null
           id: string
           imported_student_count: number | null
           institution_code: string | null
+          predecessor_class_id: string | null
           program_type: string | null
+          school_subtype: string | null
+          school_type: string | null
           section: string | null
           source: string
           source_file_name: string | null
@@ -5388,17 +6469,24 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          academic_year_id?: string | null
           active?: boolean
           advisor_teacher_id?: string | null
+          branch_id?: string | null
           class_name: string
           composite_key?: string | null
           curriculum_status?: string
+          education_unit_id?: string | null
           expected_weekly_hours?: number | null
+          field_id?: string | null
           grade_level?: number | null
           id?: string
           imported_student_count?: number | null
           institution_code?: string | null
+          predecessor_class_id?: string | null
           program_type?: string | null
+          school_subtype?: string | null
+          school_type?: string | null
           section?: string | null
           source?: string
           source_file_name?: string | null
@@ -5406,17 +6494,24 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          academic_year_id?: string | null
           active?: boolean
           advisor_teacher_id?: string | null
+          branch_id?: string | null
           class_name?: string
           composite_key?: string | null
           curriculum_status?: string
+          education_unit_id?: string | null
           expected_weekly_hours?: number | null
+          field_id?: string | null
           grade_level?: number | null
           id?: string
           imported_student_count?: number | null
           institution_code?: string | null
+          predecessor_class_id?: string | null
           program_type?: string | null
+          school_subtype?: string | null
+          school_type?: string | null
           section?: string | null
           source?: string
           source_file_name?: string | null
@@ -5430,6 +6525,55 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "institutions"
             referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "school_classes_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_classes_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "institution_branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_classes_education_unit_id_fkey"
+            columns: ["education_unit_id"]
+            isOneToOne: false
+            referencedRelation: "institution_education_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_classes_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "institution_fields"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_classes_predecessor_class_id_fkey"
+            columns: ["predecessor_class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "school_classes_predecessor_class_id_fkey"
+            columns: ["predecessor_class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_classes_predecessor_class_id_fkey"
+            columns: ["predecessor_class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -5993,6 +7137,76 @@ export type Database = {
             foreignKeyName: "teacher_duty_cycle_members_teacher_id_fkey"
             columns: ["teacher_id"]
             isOneToOne: true
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      teacher_flexible_schedule_duties: {
+        Row: {
+          active: boolean
+          duty_type: string
+          id: string
+          institution_code: string
+          locked: boolean
+          min_block_hours: number
+          movable: boolean
+          placement_phase: string
+          placement_strategy: string
+          source_id: string | null
+          teacher_id: string
+          total_hours: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          duty_type: string
+          id?: string
+          institution_code: string
+          locked?: boolean
+          min_block_hours?: number
+          movable?: boolean
+          placement_phase: string
+          placement_strategy?: string
+          source_id?: string | null
+          teacher_id: string
+          total_hours: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          duty_type?: string
+          id?: string
+          institution_code?: string
+          locked?: boolean
+          min_block_hours?: number
+          movable?: boolean
+          placement_phase?: string
+          placement_strategy?: string
+          source_id?: string | null
+          teacher_id?: string
+          total_hours?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_flexible_schedule_duties_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "teacher_flexible_schedule_duties_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_flexible_schedule_duties_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
           },
@@ -6792,6 +8006,286 @@ export type Database = {
           },
         ]
       }
+      vocational_coordination_plans: {
+        Row: {
+          academic_year_id: string | null
+          active: boolean
+          daily_coordination_max_hours: number
+          education_unit_id: string | null
+          eligible_teacher_count: number
+          enterprise_days_per_week: number | null
+          enterprise_weekly_hours: number | null
+          field_id: string
+          grade_level: number | null
+          high_target: number | null
+          high_target_teacher_count: number | null
+          id: string
+          institution_code: string
+          is_metropolitan_district: boolean | null
+          low_target: number | null
+          program_type: string | null
+          source_requirement_id: string | null
+          source_rule: string | null
+          total_hours: number
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id?: string | null
+          active?: boolean
+          daily_coordination_max_hours?: number
+          education_unit_id?: string | null
+          eligible_teacher_count: number
+          enterprise_days_per_week?: number | null
+          enterprise_weekly_hours?: number | null
+          field_id: string
+          grade_level?: number | null
+          high_target?: number | null
+          high_target_teacher_count?: number | null
+          id?: string
+          institution_code: string
+          is_metropolitan_district?: boolean | null
+          low_target?: number | null
+          program_type?: string | null
+          source_requirement_id?: string | null
+          source_rule?: string | null
+          total_hours: number
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string | null
+          active?: boolean
+          daily_coordination_max_hours?: number
+          education_unit_id?: string | null
+          eligible_teacher_count?: number
+          enterprise_days_per_week?: number | null
+          enterprise_weekly_hours?: number | null
+          field_id?: string
+          grade_level?: number | null
+          high_target?: number | null
+          high_target_teacher_count?: number | null
+          id?: string
+          institution_code?: string
+          is_metropolitan_district?: boolean | null
+          low_target?: number | null
+          program_type?: string | null
+          source_requirement_id?: string | null
+          source_rule?: string | null
+          total_hours?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocational_coordination_plans_education_unit_id_fkey"
+            columns: ["education_unit_id"]
+            isOneToOne: false
+            referencedRelation: "institution_education_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocational_coordination_plans_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "institution_fields"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocational_coordination_plans_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "vocational_coordination_plans_source_requirement_id_fkey"
+            columns: ["source_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocational_coordination_plans_source_requirement_id_fkey"
+            columns: ["source_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+        ]
+      }
+      vocational_course_group_plans: {
+        Row: {
+          applied_group_count: number
+          groupable: boolean
+          id: string
+          institution_code: string
+          override_reason: string | null
+          requirement_id: string
+          source_rule: string | null
+          special_needs_student_count: number
+          student_count: number
+          suggested_group_count: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          applied_group_count: number
+          groupable?: boolean
+          id?: string
+          institution_code: string
+          override_reason?: string | null
+          requirement_id: string
+          source_rule?: string | null
+          special_needs_student_count?: number
+          student_count: number
+          suggested_group_count: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          applied_group_count?: number
+          groupable?: boolean
+          id?: string
+          institution_code?: string
+          override_reason?: string | null
+          requirement_id?: string
+          source_rule?: string | null
+          special_needs_student_count?: number
+          student_count?: number
+          suggested_group_count?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocational_course_group_plans_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "vocational_course_group_plans_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: true
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocational_course_group_plans_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: true
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+        ]
+      }
+      vocational_lead_assignments: {
+        Row: {
+          active: boolean
+          duty_type: string
+          field_id: string
+          id: string
+          institution_code: string
+          teacher_id: string
+          updated_at: string
+          weekly_hours: number
+          workshop_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          duty_type: string
+          field_id: string
+          id?: string
+          institution_code: string
+          teacher_id: string
+          updated_at?: string
+          weekly_hours: number
+          workshop_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          duty_type?: string
+          field_id?: string
+          id?: string
+          institution_code?: string
+          teacher_id?: string
+          updated_at?: string
+          weekly_hours?: number
+          workshop_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocational_lead_assignments_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "institution_fields"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocational_lead_assignments_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "vocational_lead_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "vocational_lead_assignments_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "vocational_lead_assignments_workshop_id_fkey"
+            columns: ["workshop_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vocational_program_schedule_policies: {
+        Row: {
+          active: boolean
+          default_enterprise_days: number | null
+          default_school_days: number | null
+          eligible_grades: number[]
+          program_type: string
+          regular_year_enterprise_mode: string
+          source_rule: string
+          updated_at: string
+          weekly_hours_from_official_schedule: boolean
+        }
+        Insert: {
+          active?: boolean
+          default_enterprise_days?: number | null
+          default_school_days?: number | null
+          eligible_grades: number[]
+          program_type: string
+          regular_year_enterprise_mode: string
+          source_rule: string
+          updated_at?: string
+          weekly_hours_from_official_schedule?: boolean
+        }
+        Update: {
+          active?: boolean
+          default_enterprise_days?: number | null
+          default_school_days?: number | null
+          eligible_grades?: number[]
+          program_type?: string
+          regular_year_enterprise_mode?: string
+          source_rule?: string
+          updated_at?: string
+          weekly_hours_from_official_schedule?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       class_curriculum_summary: {
@@ -6810,6 +8304,7 @@ export type Database = {
       }
       class_roster_summary: {
         Row: {
+          academic_year_id: string | null
           class_name: string | null
           composite_key: string | null
           grade_level: number | null
@@ -6821,7 +8316,54 @@ export type Database = {
           student_count: number | null
           suggested_group_count: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "school_classes_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_course_schedule_effective: {
+        Row: {
+          active: boolean | null
+          branch_name: string | null
+          category: string | null
+          course_id: string | null
+          effective_academic_year: string | null
+          elective_group_key: string | null
+          field_name: string | null
+          grade_level: number | null
+          hour_options: number[] | null
+          id: string | null
+          manually_overridden: boolean | null
+          max_selections: number | null
+          needs_review: boolean | null
+          parsed_constraints: Json | null
+          parser_confidence: number | null
+          program_type: string | null
+          repeat_across_years: boolean | null
+          schedule_variant: string | null
+          school_subtype: string | null
+          school_type: string | null
+          source_decision_date: string | null
+          source_decision_no: string | null
+          source_file_name: string | null
+          source_note: string | null
+          source_page: number | null
+          source_section: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_course_schedule_catalog_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       schedule_assignment_options: {
         Row: {
@@ -7076,6 +8618,10 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: undefined
       }
+      assign_class_course_from_pool_v1: {
+        Args: { p_class_id: string; p_course_id: string; p_hours: number }
+        Returns: string
+      }
       assign_classrooms_to_scenario: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -7180,6 +8726,19 @@ export type Database = {
         }
         Returns: string
       }
+      audit_mtal_curriculum_v1: {
+        Args: never
+        Returns: {
+          branch_name: string
+          code: string
+          detail: string
+          field_name: string
+          grade_level: number
+          program_type: string
+          schedule_variant: string
+          severity: string
+        }[]
+      }
       calculate_norm_from_rule: {
         Args: { p_rule_set_id: string; p_total_hours: number }
         Returns: number
@@ -7243,6 +8802,19 @@ export type Database = {
           p_copy_teachers?: boolean
           p_source_class_id: string
           p_target_class_id: string
+        }
+        Returns: number
+      }
+      course_slot_allowed_v1: {
+        Args: { p_course_id: string; p_period: number; p_weekday: number }
+        Returns: boolean
+      }
+      course_slot_penalty_v1: {
+        Args: {
+          p_block: number
+          p_course_id: string
+          p_start: number
+          p_weekday: number
         }
         Returns: number
       }
@@ -7415,11 +8987,13 @@ export type Database = {
         Returns: {
           active: boolean
           created_at: string
+          education_mode: string
           id: string
           institution_code: string | null
           lunch_after_period: number | null
           name: string
           periods_per_day: number
+          session_scope: string
           teaching_days: number[]
           updated_at: string
         }
@@ -7438,6 +9012,33 @@ export type Database = {
           is_teaching_day: boolean
           is_weekday: boolean
           is_workday: boolean
+        }[]
+      }
+      get_class_course_pool_v1: {
+        Args: { p_class_id: string }
+        Returns: {
+          already_assigned: boolean
+          category: string
+          course_id: string
+          course_name: string
+          current_hours: number
+          elective_group_key: string
+          eligible: boolean
+          expected_hours: number
+          hour_options: number[]
+          planned_hours: number
+          reason: string
+          repeat_across_years: boolean
+          short_name: string
+        }[]
+      }
+      get_current_custom_rule_issues_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
         }[]
       }
       get_curriculum_readiness: {
@@ -7643,6 +9244,15 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_scenario_block_pattern_v1: {
+        Args: {
+          p_base: number[]
+          p_remaining: number
+          p_requirement_id: string
+          p_scenario_no: number
+        }
+        Returns: number[]
+      }
       get_scenario_room_status: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -7842,6 +9452,14 @@ export type Database = {
           detail: string
         }[]
       }
+      get_schedule_scenario_custom_rule_issues_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_scenario_edge_slot_issues_v1: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -7963,9 +9581,14 @@ export type Database = {
           imported_rows: number
         }[]
       }
+      infer_school_type_for_class_v1: {
+        Args: { p_existing: string; p_grade: number; p_program: string }
+        Returns: string
+      }
       is_admin: { Args: never; Returns: boolean }
       is_institution_principal: { Args: never; Returns: boolean }
       is_manager_or_admin: { Args: never; Returns: boolean }
+      is_metropolitan_province: { Args: { p_name: string }; Returns: boolean }
       is_principal_user: { Args: never; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
       is_teaching_day: { Args: { p_date: string }; Returns: boolean }
@@ -7989,6 +9612,10 @@ export type Database = {
           hours: number
           tckn: string
         }[]
+      }
+      link_class_predecessors_for_year_v1: {
+        Args: { p_academic_year_id: string }
+        Returns: number
       }
       materialize_workshop_block_rule_v1: {
         Args: { p_course_id: string }
@@ -8289,6 +9916,16 @@ export type Database = {
         Args: { p_assignment_id: string }
         Returns: boolean
       }
+      schedule_relation_slot_allowed_v1: {
+        Args: {
+          p_block: number
+          p_period: number
+          p_requirement_id: string
+          p_scenario_id: string
+          p_weekday: number
+        }
+        Returns: boolean
+      }
       schedule_rule_mode_v1: { Args: { p_rule_code: string }; Returns: string }
       schedule_rule_weight_v1: {
         Args: {
@@ -8419,6 +10056,20 @@ export type Database = {
           route_prefix: string
         }[]
       }
+      super_admin_import_official_course_schedule_v1: {
+        Args: {
+          p_effective_academic_year: string
+          p_program_type: string
+          p_rows: Json
+          p_school_type: string
+          p_source_file_name: string
+        }
+        Returns: Json
+      }
+      super_admin_import_official_course_schedule_v2: {
+        Args: { p_profile: Json; p_rows: Json; p_source_file_name: string }
+        Returns: Json
+      }
       super_admin_list_tenants: {
         Args: never
         Returns: {
@@ -8431,6 +10082,10 @@ export type Database = {
           reviewed_at: string
           school_name: string
         }[]
+      }
+      super_admin_override_official_course_v1: {
+        Args: { p_catalog_id: string; p_patch: Json; p_reason: string }
+        Returns: undefined
       }
       super_admin_review_tenant: {
         Args: {
@@ -8476,6 +10131,10 @@ export type Database = {
           table_name: string
         }[]
       }
+      super_admin_upsert_curriculum_profile_v1: {
+        Args: { p_profile: Json }
+        Returns: string
+      }
       super_admin_upsert_personnel: {
         Args: {
           p_email?: string
@@ -8503,6 +10162,14 @@ export type Database = {
           failed: number
           synced: number
         }[]
+      }
+      sync_official_course_offerings_for_class_v1: {
+        Args: { p_class_id: string }
+        Returns: number
+      }
+      sync_official_course_offerings_for_year_v1: {
+        Args: { p_academic_year_id: string }
+        Returns: number
       }
       sync_payroll_calendar_from_academic_year: {
         Args: { p_month: number; p_year: number }
@@ -8565,6 +10232,17 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      upsert_official_vocational_catalog_batch: {
+        Args: { p_rows: Json }
+        Returns: {
+          branch_count: number
+          field_count: number
+        }[]
+      }
+      upsert_official_vocational_framework_sources_batch: {
+        Args: { p_rows: Json }
+        Returns: number
+      }
       upsert_schedule_slot_permission_core_v2: {
         Args: {
           p_classroom_id?: string
@@ -8598,6 +10276,34 @@ export type Database = {
       validate_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
         Returns: number
+      }
+      vocational_coordination_program_applicable: {
+        Args: {
+          p_grade: number
+          p_grade11_approved?: boolean
+          p_has_official_enterprise_course: boolean
+          p_program_type: string
+        }
+        Returns: boolean
+      }
+      vocational_coordination_weekly_cap: {
+        Args: { p_is_metropolitan: boolean; p_program_type: string }
+        Returns: number
+      }
+      vocational_enterprise_days_from_hours: {
+        Args: { p_weekly_hours: number }
+        Returns: number
+      }
+      vocational_suggest_group_count: {
+        Args: { p_grade: number; p_special?: number; p_students: number }
+        Returns: number
+      }
+      workshop_block_patterns: {
+        Args: { p_daily_capacity: number; p_total: number }
+        Returns: {
+          part_count: number
+          pattern: number[]
+        }[]
       }
     }
     Enums: {

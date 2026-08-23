@@ -46,6 +46,7 @@ import { Route as SettingsPermissionsRouteImport } from './routes/settings-permi
 import { Route as SettingsTaskRolesRouteImport } from './routes/settings-task-roles'
 import { Route as SubstitutesRouteImport } from './routes/substitutes'
 import { Route as SuperAdminRouteImport } from './routes/super-admin'
+import { Route as SuperAdminCoursePoolRouteImport } from './routes/super-admin-course-pool'
 import { Route as SuperAdminTenantsRouteImport } from './routes/super-admin-tenants'
 import { Route as TimetableRouteImport } from './routes/timetable'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -236,6 +237,11 @@ const SuperAdminRoute = SuperAdminRouteImport.update({
   path: '/super-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuperAdminCoursePoolRoute = SuperAdminCoursePoolRouteImport.update({
+  id: '/super-admin-course-pool',
+  path: '/super-admin-course-pool',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuperAdminTenantsRoute = SuperAdminTenantsRouteImport.update({
   id: '/super-admin-tenants',
   path: '/super-admin-tenants',
@@ -290,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
+  '/super-admin-course-pool': typeof SuperAdminCoursePoolRoute
   '/super-admin-tenants': typeof SuperAdminTenantsRoute
   '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -332,6 +339,7 @@ export interface FileRoutesByTo {
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
+  '/super-admin-course-pool': typeof SuperAdminCoursePoolRoute
   '/super-admin-tenants': typeof SuperAdminTenantsRoute
   '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -375,6 +383,7 @@ export interface FileRoutesById {
   '/settings-task-roles': typeof SettingsTaskRolesRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
+  '/super-admin-course-pool': typeof SuperAdminCoursePoolRoute
   '/super-admin-tenants': typeof SuperAdminTenantsRoute
   '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -419,6 +428,7 @@ export interface FileRouteTypes {
     | '/settings-task-roles'
     | '/substitutes'
     | '/super-admin'
+    | '/super-admin-course-pool'
     | '/super-admin-tenants'
     | '/timetable'
     | '/auth/callback'
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/settings-task-roles'
     | '/substitutes'
     | '/super-admin'
+    | '/super-admin-course-pool'
     | '/super-admin-tenants'
     | '/timetable'
     | '/auth/callback'
@@ -503,6 +514,7 @@ export interface FileRouteTypes {
     | '/settings-task-roles'
     | '/substitutes'
     | '/super-admin'
+    | '/super-admin-course-pool'
     | '/super-admin-tenants'
     | '/timetable'
     | '/auth/callback'
@@ -546,6 +558,7 @@ export interface RootRouteChildren {
   SettingsTaskRolesRoute: typeof SettingsTaskRolesRoute
   SubstitutesRoute: typeof SubstitutesRoute
   SuperAdminRoute: typeof SuperAdminRoute
+  SuperAdminCoursePoolRoute: typeof SuperAdminCoursePoolRoute
   SuperAdminTenantsRoute: typeof SuperAdminTenantsRoute
   TimetableRoute: typeof TimetableRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -812,6 +825,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/super-admin-course-pool': {
+      id: '/super-admin-course-pool'
+      path: '/super-admin-course-pool'
+      fullPath: '/super-admin-course-pool'
+      preLoaderRoute: typeof SuperAdminCoursePoolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/super-admin-tenants': {
       id: '/super-admin-tenants'
       path: '/super-admin-tenants'
@@ -874,6 +894,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsTaskRolesRoute: SettingsTaskRolesRoute,
   SubstitutesRoute: SubstitutesRoute,
   SuperAdminRoute: SuperAdminRoute,
+  SuperAdminCoursePoolRoute: SuperAdminCoursePoolRoute,
   SuperAdminTenantsRoute: SuperAdminTenantsRoute,
   TimetableRoute: TimetableRoute,
   AuthCallbackRoute: AuthCallbackRoute,
