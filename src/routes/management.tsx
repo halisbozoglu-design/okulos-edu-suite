@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, CalendarRange, Calculator, Crown, FileClock, GraduationCap, KeyRound, Scale, Settings, ShieldCheck, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
+import { BookOpen, BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, CalendarRange, Calculator, Crown, FileClock, FileSpreadsheet, GraduationCap, KeyRound, Scale, Settings, ShieldCheck, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { supabase } from "@/lib/supabase";
 
@@ -20,10 +20,10 @@ const items:readonly ManagementItem[]=[
  {group:"data",to:'/classes',title:'Sınıflar & Şubeler',desc:'MEB/e-Okul sınıf-şube raporları, program ve mevcut bilgileri',icon:Users,permissions:['classes.manage']},
  {group:"data",to:'/personnel-admin',title:'Öğretmenler & Personel',desc:'Branş, ana görev, hesap ilişkisi ve alt sorumluluklar',icon:UserCog,permissions:['personnel.view','personnel.manage']},
  {group:"data",to:'/personnel-import',title:'Personel Özet Bilgi İçe Aktarma',desc:'MEBBİS PDF/Excel personel alanları — yalnız kurum müdürü',icon:ShieldCheck,permissions:[],principalOnly:true},
- {group:"data",to:'/curriculum',title:'Ders Havuzu & Atamalar',desc:'Çizelge/müfredat, manuel ders-saat düzeltme ve öğretmen atamaları',icon:BookOpenCheck,permissions:['curriculum.manage']},
+ {group:"data",to:'/curriculum',title:'Ders Havuzu & Atamalar',desc:'Resmî çizelgeden sınıfa uygun dersler, saat seçimi ve öğretmen atamaları',icon:BookOpenCheck,permissions:['curriculum.manage']},
  {group:"data",to:'/classrooms',title:'Derslikler / Salonlar',desc:'Kapasite, derslik tipi, bölüm ve gerekli donanım',icon:Building2,permissions:['classrooms.manage']},
 
- {group:"schedule",to:'/timetable',title:'Ders Programı Çalışma Alanı',desc:'Yıl, veri hazırlığı, kurallar, program üretimi, senaryolar, kontrol, geçmiş ve yayın tek yerde',icon:GraduationCap,permissions:['schedule.view','schedule.edit','schedule.rules','schedule.generate','schedule.apply','schedule.publish','schedule.restore'],featured:true},
+ {group:"schedule",to:'/timetable',title:'Ders Programı Çalışma Alanı',desc:'Yıl, atama, yerleşim kuralları, program üretimi, senaryolar, kontrol, geçmiş ve yayın tek yerde',icon:GraduationCap,permissions:['schedule.view','schedule.edit','schedule.rules','schedule.generate','schedule.apply','schedule.publish','schedule.restore'],featured:true},
  {group:"schedule",to:'/schedule-reports',title:'Raporlar & Çıktılar',desc:'Öğretmen, sınıf, derslik ve ders/branş özetleri; Excel, CSV, yazdırma ve PDF',icon:Table2,permissions:['schedule.view']},
 
  {group:"operations",to:'/norm-analysis',title:'Norm Kadro Analizi',desc:'Ders yükü, norm, mevcut öğretmen ve açık/fazla analizi',icon:Scale,permissions:['norm.view','norm.manage']},
@@ -38,6 +38,7 @@ const items:readonly ManagementItem[]=[
  {group:"system",to:'/settings-permissions',title:'Görev ve Yetki Atama',desc:'Personel bazlı modül, işlem, süre ve delegasyon',icon:KeyRound,permissions:['permissions.manage']},
  {group:"system",to:'/settings-task-roles',title:'Görev Şablonları',desc:'Okula özel tekrar kullanılabilir görev/rol paketleri',icon:BriefcaseBusiness,permissions:['permissions.manage']},
  {group:"system",to:'/personnel-field-settings',title:'Personel Alan Kullanımı',desc:'Süper Admin varsayılanı; kurum müdürü kendi kurum alanlarını belirler',icon:Crown,permissions:[],principalOrSuper:true},
+ {group:"system",to:'/super-admin/course-schedules',title:'Resmî Haftalık Ders Çizelgeleri',desc:'MEB PDF/Excel çizelgelerini parse et; okul türü, sınıf, zorunlu/seçmeli ve saat seçeneklerini sisteme dağıt',icon:FileSpreadsheet,permissions:[],superOnly:true},
  {group:"system",to:'/super-admin-tenants',title:'Tenant & Sistem Kontrolü',desc:'Kurum onay/red, müdür mesajları, modül aç/kapat ve bakım modu',icon:ShieldCheck,permissions:[],superOnly:true},
  {group:"system",to:'/super-admin',title:'Süper Admin',desc:'Sistem varsayımları, TTKB, norm ve kaynak girdileri',icon:Crown,permissions:[],superOnly:true},
 ];

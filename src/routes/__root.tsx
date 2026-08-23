@@ -97,6 +97,7 @@ const protectedRoutes: RouteRule[] = [
   { prefix: "/norm-analysis", any: ["norm.view", "norm.manage"] },
   { prefix: "/timetable", any: ["schedule.view", "schedule.edit", "schedule.rules", "schedule.generate", "schedule.apply", "schedule.publish", "schedule.restore"] },
   { prefix: "/schedule-optimization", any: ["schedule.view", "schedule.rules"] },
+  { prefix: "/schedule-placement-rules", any: ["schedule.view", "schedule.rules"] },
   { prefix: "/schedule-scoped-rules", any: ["schedule.view", "schedule.rules"] },
   { prefix: "/schedule-scenario-comparison", any: ["schedule.view", "schedule.generate", "schedule.apply"] },
   { prefix: "/schedule-reports", any: ["schedule.view"] },
