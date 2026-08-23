@@ -6,59 +6,38 @@ Updated: 2026-08-23
 - MTAL official current catalog: 56 fields / 119 branches.
 - MESEM official current catalog: 39 fields / 193 branches.
 - Source: user-supplied MTEGM `alan_dal_listesi_08092025.pdf`.
-- Every MTAL pull is cross-checked against this user-supplied field/branch catalog as well as the live class-specific MTEGM framework source.
-- Name changes are not force-normalized: old catalog name <-> new live name is kept as lineage/manual-review where needed.
+- Every MTAL pull is cross-checked against this user-supplied field/branch catalog and the live class-specific MTEGM framework source.
+- Name changes are not force-normalized; old catalog name <-> new live name stays as lineage/manual-review where needed.
 - MESEM telafi catalog excluded from normal live catalog.
-- Finalization rule: MTAL is NOT complete until automated audit verifies field -> branch -> grade -> program/schedule variant -> profile -> row-level courses -> hours -> exact source chain. Unresolved source/name issues are listed for manual review; pulling continues around them.
+- MTAL is not complete until completeness audit + manual-review list are closed.
 
 ## Framework applicability/source index
-- MTAL source index complete: grade 9 = 63, grade 10 = 61, grade 11 = 59, grade 12 = 59 active portal programs.
-- Grade 9 uses 2026 programs; grades 10-11 primarily living 2024-41; grade 12 living 2023-40, with field-specific exceptions resolved from portal.
-- MESEM source index complete: 38 active portal programs for each grade 9-12.
-- Exact PDF URLs are pinned as each framework is parsed.
-- If live portal says 2026 but PDF fetch times out or stale cache returns older schedule, do not persist inferred data; keep manual-review/source-retry item.
+- MTAL source index: grade 9 = 63, grade 10 = 61, grade 11 = 59, grade 12 = 59 active portal programs.
+- Grade 9 uses 2026 programs; grades 10-11 primarily living 2024-41; grade 12 living 2023-40, with field-specific exceptions.
+- If portal says 2026 but PDF fetch is timeout/stale, inferred rows are not persisted; item stays source-retry/manual-review.
 
 ## Audit
-- `audit_mtal_curriculum_v1()` is active in Cloud and persisted by migration `20260823130500_mtal_curriculum_audit.sql`.
-- Audit key includes field + branch + grade + program + schedule variant.
-- Current persisted profiles pass row/fixed-hour/total/source validation after repairs.
-- Current Cloud audit result: zero findings on persisted profiles.
-- Manual completeness review separately covers missing field/branch/grade/source-lineage cases and user-supplied 56/119 catalog reconciliation.
+- `audit_mtal_curriculum_v1()` active in Cloud; migration `20260823130500_mtal_curriculum_audit.sql`.
+- Current persisted-profile audit result: 0 findings.
+- Final completeness review separately checks missing field/branch/grade/source-lineage against 56/119 catalog and live portal.
 
 ## Current MTAL pull progress
-- Current Cloud coverage: 38 distinct populated MTAL field names / 753 active curriculum profiles / 8763 active course-schedule rows.
-- Bilişim 9-12 rebuilt/validated; wrong legacy grade-12 enterprise-from-11 profiles removed and living grade-12 source structure restored.
-- Elektrik-Elektronik 9-12 populated; grade-12 AMP enterprise vs ATP academic-support separation.
-- Uçak Bakım 9-12 populated.
-- Gıda Teknolojisi 9-12 populated.
-- İnşaat Teknolojisi 9-12 profile chain; grade 10-11 row-level data complete; 2026-vs-transition branch lineage preserved.
-- Sağlık Hizmetleri field name remains; 2026 grade 9 uses Diş Protez Teknisyenliği + Sağlık Bakım Teknisyenliği; living 10-11 keeps Ebe Yardımcılığı / Hemşire Yardımcılığı / Sağlık Bakım Teknisyenliği. Grade 11 row-level complete.
-- Metal Teknolojisi 9-12 populated.
-- Mobilya ve İç Mekân Tasarımı 9-12 populated; old/new branch-name lineage preserved.
-- Moda Tasarım Teknolojileri 9-12 populated. User-supplied field/branch catalog matches live branches exactly: Giysi Kalıp Tasarımı ve Üretimi + Terzilik.
-- Muhasebe ve Finansman living grades 10-12 populated with real row-level courses. User-supplied catalog matches live branches exactly: Muhasebe + Dış Ticaret. Grade 9 current-2026 remains to be pulled separately.
-- Raylı Sistemler Teknolojisi living grades 10-12 populated for all three user-supplied branches: Raylı Sistem Araçları, Raylı Sistemler Elektrik-Elektronik, Raylı Sistemler Yol.
-- Motorlu Araçlar Teknolojisi living grades 10-12 populated for all five user-supplied branches; 2026 grade 9 remains under new live field name `Otomotiv Teknolojileri`, preserved as lineage/manual-review rather than destructive rename.
-- Plastik Teknolojisi living grades 10-12 populated and audit clean; grade 12 verified as source-specific 43-hour 2023-40 structure.
-- Radyo-Televizyon living grades 10-12 populated and audit clean; grade 12 uses verified 43-hour 2023-40 structure.
-- Metalürji Teknolojisi living grades 10-12 populated for `Döküm` and `İzabe ve Haddecilik`; audit clean.
-- Yiyecek İçecek Hizmetleri: 2026 grade 9 Aşçılık/Pastacılık structure retained; living 10-12 transition uses single `Yiyecek İçecek Hizmetleri` branch and is populated.
-- Aile ve Tüketici Hizmetleri: living grades 10-12 populated for Sosyal Destek Hizmetleri + Tüketici Hizmetleri. 2026 grade-9 portal name `Sosyal Hizmetler` remains manual-review lineage; not force-normalized.
-- Siber Güvenlik grade 9 populated from current 2026 source: ATP-only, 28 common + 11 vocational + 5 elective = 44 hours.
-- Denizcilik is now populated across 9-12 for supplied branches Gemi Elektroniği ve Haberleşme, Gemi Makineleri İşletme, Güverte İşletme. Grades 10-11 use 2024-41 with source-specific totals (grade 10 = 47; grade 11 AMP = 47 / ATP = 46). Grade 12 uses 2023-40 AMP enterprise / ATP academic-support split. Audit clean.
-- İtfaiyecilik ve Yangın Güvenliği is now populated across 9-12. Grade 10 AMP/ATP, grade 11 AMP/ATP plus conditional `ENTERPRISE_FROM_11`, and grade 12 AMP enterprise / ATP academic support are complete. The 11th-grade enterprise condition is persisted from the source. Audit clean.
-- Havacılık ve Uzay Teknolojisi is populated for living grades 9-11, protocol-scoped and ATP-only, across Tasarım ve İmalat / İtki Sistemleri / Elektronik Sistemler. Grade 10 = 41 fixed + 4 elective; grade 11 = 25 fixed + 20 elective. Portal has no living grade-12 entry for this phased program. Audit clean.
-- Konaklama ve Seyahat Hizmetleri grade 9 populated with current 2026 branch structure.
-- Additional 2026 grade-9 profiles already populated include Adalet, Basım Teknolojileri, Büro Yönetimi, Çocuk Gelişimi, Endüstriyel Kalite Kontrol, Endüstriyel Otomasyon, Grafik ve Fotoğraf, Hasta ve Yaşlı Hizmetleri, Pazarlama ve Perakende, Ulaştırma Hizmetleri and Yapay Zekâ.
-- Kimya Teknolojisi living grades 10-12 populated for all three supplied branches `Kimya Laboratuvarı`, `Petrol Endüstrisi`, `Proses`; audit clean.
-- Biyomedikal Cihaz Teknolojileri living grades 10-12 populated for all four supplied branches; audit clean.
-- Makine ve Tasarım Teknolojisi is populated across 9-12. Grade 9 = 19 profiles / 266 rows. Grade 10 = 25 profiles / 377 rows. Grade 11 = 25 profiles / 265 rows. Grade 12 = 17 profiles / 76 rows. Eight regular branches have AMP/ATP/enterprise variants where supported; Savunma Mekanik Sistemleri is ATP-only. Field audit clean.
-- Hasta ve Yaşlı Hizmetleri is populated across 9-12 for supplied branch `Hasta ve Yaşlı Bakımı`. Living grade 10-11 2024-41 rows and grade 12 2023-40 AMP enterprise / ATP academic-support split are complete; field audit clean.
-- Ulaştırma Hizmetleri: grade 9 current-2026 and living grades 10-11 were already populated; grade 12 living 2023-40 is complete for `Lojistik` and `Sivil Havacılık`.
-- Yenilenebilir Enerji Teknolojileri: grade 9 current-2026 and living grades 10-11 were already populated; grade 12 living 2023-40 is complete.
-- Pazarlama ve Perakende: grade 9 current-2026 and grade 12 living 2023-40 are populated; living grades 10-11 remain to be imported from 2024-41.
-- Endüstriyel Kalite Kontrol: grade 9 current 2026 is populated. Living grade 10 is confirmed by portal under 2025-49 but current framework file access is unreliable; grade 10 remains source-retry/manual-review rather than inferred.
-- Tesisat/Tarım/Tekstil and other 2026 source-fetch problem fields remain source-retry/manual-review; no stale rows are accepted.
+- Cloud: 42 distinct populated MTAL field names / 821 active curriculum profiles / 9530 active course-schedule rows.
+- Bilişim, Elektrik-Elektronik, Uçak Bakım, Gıda, Metal, Mobilya, Moda, Makine ve Tasarım, Denizcilik, İtfaiyecilik, Hasta ve Yaşlı, Yiyecek İçecek and several other chains are populated across their living grade ranges and audit-clean.
+- İnşaat and Sağlık retain current-vs-transition branch lineage rather than destructive normalization.
+- Motorlu Araçlar 10-12 is populated; 2026 grade 9 remains under new live name `Otomotiv Teknolojileri` as lineage/manual-review.
+- Aile ve Tüketici 10-12 is populated; 2026 portal `Sosyal Hizmetler` lineage remains review-required.
+- Kimya Teknolojisi 10-12 complete for Kimya Laboratuvarı / Petrol Endüstrisi / Proses.
+- Biyomedikal Cihaz Teknolojileri 10-12 complete for all four supplied branches.
+- Pazarlama ve Perakende is now complete across 9-12; Satış Danışmanlığı + Sigortacılık, including conditional enterprise-from-11 and grade-12 academic-support split.
+- Hayvan Yetiştiriciliği ve Sağlığı 10-12 complete; enterprise-from-11 condition and grade-12 AMP/ATP split persisted.
+- Güzellik Hizmetleri 10-12 complete from `guzellik_10.pdf` / `guzellik_12.pdf`; 10=13 vocational, 11 AMP=17, ATP/enterprise core=9, grade-12 AMP enterprise / ATP academic support; audit clean.
+- Harita-Tapu-Kadastro 10-12 complete for `Tapu` + `Harita Kadastro`; branch-specific 10/11 courses, enterprise-from-11 condition and 2023-40 grade-12 split persisted; audit clean.
+- Gemi Yapımı 10-12 complete for `Gemi İnşa` + `Yat İnşa` + `Gemi Donatım`; branch-specific 10/11 rows, conditional enterprise-from-11 and 2023-40 grade-12 AMP/ATP split persisted; audit clean.
+- Havacılık ve Uzay living grades 9-11 populated, protocol-scoped and ATP-only; portal has no living grade-12 entry.
+- Endüstriyel Kalite Kontrol grade 9 populated; living grade 10 confirmed under 2025-49 but exact file access remains source-retry/manual-review.
+- Konaklama grade 9 populated; standard upper-grade source access currently unstable and remains source-retry (protocol source is not substituted).
+- Tesisat / Tarım / Tekstil and other current-2026 source-fetch problem fields remain source-retry/manual-review; stale cached rows are not accepted.
 
 ## Scheduling rules already in DB
 - Class identity includes education unit/program/field/branch context.
@@ -74,18 +53,14 @@ Updated: 2026-08-23
 - Grade 9/10/11/12 coverage per living source.
 - Exact AMP/ATP/enterprise-from-11/academic-support variants only when source supports them.
 - Detect profile-without-course-rows and rows-without-profile.
-- Validate fixed row-hour sum against `required_hour_total`.
-- Validate fixed + elective/elective-vocational/academic-support totals against official `total_hour_target`.
-- Validate enterprise-hour pattern and source condition annotations.
-- Validate exact PDF/decision provenance and unresolved source retries.
-- Validate 2026-vs-transition branch/field name lineage and no accidental normalization.
-- Detect stale-cache or source-year mismatches.
-- Final unresolved items will be listed field -> branch -> grade -> reason for manual verification before MESEM import.
+- Validate fixed row-hour sum and official total-hour target.
+- Validate enterprise-hour pattern, source conditions, PDF/decision provenance and stale-cache/year mismatches.
+- Validate old/new field and branch lineage without accidental normalization.
+- Final unresolved items listed as field -> branch -> grade -> reason for manual verification.
 
 ## Next
-1. Complete Pazarlama ve Perakende living 10-11 2024-41 rows.
-2. Continue supplied-catalog fields with existing partial chains, then source-accessible empty fields.
-3. Keep Endüstriyel Kalite Kontrol grade 10 and other 404/timeout items in source-retry/manual-review until exact source is recoverable.
-4. Complete branch-scoped elective-vocational and academic-support eligibility.
-5. Run final MTAL completeness audit and produce manual-control list.
-6. Then begin MESEM full import and equivalent audit.
+1. Continue source-accessible empty MTAL fields first.
+2. Retry current-2026 grade-9 sources separately; never use stale old 44-hour PDFs as 2026.
+3. Keep unresolved 404/timeout/name-lineage cases in manual-review while pulling continues.
+4. Run final completeness audit and produce manual-control list.
+5. Only after MTAL closure, begin MESEM full import and equivalent audit.
