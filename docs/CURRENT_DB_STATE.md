@@ -2,6 +2,12 @@
 
 Updated: 2026-08-23
 
+## Cross-chat handoff rule
+- This file is the authoritative continuation point for MTAL/MESEM curriculum work across all ChatGPT conversations in this project.
+- At the start of any continuation, read this file first and continue from `Current incompleteness focus` / `Next`; do not restart the curriculum scan and do not re-import a completed batch unless an audit proves it is incorrect.
+- Cloud state and official live MTEGM sources override conversational recollection. After every significant successful batch, update this file with verified Cloud totals, completed scopes, audit result, source-retry/manual-review items, and the exact next work.
+- Preserve completed data, source provenance, field/branch lineage, protocol/regional variants, and official applicability. Never fill a gap by assumption or by stale cached framework PDFs.
+
 ## Vocational timetable core
 - MTAL official catalog: 56 fields / 119 branches.
 - MESEM official catalog: 39 fields / 193 branches.
