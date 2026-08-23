@@ -20,26 +20,34 @@ Updated: 2026-08-23
 - Final completeness review separately checks missing field/branch/grade/source-lineage against 56/119 catalog and live portal.
 
 ## Current MTAL pull progress
-- Cloud: 55 distinct populated MTAL field names / 981 active curriculum profiles / 11246 active course-schedule rows.
-- Major living chains already populated/audit-clean include Bilişim, Elektrik-Elektronik, Uçak Bakım, Gıda, İnşaat, Sağlık, Metal, Mobilya, Moda, Makine ve Tasarım, Motorlu Araçlar/Otomotiv lineage, Denizcilik, İtfaiyecilik, Hasta ve Yaşlı, Yiyecek İçecek, Kimya, Biyomedikal, Pazarlama, Hayvan Yetiştiriciliği, Güzellik, Harita-Tapu-Kadastro, Gemi Yapımı, Halkla İlişkiler, Kuyumculuk, Laboratuvar Hizmetleri, Maden, Mikromekanik, Geleneksel Türk Sanatları, El Sanatları, Tarım, Plastik Sanatlar, Tesisat, Matbaa/Basım lineage and others.
-- Tekstil Teknolojisi living grades 10-12 now complete for all five supplied branches: İplik Üretim Teknolojisi, Dokuma Üretim Teknolojisi, Örme Üretim Teknolojisi, Tekstil Baskı ve Desenciliği, Tekstil Boya Apre ve Laborantlığı. Grade 10 uses branch-specific 13h vocational packages; grade 11 AMP standard=17 vocational, ATP core=9, conditional enterprise-from-11=9+16 enterprise; grade 12 uses living transition AMP enterprise / ATP academic-support split. Audit clean.
-- Gazetecilik standard MTAL living grades 10-12 now complete and kept separate from Gazetecilik-Protokol. Grade 10 vocational=13 (Haber Fotoğrafçılığı 3 + Dijital Görsel Düzenleme 4 + Yayın Türüne Göre Gazetecilik 6); grade 11 AMP=17, ATP core=9, conditional enterprise-from-11=9+16 enterprise; grade 12 uses living transition AMP enterprise / ATP academic-support split. Audit clean.
+- Cloud: 57 distinct persisted MTAL field-name lineages / 993 active curriculum profiles / 11366 active course-schedule rows.
+- `57` is intentionally greater than the canonical 56-field catalog count because current-vs-transition aliases/lineages such as Motorlu Araçlar/Otomotiv, Matbaa/Basım and similar names are preserved rather than destructively merged.
+- Major living chains already populated/audit-clean include Bilişim, Elektrik-Elektronik, Uçak Bakım, Gıda, İnşaat, Sağlık, Metal, Mobilya, Moda, Makine ve Tasarım, Denizcilik, İtfaiyecilik, Hasta ve Yaşlı, Yiyecek İçecek, Kimya, Biyomedikal, Pazarlama, Hayvan Yetiştiriciliği, Güzellik, Harita-Tapu-Kadastro, Gemi Yapımı, Halkla İlişkiler, Kuyumculuk, Laboratuvar Hizmetleri, Maden, Mikromekanik, Geleneksel Türk Sanatları, El Sanatları, Tarım, Plastik Sanatlar, Tesisat, Matbaa/Basım lineage, Tekstil and Gazetecilik.
+- Ayakkabı ve Saraciye Teknolojisi (Protokol Kapsamında) living grades 10-12 complete for `Ayakkabı Tasarımı ve Üretimi` + `Saraciye Tasarımı ve Üretimi`. Program is protocol-scoped AMP only; no ATP profile is fabricated. Grade 10=27 common+13 vocational+1 guidance+4 elective; grade 11=15 common+26 vocational/enterprise-application+4 elective; grade 12=10 common+24 enterprise+7 elective-vocational+4 elective. Audit clean. Current 2026 grade 9 remains source-retry.
+- Seramik ve Cam Teknolojisi (Protokol Kapsamında) living grades 10-12 complete for `Seramik` + `Cam`, protocol-scoped AMP only. Source explicitly states İstanbul Sanayi Odası protocol scope. Seramik grade 12 includes additional 2h Bilgisayarda Desen Tasarımı, so its fixed/elective split differs from Cam. Audit clean. Current 2026 grade 9 remains source-retry/lineage review because portal label omits the catalog protocol suffix.
+- Gastronomi ve Mutfak Sanatları is now a regional current-program case: 2026-91 Marmara and 2026-92 Doğu Anadolu replace withdrawn 2025-75. Portal lists both current grade-9 programs, but direct `marmaragastro_9.pdf` and `dogugastro_9.pdf` currently return 404. No stale 2025 generic `gastro_9.pdf` rows are persisted. Item remains source-retry/manual-review.
 - Havacılık ve Uzay living grades 9-11 populated, protocol-scoped and ATP-only; no living grade-12 portal entry.
 - Endüstriyel Kalite Kontrol grade 9 populated; living grade 10 confirmed under 2025-49 but exact file access remains source-retry/manual-review.
 - Konaklama grade 9 populated; standard upper-grade source access remains source-retry; protocol source is not substituted.
-- Current-2026 grade-9 source-retry/manual-review remains for a number of fields whose direct PDFs are stale/404/timeout; living upper-grade chains continue to be imported independently.
+- Current-2026 grade-9 source-retry/manual-review remains for many fields whose direct PDFs are stale/404/timeout; living upper-grade chains are imported independently.
+
+## Current incompleteness focus
+- Fully unresolved canonical field: Gastronomi ve Mutfak Sanatları (regional 2026 grade-9 PDFs 404; no living upper grades yet in portal).
+- Phased/special programs with no current upper-grade source: Siber Güvenlik, Yapay Zekâ, Havacılık ve Uzay grade 12; do not fabricate rows.
+- Endüstriyel Kalite Kontrol grade 10 uses 2025-49 and remains source-retry.
+- Konaklama ve Seyahat Hizmetleri upper grades remain source-retry.
+- Current 2026 grade-9 retry queue includes Ayakkabı-Protokol, Seramik/Cam, Gazetecilik, Geleneksel Türk Sanatları, Güzellik, Halkla İlişkiler, Hayvan, Kuyumculuk, Laboratuvar, Maden, Mikromekanik, Plastik Sanatlar, Tarım, Tekstil and other fields already complete in living upper grades.
 
 ## Final MTAL audit requirements
 - Reconcile expected fields/branches against user-supplied 56/119 catalog and live portal.
-- Validate living grade coverage and exact AMP/ATP/enterprise/academic-support variants.
+- Validate living grade coverage and exact AMP/ATP/enterprise/academic-support/protocol/regional variants.
 - Detect profile-without-rows and rows-without-profile.
 - Validate fixed row-hour sums, official total targets, enterprise-hour patterns and source conditions.
 - Validate exact PDF/decision provenance, stale-cache/year mismatches and old/new field/branch lineage.
 - Final unresolved list format: field -> branch -> grade -> reason.
 
 ## Next
-1. Finish fully empty/protocol MTAL catalog areas: Ayakkabı ve Saraciye (Protokol), Gastronomi ve Mutfak Sanatları, Seramik ve Cam (Protokol), and remaining protocol/special variants where live sources support them.
-2. Retry current-2026 grade-9 source files separately; never use stale old 44-hour PDFs as 2026.
-3. Resolve Endüstriyel Kalite Kontrol grade 10 (2025-49), Konaklama upper grades and other source-retry items.
-4. Extend final completeness audit to explicit 56/119 catalog + portal coverage and produce manual-control list.
-5. Only after MTAL closure, begin MESEM full import and equivalent audit.
+1. Retry current-2026 grade-9 source files directly from portal links; never use stale old 44-hour PDFs as 2026.
+2. Resolve Endüstriyel Kalite Kontrol grade 10 (2025-49) and Konaklama upper grades if exact files recover.
+3. Build explicit 56/119 catalog + live-portal completeness audit and generate manual-control list.
+4. Only after MTAL closure, begin MESEM full import and equivalent audit.
