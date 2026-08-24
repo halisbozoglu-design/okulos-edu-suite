@@ -1,5 +1,5 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -24,54 +24,21 @@
     "impact_levels": ["L0", "L1", "L2", "L3"]
   },
   "completed_focus": [
-    {
-      "legal_family": "MESEM_REGISTRATION",
-      "articles": ["21", "22"],
-      "staging_doc": "docs/legal-mesem-registration-staging.md"
-    },
-    {
-      "legal_family": "MESEM_TRANSFER",
-      "articles": ["37", "38", "41"],
-      "staging_doc": "docs/legal-mesem-transfer-staging.md",
-      "article_verified_increment": 0,
-      "reason": "Exact legacy workflow_id bindings cannot be safely asserted until the durable 2,229-row master is available."
-    },
-    {
-      "legal_family": "TRANSFER_EXEMPTION_RESPONSIBILITY",
-      "articles": ["42"],
-      "staging_doc": "docs/legal-transfer-exemption-responsibility-staging.md",
-      "article_verified_increment": 0,
-      "reason": "Current official provision verified, but exact legacy workflow_id bindings are not available."
-    },
-    {
-      "legal_family": "MESEM_BUSINESS_TRAINING_AND_CONTRACTS",
-      "articles": ["134", "137", "143", "144", "146", "147", "222"],
-      "staging_doc": "docs/legal-mesem-business-training-contracts-staging.md",
-      "article_verified_increment": 0,
-      "reason": "Official provisions atomized; durable master workflow_id bindings still unavailable."
-    },
-    {
-      "legal_family": "MESEM_COORDINATION_AND_WORKPLACE_ELIGIBILITY",
-      "articles": ["135", "136", "137", "138", "139", "140", "141", "142"],
-      "staging_doc": "docs/legal-mesem-enterprise-selection-staging.md",
-      "article_verified_increment": 0,
-      "reason": "Current official provisions verified and atomized; exact 2,229-row master workflow_id bindings remain unavailable."
-    },
-    {
-      "legal_family": "MESEM_EDUCATION_UNIT_AND_TRAINER",
-      "articles": ["148", "149", "150", "151", "152"],
-      "staging_doc": "docs/legal-mesem-education-unit-personnel-staging.md",
-      "article_verified_increment": 0,
-      "reason": "Current official provisions verified and atomized; exact master workflow_id bindings remain unavailable."
-    }
+    {"legal_family":"MESEM_REGISTRATION","articles":["21","22"],"staging_doc":"docs/legal-mesem-registration-staging.md"},
+    {"legal_family":"MESEM_TRANSFER","articles":["37","38","41"],"staging_doc":"docs/legal-mesem-transfer-staging.md","article_verified_increment":0},
+    {"legal_family":"TRANSFER_EXEMPTION_RESPONSIBILITY","articles":["42"],"staging_doc":"docs/legal-transfer-exemption-responsibility-staging.md","article_verified_increment":0},
+    {"legal_family":"MESEM_BUSINESS_TRAINING_AND_CONTRACTS","articles":["134","137","143","144","146","147","222"],"staging_doc":"docs/legal-mesem-business-training-contracts-staging.md","article_verified_increment":0},
+    {"legal_family":"MESEM_COORDINATION_AND_WORKPLACE_ELIGIBILITY","articles":["135","136","137","138","139","140","141","142"],"staging_doc":"docs/legal-mesem-enterprise-selection-staging.md","article_verified_increment":0},
+    {"legal_family":"MESEM_EDUCATION_UNIT_AND_TRAINER","articles":["148","149","150","151","152"],"staging_doc":"docs/legal-mesem-education-unit-personnel-staging.md","article_verified_increment":0},
+    {"legal_family":"MESEM_CREDENTIALS_AND_EXAMS","articles":["46","56","58","59","69","70","70/A","71","73","76"],"staging_doc":"docs/legal-mesem-credentials-exams-staging.md","article_verified_increment":0,"reason":"Current official provisions verified and atomized; durable master workflow_id bindings remain unavailable."}
   ],
   "current_focus": {
-    "legal_family": "MESEM_CREDENTIALS_AND_EXAMS",
+    "legal_family": "MESEM_ATTENDANCE_SUCCESS_CLASS_PROGRESSION",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "goal": "Locate and verify current provisions governing MESEM kalfalik/ustalik, diploma/certification, examination and completion workflows without inventing workflow-id matches."
+    "goal": "Verify MESEM-specific attendance, class repetition, progression and completion gates, separating general secondary-school rules from MESEM exceptions."
   },
   "next_target": {
-    "family": "MESEM_CREDENTIALS_AND_EXAMS",
-    "action": "Identify current official article/paragraph set first, then atomize only directly supported rules and retain unbound rules in staging until the durable master is available."
+    "family": "MESEM_ATTENDANCE_SUCCESS_CLASS_PROGRESSION",
+    "action": "Atomize current attendance limits, excuse/document handling, class-repeat limits and MESEM-specific progression rules; do not invent legacy workflow bindings."
   }
 }
