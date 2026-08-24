@@ -18,7 +18,6 @@ Updated: 2026-08-24
 
 ## MTAL audit and progress
 - `audit_mtal_curriculum_v1()` current result: 0 findings.
-- `audit_mtal_catalog_completeness_v1()` current result: 1 missing field / 3 missing branches.
 - Canonical reference: 56 fields / 119 branches; effectively 55 fields / 116 branches populated.
 - Only unresolved canonical field: `Gastronomi ve Mutfak Sanatları`.
 - Missing branches: `Mutfak Sanatları`, `Pastacılık ve Ekmekçilik`, `Servis ve Kahve Hazırlama`.
@@ -27,33 +26,28 @@ Updated: 2026-08-24
 - This is the sole MTAL manual-review/source-retry item unless a later audit finds another issue.
 
 ## MESEM audit and progress
-- `audit_mesem_catalog_completeness_v1()` active; canonical reference verified at 39 fields / 193 branches.
+- Canonical reference verified from live catalog tables at 39 fields / 193 branches.
+- There is currently no callable `audit_mesem_catalog_completeness_v1()` function in Cloud; completeness is computed directly by canonical catalog (`official_vocational_fields` + `official_vocational_branches`) minus active MESEM profiles. Do not report the function as executed until it actually exists.
 - Current live Cloud: 200 active curriculum profiles / 1223 active real course-schedule rows / 7 fields with profiles / 25 canonical branches with profiles.
 - Current completeness open by canonical difference: 32 fields / 168 branches.
-- Profiled fields now: `Ayakkabı ve Saraciye Teknolojisi`, `Bilişim Teknolojileri`, `Büro Yönetimi`, `Denizcilik`, `El Sanatları Teknolojisi`, `Elektrik-Elektronik Teknolojisi`, `Endüstriyel Otomasyon Teknolojileri`.
+- Profiled fields: `Ayakkabı ve Saraciye Teknolojisi`, `Bilişim Teknolojileri`, `Büro Yönetimi`, `Denizcilik`, `El Sanatları Teknolojisi`, `Elektrik-Elektronik Teknolojisi`, `Endüstriyel Otomasyon Teknolojileri`.
 - Bilişim profiles exist but its exact MESEM `official_course_schedule_catalog` course-row repair is still pending and must preserve the existing profiles.
 
 ### Elektrik-Elektronik Teknolojisi
-- Living official source: decision 2021-33, official PDF `https://meslek.meb.gov.tr/upload/cop10_mem/2021_elektrik_mem_cop.pdf`.
-- All 10 canonical branches now exist in live Cloud, each with grades 9-12 and separate USTALIK/DIPLOMA variants: 80 active profiles total.
-- Verified official pattern: USTALIK total 42 hours at grades 9-12; DIPLOMA totals 44 / 44 / 46 / 48 for grades 9 / 10 / 11 / 12; every profile carries 32 hours `İşletmelerde Mesleki Eğitim`.
-- Completed branches:
-  - `Asansör Sistemleri`
-  - `Bobinaj`
-  - `Büro Makineleri Teknik Servisi`
-  - `Elektrik Tesisatları ve Pano Montörlüğü`
-  - `Elektrikli Ev Aletleri Teknik Servisi`
-  - `Endüstriyel Bakım Onarım`
-  - `Görüntü ve Ses Sistemleri`
-  - `Güvenlik Sistemleri`
-  - `Haberleşme Sistemleri`
-  - `Yüksek Gerilim Sistemleri`
-- Migration batch 01: `20260824215000_mesem_elektrik_elektronik_batch01_asansor_bobinaj.sql` — 16 profiles / 102 course rows.
-- Migration batch 02: `20260824215800_mesem_elektrik_elektronik_batch02_buro_tesisat.sql` — 16 profiles / 110 course rows.
-- Migration batch 03: `20260824224000_mesem_elektrik_elektronik_batch03_ev_aletleri_endustriyel_bakim.sql` — this run added 16 profiles / 108 real course rows (`Elektrikli Ev Aletleri Teknik Servisi` 53 rows; `Endüstriyel Bakım Onarım` 55 rows).
-- Batch 03 official source pages: PDF pages 13-14. Electric-home-appliances branch rows: grade 11 `Temizleyici ve Yıkayıcı Ev Aletleri 4 + Elektrik Motorları 2 + Endüstriyel Kontrol ve Arıza Analizi 1`; grade 12 `Isıtıcı ve Pişirici Ev Aletleri 3 + Soğutucular ve Klimalar 2 + Bilgisayar Destekli Uygulamalar 2`. Industrial-maintenance branch rows: grade 11 `Elektrik Makineleri ve Kontrol Sistemleri 4 + Dijital Elektronik 2 + Endüstriyel Kontrol ve Arıza Analizi 1`; grade 12 `Endüstriyel Elektrik Sistemleri 1 + Endüstriyel Kontrol Sistemleri 2 + Mikrokontrol Devreleri 2 + Bilgisayar Destekli Uygulamalar 2`.
-- Live Cloud also contains the remaining four Elektrik-Elektronik branches; do not re-import them on the next run. Their repository migration provenance should be reconciled if not already committed.
-- Batch-03 validation: 8 profiles per branch; enterprise-hours sum 256 per branch; 53 and 55 real course rows respectively; fixed-hour aggregate 346 for each branch; `audit_mtal_curriculum_v1()` remained 0.
+- Living official source: decision 2021-33, official PDF `https://meslek.meb.gov.tr/upload/cop9_mem/2021_elektrik_mem_cop.pdf`.
+- All 10 canonical branches exist in live Cloud, each with grades 9-12 and separate USTALIK/DIPLOMA variants: 80 active profiles total.
+- Verified official pattern for this source: USTALIK total 42 hours at grades 9-12; DIPLOMA totals 44 / 44 / 46 / 48 for grades 9 / 10 / 11 / 12; every profile carries 32 hours `İşletmelerde Mesleki Eğitim`.
+- Completed branches: `Asansör Sistemleri`, `Bobinaj`, `Büro Makineleri Teknik Servisi`, `Elektrik Tesisatları ve Pano Montörlüğü`, `Elektrikli Ev Aletleri Teknik Servisi`, `Endüstriyel Bakım Onarım`, `Görüntü ve Ses Sistemleri`, `Güvenlik Sistemleri`, `Haberleşme Sistemleri`, `Yüksek Gerilim Sistemleri`.
+- Existing data batch migrations include batch01/batch02/batch03 for the first six branches.
+- Repository provenance for the final four pre-existing Cloud branches was reconciled with guard migration `20260824235500_mesem_elektrik_elektronik_repo_sync_final_four_guard.sql` (commit `53fae7af846c1669eb525ca41b90f3a1b89a2d2e`). This guard intentionally performs no duplicate data writes; it asserts the already-existing Cloud state.
+- Final-four guard validation passed in Cloud: 32 profiles / 224 real course rows; branch row counts `Görüntü ve Ses Sistemleri=55`, `Güvenlik Sistemleri=57`, `Haberleşme Sistemleri=57`, `Yüksek Gerilim Sistemleri=55`; all profiles decision `2021-33`, source URL exact, source pages 15/16/17/18, USTALIK/DIPLOMA only, and every IME row exactly 32 hours.
+- `audit_mtal_curriculum_v1()` remained 0 findings after validation.
+
+### Gazetecilik (Protokol Kapsamında) source-retry
+- This is the next canonical MESEM field targeted after Elektrik-Elektronik.
+- Current official MTEGM MEM 9th-grade DBF listing does not expose Gazetecilik among the MEM field DBFs, while MTAL portal results do expose `Gazetecilik - Protokol`; the MTAL program must not be substituted for MESEM.
+- A current official MESEM weekly course-table PDF for the protocol branches was not located in the official MEB/MTEGM search during the 2026-08-24 run. No profiles/course rows were invented or written.
+- Keep `Gazetecilik (Protokol Kapsamında)` in source-retry/manual-review and continue to the next source-accessible canonical MESEM field.
 
 ## Current incompleteness focus
 - MTAL: only 2026 regional Gastronomi source-unavailable manual review remains (1 field / 3 branches).
@@ -62,9 +56,9 @@ Updated: 2026-08-24
 - Bilişim course-row repair remains separate from catalog completeness because its profiles already exist.
 
 ## Next
-1. At the next run, re-read live Cloud first. Treat all 10 Elektrik-Elektronik branches as completed and do not rewrite them.
-2. Reconcile GitHub migration provenance for the four Elektrik-Elektronik branches that were already present in live Cloud outside batch 03; if migration files already exist, leave them untouched; if Cloud has rows but repo migration is missing, generate repo-sync migration without reapplying to Cloud.
-3. Continue to the next wholly open MESEM field that is not already present in Cloud, using its living official MTEGM source and safe sub-batches.
+1. Treat all 10 Elektrik-Elektronik branches and their repository provenance as completed; do not rewrite them.
+2. Skip Gazetecilik protocol until a direct official MESEM weekly course-table source is accessible; retry opportunistically, never substitute MTAL.
+3. Continue to the next wholly open, source-accessible canonical MESEM field from the official MEM portal/official PDF set.
 4. Separately repair Bilişim real course rows from its official MESEM source while preserving existing profiles.
-5. After every Cloud batch run per-profile fixed-hour validation, `audit_mesem_catalog_completeness_v1()`, and verify `audit_mtal_curriculum_v1()` remains clean.
-6. Retry current 2026 Gastronomi regional PDFs opportunistically; never substitute the withdrawn/stale 2025 source.
+5. After every data batch run per-profile fixed-hour validation and canonical completeness difference; verify `audit_mtal_curriculum_v1()` remains clean.
+6. Retry current 2026 MTAL Gastronomi regional PDFs opportunistically; never substitute the withdrawn/stale 2025 source.
