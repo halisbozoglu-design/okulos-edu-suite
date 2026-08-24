@@ -1,5 +1,5 @@
 {
-  "schema_version": 8,
+  "schema_version": 9,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -30,15 +30,16 @@
     {"legal_family":"MESEM_BUSINESS_TRAINING_AND_CONTRACTS","articles":["134","137","143","144","146","147","222"],"staging_doc":"docs/legal-mesem-business-training-contracts-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_COORDINATION_AND_WORKPLACE_ELIGIBILITY","articles":["135","136","137","138","139","140","141","142"],"staging_doc":"docs/legal-mesem-enterprise-selection-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_EDUCATION_UNIT_AND_TRAINER","articles":["148","149","150","151","152"],"staging_doc":"docs/legal-mesem-education-unit-personnel-staging.md","article_verified_increment":0},
-    {"legal_family":"MESEM_CREDENTIALS_AND_EXAMS","articles":["46","56","58","59","69","70","70/A","71","73","76"],"staging_doc":"docs/legal-mesem-credentials-exams-staging.md","article_verified_increment":0,"reason":"Current official provisions verified and atomized; durable master workflow_id bindings remain unavailable."}
+    {"legal_family":"MESEM_CREDENTIALS_AND_EXAMS","articles":["46","56","58","59","69","70","70/A","71","73","76"],"staging_doc":"docs/legal-mesem-credentials-exams-staging.md","article_verified_increment":0,"reason":"Current official provisions verified and atomized; durable master workflow_id bindings remain unavailable."},
+    {"legal_family":"MESEM_ATTENDANCE_SUCCESS_CLASS_PROGRESSION","articles":["36","56","57","58","59","144"],"staging_doc":"docs/legal-mesem-attendance-progression-staging.md","article_verified_increment":0,"reason":"Current official provisions verified and atomized; exact 2,229-row master workflow_id bindings remain unavailable."}
   ],
   "current_focus": {
-    "legal_family": "MESEM_ATTENDANCE_SUCCESS_CLASS_PROGRESSION",
+    "legal_family": "MESEM_ASSESSMENT_CERTIFICATION_EDGE_CASES",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "goal": "Verify MESEM-specific attendance, class repetition, progression and completion gates, separating general secondary-school rules from MESEM exceptions."
+    "goal": "Verify remaining MESEM-specific assessment, certification and exceptional completion rules not yet atomized, without inventing workflow-id matches."
   },
   "next_target": {
-    "family": "MESEM_ATTENDANCE_SUCCESS_CLASS_PROGRESSION",
-    "action": "Atomize current attendance limits, excuse/document handling, class-repeat limits and MESEM-specific progression rules; do not invent legacy workflow bindings."
+    "family": "MESEM_ASSESSMENT_CERTIFICATION_EDGE_CASES",
+    "action": "Review remaining MESEM-specific exam, certification, exemption, prior-learning and completion provisions; preserve exact source provenance and keep unbound rules in staging."
   }
 }
