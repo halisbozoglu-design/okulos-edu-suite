@@ -1,5 +1,5 @@
 {
-  "schema_version": 6,
+  "schema_version": 7,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -56,16 +56,22 @@
       "staging_doc": "docs/legal-mesem-enterprise-selection-staging.md",
       "article_verified_increment": 0,
       "reason": "Current official provisions verified and atomized; exact 2,229-row master workflow_id bindings remain unavailable."
+    },
+    {
+      "legal_family": "MESEM_EDUCATION_UNIT_AND_TRAINER",
+      "articles": ["148", "149", "150", "151", "152"],
+      "staging_doc": "docs/legal-mesem-education-unit-personnel-staging.md",
+      "article_verified_increment": 0,
+      "reason": "Current official provisions verified and atomized; exact master workflow_id bindings remain unavailable."
     }
   ],
   "current_focus": {
-    "legal_family": "MESEM_EDUCATION_UNIT_AND_TRAINER",
+    "legal_family": "MESEM_CREDENTIALS_AND_EXAMS",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "articles": ["148", "149", "150", "151", "152"],
-    "goal": "Verify enterprise education-unit standards, education board/personnel structure, trainer assignment and responsibilities without inventing workflow-id matches."
+    "goal": "Locate and verify current provisions governing MESEM kalfalik/ustalik, diploma/certification, examination and completion workflows without inventing workflow-id matches."
   },
   "next_target": {
-    "family": "MESEM_EDUCATION_UNIT_AND_TRAINER",
-    "action": "Atomize education-unit minimum standards, board/personnel roles and usta ogretici/egitici personel assignment rules; preserve source provenance and keep unbound rules in staging."
+    "family": "MESEM_CREDENTIALS_AND_EXAMS",
+    "action": "Identify current official article/paragraph set first, then atomize only directly supported rules and retain unbound rules in staging until the durable master is available."
   }
 }
