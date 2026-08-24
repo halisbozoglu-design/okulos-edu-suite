@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -35,16 +35,22 @@
       "staging_doc": "docs/legal-mesem-transfer-staging.md",
       "article_verified_increment": 0,
       "reason": "Exact legacy workflow_id bindings cannot be safely asserted until the durable 2,229-row master is available."
+    },
+    {
+      "legal_family": "TRANSFER_EXEMPTION_RESPONSIBILITY",
+      "articles": ["42"],
+      "staging_doc": "docs/legal-transfer-exemption-responsibility-staging.md",
+      "article_verified_increment": 0,
+      "reason": "Current official provision verified, but exact legacy workflow_id bindings are not available."
     }
   ],
   "current_focus": {
-    "legal_family": "MESEM_TRANSFER_AND_RESPONSIBILITY",
+    "legal_family": "MESEM_BUSINESS_TRAINING_AND_CONTRACTS",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "articles": ["42"],
-    "goal": "Verify transfer-related exemption/responsibility rules and bind only exact matching workflow rows when the durable master is available."
+    "goal": "Verify workplace vocational training, contract, attendance, insurance and school-enterprise responsibility provisions without inventing workflow-id matches."
   },
   "next_target": {
     "family": "MESEM_BUSINESS_TRAINING_AND_CONTRACTS",
-    "action": "Inspect current official provisions for workplace vocational training, contracts, attendance, insurance and school-enterprise responsibilities without inventing workflow-id matches."
+    "action": "Locate and atomize the current official provisions governing workplace vocational training, contracts, attendance, insurance and school-enterprise responsibilities; keep new/changed rules in staging until exact workflow bindings are available."
   }
 }
