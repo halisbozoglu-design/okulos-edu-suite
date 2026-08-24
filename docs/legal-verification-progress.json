@@ -1,5 +1,5 @@
 {
-  "schema_version": 5,
+  "schema_version": 6,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -49,16 +49,23 @@
       "staging_doc": "docs/legal-mesem-business-training-contracts-staging.md",
       "article_verified_increment": 0,
       "reason": "Official provisions atomized; durable master workflow_id bindings still unavailable."
+    },
+    {
+      "legal_family": "MESEM_COORDINATION_AND_WORKPLACE_ELIGIBILITY",
+      "articles": ["135", "136", "137", "138", "139", "140", "141", "142"],
+      "staging_doc": "docs/legal-mesem-enterprise-selection-staging.md",
+      "article_verified_increment": 0,
+      "reason": "Current official provisions verified and atomized; exact 2,229-row master workflow_id bindings remain unavailable."
     }
   ],
   "current_focus": {
-    "legal_family": "MESEM_COORDINATION_AND_WORKPLACE_ELIGIBILITY",
+    "legal_family": "MESEM_EDUCATION_UNIT_AND_TRAINER",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "articles": ["135", "136", "139", "140", "141", "142"],
-    "goal": "Verify student-group, workplace-selection, eligibility, commission, capacity and annual timing rules without inventing workflow-id matches."
+    "articles": ["148", "149", "150", "151", "152"],
+    "goal": "Verify enterprise education-unit standards, education board/personnel structure, trainer assignment and responsibilities without inventing workflow-id matches."
   },
   "next_target": {
-    "family": "MESEM_COORDINATION_AND_WORKPLACE_ELIGIBILITY",
-    "action": "Atomize workplace eligibility, commission, capacity, annual May/June timing and trainer requirements; preserve exact source provenance and keep unbound rules in staging."
+    "family": "MESEM_EDUCATION_UNIT_AND_TRAINER",
+    "action": "Atomize education-unit minimum standards, board/personnel roles and usta ogretici/egitici personel assignment rules; preserve source provenance and keep unbound rules in staging."
   }
 }
