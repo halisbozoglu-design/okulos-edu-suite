@@ -1,5 +1,5 @@
 {
-  "schema_version": 16,
+  "schema_version": 17,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -27,16 +27,17 @@
     {"legal_family":"MESEM_OPERATIONAL_GAPS_50PLUS_V2","articles":["143","144","145","146","147","154","155","156","222"],"staging_doc":"docs/legal-mesem-operational-gaps-batch-50plus-v2.md","atomized_rule_count":116,"article_verified_increment":0},
     {"legal_family":"MTAL_MESEM_MANAGEMENT_OPERATIONS_50PLUS_V3","articles":["78","80","81","82","84","84/C","85"],"staging_doc":"docs/legal-mtal-mesem-management-operations-batch-50plus-v3.md","atomized_rule_count":84,"article_verified_increment":0},
     {"legal_family":"MTAL_MESEM_GOVERNANCE_YEARCYCLE_50PLUS_V4","articles":["86","93","94","95","97","98","99","100","101","102","103","104","105","106","107","108","109","112","113","114","115","116","117","118","119","120"],"staging_doc":"docs/legal-mtal-mesem-governance-yearcycle-batch-50plus-v4.md","atomized_rule_count":96,"article_verified_increment":0},
-    {"legal_family":"STUDENT_DISCIPLINE_RECORDS_50PLUS_V5","articles":["165","166","167","168","169","170","171","172","173","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206"],"staging_doc":"docs/legal-student-discipline-records-batch-50plus-v5.md","atomized_rule_count":141,"article_verified_increment":0,"reason":"141 discipline/records control atoms staged from current official provisions, including school/pansiyon/enterprise events, evidence, board workflow, appeal, notification, e-Okul and archive. Operational atom count is not ARTICLE_VERIFIED."}
+    {"legal_family":"STUDENT_DISCIPLINE_RECORDS_50PLUS_V5","articles":["165","166","167","168","169","170","171","172","173","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206"],"staging_doc":"docs/legal-student-discipline-records-batch-50plus-v5.md","atomized_rule_count":141,"article_verified_increment":0},
+    {"legal_family":"DOCUMENT_SECURITY_DORMITORY_YEARCYCLE_50PLUS_V6","articles":["157","158","159","160","161","162","163","164","174","175","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","223","224"],"staging_doc":"docs/legal-document-security-dormitory-yearcycle-batch-50plus-v6.md","atomized_rule_count":82,"new_operational_atom_count":37,"crossvalidated_atom_count":45,"article_verified_increment":0,"reason":"82 atoms staged. Discipline/behaviour portions cross-validate prior coverage; Md.207-221 and 223-224 provide the principal new operational coverage. Counts are not ARTICLE_VERIFIED."}
   ],
   "current_focus": {
-    "legal_family": "REMAINING_DOCUMENT_SECURITY_DORMITORY_AND_YEAR_CYCLE_50PLUS_V6",
+    "legal_family": "REMAINING_UNPROCESSED_OOKY_AND_REFERENCED_REGULATIONS_50PLUS_V7",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "goal": "Continue in >=50-rule sessions on remaining current provisions, prioritizing document/record flows, security, dormitory interfaces, awards/protection, miscellaneous year-cycle and still-unprocessed MTAL/MESEM clauses while avoiding duplicate article families."
+    "goal": "Continue in >=50-rule sessions by identifying remaining OOKY source articles not yet represented, then follow only current officially referenced regulations where OOKY delegates the process."
   },
   "next_target": {
-    "family": "REMAINING_DOCUMENT_SECURITY_DORMITORY_AND_YEAR_CYCLE_50PLUS_V6",
+    "family": "REMAINING_UNPROCESSED_OOKY_AND_REFERENCED_REGULATIONS_50PLUS_V7",
     "minimum_batch": 50,
-    "action": "Process >=50 additional non-duplicate official atoms from remaining provisions (including suitable portions of Md.157-164, 174-175, 207-220 and unprocessed document/security/pansiyon interfaces); preserve provenance and keep ARTICLE_VERIFIED at 390 until durable workflow_id binding exists."
+    "action": "Gap-scan the current OOKY article map, prioritize untouched registration/education/assessment/admin clauses and current delegated regulations such as boarding/social aid, dress, official correspondence/archive only where operationally relevant; preserve source hierarchy and do not increase ARTICLE_VERIFIED without exact workflow_id binding."
   }
 }
