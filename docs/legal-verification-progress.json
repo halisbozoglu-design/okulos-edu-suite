@@ -1,5 +1,5 @@
 {
-  "schema_version": 13,
+  "schema_version": 14,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -35,16 +35,17 @@
     {"legal_family":"MESEM_PRIOR_LEARNING_EQUIVALENCE","articles":["63/A","YONERGE-5","YONERGE-6","YONERGE-7"],"staging_doc":"docs/legal-mesem-prior-learning-equivalence-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_CERTIFICATION_EDGE_CASES","articles":["70","70/A","YONERGE-14/2","YONERGE-16"],"staging_doc":"docs/legal-mesem-certification-edge-cases-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_WORKPLACE_MONITORING_AND_COORDINATION_50PLUS","articles":["88","89","121","122","123","124","125","126","127","128","129","130","131","132","133"],"staging_doc":"docs/legal-mesem-coordination-monitoring-batch-50plus.md","atomized_rule_count":67,"article_verified_increment":0},
-    {"legal_family":"MESEM_OPERATIONAL_GAPS_50PLUS_V2","articles":["143","144","145","146","147","154","155","156","222"],"staging_doc":"docs/legal-mesem-operational-gaps-batch-50plus-v2.md","atomized_rule_count":116,"article_verified_increment":0,"reason":"116 operational control atoms were staged from current official provisions. Some source articles overlap earlier family-level staging, so this count is an operational atom count, not a claim of 116 newly ARTICLE_VERIFIED legacy workflows."}
+    {"legal_family":"MESEM_OPERATIONAL_GAPS_50PLUS_V2","articles":["143","144","145","146","147","154","155","156","222"],"staging_doc":"docs/legal-mesem-operational-gaps-batch-50plus-v2.md","atomized_rule_count":116,"article_verified_increment":0,"reason":"116 operational control atoms were staged from current official provisions. Some source articles overlap earlier family-level staging, so this count is an operational atom count, not a claim of 116 newly ARTICLE_VERIFIED legacy workflows."},
+    {"legal_family":"MTAL_MESEM_MANAGEMENT_OPERATIONS_50PLUS_V3","articles":["78","80","81","82","84","84/C","85"],"staging_doc":"docs/legal-mtal-mesem-management-operations-batch-50plus-v3.md","atomized_rule_count":84,"article_verified_increment":0,"reason":"84 management/operations atoms staged from current official provisions, emphasizing governance, commissions, technical management, workshop/lab safety, assets and production-service controls. Count is not ARTICLE_VERIFIED."}
   ],
   "current_focus": {
-    "legal_family": "MESEM_MTAL_REMAINING_UNIQUE_GAPS_50PLUS",
+    "legal_family": "MTAL_MESEM_REMAINING_GOVERNANCE_AND_YEAR_CYCLE_50PLUS",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "goal": "Continue in 50+ batches, now prioritizing provisions not yet covered by prior source-article families and separating genuinely new source atoms from cross-validation/control atoms."
+    "goal": "Continue in >=50-rule sessions using remaining official MTAL/MESEM governance, teacher duties, professional-work year cycle, expert/usta ogretici, facilities and other unprocessed operational provisions, separating unique source atoms from cross-validation atoms."
   },
   "next_target": {
-    "family": "MESEM_MTAL_REMAINING_UNIQUE_GAPS_50PLUS",
+    "family": "MTAL_MESEM_REMAINING_GOVERNANCE_AND_YEAR_CYCLE_50PLUS",
     "minimum_batch": 50,
-    "action": "Process at least 50 additional unique or explicitly cross-validated rule atoms from remaining MTAL/MESEM governance, boards, discipline-in-enterprise, records, safety, production/service and year-cycle provisions; report new-vs-crossvalidated counts separately."
+    "action": "Process >=50 additional atoms from remaining source provisions such as Md.86-87, 93-120 and related current official rules; avoid duplicate workflow claims and keep ARTICLE_VERIFIED unchanged until durable workflow_id binding is possible."
   }
 }
