@@ -1,5 +1,5 @@
 {
-  "schema_version": 15,
+  "schema_version": 16,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -10,19 +10,8 @@
     "file_library_master_available": false,
     "rule": "Do not increment ARTICLE_VERIFIED unless workflow_id + current official source + article/paragraph are all directly verified."
   },
-  "official_source_policy": [
-    "Resmi Gazete",
-    "MEB Mevzuat Sistemi",
-    "mevzuat.gov.tr",
-    "MEB general directorate official guides/PDFs",
-    "MEB Teftis Kurulu current inspection guides"
-  ],
-  "publication_model": {
-    "new_or_changed_rules": "STAGING_SUPERADMIN_APPROVAL",
-    "history": "immutable",
-    "apply_to": "future_and_pending_workflows_only",
-    "impact_levels": ["L0", "L1", "L2", "L3"]
-  },
+  "official_source_policy": ["Resmi Gazete","MEB Mevzuat Sistemi","mevzuat.gov.tr","MEB general directorate official guides/PDFs","MEB Teftis Kurulu current inspection guides"],
+  "publication_model": {"new_or_changed_rules":"STAGING_SUPERADMIN_APPROVAL","history":"immutable","apply_to":"future_and_pending_workflows_only","impact_levels":["L0","L1","L2","L3"]},
   "completed_focus": [
     {"legal_family":"MESEM_REGISTRATION","articles":["21","22"],"staging_doc":"docs/legal-mesem-registration-staging.md"},
     {"legal_family":"MESEM_TRANSFER","articles":["37","38","41"],"staging_doc":"docs/legal-mesem-transfer-staging.md","article_verified_increment":0},
@@ -35,18 +24,19 @@
     {"legal_family":"MESEM_PRIOR_LEARNING_EQUIVALENCE","articles":["63/A","YONERGE-5","YONERGE-6","YONERGE-7"],"staging_doc":"docs/legal-mesem-prior-learning-equivalence-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_CERTIFICATION_EDGE_CASES","articles":["70","70/A","YONERGE-14/2","YONERGE-16"],"staging_doc":"docs/legal-mesem-certification-edge-cases-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_WORKPLACE_MONITORING_AND_COORDINATION_50PLUS","articles":["88","89","121","122","123","124","125","126","127","128","129","130","131","132","133"],"staging_doc":"docs/legal-mesem-coordination-monitoring-batch-50plus.md","atomized_rule_count":67,"article_verified_increment":0},
-    {"legal_family":"MESEM_OPERATIONAL_GAPS_50PLUS_V2","articles":["143","144","145","146","147","154","155","156","222"],"staging_doc":"docs/legal-mesem-operational-gaps-batch-50plus-v2.md","atomized_rule_count":116,"article_verified_increment":0,"reason":"116 operational control atoms were staged from current official provisions. Some source articles overlap earlier family-level staging, so this count is an operational atom count, not a claim of 116 newly ARTICLE_VERIFIED legacy workflows."},
-    {"legal_family":"MTAL_MESEM_MANAGEMENT_OPERATIONS_50PLUS_V3","articles":["78","80","81","82","84","84/C","85"],"staging_doc":"docs/legal-mtal-mesem-management-operations-batch-50plus-v3.md","atomized_rule_count":84,"article_verified_increment":0,"reason":"84 management/operations atoms staged from current official provisions, emphasizing governance, commissions, technical management, workshop/lab safety, assets and production-service controls. Count is not ARTICLE_VERIFIED."},
-    {"legal_family":"MTAL_MESEM_GOVERNANCE_YEARCYCLE_50PLUS_V4","articles":["86","93","94","95","97","98","99","100","101","102","103","104","105","106","107","108","109","112","113","114","115","116","117","118","119","120"],"staging_doc":"docs/legal-mtal-mesem-governance-yearcycle-batch-50plus-v4.md","atomized_rule_count":96,"article_verified_increment":0,"reason":"96 official-rule atoms staged from teacher duties, expert/master-trainer rules, facilities, accessibility, boards, commissions, teams and annual meeting cycles. Count is operational atomization, not ARTICLE_VERIFIED."}
+    {"legal_family":"MESEM_OPERATIONAL_GAPS_50PLUS_V2","articles":["143","144","145","146","147","154","155","156","222"],"staging_doc":"docs/legal-mesem-operational-gaps-batch-50plus-v2.md","atomized_rule_count":116,"article_verified_increment":0},
+    {"legal_family":"MTAL_MESEM_MANAGEMENT_OPERATIONS_50PLUS_V3","articles":["78","80","81","82","84","84/C","85"],"staging_doc":"docs/legal-mtal-mesem-management-operations-batch-50plus-v3.md","atomized_rule_count":84,"article_verified_increment":0},
+    {"legal_family":"MTAL_MESEM_GOVERNANCE_YEARCYCLE_50PLUS_V4","articles":["86","93","94","95","97","98","99","100","101","102","103","104","105","106","107","108","109","112","113","114","115","116","117","118","119","120"],"staging_doc":"docs/legal-mtal-mesem-governance-yearcycle-batch-50plus-v4.md","atomized_rule_count":96,"article_verified_increment":0},
+    {"legal_family":"STUDENT_DISCIPLINE_RECORDS_50PLUS_V5","articles":["165","166","167","168","169","170","171","172","173","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206"],"staging_doc":"docs/legal-student-discipline-records-batch-50plus-v5.md","atomized_rule_count":141,"article_verified_increment":0,"reason":"141 discipline/records control atoms staged from current official provisions, including school/pansiyon/enterprise events, evidence, board workflow, appeal, notification, e-Okul and archive. Operational atom count is not ARTICLE_VERIFIED."}
   ],
   "current_focus": {
-    "legal_family": "MTAL_MESEM_REMAINING_UNIQUE_GAPS_50PLUS_V5",
+    "legal_family": "REMAINING_DOCUMENT_SECURITY_DORMITORY_AND_YEAR_CYCLE_50PLUS_V6",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "goal": "Continue in >=50-rule sessions, prioritizing still-unprocessed current provisions and distinguishing unique source atoms from cross-validation atoms."
+    "goal": "Continue in >=50-rule sessions on remaining current provisions, prioritizing document/record flows, security, dormitory interfaces, awards/protection, miscellaneous year-cycle and still-unprocessed MTAL/MESEM clauses while avoiding duplicate article families."
   },
   "next_target": {
-    "family": "MTAL_MESEM_REMAINING_UNIQUE_GAPS_50PLUS_V5",
+    "family": "REMAINING_DOCUMENT_SECURITY_DORMITORY_AND_YEAR_CYCLE_50PLUS_V6",
     "minimum_batch": 50,
-    "action": "Process >=50 additional atoms from remaining current provisions, prioritizing unprocessed teacher/professional-work rules, board/zumre subclauses, discipline/records, dormitory/open-education/MTAL operational interfaces and document evidence flows; keep ARTICLE_VERIFIED unchanged until durable workflow_id binding is available."
+    "action": "Process >=50 additional non-duplicate official atoms from remaining provisions (including suitable portions of Md.157-164, 174-175, 207-220 and unprocessed document/security/pansiyon interfaces); preserve provenance and keep ARTICLE_VERIFIED at 390 until durable workflow_id binding exists."
   }
 }
