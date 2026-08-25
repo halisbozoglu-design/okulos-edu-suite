@@ -1,5 +1,5 @@
 {
-  "schema_version": 10,
+  "schema_version": 11,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -32,18 +32,16 @@
     {"legal_family":"MESEM_EDUCATION_UNIT_AND_TRAINER","articles":["148","149","150","151","152"],"staging_doc":"docs/legal-mesem-education-unit-personnel-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_CREDENTIALS_AND_EXAMS","articles":["46","56","58","59","69","70","70/A","71","73","76"],"staging_doc":"docs/legal-mesem-credentials-exams-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_ATTENDANCE_SUCCESS_CLASS_PROGRESSION","articles":["36","56","57","58","59","144"],"staging_doc":"docs/legal-mesem-attendance-progression-staging.md","article_verified_increment":0},
-    {"legal_family":"MESEM_PRIOR_LEARNING_EQUIVALENCE","articles":["63/A","YONERGE-5","YONERGE-6","YONERGE-7"],"staging_doc":"docs/legal-mesem-prior-learning-equivalence-staging.md","article_verified_increment":0,"reason":"Official provisions verified and atomized; exact 2,229-row master workflow_id bindings remain unavailable."}
+    {"legal_family":"MESEM_PRIOR_LEARNING_EQUIVALENCE","articles":["63/A","YONERGE-5","YONERGE-6","YONERGE-7"],"staging_doc":"docs/legal-mesem-prior-learning-equivalence-staging.md","article_verified_increment":0},
+    {"legal_family":"MESEM_CERTIFICATION_EDGE_CASES","articles":["70","70/A","YONERGE-14/2","YONERGE-16"],"staging_doc":"docs/legal-mesem-certification-edge-cases-staging.md","article_verified_increment":0,"reason":"Official provisions verified and atomized; exact 2,229-row master workflow_id bindings remain unavailable."}
   ],
   "current_focus": {
-    "legal_family": "MESEM_REMAINING_CERTIFICATION_EDGE_CASES",
-    "primary_sources": [
-      "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-      "https://mevzuat.meb.gov.tr/dosyalar/1872.pdf"
-    ],
-    "goal": "Verify remaining exceptional certification, examination, supplementary-completion and trainer-certificate rules without inventing workflow-id matches."
+    "legal_family": "MESEM_WORKPLACE_MONITORING_AND_COORDINATION",
+    "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
+    "goal": "Verify remaining coordinator-teacher monitoring, workplace visit, reporting, document and school-enterprise coordination duties without inventing workflow-id matches."
   },
   "next_target": {
-    "family": "MESEM_REMAINING_CERTIFICATION_EDGE_CASES",
-    "action": "Review remaining current official provisions for exceptional kalfalik/ustalik certification, supplementary completion and usta ogretici access; preserve exact provenance and keep unbound rules in staging."
+    "family": "MESEM_WORKPLACE_MONITORING_AND_COORDINATION",
+    "action": "Atomize coordinator teacher duties, workplace monitoring/reporting, document exchange and school-enterprise coordination; preserve provenance and keep unbound rules in staging."
   }
 }
