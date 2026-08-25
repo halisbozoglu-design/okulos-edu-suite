@@ -1,0 +1,29 @@
+do $$
+declare src text:='https://meslek.meb.gov.tr/upload/cop11_mem/2023_siber_mem_cop.pdf'; p record; r record;
+begin
+for p in select * from (values (9,'USTALIK',40,42,6,2,2),(9,'DIPLOMA',42,44,8,2,2),(10,'USTALIK',42,42,6,4,0),(10,'DIPLOMA',44,44,8,4,0),(11,'USTALIK',42,42,3,7,0),(11,'DIPLOMA',46,46,7,7,0),(12,'USTALIK',42,42,2,8,0),(12,'DIPLOMA',48,48,8,8,0)) v(grade,variant,required,target,common,voc,elective) loop
+ if not exists(select 1 from official_curriculum_profiles x where x.active and x.effective_academic_year='2026-2027' and x.school_type='MESEM' and x.field_name='Siber Güvenlik' and x.branch_name='Siber Güvenlik' and x.grade_level=p.grade and x.schedule_variant=p.variant) then
+  insert into official_curriculum_profiles(effective_academic_year,school_type,program_type,field_name,branch_name,grade_level,required_course_count,required_hour_total,elective_course_min,elective_course_max,elective_hour_min,elective_hour_max,total_hour_min,total_hour_max,total_hour_target,group_rules,source_file_name,source_decision_no,source_note,active,schedule_variant,common_hours,vocational_hours,elective_vocational_hours,elective_hours,guidance_hours,enterprise_hours,applicability_status,source_page,parsed_constraints,academic_support_hours)
+  values('2026-2027','MESEM','MESEM','Siber Güvenlik','Siber Güvenlik',p.grade,0,p.required,0,0,0,p.elective,p.target,p.target,p.target,'[]'::jsonb,src,'2023-12','2023-12 yaşayan MESEM Siber Güvenlik çizelgesi; parantezli saatler DIPLOMA fark dersidir.',true,p.variant,p.common,p.voc,0,p.elective,0,32,'CURRENTLY_VALID',6,'{"enterpriseDays":4,"enterpriseHoursPerDay":8,"parentheticalHoursMeaning":"DIPLOMA_ADDITIONAL_DIFFERENCE_COURSES"}'::jsonb,0);
+ end if;
+end loop;
+for p in select grade_level,schedule_variant from official_curriculum_profiles where active and school_type='MESEM' and field_name='Siber Güvenlik' and branch_name='Siber Güvenlik' and effective_academic_year='2026-2027' loop
+ for r in select s.*,cc.name from official_course_schedule_catalog s join course_catalog cc on cc.id=s.course_id where s.active and s.school_type='MESEM' and s.field_name='Seramik ve Cam Teknolojisi' and s.branch_name='Alçı Model Kalıp' and s.grade_level=p.grade_level and s.schedule_variant=p.schedule_variant and cc.name in ('Türk Dili ve Edebiyatı','Din Kültürü ve Ahlak Bilgisi','Matematik','Tarih','T.C. İnkılap Tarihi ve Atatürkçülük','İşletmelerde Mesleki Eğitim') loop
+  if not exists(select 1 from official_course_schedule_catalog x where x.active and x.school_type='MESEM' and x.field_name='Siber Güvenlik' and x.branch_name='Siber Güvenlik' and x.grade_level=p.grade_level and x.schedule_variant=p.schedule_variant and x.course_id=r.course_id) then
+   insert into official_course_schedule_catalog(effective_academic_year,school_type,program_type,grade_level,course_id,category,hour_options,source_file_name,source_note,active,field_name,branch_name,parsed_constraints,source_decision_no,source_page,source_section,parser_confidence,needs_review,schedule_variant)
+   values('2026-2027','MESEM','MESEM',p.grade_level,r.course_id,r.category,r.hour_options,src,'2023-12 Siber Güvenlik',true,'Siber Güvenlik','Siber Güvenlik',r.parsed_constraints,'2023-12',6,'HAFTALIK DERS ÇİZELGESİ',1,false,p.schedule_variant);
+  end if;
+ end loop;
+end loop;
+create temporary table _v(grade int,name text,h int) on commit drop;
+insert into _v values (9,'Bilişim Sistemleri',1),(9,'Bilgisayarlı Tasarım Uygulamaları',1),(10,'Bilişim Teknolojilerinin Temelleri',1),(10,'Programlama Temelleri',1),(10,'Siber Güvenlik Atölyesi',1),(10,'Ağ Teknolojileri',1),(11,'Sistem Güvenliği',2),(11,'Sızma Testi ve Siber Olaylara Müdahale',5),(12,'Ahilik Kültürü ve Girişimcilik',1),(12,'Güvenli Yazılım Geliştirme',2),(12,'Siber Güvenlikte Açık Kaynak İşletim Sistemi',2),(12,'Adli Bilişim',3);
+insert into course_catalog(name,category,active) select distinct v.name,'uygulama',true from _v v where not exists(select 1 from course_catalog cc where cc.name=v.name);
+for r in select v.*,cc.id course_id from _v v join course_catalog cc on cc.name=v.name loop
+ for p in select schedule_variant from official_curriculum_profiles where active and school_type='MESEM' and field_name='Siber Güvenlik' and branch_name='Siber Güvenlik' and grade_level=r.grade and effective_academic_year='2026-2027' loop
+  if not exists(select 1 from official_course_schedule_catalog x where x.active and x.school_type='MESEM' and x.field_name='Siber Güvenlik' and x.branch_name='Siber Güvenlik' and x.grade_level=r.grade and x.schedule_variant=p.schedule_variant and x.course_id=r.course_id) then
+   insert into official_course_schedule_catalog(effective_academic_year,school_type,program_type,grade_level,course_id,category,hour_options,source_file_name,source_note,active,field_name,branch_name,parsed_constraints,source_decision_no,source_page,source_section,parser_confidence,needs_review,schedule_variant)
+   values('2026-2027','MESEM','MESEM',r.grade,r.course_id,'uygulama',array[r.h],src,'2023-12 Siber Güvenlik',true,'Siber Güvenlik','Siber Güvenlik','[]'::jsonb,'2023-12',6,'HAFTALIK DERS ÇİZELGESİ',1,false,p.schedule_variant);
+  end if;
+ end loop;
+end loop;
+end $$;
