@@ -1,6 +1,6 @@
 {
-  "schema_version": 23,
-  "updated_on": "2026-08-25",
+  "schema_version": 24,
+  "updated_on": "2026-08-26",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
   "last_reliable_article_verified_percent": 17.5,
@@ -34,17 +34,18 @@
     {"legal_family":"OOKY_DELEGATED_REGULATIONS_100PLUS_V9","articles":["OOKY-208","OOKY-215","OOKY-216","OOKY-218","OOKY-219","OOKY-220","OOKY-221","IOKBS-2026","DRESS-1-4","RPD-ETHICS-4-7","PLANNING-4-7"],"staging_doc":"docs/legal-ooky-delegated-regulations-batch-100plus-v9.md","atomized_rule_count":110,"new_source_atom_count":110,"article_verified_increment":0,"migration_count":0,"source_urls":["https://mevzuat.meb.gov.tr/dosyalar/1657.pdf","https://mevzuat.meb.gov.tr/dosyalar/2302.pdf","https://mevzuat.meb.gov.tr/dosyalar/1617.pdf","https://mevzuat.meb.gov.tr/dosyalar/2296.pdf","https://mevzuat.meb.gov.tr/dosyalar/2237.pdf"]},
     {"legal_family":"DELEGATED_REGULATIONS_DEEPENING_100PLUS_V10","articles":["OOKY-16","OOKY-10/f","RPD-15-25","SPED-22-24","SPED-47-48","TRANSPORT-1-2","TRANSPORT-8/2-3","ARCHIVE-5","ARCHIVE-9","OFFICIAL-CORRESPONDENCE-1","OOKY-224"],"staging_doc":"docs/legal-delegated-regulations-deepening-batch-100plus-v10.md","atomized_rule_count":140,"new_source_atom_count":140,"article_verified_increment":0,"migration_count":0,"source_urls":["https://mevzuat.meb.gov.tr/dosyalar/1657.pdf","https://www.meb.gov.tr/mevzuat/liste.php?ara=6","https://rizeram.meb.k12.tr/meb_iys_dosyalar/53/01/269836/dosyalar/2024_12/11104229_ozelegitimhizmetleriyonetmeligi.pdf","https://www.meb.gov.tr/meb_iys_dosyalar/2014_09/12024357_tasimayonetmeligi.pdf","https://tkb.meb.gov.tr/meb_iys_dosyalar/2023_11/13135701_tasimayoluylaegitimeerisimrehberlikvedenetimrehberi.pdf","https://www.devletarsivleri.gov.tr/varliklar/dosyalar/mevzuat/arsivhizmetleri.pdf","https://www.aile.gov.tr/media/49629/resm%C3%AE-yazismalarda-uygulanacak-usul-ve-esaslar-hakkinda-yonetmelik.pdf","https://mevzuat.meb.gov.tr/dosyalar/2274.pdf"]},
     {"legal_family":"DELEGATED_REGULATIONS_DEEPENING_100PLUS_V11","articles":["BOARD-18-20","TRANSPORT-2024-1-5,19","ACCESS-DIRECTIVE-13-14","SPED-1-4","OOKY-2023-23/2-c","RPD-3","OPEN-7,10,16-18,59-61"],"staging_doc":"docs/legal-delegated-regulations-deepening-batch-100plus-v11.md","atomized_rule_count":132,"new_source_atom_count":132,"article_verified_increment":0,"migration_count":0,"source_urls":["https://mevzuat.meb.gov.tr/dosyalar/716.pdf","https://resmigazete.gov.tr/eskiler/2024/08/20240801-2.htm","https://mevzuat.meb.gov.tr/dosyalar/2262.pdf","https://resmigazete.gov.tr/eskiler/2018/07/20180707-8.htm","https://resmigazete.gov.tr/eskiler/2023/09/20230908-2.htm","https://www.meb.gov.tr/rehberlik-ve-psikolojik-danisma-hizmetleri-yonetmeligi-yayimlandi/haber/21433/tr","https://resmigazete.gov.tr/eskiler/2024/10/20241022-2.htm","https://www.devletarsivleri.gov.tr/varliklar/dosyalar/mevzuat/arsivhizmetleri.pdf"]},
-    {"legal_family":"ARCHIVE_EXACT_PRIMARY_100PLUS_V12","articles":["5-35","GECICI-1"],"staging_doc":"docs/legal-archive-correspondence-deepening-batch-100plus-v12.md","atomized_rule_count":110,"exact_primary_clause_count":110,"article_verified_increment":0,"migration_count":0,"source_urls":["https://www.devletarsivleri.gov.tr/varliklar/dosyalar/mevzuat/arsivhizmetleri.pdf","https://www.devletarsivleri.gov.tr/Sayfalar/Haberler/Duyuru.aspx?ID=4164","https://www.aile.gov.tr/media/49629/resm%C3%AE-yazismalarda-uygulanacak-usul-ve-esaslar-hakkinda-yonetmelik.pdf"],"reason":"110 exact current-primary-source archive atoms were extracted from the full current Regulation, including annual January/February/March workflows, commissions, 10-year destruction evidence retention, transfer, digitisation, audit and reporting. Current 2020 official-correspondence Md1-20 was also anchored but not added to this 110 count; it continues in V13."}
+    {"legal_family":"ARCHIVE_EXACT_PRIMARY_100PLUS_V12","articles":["5-35","GECICI-1"],"staging_doc":"docs/legal-archive-correspondence-deepening-batch-100plus-v12.md","atomized_rule_count":110,"exact_primary_clause_count":110,"article_verified_increment":0,"migration_count":0,"source_urls":["https://www.devletarsivleri.gov.tr/varliklar/dosyalar/mevzuat/arsivhizmetleri.pdf","https://www.devletarsivleri.gov.tr/Sayfalar/Haberler/Duyuru.aspx?ID=4164","https://www.aile.gov.tr/media/49629/resm%C3%AE-yazismalarda-uygulanacak-usul-ve-esaslar-hakkinda-yonetmelik.pdf"]},
+    {"legal_family":"DYK_OPERATIONS_100PLUS_V13","articles":["1-24"],"staging_doc":"docs/legal-dyk-operations-batch-100plus-v13.md","atomized_rule_count":125,"new_source_atom_count":125,"article_verified_increment":0,"migration_count":0,"source_urls":["https://mevzuat.meb.gov.tr/dosyalar/2179.pdf"],"reason":"125 DYK workflow/control atoms staged under the prior fast-batch method. Annual e-Kilavuz parameters remain versioned child sources; final full-text correctness/missing-source audit is deferred until all families are covered."}
   ],
-  "large_batch_atom_total": 1296,
+  "large_batch_atom_total": 1421,
   "current_focus": {
-    "legal_family": "OFFICIAL_CORRESPONDENCE_FULL_CURRENT_PRIMARY_100PLUS_V13",
-    "primary_source": "https://www.aile.gov.tr/media/49629/resm%C3%AE-yazismalarda-uygulanacak-usul-ve-esaslar-hakkinda-yonetmelik.pdf",
-    "goal": "Complete the full current 2020 Resmi Yazismalar regulation from Md21 onward and atomize every operative paragraph/bend with exact primary-source article references; then resume remaining current delegated MEB regulations."
+    "legal_family": "SCHOOL_FAMILY_UNION_SOCIAL_ACTIVITIES_AND_REMAINING_DELEGATED_100PLUS_V14",
+    "primary_source": "https://mevzuat.meb.gov.tr/",
+    "goal": "Continue the prior fast >=100-atom batch method across current school-family-union, social-activities and other still-uncovered delegated school-operation families, preserving official source URLs/provenance and deferring the global full-text correctness/missing audit until the end."
   },
   "next_target": {
-    "family": "OFFICIAL_CORRESPONDENCE_FULL_CURRENT_PRIMARY_100PLUS_V13",
+    "family": "SCHOOL_FAMILY_UNION_SOCIAL_ACTIVITIES_AND_REMAINING_DELEGATED_100PLUS_V14",
     "minimum_batch": 100,
-    "action": "Continue full primary-text scan of 10.06.2020 RG31151 from Md21 through final provisions/examples as operationally relevant. Count only exact current clauses. Preserve URLs, article/paragraph, roles/evidence/impact, and keep ARTICLE_VERIFIED at 390 until exact legacy workflow_id binding is available."
+    "action": "Process >=100 additional provenance-linked atoms from current official sources for Okul Aile Birligi, Sosyal Etkinlikler and adjacent unprocessed school-operation regulations; preserve annual/versioned parameters, avoid duplicate workflow claims, use no migration unless architecture requires it, and keep ARTICLE_VERIFIED at 390 until durable workflow_id binding exists."
   }
 }
