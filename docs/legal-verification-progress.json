@@ -1,5 +1,5 @@
 {
-  "schema_version": 11,
+  "schema_version": 12,
   "updated_on": "2026-08-25",
   "master_workflow_count": 2229,
   "last_reliable_article_verified": 390,
@@ -33,15 +33,17 @@
     {"legal_family":"MESEM_CREDENTIALS_AND_EXAMS","articles":["46","56","58","59","69","70","70/A","71","73","76"],"staging_doc":"docs/legal-mesem-credentials-exams-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_ATTENDANCE_SUCCESS_CLASS_PROGRESSION","articles":["36","56","57","58","59","144"],"staging_doc":"docs/legal-mesem-attendance-progression-staging.md","article_verified_increment":0},
     {"legal_family":"MESEM_PRIOR_LEARNING_EQUIVALENCE","articles":["63/A","YONERGE-5","YONERGE-6","YONERGE-7"],"staging_doc":"docs/legal-mesem-prior-learning-equivalence-staging.md","article_verified_increment":0},
-    {"legal_family":"MESEM_CERTIFICATION_EDGE_CASES","articles":["70","70/A","YONERGE-14/2","YONERGE-16"],"staging_doc":"docs/legal-mesem-certification-edge-cases-staging.md","article_verified_increment":0,"reason":"Official provisions verified and atomized; exact 2,229-row master workflow_id bindings remain unavailable."}
+    {"legal_family":"MESEM_CERTIFICATION_EDGE_CASES","articles":["70","70/A","YONERGE-14/2","YONERGE-16"],"staging_doc":"docs/legal-mesem-certification-edge-cases-staging.md","article_verified_increment":0},
+    {"legal_family":"MESEM_WORKPLACE_MONITORING_AND_COORDINATION_50PLUS","articles":["88","89","121","122","123","124","125","126","127","128","129","130","131","132","133"],"staging_doc":"docs/legal-mesem-coordination-monitoring-batch-50plus.md","atomized_rule_count":67,"article_verified_increment":0,"reason":"67 official-rule atoms staged in one session; durable 2,229-row workflow_id bindings remain unavailable."}
   ],
   "current_focus": {
-    "legal_family": "MESEM_WORKPLACE_MONITORING_AND_COORDINATION",
+    "legal_family": "MESEM_REMAINING_OPERATIONAL_GAPS_50PLUS",
     "primary_source": "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
-    "goal": "Verify remaining coordinator-teacher monitoring, workplace visit, reporting, document and school-enterprise coordination duties without inventing workflow-id matches."
+    "goal": "Continue in batches of at least 50 atomic rules, prioritizing remaining payment, insurance, workplace safety, contract lifecycle, boards, documents, inspection and year-cycle operations while avoiding duplicates."
   },
   "next_target": {
-    "family": "MESEM_WORKPLACE_MONITORING_AND_COORDINATION",
-    "action": "Atomize coordinator teacher duties, workplace monitoring/reporting, document exchange and school-enterprise coordination; preserve provenance and keep unbound rules in staging."
+    "family": "MESEM_REMAINING_OPERATIONAL_GAPS_50PLUS",
+    "minimum_batch": 50,
+    "action": "Locate at least 50 non-duplicate official rule atoms across remaining MESEM/MTAL operational provisions; preserve exact provenance and do not increase ARTICLE_VERIFIED without durable workflow_id bindings."
   }
 }
