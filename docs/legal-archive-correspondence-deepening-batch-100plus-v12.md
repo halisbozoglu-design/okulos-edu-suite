@@ -1,167 +1,215 @@
-# Legal Deepening V12 — Arşiv + Resmî Yazışma
+# Legal Deepening V12 — Devlet Arşiv Hizmetleri + Resmî Yazışma
 
 Status: STAGING_SUPERADMIN_APPROVAL
 Date: 2026-08-25
-Scope: current official archive + official-correspondence rules, plus only directly related school workflow controls.
 ARTICLE_VERIFIED increment: 0
 Migration count: 0
 
-## Primary official sources
+## Primary current official sources
 - Devlet Arşiv Hizmetleri Hakkında Yönetmelik — 18.10.2019 / RG 30922 — https://www.devletarsivleri.gov.tr/varliklar/dosyalar/mevzuat/arsivhizmetleri.pdf
-- Devlet Arşivleri Başkanlığı official publication page — https://www.devletarsivleri.gov.tr/Sayfalar/Haberler/Duyuru.aspx?ID=4164
-- Resmî Yazışmalarda Uygulanacak Usul ve Esaslar Hakkında Yönetmelik — 10.06.2020 / RG 31151 — https://www.aile.gov.tr/media/49629/resm%C3%AE-yazismalarda-uygulanacak-usul-ve-esaslar-hakkinda-yonetmelik.pdf
-- Current-government confirmation page — https://www.hmb.gov.tr/sgb-mevzuat
-- MEB current training material quoting current Archive Regulation Md.10 — https://meslek.meb.gov.tr/upload/dersmateryali/pdf/A2025HDEI1004.pdf
+- Devlet Arşivleri Başkanlığı publication page — https://www.devletarsivleri.gov.tr/Sayfalar/Haberler/Duyuru.aspx?ID=4164
+- Resmî Yazışmalarda Uygulanacak Usul ve Esaslar Hakkında Yönetmelik — 09.06.2020 Karar 2646 / RG 10.06.2020-31151 — https://www.aile.gov.tr/media/49629/resm%C3%AE-yazismalarda-uygulanacak-usul-ve-esaslar-hakkinda-yonetmelik.pdf
+- Current-government confirmation — https://www.hmb.gov.tr/sgb-mevzuat
 
-## Source hierarchy / blocker policy
-1. Current official regulation text is authority.
-2. Government training/guidance material is cross-check, not superior authority.
-3. 1988 archive regulation and 2015 official-correspondence regulation are REPEALED_SOURCE_BLOCK for new workflows.
-4. Exact article/paragraph not directly recovered in this pass is retained with `article_ref_status=FINAL_CROSSCHECK_REQUIRED`; such items are not ARTICLE_VERIFIED.
+## Authority guard
+- 16.05.1988 archive regulation is blocked for new decisions by current Regulation Md.32.
+- 2015 official-correspondence regulation is not used as current authority; current authority is 2020/31151.
+- Only exact clauses visually/directly confirmed in current primary text are counted below.
 
-## A. Archive workflow atoms (62)
+# A — DEVLET ARŞİV HİZMETLERİ HAKKINDA YÖNETMELİK — EXACT ATOMS
 
-A01 | ARCHIVE | protect records from fire | evidence=facility/risk control | impact=L3
-A02 | ARCHIVE | protect records from theft | evidence=access/security control | impact=L3
-A03 | ARCHIVE | protect records from humidity | evidence=environment check | impact=L2
-A04 | ARCHIVE | protect records from heat | evidence=environment check | impact=L2
-A05 | ARCHIVE | protect records from water/flood | evidence=facility control | impact=L3
-A06 | ARCHIVE | protect electronic records from cyber risk | evidence=IT/security control | impact=L3
-A07 | ARCHIVE | preserve records in original order | evidence=classification structure | impact=L2
-A08 | ARCHIVE | use institutional file plan | evidence=file plan code | impact=L3
-A09 | ARCHIVE-Md10/1 | assign file code from institutional file plan | evidence=file_code | impact=L3
-A10 | ARCHIVE-Md10/2 | multi-subject record uses dominant subject file code | evidence=classification decision | impact=L2
-A11 | ARCHIVE-Md10/2 | copy may be placed in other relevant file | evidence=cross-reference | impact=L1
-A12 | ARCHIVE-Md10/3 | incoming record file code is not automatically reused for reply | evidence=reply classification | impact=L2
-A13 | ARCHIVE-Md10/4 | transaction-continuity records cannot receive a different code merely because another code exists | evidence=transaction link | impact=L3
-A14 | ARCHIVE-Md10/5 | EBYS file code is mandatory metadata | evidence=metadata validation | impact=L3
-A15 | ARCHIVE | maintain retention plans | evidence=retention_plan | impact=L3
-A16 | ARCHIVE | retention periods must be versioned | evidence=legal_snapshot | impact=L2
-A17 | ARCHIVE | records reaching retention end require disposition review | evidence=review record | impact=L3
-A18 | ARCHIVE | archival-value records are not destroyed | evidence=archive-value decision | impact=L3
-A19 | ARCHIVE | non-archival records may enter disposal process only after authorized review | evidence=commission decision | impact=L3
-A20 | ARCHIVE | disposal is commission-based, not individual-user action | evidence=commission membership | impact=L3
-A21 | ARCHIVE | disposal list must identify records sufficiently | evidence=imha_listesi | impact=L3
-A22 | ARCHIVE | disposal approval/procedure must be completed before destruction | evidence=approval | impact=L3
-A23 | ARCHIVE | electronic destruction must make recovery unauthorized/impracticable per approved method | evidence=destruction log | impact=L3
-A24 | ARCHIVE | physical destruction requires controlled method | evidence=destruction log | impact=L3
-A25 | ARCHIVE | archival transfer preserves provenance and original order | evidence=transfer list | impact=L3
-A26 | ARCHIVE | transfer must have inventory/list evidence | evidence=devir_teslim_listesi | impact=L3
-A27 | ARCHIVE | transferred records remain searchable by metadata | evidence=index/catalog | impact=L2
-A28 | ARCHIVE | access permissions follow confidentiality classification | evidence=access policy | impact=L3
-A29 | ARCHIVE | confidentiality is not removed merely by archival transfer | evidence=classification status | impact=L3
-A30 | ARCHIVE | declassification requires authorized action | evidence=declassification approval | impact=L3
-A31 | ARCHIVE | backup of electronic records is mandatory operational control | evidence=backup log | impact=L3
-A32 | ARCHIVE | disaster recovery for electronic archive must be planned | evidence=DR plan | impact=L3
-A33 | ARCHIVE | archive storage locations require physical-security controls | evidence=inspection | impact=L3
-A34 | ARCHIVE | archive-location conditions require periodic inspection | evidence=checklist | impact=L2
-A35 | ARCHIVE | records must remain accessible throughout retention period | evidence=retrieval test | impact=L3
-A36 | ARCHIVE | archive access/action logs should be retained for accountable access | evidence=audit log | impact=L2
-A37 | ARCHIVE | institution archive and unit archive roles must be distinguishable | evidence=role assignment | impact=L2
-A38 | ARCHIVE | records closed in business process move into filing/archive lifecycle | evidence=closure status | impact=L2
-A39 | ARCHIVE | active records must not be prematurely disposed | evidence=business status | impact=L3
-A40 | ARCHIVE | legal hold blocks destruction | evidence=hold flag | impact=L3
-A41 | ARCHIVE | investigation/litigation records remain protected while needed | evidence=hold reason | impact=L3
-A42 | ARCHIVE | personal/sensitive data protection continues in archive | evidence=access controls | impact=L3
-A43 | ARCHIVE | duplicate copies may be disposition candidates where original/authentic record is preserved | evidence=duplicate classification | impact=L2
-A44 | ARCHIVE | superseded forms/publications may be disposition candidates after required exemplar retention | evidence=sample-retention decision | impact=L2
-A45 | ARCHIVE | incomplete/open transactions are not disposal candidates | evidence=status check | impact=L3
-A46 | ARCHIVE | records with unresolved audit findings are blocked from disposal | evidence=audit hold | impact=L3
-A47 | ARCHIVE | transfer/destruction workflow must capture responsible person/commission | evidence=actor ids | impact=L2
-A48 | ARCHIVE | transaction date is retained in archive metadata | evidence=metadata | impact=L2
-A49 | ARCHIVE | originating unit is retained in archive metadata | evidence=metadata | impact=L2
-A50 | ARCHIVE | record type/subject classification is retained in archive metadata | evidence=metadata | impact=L2
-A51 | ARCHIVE | retention trigger date must be explicit | evidence=retention_start | impact=L2
-A52 | ARCHIVE | disposition decision must be immutable after execution except corrective record | evidence=immutable audit | impact=L3
-A53 | ARCHIVE | executed disposal keeps evidence even though source record is destroyed | evidence=imha record | impact=L3
-A54 | ARCHIVE | archive transfer keeps legal snapshot/source basis | evidence=legal_snapshot | impact=L2
-A55 | ARCHIVE | change in retention rule applies prospectively unless law requires otherwise | evidence=versioning | impact=L2
-A56 | ARCHIVE | historical completed archive actions are immutable | evidence=history | impact=L3
-A57 | ARCHIVE | Standart Dosya Planı is a required classification interface | evidence=SDP code | impact=L3
-A58 | ARCHIVE | EBYS and archive lifecycle must exchange identifiers without losing original record id | evidence=record_id | impact=L3
-A59 | ARCHIVE | original/authentic record must be distinguishable from copy | evidence=record status | impact=L3
-A60 | ARCHIVE | archive export/transfer must preserve integrity verification | evidence=hash/signature where applicable | impact=L3
-A61 | ARCHIVE | any unresolved exact paragraph mapping stays staging-only | evidence=article_ref_status | impact=L3
-A62 | ARCHIVE | repealed 1988 regulation cannot be active authority for a new decision | evidence=source status | impact=L3
+## Md.5 — Belgelerin korunması (2)
+A001 Md5/1-a: fire/theft/humidity/temperature/flood/dust/animal/pest protection + preservation in original order; role=yükümlü; evidence=archive safety control; impact=L3.
+A002 Md5/1-b: electronic records require disaster/cyber/software-hardware risk controls, disaster-recovery planning and backup units; impact=L3.
 
-## B. Official correspondence workflow atoms (64)
+## Md.6 — Belge yöneticileri ve arşiv personeli (4)
+A003 Md6/1: designate Institution Document Manager and Unit Document Managers; optional additional document managers per subunit.
+A004 Md6/2: assign sufficient qualified staff for archive/document-management work according to archival methods/techniques.
+A005 Md6/3: preference for vocationally trained staff.
+A006 Md6/4: institution takes measures to develop staff professional knowledge/skills.
 
-B01 | CORR | all school official correspondence follows current 2020 regulation | evidence=source snapshot | impact=L3
-B02 | CORR | electronic and physical correspondence are distinct delivery/signature modes | evidence=mode | impact=L2
-B03 | CORR | electronic record uses secure electronic signature where required | evidence=e-signature | impact=L3
-B04 | CORR | physical record uses wet signature where electronic path not used/available | evidence=signature | impact=L3
-B05 | CORR | document must identify sending administration | evidence=header | impact=L3
-B06 | CORR | DETSIS/current institutional identity data must drive sender identity where applicable | evidence=identity mapping | impact=L3
-B07 | CORR | every outgoing official document requires a number/record identity | evidence=number | impact=L3
-B08 | CORR | file-plan component must be represented in document number/classification | evidence=file code | impact=L3
-B09 | CORR | document date is mandatory metadata | evidence=date | impact=L3
-B10 | CORR | electronic signature time/date must be preserved | evidence=signature timestamp | impact=L3
-B11 | CORR | document subject must be present and concise | evidence=subject | impact=L2
-B12 | CORR | addressee/muhatap must be explicit | evidence=recipient | impact=L3
-B13 | CORR | prior related correspondence is represented through ilgi/reference section | evidence=reference links | impact=L2
-B14 | CORR | body must be clear, concise and grammatically compliant | evidence=content validation/manual review | impact=L1
-B15 | CORR | attachment list must match actual attachments | evidence=attachment validation | impact=L3
-B16 | CORR | distribution list differentiates action and information recipients where applicable | evidence=distribution | impact=L2
-B17 | CORR | signature block must match authorized signatory | evidence=authority check | impact=L3
-B18 | CORR | delegated signature requires delegated-authority representation | evidence=delegation record | impact=L3
-B19 | CORR | acting/vekil signatory must be validated against current assignment | evidence=assignment | impact=L3
-B20 | CORR | approval/OLUR documents use approval chain, not ordinary outgoing-signature chain | evidence=approval workflow | impact=L3
-B21 | CORR | preparer/paraf chain must be recorded where required | evidence=paraf | impact=L2
-B22 | CORR | coordinator opinions/parafs must be captured for multi-unit matters where required by institution authority rules | evidence=coordination | impact=L2
-B23 | CORR | legal basis cited in approval should be machine-linkable to legal source | evidence=legal link | impact=L2
-B24 | CORR | document template is separate from business rule; template change does not rewrite completed documents | evidence=template version | impact=L2
-B25 | CORR | electronic document authenticity/integrity must remain verifiable | evidence=signature/hash | impact=L3
-B26 | CORR | signed electronic record cannot be silently edited | evidence=immutable signed blob | impact=L3
-B27 | CORR | correction after signature creates a traceable new/corrective record rather than mutating history | evidence=version/audit | impact=L3
-B28 | CORR | incoming records receive registration/tracking identity | evidence=incoming id | impact=L3
-B29 | CORR | incoming physical document should be associated with electronic tracking when digitized/registered | evidence=scan/index | impact=L2
-B30 | CORR | received electronic documents preserve original metadata/signatures | evidence=original package | impact=L3
-B31 | CORR | routing/havale must identify responsible unit/person | evidence=routing record | impact=L2
-B32 | CORR | deadline-bearing incoming documents create due-date controls | evidence=deadline | impact=L3
-B33 | CORR | urgent/günlü status must be retained and surfaced | evidence=priority flag | impact=L3
-B34 | CORR | confidentiality level must be retained during routing | evidence=classification | impact=L3
-B35 | CORR | restricted correspondence requires access control | evidence=ACL | impact=L3
-B36 | CORR | personal/sensitive correspondence should not be exposed beyond authorized roles | evidence=ACL | impact=L3
-B37 | CORR | KEP/electronic delivery evidence must be retained when used | evidence=delivery receipt | impact=L3
-B38 | CORR | physical delivery evidence must be retained when proof of service/receipt is required | evidence=delivery receipt | impact=L3
-B39 | CORR | return/rejection reason must be recorded for nonconforming correspondence | evidence=rejection reason | impact=L2
-B40 | CORR | document attachments inherit appropriate confidentiality/access restrictions | evidence=attachment ACL | impact=L3
-B41 | CORR | attachment count/name/version must be bound to signed document | evidence=manifest | impact=L3
-B42 | CORR | link-based electronic attachment must remain retrievable for required period or be captured in record package | evidence=package | impact=L3
-B43 | CORR | outgoing document must be archived with its final signed version | evidence=final record | impact=L3
-B44 | CORR | incoming document and reply must be relationally linked | evidence=thread/case link | impact=L2
-B45 | CORR | official correspondence belongs to a file/transaction context, not isolated storage | evidence=case/file | impact=L2
-B46 | CORR | system should prevent use of repealed 2015 official-correspondence regulation as active authority | evidence=source status | impact=L3
-B47 | CORR | current authority is 09.06.2020 Decision 2646 / RG 10.06.2020-31151 | evidence=legal source | impact=L3
-B48 | CORR | source URL and regulation version are stored with generated compliance rule | evidence=source_url | impact=L2
-B49 | CORR | source snapshot is preserved for historical document generation | evidence=legal_snapshot | impact=L2
-B50 | CORR | future regulation change creates staging diff, not direct mutation | evidence=legal_change | impact=L3
-B51 | CORR | future-approved change applies only to future/pending correspondence | evidence=effective rule version | impact=L3
-B52 | CORR | completed correspondence remains immutable under historical rule version | evidence=history | impact=L3
-B53 | CORR | template validation should ensure required structural fields exist | evidence=template validator | impact=L2
-B54 | CORR | role authorization should block unauthorized signature | evidence=RBAC | impact=L3
-B55 | CORR | role authorization should block unauthorized approval | evidence=RBAC | impact=L3
-B56 | CORR | delegation expiry blocks further delegated signatures | evidence=delegation end | impact=L3
-B57 | CORR | organizational change should not retroactively alter prior header/signature metadata | evidence=historical snapshot | impact=L3
-B58 | CORR | outgoing number uniqueness is enforced within configured numbering scope | evidence=unique constraint/business check | impact=L3
-B59 | CORR | incoming number/reference values from external institution are preserved exactly as received | evidence=source metadata | impact=L2
-B60 | CORR | audit trail records creation, paraf, signature, dispatch, receipt, routing and closure | evidence=audit log | impact=L3
-B61 | CORR | printout of electronic document is not treated as original electronic signature container unless regulation permits certified copy treatment | evidence=record type | impact=L3
-B62 | CORR | certified/aslı gibidir copy workflow is distinct from original-record workflow | evidence=copy certification | impact=L3
-B63 | CORR | any unresolved exact paragraph mapping remains staging-only until final verification pass | evidence=article_ref_status | impact=L3
-B64 | CORR | annual/tenant-specific imza-yetki rules are subordinate parameters and cannot override regulation hierarchy | evidence=authority hierarchy | impact=L3
+## Md.7 — Gizlilik (3)
+A007 Md7/1: confidentiality continues until formally removed.
+A008 Md7/2: confidentiality continues after transfer to Presidency; Presidency decides removal after institution opinion; declassification annotation required.
+A009 Md7/3: transferred-record declassification process follows Presidency directive.
 
-## Counts
-- archive atoms: 62
-- official-correspondence atoms: 64
-- total atomized: 126
-- exact article anchors directly confirmed this pass: ARCHIVE Md.10/1-5 plus current-regulation publication identities; remaining article/paragraph mapping flagged for final cross-check where not directly recovered from primary full text in machine-readable form.
+## Md.8 — Arşivlerden yararlanma (7)
+A010 Md8/1: units may temporarily obtain archive records for examination without removing outside institution; return after review.
+A011 Md8/2: archive record request uses EK-1 Belge/Dosya İstek Formu.
+A012 Md8/3: archive sets examination/use period; extension possible when authorized.
+A013 Md8/4: original archive document cannot leave archive/location; copy or on-site authorized expert review only for service/right-proof needs.
+A014 Md8/5: electronic records accessed within authorization; unauthorized request requires unit-chief permission and document-manager mediation.
+A015 Md8/6: regular archive-use records/logs must be kept.
+A016 Md8/7: research-open archives follow Presidency-prepared, Presidential-Decision rules.
+
+## Md.9 — Arşivlerin oluşturulması (5)
+A017 Md9/1: central organization establishes Kurum Arşivi; taşra/bölge/yurtdışı establish Merkezi Arşiv.
+A018 Md9/2: units may create Birim Arşivi for active/current records.
+A019 Md9/3: archive premises consider TS13212 standard.
+A020 Md9/4: retention periods in institution/central/unit archive are defined by retention plans.
+A021 Md9/5: electronic information/documents are kept in electronic archive supporting access, retention, disposal and transfer.
+
+## Md.10 — Dosya kodu (5)
+A022 Md10/1: file code follows institutional file plan and its rules.
+A023 Md10/2: multi-subject document uses dominant-subject code; copy may also go to other relevant file.
+A024 Md10/3: incoming document code is not automatically referenced for reply/file classification.
+A025 Md10/4: one transaction’s continuation/part cannot be split into different code merely because separately defined.
+A026 Md10/5: file code is mandatory EBYS metadata.
+
+## Md.11 — Belgelerin dosyalanması (9)
+A027 Md11/1: subject files opened when first document appears and closed at year end; long cases close on completion.
+A028 Md11/2: all transaction documents filed chronologically from initiating to closing document together with interests/attachments.
+A029 Md11/3: same-code density may be split geographically/alphabetically/chronologically unless file plan exception exists.
+A030 Md11/4: sparse special-code files may merge upward/General file; labels must be redone.
+A031 Md11/5: each folder gets EK-2 content list for quick identification/access.
+A032 Md11/6: content-list record uses each transaction’s latest document; listing begins from oldest document after ordering is complete.
+A033 Md11/7: EBYS records stored according to defined hierarchy and file codes.
+A034 Md11/8: file codes are also location identifiers in storage.
+A035 Md11/9: film/photo/record/sound/video and other special media may be organized by different systems/processes.
+
+## Md.12 — Dosya etiketi (1)
+A036 Md12/1: folder label includes institution/logo, unit name/code, file code, subject, year and special info/code where present; evidence=EK-3.
+
+## Md.13 — Devre hazırlanma / annual conformity control (8)
+A037 Md13/1: each January previous-year folders undergo conformity control.
+A038 Md13/1-a: verify filing-rule compliance.
+A039 Md13/1-b: verify each transaction document is with its attachments.
+A040 Md13/1-c: verify chronological ordering by latest transaction-document date, oldest to newest.
+A041 Md13/1-ç: verify labels.
+A042 Md13/1-d: verify content lists and complete deficiencies.
+A043 Md13/2: confidentiality indication on folder label with highest confidentiality level; secret folders handled normally during classification/placement.
+A044 Md13/3-4: conformity control jointly by relevant unit staff + unit document manager; EBYS document-file relationship/code errors are checked by document manager and corrected.
+
+## Md.14 — Belgelerin arşivlere devri (4)
+A045 Md14/1: closed + conformity-checked folders transfer to archive in February each year.
+A046 Md14/2: standalone book/brochure/blank form/material not an attachment is not transferred.
+A047 Md14/3: transfer sequence determined by agreement with units.
+A048 Md14/4: folder content lists are reference for transfer.
+
+## Md.15 — Arşivde düzenleme (8)
+A049 Md15/1: preserve original order based on structure formed at transaction time.
+A050 Md15/2: allocate archive space considering units, record density and retention periods.
+A051 Md15/3: place folders by placement plan and produce placement scheme.
+A052 Md15/4: shelf left-to-right, compartment top-to-bottom order.
+A053 Md15/5: placement begins top-left of first left shelf; each shelf group numbered.
+A054 Md15/6: consider file codes/series; small-to-large number placement.
+A055 Md15/7: special media use type-appropriate shelving/placement.
+A056 Md15/8: EBYS preserves document hierarchy and file integrity.
+
+## Md.16 — Presidency transfer (8)
+A057 Md16/1: Presidency decides transfer of archival records held by obligated institutions.
+A058 Md16/2: after appraisal, records designated archival in retention plan are separated for transfer.
+A059 Md16/3: folders whose structure was broken during appraisal are re-filed by file code.
+A060 Md16/4: transfer candidates pass Md13 conformity control.
+A061 Md16/5: use EK-4 Archive Record Transfer-Delivery and Inventory Form; notify Presidency with proposed transfer date/method; Presidency may inspect on site.
+A062 Md16/6: finalized transfer occurs with special registers/digital images within max one year.
+A063 Md16/7: preserve current order; package in numbered boxes appropriate to type and deliver securely under document-manager coordination.
+A064 Md16/8: electronic archival record hierarchy/metadata binding preserved; rebuild if absent; organize by subject/vaka file model as prescribed.
+
+## Md.17 — Ayıklama/imha location and basis (4)
+A065 Md17/1: except privileged institutions, unit archives do not conduct appraisal/destruction; institution/central archives do.
+A066 Md17/2: older-year records have priority.
+A067 Md17/3: destruction of non-retainable records requires final Appraisal and Destruction Commission decision, subject to Md21.
+A068 Md17/4: e-Archive disposition performed through system according to retention plans and Regulation.
+
+## Md.18 — Appraisal prohibition (1)
+A069 Md18/1: active records, retention-unexpired records, or litigation-subject records cannot be appraised/destroyed until period expires and/or case ends.
+
+## Md.19 — Commission (2)
+A070 Md19/1: 5-person commission = responsible unit chief or document-manager chaired + archive staff + 2 knowledgeable representatives assigned by relevant unit chief.
+A071 Md19/2: taşra/bölge/yurtdışı staff shortage allows commission minimum 3 persons.
+
+## Md.20 — Commission operation (3)
+A072 Md20/1: commission starts at beginning of March each year.
+A073 Md20/2: full membership meeting; majority vote; doubt = decision to retain.
+A074 Md20/3: rejected-for-destruction records re-evaluated in later years.
+
+## Md.21 — İmha listeleri / finality (7)
+A075 Md21/1: prepare EK-5 Destruction List; same-type records may use list showing types/years while preserving samples.
+A076 Md21/2: every page signed by commission chair and members.
+A077 Md21/3-a: central organization list becomes final after Presidency favourable opinion + top-manager/authorized-person approval.
+A078 Md21/3-b: taşra/bölge/yurtdışı list becomes final after institution-archive favourable opinion + highest unit chief/authorized-person approval.
+A079 Md21/4-5: approval specifies destruction method; records remain orderly until process is final.
+A080 Md21/6: destruction witnessed and a record/minutes prepared.
+A081 Md21/7: destruction lists, minutes and related documents kept 10 years.
+
+## Md.22 — Destruction methods (3)
+A082 Md22/1: destroy so reading/viewing is impossible, then recycle.
+A083 Md22/2: special record type follows its own destruction legislation.
+A084 Md22/3: e-Archive record removed from system so viewing/reading/use becomes impossible.
+
+## Md.23 — Digitisation (8)
+A085 Md23/1: incoming paper may be scanned with attachments into EBYS to preserve transaction/file integrity.
+A086 Md23/2: relationships among digitized, electronic and physical records are preserved.
+A087 Md23/3: archival-quality paper may be digitized for single-copy rescue, prevention of wear, disaster-risk protection, efficient use.
+A088 Md23/4: infrequently used records that will be destroyed after retention do not undergo digitization.
+A089 Md23/5: digital images remain linked to metadata.
+A090 Md23/6: digitization under archive/document-management unit knowledge/coordination; independent unit applications forbidden.
+A091 Md23/7: TS13298 considered in digitization.
+A092 Md23/8: digitization follows Presidency procedures/principles.
+
+## Md.24 — File and retention plans (3)
+A093 Md24/1: institution prepares file + retention plans under responsible unit coordination and implements after Presidency favourable opinion.
+A094 Md24/2: file plan reflects organizational structure/functions; retention plan reflects administrative/financial/legal/historical valuation.
+A095 Md24/3: Standard File Plan mandatory; special media not covered require separate retention plan.
+
+## Md.25 — Inspection (2)
+A096 Md25/1: Presidency audits legal/regulatory compliance of document/archive services and EBYS suitability to document/archive processes.
+A097 Md25/2: institution inspection units and institution document managers audit institutional document/archive processes under current law.
+
+## Md.26–29 — Reporting/coordination (4)
+A098 Md26/1: annual document/archive activity information reported to Presidency in January of following year using Presidency format/calendar.
+A099 Md27/1: Presidency may purchase private archival records when needed.
+A100 Md28/1: private archives/archive records cannot be taken abroad without Presidency permission.
+A101 Md29/1: institutions request Presidency opinion on implementation uncertainties.
+
+## Md.30 — Abolished/transferred/privatized bodies (3)
+A102 Md30/1: if records already transferred to Presidency, Presidency performs appraisal/destruction after institution closure.
+A103 Md30/2: organizational change → records transferred to institution that will continue activity.
+A104 Md30/3: obligations performed by superior/transferee body or commission formed at privatization as applicable.
+
+## Md.31–35 + transitional (6)
+A105 Md31/1: confiscated record whose confiscation judgment is final is delivered to Presidency within 6 months after judgment finality.
+A106 Md32/1: 16.05.1988 / RG19816 Archive Regulation repealed — block as active authority.
+A107 Md33/1: institution-specific archive directive may be prepared with Presidency favourable opinion, not contrary to Regulation; six-month transition from entry into force.
+A108 Geçici Md1/1: Ottoman-script archival records were to be transferred within two months without appraisal/destruction and without inventory form, using delivery minutes.
+A109 Md34/1: regulation entered into force on publication.
+A110 Md35/1: executed by President of State Archives.
+
+### Archive exact count: 110
+
+# B — RESMÎ YAZIŞMALAR — CURRENT PRIMARY TEXT CONFIRMED, PARTIAL DEEPENING (not added to V12 110-count)
+Source: 09.06.2020 Decision 2646 / RG 10.06.2020-31151.
+
+Confirmed article blocks in this pass:
+- Md1: electronic/physical official-writing scope and all public bodies.
+- Md2: legal basis.
+- Md3: chain of custody, archive signature, document, DETSIS, EBYS, electronic approval, electronic/physical environment, daily log, secure e-signature, institutional record system, official correspondence, Standard File Plan, metadata, authorized authority, timestamp, mandatory physical circumstance definitions.
+- Md4/1-2: electronic-first correspondence using e-Yazışma compliant secure signature; signed electronic record not re-signed by wet signature; physical mode only in mandatory/extraordinary cases.
+- Md5/1-2: one electronic copy; mandatory/extraordinary physical documents at least two copies with parafed copy retained by preparer administration.
+- Md6/1-3: A4 basis; attachment formats/sizes may differ; one-sided upper letter in mandatory physical mode, attachments may be double-sided.
+- Md7/1: Times New Roman 12 or Arial 11; reductions to 9/8 under stated conditions; attachments may differ.
+- Md8/1: 1.5 cm top/left/right writing area; logo option changes top gap to 0.5 cm.
+- Md9: institutional logo placement and max-two-logo rules.
+- Md10/1-6: heading identity/format; provincial/district rules; regional/direct-central-linked formatting; DETSIS headings govern.
+- Md11/1-3: document number mandatory; E/Z/O prefix by environment; DETSIS no + SDP code + record no; EBYS uniqueness; extraordinary records later uploaded with metadata.
+- Md12/1-4: date formatting; electronic timestamp date is document date; mandatory/extraordinary date at signature/registration; minutes/report/service receipt may place date at end.
+- Md13/1-2: subject location/format + concise-content requirement.
+- Md14/1-6: recipient identity, DETSIS, address rules, direct vs parent-through dispatch, provincial/foreign-mission rules, multi-recipient “DAĞITIM YERLERİ”.
+- Md15/1-10: reference/ilgi location, alignment, overflow, ordering, identifier content, punctuation, missing referenced document attachment, real-person application, anonymous/undated application expression.
+- Md17/1-14: signature placement/naming, secure e-signature, archival signature capability, personal personnel requests exception, physical signature rules, authority/delegation, vekâlet, multi-signature arrangement, report signatures/parafs/seals, attachment signing/paraf/sealing, distributed physical copies.
+- Md18/1-6: attachment heading/list/numbering, accepted electronic formats, separate attachment list, omitted-attachment marker, separate preservation of security/technical attachments linked to upper letter.
+- Md19/1-3: distribution section; “Gereği/Bilgi” distinction; long distribution list/separate attachment.
+- Md20/1-4: OLUR proposal + approval secure-signature/physical fallback; approval layout/date; physical layout; multi-level prior suitable-opinion workflow.
+
+These correspondence atoms will be continued from Md21 onward in V13 using the same current primary PDF; no unsupported inferred atom is counted here.
+
+## V12 accounting
+- exact current Archive Regulation atoms counted: 110
+- official correspondence confirmed/started but not added to V12 exact atom count: Md1-20 blocks above
 - ARTICLE_VERIFIED increment: 0
 - migration: 0
+- legacy master remains unavailable for exact workflow_id binding.
 
-## Final-pass checklist
-- Resolve every `FINAL_CROSSCHECK_REQUIRED` item against primary current full text.
-- Check 2019 archive amendments/current consolidated status.
-- Check 2020 correspondence amendments/current consolidated status.
-- Reject any atom contradicted by current higher authority.
-- Bind only after exact legacy `workflow_id` is available.
+## Publication model
+STAGING -> legal diff/impact -> Super Admin approval -> future/pending workflows only. Completed archive/correspondence history remains immutable with legal snapshot.
