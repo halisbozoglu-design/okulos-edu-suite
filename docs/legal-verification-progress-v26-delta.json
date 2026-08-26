@@ -1,0 +1,10 @@
+{
+  "updated_on":"2026-08-26",
+  "base_large_batch_atom_total":2835,
+  "completed_focus":{"legal_family":"OPEN_TRANSPORT_SPED_EXACT_DEEPENING_100PLUS_V26","staging_doc":"docs/legal-open-transport-sped-exact-deepening-batch-100plus-v26.md","atomized_rule_count":120,"migration_count":0,"source_urls":["https://resmigazete.gov.tr/eskiler/2024/10/20241022-2.htm","https://mevzuat.meb.gov.tr/dosyalar/2255.pdf","https://mevzuat.meb.gov.tr/dosyalar/1657.pdf","https://resmigazete.gov.tr/eskiler/2024/08/20240801-2.htm","https://resmigazete.gov.tr/eskiler/2018/07/20180707-8.htm"]},
+  "large_batch_atom_total_after_delta":2955,
+  "article_verified":{"base":410,"increment":4,"result":414,"master_total":2229,"percent":18.5734,"batch_doc":"docs/legal-article-verified-batch-v26.md","workflow_ids":["HB-1569","HB-1968","HB-1725","HB-1726"]},
+  "withheld_from_article_verified":[{"workflow_id":"HB-1724","reason":"current transfer timing wording/amendment chain requires reconciliation"},{"workflow_id":"HB-2056","reason":"exact current paragraph not promoted in this pass"},{"workflow_id":"HB-2059","reason":"exact current paragraph not promoted in this pass"},{"workflow_id":"HB-2060","reason":"exact current paragraph not promoted in this pass"},{"workflow_id":"HB-2061","reason":"exact current paragraph not promoted in this pass"}],
+  "migration_count":0,
+  "next_focus":{"minimum_batch":100,"goal":"Continue exact master binding with strong candidates in current school administration, boards/zumre, open education and transport; preserve no-double-count rule and raise ARTICLE_VERIFIED only with exact current clause matches."}
+}
