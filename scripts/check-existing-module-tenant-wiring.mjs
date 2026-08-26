@@ -12,7 +12,7 @@ const currentRoutePrefixes = new Set([
   '/dashboard','/management','/calendar','/academic-years','/classes','/classrooms','/curriculum','/duty-book',
   '/legislation','/norm-analysis','/norm-settings','/payroll','/payroll-rules','/personnel-admin',
   '/personnel-field-settings','/personnel-import','/quran-groups','/room-assignment','/schedule',
-  '/timetable','/schedule-optimization','/schedule-scoped-rules','/schedule-scenario-comparison','/schedule-reports',
+  '/timetable','/schedule-ejection-chain','/schedule-optimization','/schedule-scoped-rules','/schedule-scenario-comparison','/schedule-reports',
   '/schedule-archive','/schedule-history','/schedule-preparation','/schedule-rules','/schedule-solver',
   '/schedule-validation','/settings','/settings-permissions','/settings-task-roles','/substitutes',
   '/super-admin','/super-admin-tenants','/super-admin-course-pool','/notifications',
@@ -21,6 +21,7 @@ const currentRoutePrefixes = new Set([
 const featureFamily = new Map([
   ['/academic-years','/calendar'],
   ['/timetable','/schedule'],
+  ['/schedule-ejection-chain','/schedule'],
   ['/schedule-optimization','/schedule'],
   ['/schedule-scoped-rules','/schedule'],
   ['/schedule-scenario-comparison','/schedule'],
