@@ -1,12 +1,13 @@
 # Current DB State
 
-Updated: 2026-08-25
+Updated: 2026-08-26
 
 ## Cross-chat handoff rule
-- This file is the authoritative continuation point for MTAL/MESEM curriculum work.
+- This file is the authoritative continuation point for MTAL/MESEM curriculum and schedule-engine work.
 - Read Cloud live state first; never re-import completed variants unless an audit proves them wrong.
 - Preserve source provenance, field/branch lineage, protocol/regional variants and cohort applicability.
 - Cloud-first, forward-only, idempotent migrations; commit the same SQL to `supabase/migrations`.
+- For detailed timetable continuation, also read `docs/SCHEDULE_ENGINE_HANDOFF.md`.
 
 ## Curriculum phase status: CLOSED
 - MTAL canonical catalog: 56 fields / 119 branches.
@@ -41,6 +42,31 @@ These are known states, not forgotten completeness errors:
 - Curriculum metadata normalization completed without changing course/profile content; commit `51f436a3d3f81f0ec60e8116734d83386e6b135e`.
 - Catalog status/completeness exception layer completed; commit `8ee5065cd83aa399c52cf6b462dea8ad24ecdadf`.
 
+## Weekly timetable / hybrid distribution engine — current state
+- Goal: Bilsa-level manual ease + automatic official data + HARD/SOFT/OFF constraints + AI/solver hybrid optimization + manual override without silent rule violations.
+- Existing engine already has multi-scenario generation, repair/backtracking, hard-rule audit, room assignment, scoring, restore points and scenario application.
+- Solver UI was simplified to an operational flow: Preparation → Rules → Fast Distribution → Compare → Manual Edit.
+- Fast mode generates 4 candidates; advanced mode supports 4/8/12 candidate runs. Repair/rescore is parallelized client-side with `Promise.all` where safe.
+- Before applying a scenario, an automatic restore point is created.
+- Unplaced items now receive deterministic repair suggestions: cause, recommended action, whether a HARD rule must remain protected, and estimated intervention category.
+- Hybrid compute registry is live in Cloud. Only the real built-in `DB-native` worker is registered by default; no fake CPU/GPU worker entries are created.
+- Worker model supports DB/CPU/GPU, capability metadata, health/heartbeat, max parallelism, load and latency. `AUTO/HYBRID` selection can use external workers later, with DB-native fallback.
+- Current DB-native worker audit: HEALTHY, `max_parallel=4`, load 0, recommended=true.
+- Compute/orchestration migration: `20260826001000_schedule_hybrid_compute_orchestration.sql`, commit `0955efa5219a353c1d3fc5539ba2171c44566742`.
+- Solver UI commit: `af24967bfc65b6b8d71a8bcbeb47ba67148754cd`.
+- Safe manual-move backend migration created: `20260826002000_schedule_safe_manual_move.sql`, commit `396b680b3a1e12c050683adc2b57a3c41589a742`.
+- Manual move RPCs are designed to preview and apply moves through the same DB constraint path, with restore point before apply; next UI step is drag/drop wiring in `src/routes/schedule.tsx`.
+
+## CI / repository guards — latest
+- Historical duplicate migration versions already existed in repo: `20260825011500` and `20260825013000` each had two legacy files. Applied files were not renamed or edited.
+- `scripts/check-migrations.mjs` now has a narrow exact-file legacy allowlist; any new duplicate migration version still fails CI. Commit: `ad20232f95a1f1d8786af2e8d5e95e4bc3d5516d`.
+- `/super-admin-course-pool` was classified under the existing `/super-admin` feature family without changing applied migrations. Commit: `0031fa63a7cbf60e8a9e49c1ab3ecbcc9ba38ea4`.
+- At handoff time, CI run after that classification was still in progress; check latest Actions status before claiming green.
+
 ## Next phase
-Do not reopen MTAL/MESEM curriculum ingestion unless a new official source or an audit finding requires it.
-Next workstream: audit the general weekly course schedule engine across all school types, grades, program variants, electives, group rules, transition cohorts and special cases; then move to norm kadro, teacher/administrator additional lesson rules, collective agreements, Tebliğler Dergisi and Resmî Gazete-based min/max teaching load logic.
+1. Finish CI to full green including production build + TypeScript.
+2. Wire `schedule.tsx` drag/drop to safe preview/apply RPCs; show allowed/blocked target feedback, reason text, and one-click undo/history.
+3. Add safe swap/multi-move if preview proves deterministic under existing constraints.
+4. Keep UI default simple; advanced optimization/compute controls remain collapsible.
+5. Do not pretend Lovable Cloud exposes selectable physical GPU unless a real external GPU worker is connected and heartbeat-confirmed.
+6. Do not reopen MTAL/MESEM curriculum ingestion unless a new official source or audit finding requires it.
