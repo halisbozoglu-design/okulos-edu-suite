@@ -272,139 +272,32 @@ Sonraki CI'de şunlar geçti:
 - authenticated entry gate
 - route access map
 
-## 13. ŞU ANKİ CI AÇIK SORUNU — ÖNCELİK 1
+## 13. Tamamlanan manuel UX paketi (2026-08-26 son tur)
 
-Son çalıştırılan CI:
+- Güvenli drag/drop: hedef hücrede `preview_schedule_move_v1` ile canlı hard doğrulama (amber/emerald/red), stale cevap koruması, drop anında yeniden preview.
+- Dolu hücrede tek kilitsiz ders varsa `preview_schedule_swap_v1` + `swap_schedule_slots_v1` ile onaylı takas.
+- `Son Hamleyi Geri Al` (restore point) ve `/schedule-history` bağlantısı.
+- Mobil agenda/kart görünümü, masaüstü grid `hidden md:block`.
+- Öğretmen / sınıf / ders-branş / derslik filtreleri (AND).
+- Çoklu seçim + toplu kilitle/kilidi aç.
+- `source_kind` kaynak etiketi (Manuel / Sesli / İçe Aktarım).
+- Görünüm modu: Genel / Öğretmen / Sınıf / Derslik / Branş; mod seçiminde diğer kapsam filtreleri temizlenir.
+- Yerleşmeyen/eksik saat havuzu: `schedule_assignment_options.remaining_hours > 0`; tıklayınca editör ilgili atama ile açılır, kayıt yine `upsert_schedule_slot_v2` üzerinden.
+- Klavye kısayolları: Ctrl/Cmd+Z geri al, Escape seçim/preview temizle, Ctrl/Cmd+L seçilileri kilitle.
+- Performans: grid hücrelerinde per-cell filtre kaldırıldı; `day-period` anahtarlı memoized Map kullanılıyor.
+- Heartbeat RPC repoya forward migration olarak eklendi: `heartbeat_schedule_compute_worker_v1` (service_role şartı, HEALTHY/DEGRADED, WORKER_NOT_FOUND).
+- Solver compute kartı harici worker tipi/health/yük/latency gösteriyor; recommended=false olan worker "bayat/çevrimdışı" olarak işaretleniyor. GPU yoksa GPU ima edilmiyor.
 
-- Run: `32901982644`
-- Commit: `0031fa63a7cbf60e8a9e49c1ab3ecbcc9ba38ea4`
-- Sonuç: FAILURE
+## 14. Kalan açık işler
 
-Hata **Timetable authority check** aşamasında.
-
-Guard şu fonksiyonların son tanımını eski authoritative migration dosyalarında bekliyor, fakat repo'da daha sonra oluşturulmuş migration'lar aynı fonksiyonları tekrar tanımlamış:
-
-- `generate_schedule_scenarios_v2`
-  - son tanım: `20260821094620_dd216589-7cc9-42b0-86bd-576c5074d9f7.sql`
-  - guard bekliyor: `20260821021000_schedule_phase3_rpc_tenant_guards.sql`
-
-- `get_schedule_scenario_hard_issues_v2`
-  - son tanım: `20260821094548_d494d34a-aceb-44aa-abba-54f1073092b9.sql`
-  - guard bekliyor: `20260821015500_schedule_phase3_authority_closure.sql`
-
-- `get_schedule_integrity_report`
-  - son tanım: `20260821094548_d494d34a-aceb-44aa-abba-54f1073092b9.sql`
-  - guard bekliyor: `20260821015500_schedule_phase3_authority_closure.sql`
-
-**Yapılacak:** `scripts/check-timetable-authority.mjs` incelenmeli. Eski migration'lar değiştirilmemeli. Gerçek authoritative/latest safe definition hangisiyse guard forward-only mantıkla onunla senkronlanmalı. Guard'ı tamamen gevşetmek YASAK; yalnız doğru authority chain tanımlanmalı.
-
-Bu kapanmadan CI build / generated routes / TypeScript adımlarına ulaşmıyor.
-
-## 14. CI authority kapanınca hemen yapılacak doğrulama
-
-Authority guard düzeltildikten sonra CI'nin şu aşamalara kadar yeşil gitmesi şart:
-
-- timetable edge-slot policy
-- schedule Phase 2 closure
-- schedule Phase 3 closure
-- Phase 4 tests
-- Phase 5 reporting
-- auth flow
-- delegated permission flow
-- production build
-- generated route tree consistency
-- `tsc --noEmit`
-- forward migration policy
-
-Özellikle `schedule-solver.tsx` değişikliklerinin build ve TypeScript sonucu burada kesinleşmeli.
+- Gerçek dış CPU/GPU worker bağlantısı, failover ve AUTO/HYBRID chooser'ın tamamlanması.
+- Sıkışma önerilerinin tek tık uygulanabilir tam akışa dönüştürülmesi.
+- Büyük okullarda grid virtualization ve ileri performans polisajı.
 
 ## 15. Migration kuralları — DEĞİŞMEZ
 
 - Lovable Cloud production ana DB.
 - Cloud first → audit → repo migration.
 - Applied migration dosyası değiştirilemez.
-- Forward-only migration.
-- Mümkün olduğunca idempotent.
-- Migration'lar minimum token / minimum SQL tekrarına göre yazılmalı.
-- Lovable AI agent/chat token harcanmamalı; SQL doğrudan yazılıp cloud'a uygulanmalı.
+- Forward-only, mümkün olduğunca idempotent migration.
 - Eski duplicate migration dosyaları yeniden adlandırılmamalı.
-
-## 16. Bu handoff'tan sonra önerilen devam sırası
-
-**ÖNCELİK 1 — CI authority:**
-
-- `scripts/check-timetable-authority.mjs` gerçek son authoritative tanımlarla senkronla.
-- CI'yi build + TypeScript sonuna kadar yeşil yap.
-
-**ÖNCELİK 2 — Manuel Bilsa rahatlığı:**
-
-- `schedule.tsx` → production'a eklenmiş safe move preview/apply backend'ine bağla.
-- Drag/drop + preview + hard reason + safe apply + restore point.
-- Dolu hücre swap/takas desteğini transaction-safe yap.
-- Undo/restore UX.
-
-**ÖNCELİK 3 — Hibrit dağıtım orkestrasyonu:**
-
-- DB-native mevcut.
-- Gerçek dış CPU/GPU worker kontratı + heartbeat.
-- AUTO/HYBRID worker chooser.
-- N-aday dağıtımı ve ortak rescore.
-- Failover.
-
-**ÖNCELİK 4 — Sıkışma çözüm motoru:**
-
-- Mevcut diagnostic + suggestion kayıtlarını kullanıcıya anlaşılır kartlarla göster.
-- HARD kurala gevşetme önermeme guard'ı.
-- Önerinin etkisini açıklama.
-- Tek tık öneri uygula → yeniden üret → önce/sonra kalite karşılaştır.
-
-**ÖNCELİK 5 — Son UX polish:**
-
-- Hızlı kullanım ana ekranı.
-- Gelişmiş ayarlar collapsible.
-- Öğretmen/sınıf/derslik/branş görünümleri.
-- Mobil responsive davranış.
-- Klavye kısayolları ve bulk edit.
-- Performans: büyük okulda grid virtualization / memoization.
-
-## 17. Bu sohbeti tekrar yapmama kuralı
-
-Yeni sohbet bu dosyayı okuyup **buradan devam etmeli**. Aşağıdakileri yeniden sıfırdan yapmamalı:
-
-- solver yapısını tekrar keşfetmek,
-- compute registry'yi tekrar kurmak,
-- DB-native worker'ı tekrar eklemek,
-- duplicate migration legacy çiftlerini yeniden çözmek,
-- `/super-admin-course-pool` classification sorununu tekrar çözmek,
-- restore point fikrini yeniden tasarlamak,
-- safe manual move backend'i sıfırdan yazmak.
-
-Önce CI authority açığını kapat, sonra safe drag/drop UI'ya geç.
-
----
-
-## Kısa durum özeti
-
-**Yapıldı:**
-
-- Solver/optimizasyon/preparation/manual UI mimarisi incelendi.
-- Hızlı/Gelişmiş dağıtım UX'i başlatıldı.
-- 4/8/12 aday üretim ve paralel repair/rescore mantığı UI'ya eklendi.
-- Senaryo uygulama öncesi restore point.
-- Hybrid compute registry production'da.
-- DB-native worker healthy / max_parallel=4.
-- Sıkışma/çözüm önerisi backend temel katmanı production'da.
-- Safe manual move backend production'da.
-- İki legacy duplicate migration çifti için dar CI allowlist.
-- Super Admin course-pool route classification.
-
-**Eksik:**
-
-- CI timetable authority guard düzeltmesi.
-- Build + TypeScript son doğrulama.
-- Safe move backend'in `schedule.tsx` drag/drop UI entegrasyonu.
-- Güvenli swap/takas.
-- Gerçek dış CPU/GPU worker bağlantısı.
-- Worker heartbeat/failover/auto-hybrid chooser'ın tamamlanması.
-- Sıkışma önerilerini tek tık uygulanabilir tam çözüm akışına dönüştürme.
-- Son responsive/performance UX polish.
