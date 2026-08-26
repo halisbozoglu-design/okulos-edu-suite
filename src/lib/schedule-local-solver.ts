@@ -1,33 +1,35 @@
 import { supabase } from "@/lib/supabase";
 import { detectLocalScheduleCompute } from "@/lib/schedule-local-compute";
 import { gpuScoreScheduleCandidates } from "@/lib/schedule-gpu-compute";
-import type { LnsStats, LocalSearchStrategy } from "@/lib/schedule-local-solver-core";
+import type { LnsStats, LocalSearchStrategy } from "@/lib/schedule-local-solver-time-core";
 import type { PlanningRelation } from "@/lib/schedule-planning-relations";
 
 export type LocalSolveMode = "AUTO" | "CPU" | "GPU" | "HYBRID" | "DB";
 export type LocalSolveProgress = { worker: number; kind: "CPU" | "GPU"; status: "running" | "done" | "error"; completed: number; total: number; durationMs?: number };
-type Row = { assignment_id: string; teacher_id: string; class_id: string | null; weekday: number; period: number; classroom_id?: string | null; subgroup_id?: string | null; locked: boolean };
+type Row = { assignment_id: string; teacher_id: string; class_id: string | null; weekday: number; period: number; classroom_id?: string | null; subgroup_id?: string | null; schedule_session_id?: string | null; locked: boolean };
 type Candidate = { rows: Row[]; failed: number; complete: boolean; seed: number; strategy?: LocalSearchStrategy; score: { hard: number; medium: number; soft: number }; lns?: LnsStats };
 const strategies: LocalSearchStrategy[] = ["AUTO", "LATE_ACCEPTANCE", "TABU", "SIMULATED_ANNEALING", "GREAT_DELUGE", "VND"];
 
 async function problem() {
-  const [a, l, u, t, c, p, rel, sw] = await Promise.all([
+  const [a, l, u, t, c, p, rel, sw, tm] = await Promise.all([
     supabase.from("schedule_assignment_options").select("teacher_assignment_id,teacher_id,class_id,course_id,assigned_hours"),
-    supabase.from("teacher_schedule").select("teacher_assignment_id,teacher_id,class_id,weekday,period,classroom_id,subgroup_id,locked").eq("active", true).eq("locked", true),
-    supabase.from("teacher_unavailability").select("teacher_id,weekday,period").eq("active", true),
+    supabase.from("teacher_schedule").select("teacher_assignment_id,teacher_id,class_id,weekday,period,classroom_id,subgroup_id,schedule_session_id,locked").eq("active", true).eq("locked", true),
+    supabase.from("teacher_unavailability").select("teacher_id,weekday,period,schedule_session_id").eq("active", true),
     supabase.from("teacher_schedule_constraints").select("teacher_id,max_daily_hours,max_consecutive_hours"),
     supabase.from("course_schedule_rules").select("course_id,block_pattern,max_per_day,prohibited_days,prohibited_periods").eq("active", true),
     supabase.rpc("get_active_schedule_time_profile"),
     supabase.rpc("get_schedule_planning_relations_v1"),
     supabase.rpc("get_schedule_assignment_student_conflict_weights_v2"),
+    supabase.rpc("get_schedule_assignment_time_model_v1"),
   ]);
-  const e = a.error || l.error || u.error || t.error || c.error || p.error || rel.error || sw.error; if (e) throw e;
+  const e = a.error || l.error || u.error || t.error || c.error || p.error || rel.error || sw.error || tm.error; if (e) throw e;
   const prof = p.data as { teaching_days: number[]; periods_per_day: number };
+  const time = new Map((tm.data ?? []).map((x: any) => [String(x.assignment_id), x]));
   return {
     days: prof.teaching_days, periods: prof.periods_per_day,
-    assignments: (a.data ?? []).filter((x: any) => x.teacher_assignment_id).map((x: any) => ({ assignment_id: String(x.teacher_assignment_id), teacher_id: String(x.teacher_id), class_id: String(x.class_id), course_id: String(x.course_id), assigned_hours: Number(x.assigned_hours) })),
-    locked: (l.data ?? []).filter((x: any) => x.teacher_assignment_id).map((x: any) => ({ assignment_id: String(x.teacher_assignment_id), teacher_id: String(x.teacher_id), class_id: x.class_id ? String(x.class_id) : null, weekday: Number(x.weekday), period: Number(x.period), classroom_id: x.classroom_id ? String(x.classroom_id) : null, subgroup_id: x.subgroup_id ? String(x.subgroup_id) : null, locked: true })),
-    unavailable: u.data ?? [], teacherConstraints: t.data ?? [],
+    assignments: (a.data ?? []).filter((x: any) => x.teacher_assignment_id).map((x: any) => { const m:any=time.get(String(x.teacher_assignment_id))??{}; return { assignment_id: String(x.teacher_assignment_id), teacher_id: String(x.teacher_id), class_id: String(x.class_id), course_id: String(x.course_id), assigned_hours: Number(x.assigned_hours), week_pattern:m.week_pattern??"ALL", valid_from:m.valid_from??null, valid_to:m.valid_to??null, term_no:m.term_no==null?null:Number(m.term_no), schedule_session_id:m.schedule_session_id?String(m.schedule_session_id):null, allowed_periods:Array.isArray(m.allowed_periods)?m.allowed_periods.map(Number):[] }; }),
+    locked: (l.data ?? []).filter((x: any) => x.teacher_assignment_id).map((x: any) => ({ assignment_id: String(x.teacher_assignment_id), teacher_id: String(x.teacher_id), class_id: x.class_id ? String(x.class_id) : null, weekday: Number(x.weekday), period: Number(x.period), classroom_id: x.classroom_id ? String(x.classroom_id) : null, subgroup_id: x.subgroup_id ? String(x.subgroup_id) : null, schedule_session_id:x.schedule_session_id?String(x.schedule_session_id):null, locked: true })),
+    unavailable: (u.data??[]).map((x:any)=>({...x,weekday:Number(x.weekday),period:Number(x.period),schedule_session_id:x.schedule_session_id?String(x.schedule_session_id):null})), teacherConstraints: t.data ?? [],
     courseRules: (c.data ?? []).map((x: any) => ({ ...x, block_pattern: Array.isArray(x.block_pattern) ? x.block_pattern.map(Number) : null })),
     planningRelations: (rel.data ?? []).map((x: any) => ({ ...x, weight: Number(x.weight), left_selector: x.left_selector ?? {}, right_selector: x.right_selector ?? {}, parameters: x.parameters ?? {} })) as PlanningRelation[],
     studentConflictWeights: (sw.data ?? []).map((x: any) => ({ left_assignment_id: String(x.left_assignment_id), right_assignment_id: String(x.right_assignment_id), student_weight: Number(x.student_weight), severity_weight: Number(x.severity_weight) })),
