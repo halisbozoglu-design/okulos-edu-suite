@@ -31,6 +31,7 @@ import { Route as QuranGroupsRouteImport } from './routes/quran-groups'
 import { Route as RoomAssignmentRouteImport } from './routes/room-assignment'
 import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ScheduleArchiveRouteImport } from './routes/schedule-archive'
+import { Route as ScheduleEjectionChainRouteImport } from './routes/schedule-ejection-chain'
 import { Route as ScheduleHistoryRouteImport } from './routes/schedule-history'
 import { Route as ScheduleOptimizationRouteImport } from './routes/schedule-optimization'
 import { Route as SchedulePreparationRouteImport } from './routes/schedule-preparation'
@@ -161,6 +162,11 @@ const ScheduleArchiveRoute = ScheduleArchiveRouteImport.update({
   path: '/schedule-archive',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleEjectionChainRoute = ScheduleEjectionChainRouteImport.update({
+  id: '/schedule-ejection-chain',
+  path: '/schedule-ejection-chain',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScheduleHistoryRoute = ScheduleHistoryRouteImport.update({
   id: '/schedule-history',
   path: '/schedule-history',
@@ -281,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
+  '/schedule-ejection-chain': typeof ScheduleEjectionChainRoute
   '/schedule-history': typeof ScheduleHistoryRoute
   '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
@@ -324,6 +331,7 @@ export interface FileRoutesByTo {
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
+  '/schedule-ejection-chain': typeof ScheduleEjectionChainRoute
   '/schedule-history': typeof ScheduleHistoryRoute
   '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
@@ -368,6 +376,7 @@ export interface FileRoutesById {
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
+  '/schedule-ejection-chain': typeof ScheduleEjectionChainRoute
   '/schedule-history': typeof ScheduleHistoryRoute
   '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
@@ -413,6 +422,7 @@ export interface FileRouteTypes {
     | '/room-assignment'
     | '/schedule'
     | '/schedule-archive'
+    | '/schedule-ejection-chain'
     | '/schedule-history'
     | '/schedule-optimization'
     | '/schedule-preparation'
@@ -456,6 +466,7 @@ export interface FileRouteTypes {
     | '/room-assignment'
     | '/schedule'
     | '/schedule-archive'
+    | '/schedule-ejection-chain'
     | '/schedule-history'
     | '/schedule-optimization'
     | '/schedule-preparation'
@@ -499,6 +510,7 @@ export interface FileRouteTypes {
     | '/room-assignment'
     | '/schedule'
     | '/schedule-archive'
+    | '/schedule-ejection-chain'
     | '/schedule-history'
     | '/schedule-optimization'
     | '/schedule-preparation'
@@ -543,6 +555,7 @@ export interface RootRouteChildren {
   RoomAssignmentRoute: typeof RoomAssignmentRoute
   ScheduleRoute: typeof ScheduleRoute
   ScheduleArchiveRoute: typeof ScheduleArchiveRoute
+  ScheduleEjectionChainRoute: typeof ScheduleEjectionChainRoute
   ScheduleHistoryRoute: typeof ScheduleHistoryRoute
   ScheduleOptimizationRoute: typeof ScheduleOptimizationRoute
   SchedulePreparationRoute: typeof SchedulePreparationRoute
@@ -720,6 +733,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScheduleArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule-ejection-chain': {
+      id: '/schedule-ejection-chain'
+      path: '/schedule-ejection-chain'
+      fullPath: '/schedule-ejection-chain'
+      preLoaderRoute: typeof ScheduleEjectionChainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedule-history': {
       id: '/schedule-history'
       path: '/schedule-history'
@@ -879,6 +899,7 @@ const rootRouteChildren: RootRouteChildren = {
   RoomAssignmentRoute: RoomAssignmentRoute,
   ScheduleRoute: ScheduleRoute,
   ScheduleArchiveRoute: ScheduleArchiveRoute,
+  ScheduleEjectionChainRoute: ScheduleEjectionChainRoute,
   ScheduleHistoryRoute: ScheduleHistoryRoute,
   ScheduleOptimizationRoute: ScheduleOptimizationRoute,
   SchedulePreparationRoute: SchedulePreparationRoute,
