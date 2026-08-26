@@ -1,0 +1,25 @@
+{
+  "schema_version_target": 30,
+  "updated_on": "2026-08-26",
+  "base_manifest_schema_version": 29,
+  "binding_master_snapshot": "Mimaros_Master_Legal_Verification_Progress_v12.csv",
+  "latest_reported_master": "Mimaros_Master_Legal_Verification_Progress_v27.csv",
+  "latest_reported_master_available": false,
+  "file_library_binding_master_available": true,
+  "article_verified_before": 390,
+  "article_verified_increment": 6,
+  "article_verified_after": 396,
+  "master_workflow_count": 2229,
+  "article_verified_percent_exact": 17.77,
+  "article_verified_percent_display": 17.8,
+  "verified_workflow_ids": ["HB-1365","HB-1366","HB-1367","HB-1368","HB-1370","HB-1371"],
+  "verification_doc": "docs/legal-article-verified-batch-v22.md",
+  "primary_source": {
+    "title": "Devlet Arşiv Hizmetleri Hakkında Yönetmelik",
+    "official_url": "https://www.devletarsivleri.gov.tr/varliklar/dosyalar/mevzuat/arsivhizmetleri.pdf",
+    "articles": ["5/1-a","19/1-2","10/1","11/1-9","24/3","12/1","21/2","21/7"]
+  },
+  "large_batch_atom_total_after_unmerged_v19_v20_v21": 2455,
+  "migration_count": 0,
+  "note": "First post-390 ARTICLE_VERIFIED increment uses durable File Library master workflow IDs plus exact current primary-source clauses. v12 is used only as the workflow-ID binding snapshot; it is not represented as the latest v27 master. HB-1364/HB-1369/HB-1372/HB-1373 were deliberately not verified because current terminology/timing/clause exactness is insufficient or changed."
+}
