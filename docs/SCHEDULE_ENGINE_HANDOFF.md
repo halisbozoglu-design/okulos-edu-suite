@@ -3,125 +3,90 @@
 Updated: 2026-08-26
 
 ## Purpose
-This is the cross-chat continuation file for Okulos weekly timetable work. Read this before making timetable changes in another project conversation.
+Cross-chat continuation file for Okulos weekly timetable work. Read this before changing the timetable module.
 
 ## Product target
-- Bilsa-like manual ease.
-- Official/automatic data first; manual intervention only when needed.
-- HARD / SOFT / OFF constraints.
-- Hybrid AI + deterministic solver behavior.
-- Multiple candidate distributions instead of one opaque result.
-- When distribution gets stuck: explain why, propose the smallest safe relaxation/action, never silently violate HARD/mevzuat rules.
-- Manual drag/drop remains flexible but every move is checked by the same DB constraint path.
-- Fast by default; advanced controls hidden/collapsible.
+- Bilsa-like manual ease with official/automatic data first.
+- HARD / SOFT / OFF constraints; HARD/mevzuat rules are never silently weakened.
+- Multiple candidate schedules, repair/rescore, reasons and safe suggestions.
+- Manual actions are reversible and validated by the same DB constraint path.
+- CPU/GPU capability is shown only when a real worker exists.
 
-## Existing solver capability verified
-Current DB/functions/UI already support:
-- preparation readiness checks;
-- multi-scenario generation (`generate_schedule_scenarios_v2`);
-- repair/backtracking (`repair_schedule_scenario_v2`);
-- rescore (`rescore_schedule_scenario_v2`);
-- hard integrity/room/staleness applicability checks;
-- scenario application (`apply_schedule_scenario`);
-- restore points (`create_schedule_restore_point`);
-- manual slot upsert (`upsert_schedule_slot_v2`);
-- schedule integrity report;
-- room assignment and scenario comparison screens.
+## Verified core
+Existing DB/UI includes preparation, `generate_schedule_scenarios_v2`, `repair_schedule_scenario_v2`, `rescore_schedule_scenario_v2`, hard/room/stale audits, `apply_schedule_scenario`, restore points, `upsert_schedule_slot_v2`, scenario comparison and reports.
 
-## UX changes made
-`src/routes/schedule-solver.tsx` was changed so the default user path is operational rather than technical:
-1. Hazırlık
-2. Kurallar
-3. Hızlı Dağıt
-4. Karşılaştır
-5. Elle Düzelt
+## Manual schedule UX — completed
+`src/routes/schedule.tsx` now has:
+- safe drag/drop with live DB preview and translated hard-block reason;
+- atomic safe swap with confirmation;
+- one-click undo + history;
+- mobile agenda cards and desktop grid;
+- teacher / class / subject-branch / room filters;
+- General / Teacher / Class / Room / Branch view modes;
+- missing-hour pool from `schedule_assignment_options.remaining_hours`;
+- multi-select + bulk lock/unlock;
+- manual/voice/import source labels;
+- shortcuts: Ctrl/Cmd+Z undo, Esc clear, Ctrl/Cmd+L lock selected;
+- memoized day-period map instead of per-cell `filtered.filter`.
 
-Behavior:
-- default fast run: 4 candidates;
-- advanced run: 4 / 8 / 12 candidates;
-- repair + rescore run concurrently where safe;
-- compute source/status surfaced;
-- unplaced items can show repair suggestions;
-- scenario apply creates restore point first;
-- technical quality weights remain available under advanced settings instead of dominating the page.
+## Solver UX
+`src/routes/schedule-solver.tsx` supports:
+- quick 4-candidate and advanced 4/8/12 candidate runs;
+- Cloud + local compute orchestration;
+- parallel repair/rescore where safe;
+- restore point before applying a scenario;
+- unplaced diagnostics + repair suggestions;
+- external worker type/health/load/latency display;
+- stale heartbeat shown as offline/stale;
+- no fake GPU indication.
 
-Commit: `af24967bfc65b6b8d71a8bcbeb47ba67148754cd`.
+## Compute/worker backend
+Core orchestration migration/commit:
+- `20260825055000_schedule_hybrid_compute_orchestration.sql`
+- `0955efa5219a353c1d3fc5539ba2171c44566742`
 
-## Hybrid compute orchestration
-Cloud migration: `supabase/migrations/20260826001000_schedule_hybrid_compute_orchestration.sql`.
-GitHub commit: `0955efa5219a353c1d3fc5539ba2171c44566742`.
+Real default worker only:
+- `db-native` / DB / HEALTHY / max_parallel=4.
 
-Tables/functions introduced for compute orchestration and repair suggestions include:
-- worker registry with DB / CPU / GPU type;
-- health, heartbeat, capabilities, max parallelism, current load, latency;
-- compute policy/preferences;
-- run/job bookkeeping;
-- scenario repair suggestion storage;
-- worker selection/capability status RPC;
-- deterministic repair suggestion generation from `schedule_unplaced_items` diagnostics.
+External-worker heartbeat exists as `heartbeat_schedule_compute_worker_v1`; only service-role CPU/GPU workers may report HEALTHY/DEGRADED state.
 
-Important truthfulness rule:
-- Only the real `db-native` worker is registered by default.
-- Do NOT create fake CPU/GPU workers.
-- External CPU/GPU becomes selectable only after a real worker connects and heartbeat/capability is confirmed.
-- AUTO/HYBRID must always be able to fall back to DB-native.
+Execution/failover contract added:
+- migration: `20260826092500_schedule_worker_execution_failover.sql`
+- commit: `ae70bfe06617cb25c152ffb548db7008a2f64281`
+- `claim_schedule_worker_attempt_v1` atomically claims a PLANNED attempt with capacity/heartbeat checks;
+- `complete_schedule_worker_attempt_v1` completes only the owning worker's RUNNING attempt and closes the job COMPLETED/PARTIAL/FAILED;
+- `fail_schedule_worker_attempt_v1` requeues the same attempt to another healthy same-type worker, then GPU→CPU→DB-native fallback; if no fallback exists it closes safely.
 
-Verified DB-native state at implementation time:
-- display name: Yerleşik DB Çözücü
-- health: HEALTHY
-- max_parallel: 4
-- current_load: 0
-- recommended: true
+Do not register fake CPU/GPU workers. A real external process must register + heartbeat before planner/runner can use it.
 
-## Safe manual move backend
-Cloud migration applied and committed:
-`supabase/migrations/20260826002000_schedule_safe_manual_move.sql`
-Commit: `396b680b3a1e12c050683adc2b57a3c41589a742`.
+## Repair suggestions
+Current safe action codes generated from diagnostics:
+- `EXPAND_TEACHER_WINDOW`
+- `REBALANCE_DAILY_LOAD`
+- `RELAX_SOFT_CONSECUTIVE`
+- `REVIEW_COURSE_TIME_SOFT`
+- `MANUAL_REVIEW`
 
-Intent:
-- preview a manual move through the same underlying timetable constraint path;
-- rollback preview transaction;
-- return allowed/blocked + reason;
-- on apply, create restore point first;
-- then perform move with `source_kind='manual_drag'`;
-- never bypass locked-row protection or DB hard constraints.
+Do not auto-apply a suggestion that changes a constraint unless the target is proven SOFT. `REBALANCE_DAILY_LOAD` can use existing repair/rescore. `MANUAL_REVIEW` should route to safe manual placement. The other three must open the appropriate SOFT settings unless/until a dedicated guarded RPC exists.
 
-Next required frontend work:
-- wire `src/routes/schedule.tsx` cards/cells to drag/drop;
-- target cell hover should preview allowed/blocked;
-- green/valid target vs red/blocked target and translated reason;
-- apply safe move on drop;
-- link to history/undo;
-- later add safe swap/multi-move only after deterministic backend preview is verified.
+## CI
+Migration duplicate legacy exceptions remain exact-pair only; applied migrations are never renamed/edited. Latest worker-failover push CI run is `32952872104`; verify its final result before claiming this exact commit fully green.
 
-## CI work performed
-CI first failed due pre-existing migration duplicate versions, not the solver changes:
-- `20260825011500`: two legacy files;
-- `20260825013000`: two legacy files.
-
-Applied/legacy migration files were not renamed or edited. Instead `scripts/check-migrations.mjs` got an exact-pair legacy allowlist. New duplicate versions still fail.
-Commit: `ad20232f95a1f1d8786af2e8d5e95e4bc3d5516d`.
-
-Next CI blocker was a new/unclassified `/super-admin-course-pool` route. It was classified as inheriting existing `/super-admin` feature family; no applied migration changed.
-Commit: `0031fa63a7cbf60e8a9e49c1ab3ecbcc9ba38ea4`.
-
-At the moment this handoff was written, the latest CI after this classification had not yet been confirmed fully green. Always check Actions before claiming green.
+## DB connection note
+The direct Supabase management connector currently returns PostgreSQL `28P01 password authentication failed`. Do not work around this with Lovable AI. Keep forward migrations faithful in GitHub; apply to production only through direct Supabase once the connector credential is healthy.
 
 ## Non-negotiable engineering rules
-- Lovable Cloud is production DB.
-- Do not spend Lovable AI tokens for code/migration work.
-- Cloud first, then commit faithful SQL to GitHub.
-- Forward-only migrations; do not edit applied migrations.
-- Prefer compact/idempotent migrations and minimal token SQL.
-- Do not fake hardware capability.
-- HARD/mevzuat constraints are never silently weakened by AI.
-- AI/solution engine may suggest SOFT relaxations or operational fixes but should explain impact.
-- Manual intervention must remain easy and reversible.
+- No Lovable AI/chat token use for code or migration work.
+- Code and migrations are written directly by this assistant through GitHub/Supabase tools.
+- Forward-only migrations; never edit applied migrations.
+- Minimal migration count and compact/idempotent SQL.
+- No fake hardware capability.
+- HARD/mevzuat constraints are never silently weakened.
+- Manual intervention stays easy, reversible and DB-validated.
 
 ## Immediate continuation order
-1. Check latest CI run and fix only current blockers until full green.
-2. Finish drag/drop UI in `schedule.tsx` using safe preview/apply RPCs.
-3. Verify build + TypeScript + timetable guards again.
-4. Test manual move against teacher clash, class clash, unavailable time, daily limits, room clash, locked rows and subgroup conflicts.
-5. Add safe swap/multi-move only if tests prove reliable.
-6. Improve comparison/solution UI after manual workflow is stable.
+1. Verify CI for `ae70bfe` and fix any current blocker.
+2. Add safe suggestion action UX: repair/rescore for `REBALANCE_DAILY_LOAD`, manual route for `MANUAL_REVIEW`, settings route for SOFT-relax suggestions.
+3. Connect a real external CPU worker only when an actual worker process/host is available; use register→heartbeat→claim→complete/fail contract.
+4. Add large-school virtualization/performance polish after functional closure.
+5. Re-run final timetable guards, production build and TypeScript checks.
