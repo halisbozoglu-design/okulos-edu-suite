@@ -1,0 +1,14 @@
+import {describe,expect,test} from "bun:test";
+const m=await Bun.file("supabase/migrations/20260827002000_schedule_substitution_v4.sql").text();
+const ui=await Bun.file("src/routes/substitutes.tsx").text();
+const assign=await Bun.file("supabase/functions/assign-substitutes/index.ts").text();
+const report=await Bun.file("supabase/functions/report-absence/index.ts").text();
+describe("substitution v4 contract",()=>{
+ test("daily overlay keeps weekly schedule immutable and supports complete operation vocabulary",()=>{for(const k of ["COVER","MOVE","SWAP","CANCEL","CREATE","SPLIT","JOIN"])expect(m).toContain(`'${k}'`);expect(m).toContain("schedule_daily_overlays");expect(m).not.toContain("update teacher_schedule set");});
+ test("absence snapshot preserves canonical source ids",()=>{for(const x of ["source_schedule_id","course_id","classroom_id","subgroup_id"])expect(m).toContain(x);expect(report).toContain('select("id,period,class_id,class_name,course_id,subject,classroom_id,subgroup_id")');});
+ test("candidate authority covers qualification availability fairness and building transfer",()=>{for(const x of ["get_substitute_candidates_v4","qualified","weekly_load","monthly_load","ABSENT","UNAVAILABLE","TIME_CONFLICT","BUILDING_TRANSFER_NOT_ALLOWED","BUILDING_TRANSFER_TIME_INSUFFICIENT"])expect(m).toContain(x);});
+ test("all overlay applications are transactional hard audited and reversible",()=>{expect(m).toContain("pg_advisory_xact_lock");expect(m).toContain("assert_schedule_daily_overlay_hard_v1");expect(m).toContain("SUBSTITUTION_TEACHER_CONFLICT");expect(m).toContain("SUBSTITUTION_CLASS_CONFLICT");expect(m).toContain("SUBSTITUTION_ROOM_CONFLICT");expect(m).toContain("SUBSTITUTION_ROOM_POOL_SIMULTANEOUS_LIMIT");expect(m).toContain("revert_schedule_daily_overlay_v1");expect(m).toContain("schedule_daily_overlay_audit");});
+ test("chain cover uses a second feasible teacher and atomic overlay apply",()=>{expect(m).toContain("suggest_substitution_chains_v4");expect(m).toContain("get_event_cover_candidates_v1");expect(m).toContain("apply_substitution_chain_v4");expect(m).toContain("chain_role");});
+ test("edge function no longer makes substitute decisions",()=>{expect(assign).toContain("assign_substitutes_for_day_v4");expect(assign).not.toContain('rpc("assign_substitutes_for_day"');expect(assign).toContain("schedule_daily_overlays");expect(assign).toContain("notified_at");});
+ test("operator UI uses v4 explanations chains overlays and undo",()=>{for(const x of ["get_substitution_day_health_v4","get_substitute_candidates_v4","suggest_substitution_chains_v4","apply_substitution_chain_v4","schedule_daily_overlays","revert_schedule_daily_overlay_v1"])expect(ui).toContain(x);expect(ui).not.toContain('suggest_substitutes_for_day"');});
+});
