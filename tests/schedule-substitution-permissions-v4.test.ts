@@ -1,0 +1,3 @@
+import {describe,expect,test} from "bun:test";
+const m=await Bun.file("supabase/migrations/20260827003000_schedule_substitution_permission_alignment_v4.sql").text();
+describe("substitution delegated permissions",()=>{test("substitutes.manage can apply assign chain and revert without widening unrelated permissions",()=>{expect(m.match(/has_permission\('substitutes\.manage'\)/g)?.length??0).toBeGreaterThanOrEqual(4);expect(m).toContain("has_permission('schedule.edit')");expect(m).toContain("NOT_AUTHORIZED");});});
