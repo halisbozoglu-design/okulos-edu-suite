@@ -1,0 +1,10 @@
+{
+  "updated_on":"2026-08-26",
+  "base_large_batch_atom_total":2715,
+  "completed_focus":{"legal_family":"OPEN_OAB_TRANSPORT_SPED_100PLUS_V25","staging_doc":"docs/legal-open-oab-transport-sped-batch-100plus-v25.md","atomized_rule_count":120,"migration_count":0,"source_urls":["https://resmigazete.gov.tr/eskiler/2024/10/20241022-2.htm","https://mevzuat.meb.gov.tr/dosyalar/1532.pdf","https://mevzuat.meb.gov.tr/dosyalar/2191.pdf","https://resmigazete.gov.tr/eskiler/2024/08/20240801-2.htm","https://resmigazete.gov.tr/eskiler/2018/07/20180707-8.htm"]},
+  "large_batch_atom_total_after_delta":2835,
+  "article_verified":{"base":405,"increment":5,"result":410,"master_total":2229,"percent":18.394,"batch_doc":"docs/legal-article-verified-batch-v25.md","workflow_ids":["HB-1494","HB-2214","HB-2215","HB-2225","HB-0977"],"official_source":"https://mevzuat.meb.gov.tr/dosyalar/1532.pdf"},
+  "withheld_from_article_verified":[{"workflow_id":"HB-0716","reason":"legacy January timing conflicts with current term-based Md13/10 announcement rule"},{"workflow_id":"HB-0431","reason":"compound row spans general assembly and two board-formation workflows; split before exact verification"}],
+  "migration_count":0,
+  "next_focus":{"minimum_batch":100,"goal":"Continue open education + special education + transport exact clause deepening and promote master workflow_ids only where current official clause and timing align exactly."}
+}
