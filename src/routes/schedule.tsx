@@ -20,6 +20,10 @@ type TimeProfile={teaching_days:number[];periods_per_day:number;lunch_after_peri
 type Integrity={severity:"error"|"warning";code:string;affected_count:number;detail:string};
 type Editor={id?:string;assignmentId:string;weekday:number;period:number;classroomId:string;subgroupId:string;locked:boolean};
 type MovePreview={ok:boolean;error?:string};
+type DropPlan={kind:"move"}|{kind:"swap";partnerId:string}|{kind:"blocked";reason:string};
+type HoverPreview={target:string;status:"pending"|"ok"|"blocked";reason?:string};
+type SwapPrompt={sourceId:string;partnerId:string;weekday:number;period:number;sourceLabel:string;partnerLabel:string};
+type RestorePoint={id:string;label:string|null;created_at:string};
 type Unavailable={teacher_id:string;weekday:number;period:number;source:string};
 const dayName:Record<number,string>={1:"Pazartesi",2:"Salı",3:"Çarşamba",4:"Perşembe",5:"Cuma",6:"Cumartesi",7:"Pazar"};
 
