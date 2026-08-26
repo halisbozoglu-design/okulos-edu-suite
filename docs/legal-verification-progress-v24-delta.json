@@ -1,0 +1,10 @@
+{
+  "updated_on":"2026-08-26",
+  "base_large_batch_atom_total":2587,
+  "completed_focus":{"legal_family":"BILSEM_HEM_EXACT_DEEPENING_100PLUS_V24","staging_doc":"docs/legal-bilsem-hem-exact-deepening-batch-100plus-v24.md","atomized_rule_count":128,"migration_count":0,"source_urls":["https://mevzuat.meb.gov.tr/dosyalar/2193.pdf","https://mevzuat.meb.gov.tr/dosyalar/1924.pdf"]},
+  "large_batch_atom_total_after_delta":2715,
+  "article_verified":{"base":400,"increment":5,"result":405,"master_total":2229,"percent":18.17,"batch_doc":"docs/legal-article-verified-batch-v24.md","workflow_ids":["HB-0495","HB-0746","HB-0923","HB-0935","HB-1937"],"official_sources":["https://mevzuat.meb.gov.tr/dosyalar/2193.pdf","https://mevzuat.meb.gov.tr/dosyalar/1924.pdf","https://mevzuat.meb.gov.tr/dosyalar/2179.pdf"]},
+  "article_corrections":[{"workflow_id":"HB-0935","legacy_candidate":"Md.75/7","verified_current":"Md.75/6","reason":"current official consolidated text places end-of-course electronic satisfaction surveys/reporting in paragraph 6"}],
+  "migration_count":0,
+  "next_focus":{"minimum_batch":100,"goal":"Continue exact deepening of remaining school-type workflows and promote strong master queue candidates only after current official clause verification; prioritize BILSEM/HEM/open education/OAB/transport/special education exact bindings."}
+}
