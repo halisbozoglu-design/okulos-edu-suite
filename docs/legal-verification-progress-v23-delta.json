@@ -1,0 +1,10 @@
+{
+  "updated_on":"2026-08-26",
+  "base_large_batch_atom_total":2455,
+  "completed_focus":{"legal_family":"SCHOOL_TYPE_SPECIAL_IYEP_BILSEM_HEM_MEM_100PLUS_V23","staging_doc":"docs/legal-school-type-special-iyep-bilsem-hem-mem-batch-100plus-v23.md","atomized_rule_count":132,"migration_count":0,"source_urls":["https://mevzuat.meb.gov.tr/dosyalar/2023.pdf","https://mevzuat.meb.gov.tr/dosyalar/2193.pdf","https://mevzuat.meb.gov.tr/dosyalar/1924.pdf","https://resmigazete.gov.tr/eskiler/2025/04/20250426-1.htm"]},
+  "large_batch_atom_total_after_delta":2587,
+  "article_verified":{"base":396,"increment":4,"result":400,"master_total":2229,"percent":17.9453,"batch_doc":"docs/legal-article-verified-batch-v23.md","workflow_ids":["HB-0462","HB-0463","HB-0464","HB-0467"],"official_source":"https://mevzuat.meb.gov.tr/dosyalar/2023.pdf"},
+  "withheld_from_article_verified":[{"workflow_id":"HB-0465","reason":"legacy master row combines IYEP teacher/module assignment with unrelated children-club workflow; split required"}],
+  "migration_count":0,
+  "next_focus":{"minimum_batch":100,"goal":"Continue remaining school-type regulations and simultaneously bind exact master workflow_id records to current official clauses; prioritize BILSEM/HEM and current MEB institution-type workflows."}
+}
