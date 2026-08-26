@@ -961,46 +961,61 @@ export type Database = {
       classrooms: {
         Row: {
           active: boolean
+          aggregate_capacity_enforced: boolean
           branch_id: string | null
+          building_id: string | null
           capacity: number
           created_at: string
           department: string | null
           field_id: string | null
+          floor: number | null
           hardware: Json
           id: string
           institution_code: string | null
           is_vocational_workshop: boolean
+          max_simultaneous_activities: number
           name: string
+          room_pool_id: string | null
           room_type: string
           updated_at: string
         }
         Insert: {
           active?: boolean
+          aggregate_capacity_enforced?: boolean
           branch_id?: string | null
+          building_id?: string | null
           capacity: number
           created_at?: string
           department?: string | null
           field_id?: string | null
+          floor?: number | null
           hardware?: Json
           id?: string
           institution_code?: string | null
           is_vocational_workshop?: boolean
+          max_simultaneous_activities?: number
           name: string
+          room_pool_id?: string | null
           room_type?: string
           updated_at?: string
         }
         Update: {
           active?: boolean
+          aggregate_capacity_enforced?: boolean
           branch_id?: string | null
+          building_id?: string | null
           capacity?: number
           created_at?: string
           department?: string | null
           field_id?: string | null
+          floor?: number | null
           hardware?: Json
           id?: string
           institution_code?: string | null
           is_vocational_workshop?: boolean
+          max_simultaneous_activities?: number
           name?: string
+          room_pool_id?: string | null
           room_type?: string
           updated_at?: string
         }
@@ -1013,10 +1028,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "classrooms_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_buildings"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "classrooms_field_id_fkey"
             columns: ["field_id"]
             isOneToOne: false
             referencedRelation: "institution_fields"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classrooms_room_pool_id_fkey"
+            columns: ["room_pool_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_room_pools"
             referencedColumns: ["id"]
           },
           {
@@ -5273,6 +5302,78 @@ export type Database = {
           },
         ]
       }
+      schedule_building_travel: {
+        Row: {
+          active: boolean
+          from_building_id: string
+          id: string
+          institution_code: string
+          minutes: number
+          to_building_id: string
+        }
+        Insert: {
+          active?: boolean
+          from_building_id: string
+          id?: string
+          institution_code?: string
+          minutes: number
+          to_building_id: string
+        }
+        Update: {
+          active?: boolean
+          from_building_id?: string
+          id?: string
+          institution_code?: string
+          minutes?: number
+          to_building_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_building_travel_from_building_id_fkey"
+            columns: ["from_building_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_building_travel_to_building_id_fkey"
+            columns: ["to_building_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_buildings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_buildings: {
+        Row: {
+          active: boolean
+          code: string | null
+          created_at: string
+          id: string
+          institution_code: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code?: string | null
+          created_at?: string
+          id?: string
+          institution_code?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string | null
+          created_at?: string
+          id?: string
+          institution_code?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       schedule_compute_workers: {
         Row: {
           active: boolean
@@ -5433,6 +5534,7 @@ export type Database = {
           max_same_course_per_day: number
           periods_per_day: number
           repeated_course_penalty: number
+          student_conflict_penalty: number
           teaching_days: number[]
           updated_at: string
         }
@@ -5444,6 +5546,7 @@ export type Database = {
           max_same_course_per_day?: number
           periods_per_day?: number
           repeated_course_penalty?: number
+          student_conflict_penalty?: number
           teaching_days?: number[]
           updated_at?: string
         }
@@ -5455,6 +5558,7 @@ export type Database = {
           max_same_course_per_day?: number
           periods_per_day?: number
           repeated_course_penalty?: number
+          student_conflict_penalty?: number
           teaching_days?: number[]
           updated_at?: string
         }
@@ -5625,6 +5729,95 @@ export type Database = {
             referencedColumns: ["teacher_id"]
           },
         ]
+      }
+      schedule_period_breaks: {
+        Row: {
+          after_period: number
+          id: string
+          institution_code: string
+          minutes: number
+          time_profile_id: string
+          transfer_allowed: boolean
+        }
+        Insert: {
+          after_period: number
+          id?: string
+          institution_code?: string
+          minutes?: number
+          time_profile_id: string
+          transfer_allowed?: boolean
+        }
+        Update: {
+          after_period?: number
+          id?: string
+          institution_code?: string
+          minutes?: number
+          time_profile_id?: string
+          transfer_allowed?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_period_breaks_time_profile_id_fkey"
+            columns: ["time_profile_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_time_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_planning_relations: {
+        Row: {
+          active: boolean
+          created_at: string
+          effective_from: string | null
+          effective_to: string | null
+          id: string
+          institution_code: string
+          left_selector: Json
+          mode: string
+          parameters: Json
+          relation_type: string
+          right_selector: Json
+          source_ref: string | null
+          source_type: string | null
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          institution_code?: string
+          left_selector?: Json
+          mode?: string
+          parameters?: Json
+          relation_type: string
+          right_selector?: Json
+          source_ref?: string | null
+          source_type?: string | null
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          institution_code?: string
+          left_selector?: Json
+          mode?: string
+          parameters?: Json
+          relation_type?: string
+          right_selector?: Json
+          source_ref?: string | null
+          source_type?: string | null
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: []
       }
       schedule_publication_rows: {
         Row: {
@@ -6182,6 +6375,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      schedule_room_pools: {
+        Row: {
+          active: boolean
+          capacity: number
+          created_at: string
+          id: string
+          institution_code: string
+          max_simultaneous_activities: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          capacity: number
+          created_at?: string
+          id?: string
+          institution_code?: string
+          max_simultaneous_activities?: number
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          capacity?: number
+          created_at?: string
+          id?: string
+          institution_code?: string
+          max_simultaneous_activities?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       schedule_rule_modes: {
         Row: {
@@ -7483,6 +7709,216 @@ export type Database = {
           },
         ]
       }
+      student_course_requests: {
+        Row: {
+          active: boolean
+          allow_overlap: boolean
+          alternative_group: string | null
+          course_id: string
+          created_at: string
+          id: string
+          institution_code: string
+          priority: number
+          request_kind: string
+          source: string | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          allow_overlap?: boolean
+          alternative_group?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          institution_code?: string
+          priority?: number
+          request_kind?: string
+          source?: string | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          allow_overlap?: boolean
+          alternative_group?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          institution_code?: string
+          priority?: number
+          request_kind?: string
+          source?: string | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_course_requests_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_course_requests_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_free_time_requests: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          institution_code: string
+          mode: string
+          periods: number[]
+          student_id: string
+          updated_at: string
+          weekday: number
+          weight: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          institution_code?: string
+          mode?: string
+          periods: number[]
+          student_id: string
+          updated_at?: string
+          weekday: number
+          weight?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          institution_code?: string
+          mode?: string
+          periods?: number[]
+          student_id?: string
+          updated_at?: string
+          weekday?: number
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_free_time_requests_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_schedule_enrollments: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          institution_code: string
+          locked: boolean
+          source: string
+          student_id: string
+          teacher_assignment_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          institution_code?: string
+          locked?: boolean
+          source?: string
+          student_id: string
+          teacher_assignment_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          institution_code?: string
+          locked?: boolean
+          source?: string
+          student_id?: string
+          teacher_assignment_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_schedule_enrollments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_schedule_enrollments_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["teacher_assignment_id"]
+          },
+          {
+            foreignKeyName: "student_schedule_enrollments_teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_sectioning_issues: {
+        Row: {
+          code: string
+          created_at: string
+          detail: string | null
+          id: string
+          institution_code: string
+          request_id: string | null
+          student_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          institution_code?: string
+          request_id?: string | null
+          student_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          institution_code?: string
+          request_id?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_sectioning_issues_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "student_course_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_sectioning_issues_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       students: {
         Row: {
           active: boolean
@@ -7871,6 +8307,7 @@ export type Database = {
           id: string
           institution_code: string | null
           note: string | null
+          section_capacity: number | null
           teacher_id: string
           updated_at: string
         }
@@ -7883,6 +8320,7 @@ export type Database = {
           id?: string
           institution_code?: string | null
           note?: string | null
+          section_capacity?: number | null
           teacher_id: string
           updated_at?: string
         }
@@ -7895,6 +8333,7 @@ export type Database = {
           id?: string
           institution_code?: string | null
           note?: string | null
+          section_capacity?: number | null
           teacher_id?: string
           updated_at?: string
         }
@@ -9491,6 +9930,10 @@ export type Database = {
         Args: { p_profile_key: string }
         Returns: undefined
       }
+      apply_schedule_repair_suggestion_v1: {
+        Args: { p_suggestion_id: string }
+        Returns: Json
+      }
       apply_schedule_scenario: {
         Args: { p_scenario_id: string }
         Returns: number
@@ -9610,6 +10053,10 @@ export type Database = {
           substitute_user_id: string
         }[]
       }
+      assign_substitutes_for_day_v3: {
+        Args: { p_date?: string }
+        Returns: number
+      }
       assign_substitutes_permission_core_v2: {
         Args: { p_date?: string }
         Returns: {
@@ -9715,6 +10162,18 @@ export type Database = {
       }
       can_manage_permissions: { Args: never; Returns: boolean }
       can_manage_personnel_private_data: { Args: never; Returns: boolean }
+      claim_schedule_worker_attempt_v1: {
+        Args: { p_worker_key: string }
+        Returns: {
+          attempt_id: string
+          attempt_no: number
+          config: Json
+          job_id: string
+          mode: string
+          quality_target: number
+          seed: number
+        }[]
+      }
       claim_super_admin_profile: {
         Args: never
         Returns: {
@@ -9755,6 +10214,19 @@ export type Database = {
         }
         Returns: number
       }
+      complete_schedule_worker_attempt_v1: {
+        Args: {
+          p_attempt_id: string
+          p_diagnostics?: Json
+          p_duration_ms?: number
+          p_hard_issue_count?: number
+          p_scenario_id: string
+          p_score?: number
+          p_unplaced_count?: number
+          p_worker_key: string
+        }
+        Returns: boolean
+      }
       course_slot_allowed_v1: {
         Args: { p_course_id: string; p_period: number; p_weekday: number }
         Returns: boolean
@@ -9792,6 +10264,14 @@ export type Database = {
       ensure_tenant_composite_pk_v1: {
         Args: { p_columns: string[]; p_table: string }
         Returns: undefined
+      }
+      fail_schedule_worker_attempt_v1: {
+        Args: {
+          p_attempt_id: string
+          p_diagnostics?: Json
+          p_worker_key: string
+        }
+        Returns: string
       }
       finalize_my_registration: {
         Args: { p_email: string; p_tckn: string }
@@ -10227,6 +10707,66 @@ export type Database = {
           unassigned_rows: number
         }[]
       }
+      get_schedule_activity_instances_v1: {
+        Args: never
+        Returns: {
+          activity_key: string
+          class_id: string
+          component_no: number
+          course_id: string
+          duration: number
+          teacher_assignment_id: string
+          teacher_id: string
+        }[]
+      }
+      get_schedule_assignment_student_conflict_weights_v1: {
+        Args: never
+        Returns: {
+          left_assignment_id: string
+          right_assignment_id: string
+          student_weight: number
+        }[]
+      }
+      get_schedule_assignment_student_conflict_weights_v2: {
+        Args: never
+        Returns: {
+          left_assignment_id: string
+          right_assignment_id: string
+          severity_weight: number
+          student_weight: number
+        }[]
+      }
+      get_schedule_atomic_move_plan_v1: {
+        Args: {
+          p_classroom_id?: string
+          p_period: number
+          p_schedule_id: string
+          p_weekday: number
+        }
+        Returns: Json
+      }
+      get_schedule_block_integrity_report_v1: {
+        Args: never
+        Returns: {
+          actual_pattern: number[]
+          expected_pattern: number[]
+          ok: boolean
+          teacher_assignment_id: string
+        }[]
+      }
+      get_schedule_block_move_plan_v1: {
+        Args: {
+          p_classroom_id?: string
+          p_period: number
+          p_schedule_id: string
+          p_weekday: number
+        }
+        Returns: Json
+      }
+      get_schedule_building_travel_minutes_v1: {
+        Args: { p_from: string; p_to: string }
+        Returns: number
+      }
       get_schedule_compute_capabilities_v1: {
         Args: never
         Returns: {
@@ -10340,6 +10880,18 @@ export type Database = {
       get_schedule_phase3_scoped_preference_score_v1: {
         Args: { p_scenario_id: string }
         Returns: number
+      }
+      get_schedule_planning_relations_v1: {
+        Args: never
+        Returns: {
+          id: string
+          left_selector: Json
+          mode: string
+          parameters: Json
+          relation_type: string
+          right_selector: Json
+          weight: number
+        }[]
       }
       get_schedule_preparation_readiness: {
         Args: never
@@ -10493,6 +11045,35 @@ export type Database = {
           score: number
         }[]
       }
+      get_schedule_scenario_student_conflict_summary_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_students: number
+          conflict_events: number
+          weighted_conflict: number
+        }[]
+      }
+      get_schedule_student_conflict_report_v1: {
+        Args: never
+        Returns: {
+          conflict_count: number
+          period: number
+          student_id: string
+          weekday: number
+        }[]
+      }
+      get_schedule_student_conflict_report_v2: {
+        Args: never
+        Returns: {
+          assignment_ids: string[]
+          conflict_count: number
+          period: number
+          student_id: string
+          student_name: string
+          subjects: string[]
+          weekday: number
+        }[]
+      }
       get_super_admin_personnel: {
         Args: never
         Returns: {
@@ -10629,6 +11210,15 @@ export type Database = {
         }
         Returns: number
       }
+      move_schedule_block_v1: {
+        Args: {
+          p_classroom_id?: string
+          p_period: number
+          p_schedule_id: string
+          p_weekday: number
+        }
+        Returns: Json
+      }
       move_schedule_slot_v1: {
         Args: {
           p_classroom_id?: string
@@ -10638,6 +11228,7 @@ export type Database = {
         }
         Returns: string
       }
+      move_schedule_slots_batch_v1: { Args: { p_moves: Json }; Returns: Json }
       normalize_class_key: {
         Args: { p_class_name: string; p_program_type: string }
         Returns: string
@@ -10761,6 +11352,16 @@ export type Database = {
         Args: { p_preserve?: boolean }
         Returns: number
       }
+      preview_schedule_batch_move_v1: { Args: { p_moves: Json }; Returns: Json }
+      preview_schedule_block_move_v1: {
+        Args: {
+          p_classroom_id?: string
+          p_period: number
+          p_schedule_id: string
+          p_weekday: number
+        }
+        Returns: Json
+      }
       preview_schedule_move_v1: {
         Args: {
           p_classroom_id?: string
@@ -10811,6 +11412,7 @@ export type Database = {
         Returns: string
       }
       quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
+      reap_stale_schedule_worker_attempts_v1: { Args: never; Returns: number }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
         Returns: string
@@ -11031,6 +11633,10 @@ export type Database = {
         Args: { p_rule_code: string; p_subject: string }
         Returns: boolean
       }
+      section_students_batch_v1: {
+        Args: { p_replace_solver?: boolean }
+        Returns: Json
+      }
       seed_timetable_defaults_for_tenant_v1: {
         Args: { p_code: string }
         Returns: undefined
@@ -11122,6 +11728,15 @@ export type Database = {
         Args: { p_class_id: string; p_subgroup_id: string }
         Returns: number
       }
+      suggest_schedule_ejection_chain_v1: {
+        Args: {
+          p_limit?: number
+          p_period: number
+          p_schedule_id: string
+          p_weekday: number
+        }
+        Returns: Json
+      }
       suggest_substitutes_for_day: {
         Args: { p_date?: string }
         Returns: {
@@ -11133,6 +11748,24 @@ export type Database = {
           class_name: string
           period: number
           priority: number
+          reason: string
+          subject: string
+          weekly_load: number
+        }[]
+      }
+      suggest_substitutes_for_day_v3: {
+        Args: { p_date?: string }
+        Returns: {
+          absence_lesson_id: string
+          candidate_name: string
+          candidate_user_id: string
+          class_id: string
+          class_name: string
+          duty: boolean
+          monthly_load: number
+          period: number
+          qualified: boolean
+          rank_score: number
           reason: string
           subject: string
           weekly_load: number
