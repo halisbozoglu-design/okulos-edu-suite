@@ -1,0 +1,33 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":3075,
+  "completed_focus":{
+    "legal_family":"STUDENT_BOARDS_TRANSPORT_OPEN_100PLUS_V28",
+    "staging_doc":"docs/legal-student-boards-transport-open-deepening-batch-100plus-v28.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2260.pdf",
+      "https://resmigazete.gov.tr/eskiler/2024/08/20240801-2.htm",
+      "https://resmigazete.gov.tr/eskiler/2024/10/20241022-2.htm"
+    ]
+  },
+  "large_batch_atom_total_after_delta":3195,
+  "article_verified":{
+    "base":420,
+    "increment":5,
+    "result":425,
+    "master_total":2229,
+    "percent":19.0668,
+    "batch_doc":"docs/legal-article-verified-batch-v28.md",
+    "workflow_ids":["HB-0571","HB-0575","HB-0576","HB-1006","HB-1013"],
+    "official_source":"https://mevzuat.meb.gov.tr/dosyalar/2260.pdf",
+    "verified_article":"10/1-8"
+  },
+  "migration_count":0,
+  "next_focus":{
+    "minimum_batch":100,
+    "goal":"Continue exact ARTICLE_VERIFIED promotion from strong master candidates, prioritizing current student registration/nakil, OOKY boards/commissions, transport Md13 and school-type-specific workflows; preserve duplicate protection and current-source reconciliation."
+  }
+}
