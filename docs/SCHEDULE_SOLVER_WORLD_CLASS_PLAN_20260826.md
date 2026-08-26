@@ -16,8 +16,8 @@ Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki toplam timetable kabiliye
 4. Generic constraint parity — **CLOSED 2026-08-26**
 5. Oda/bina parity kapanışı — **CLOSED 2026-08-26**
 6. Student sectioning tam kapanış — **CLOSED 2026-08-27**
-7. Substitution tam kapanış — **NEXT**
-8. Zaman modeli: odd/even week, tarih/dönem, çoklu vardiya
+7. Substitution tam kapanış — **CLOSED 2026-08-27**
+8. Zaman modeli: odd/even week, tarih/dönem, çoklu vardiya — **NEXT**
 9. Incremental score & büyük okul performansı
 10. Adaptive/elite solver
 11. Hybrid compute kapanışı
@@ -68,69 +68,70 @@ Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki toplam timetable kabiliye
 - CI run `33014655258`, SUCCESS.
 
 ## Bölüm 6 — Student sectioning tam kapanış — CLOSED
+- Requests: PRIMARY / ALTERNATIVE / SUBSTITUTE; `HOME_CLASS`, `OFFERING`, `CROSS_CLASS` scope; uppercase request-kind canonical.
+- `get_student_section_candidates_v2` online/batch/explanation için tek feasibility authority; capacity unknown tahmin edilmez.
+- `section_student_v2`, `section_students_batch_v2`, `repair_student_sectioning_conflicts_v2`; locked enrollment korunur, tenant advisory lock capacity race'i engeller.
+- Student conflict objective Bölüm 1 authority'sini tüketir; ikinci conflict motoru açılmaz.
+- UI `/student-sectioning`; route `/schedule` feature ailesinde.
+- Migration: `20260827000500_schedule_student_sectioning_v2.sql`.
+- Core/UI/tests: `ca08476f5e81597b9db64d6c9f7d167cc91f10cb`, `5e363a5bfa914342e1485b975e5faab105e55365`, `1db5568856b555bb45cc9953392ce805ef701956`, `5011af48c5ae745ff49bc5e36bf2c3111f90ad10`, `4521f613c37b63b1ebcbb0bd6d2aff58f25d040d`.
+- Final code CI run `33015602242`, SUCCESS; authoritative docs closure run `33019041990`, SUCCESS.
 
-### Canonical request ve scope modeli
-- `student_course_requests`: PRIMARY / ALTERNATIVE / SUBSTITUTE, priority, alternative_group, allow_overlap.
-- `scope_mode`: `HOME_CLASS` varsayılan güvenli scope; `OFFERING` aynı offering_rule_id kapsamı; `CROSS_CLASS` kurum içi aynı course section'ları.
-- Normal sınıf dersi başka şubeye yanlış section edilemez; ortak/seçmeli offering explicit scope ile paylaşılabilir.
-- `request_kind` semantiği uppercase constraint ile hizalandı; eski lowercase importance karşılaştırması kaldırıldı.
+## Bölüm 7 — Substitution tam kapanış — CLOSED
 
-### Candidate authority
-`get_student_section_candidates_v2(request_id)` online/batch/explanation için tek canonical feasibility kaynağıdır. Her adayda:
-- timetable var/yok,
-- capacity bilinmiyor/dolu,
-- locked section,
-- HARD free-time,
-- mevcut enrollment time conflict,
-- MEDIUM/SOFT free-time penalty,
-- section balance/load,
-- mevcut section'ı koruma/stability penalty,
-- explicit rejection reasons (`NO_TIMETABLE`, `CAPACITY_UNKNOWN`, `SECTION_FULL`, `LOCKED_SECTION`, `HARD_FREE_TIME`, `TIME_CONFLICT`).
-Unknown capacity tahmin edilmez.
+### Canonical date-scoped overlay
+- Haftalık `teacher_schedule` source-of-truth olarak immutable kalır; günlük kriz/vekalet değişiklikleri `schedule_daily_overlays` içinde tarih bazlı tutulur.
+- Operation vocabulary: `COVER`, `MOVE`, `SWAP`, `CANCEL`, `CREATE`, `SPLIT`, `JOIN`.
+- `get_schedule_daily_effective_v1/v2` haftalık program + günlük overlay'i tek effective-day görünümünde birleştirir.
+- SPLIT gerçek `effective_subgroup_id`; JOIN gerçek `effective_class_ids[]` taşır. JOIN en az iki kaynak + tam bir emit; SPLIT en az iki parça gerektirir.
 
-### Online + batch + repair
-- `section_student_v2`: tek öğrenci online/incremental resectioning.
-- `section_students_batch_v2`: fail-first batch; en az feasible seçeneği olan öğrenciyi önce işler.
-- `repair_student_sectioning_conflicts_v2`: timetable değişince yalnız conflict yaşayan öğrencileri tekrar section eder.
-- Locked enrollment korunur.
-- Tenant advisory lock aynı kapasitenin eşzamanlı iki online çağrıda aşılmasını önler.
-- Alternative-group içinde başarılı alternatif bulunduğunda önceki çözülmüş issue temizlenir.
-- Gereksiz section değişimi stability SOFT maliyetiyle engellenir.
+### Exact absence snapshot ve candidate authority
+- `absence_lessons` artık `source_schedule_id`, `course_id`, `classroom_id`, `subgroup_id` saklar; qualification subject-name tahminine bağlı değildir.
+- `get_substitute_candidates_v4`: qualification, duty, absence, teacher unavailability, effective-day time conflict, weekly/monthly fairness ve building-transfer nedenlerini açıkça döndürür.
+- HARD reasons: `ABSENT`, `UNAVAILABLE`, `TIME_CONFLICT`, `BUILDING_TRANSFER_NOT_ALLOWED`, `BUILDING_TRANSFER_TIME_INSUFFICIENT`.
+- Yeterlilik doğrulanamayan öğretmen acil fallback olarak ağır cezalı kalır; HARD fiziksel/zaman ihlali olan aday uygulanamaz.
 
-### Timetable feedback loop
-- Candidate feasibility doğrudan aktif `teacher_schedule` kullanır.
-- Student conflict report timetable değişiminden sonra gerçek çakışmayı gösterir.
-- Repair path yalnız conflict setini değiştirir; tüm öğrencileri sebepsiz yeniden dağıtmaz.
-- Student conflict objective Bölüm 1'in MEDIUM authority'sini tüketir; ikinci conflict motoru açılmaz.
+### Direct cover + chain
+- `assign_substitutes_for_day_v4` her direct atamadan sonra effective-day programı yeniden değerlendirir.
+- `suggest_substitution_chains_v4`: A yalnız kendi dersi nedeniyle meşgulse A'nın dersini feasible B'ye verip A'yı devamsız derse önerir.
+- `apply_substitution_chain_v4` iki adımı tek transaction içinde yeniden doğrular ve uygular.
 
-### UI / açıklanabilirlik
-- `/student-sectioning`: request, scope, alternative/substitute group, HARD/MEDIUM/SOFT free-time, section capacity, candidate açıklaması, tek öğrenci resection, tüm okul batch ve conflict repair.
-- Candidate UI neden uygun/uygun değil bilgisini açıkça gösterir.
-- Senaryo karşılaştırmadan `/student-sectioning` ekranına doğrudan geçiş vardır.
-- Route mevcut `/schedule` tenant/feature ailesindedir; yeni bağımsız feature açılmadı.
+### HARD validator, room/building ve rollback
+- `apply_schedule_daily_overlay_v1`: tenant/date advisory lock + all-or-nothing apply.
+- `assert_schedule_daily_overlay_hard_v1`: teacher, class/subgroup, exact room, shared room-pool simultaneous limit, aggregate capacity ve building transfer authority'lerini enforce eder.
+- JOIN edilen sınıfların öğrenci sayıları room-pool capacity hesabında toplanır; bilinmeyen kapasite tahmin edilmez.
+- `revert_schedule_daily_overlay_v1`: operation-group bazlı atomik geri alma; bağlı vekalet kaydını pasifleştirir, absence durumunu yeniden açar ve HARD audit'i tekrar çalıştırır.
+- `schedule_daily_overlay_audit` APPLY/REVERT izini tutar.
 
-### Forward migration / commits
-- `20260827000500_schedule_student_sectioning_v2.sql` — commit `ca08476f5e81597b9db64d6c9f7d167cc91f10cb`.
-- UI: `5e363a5bfa914342e1485b975e5faab105e55365`.
-- Regression: `1db5568856b555bb45cc9953392ce805ef701956`.
-- Tenant/feature classification: `5011af48c5ae745ff49bc5e36bf2c3111f90ad10`.
-- Scenario→sectioning navigation: `4521f613c37b63b1ebcbb0bd6d2aff58f25d040d`.
+### Bildirim ve authority ayrımı
+- `assign-substitutes` edge function artık vekil seçmez; `assign_substitutes_for_day_v4` Cloud authority'sini çağırır ve bildirilmemiş effective overlay görevlerini Web Push/Telegram'a taşır.
+- Notification state overlay seviyesindedir; chain'deki A ve B dahil tüm effective öğretmen görevleri bildirilebilir.
+- `report-absence` exact source IDs ile absence snapshot üretir.
+
+### UI ve delegated permission
+- `/substitutes`: day health, nedenli candidate listesi, qualification/duty/fairness, HARD rejection, chain öneri/apply, active overlay, notification state ve operation-group undo.
+- `substitutes.manage` delegasyonu direct assignment, chain apply ve rollback için canonical DB yetkisidir; `schedule.edit` generic daily overlay müdahalesinde geçerlidir. Yetkisiz çağrı `NOT_AUTHORIZED` ile reddedilir.
+
+### Forward migrations / commits
+- `20260827002000_schedule_substitution_v4.sql` — `f16433123d5dc08b7776edebc0c6bb5179e2a503`.
+- `20260827002500_schedule_substitution_split_join_v4.sql` — `b337c89c67b65432c399be162cb0e436948c19e2`.
+- `20260827003000_schedule_substitution_permission_alignment_v4.sql` — `79e5b7e754adbd9a59cc3fa43ee298d0bed18ab2`.
+- UI: `4d43e22c5ea438f185da0199b3d83f7abf407fc3`.
+- Exact absence edge: `6db884416db2cbc7b604c5062fd50c14bb6d85f3`.
+- Overlay notification edge: `9866533175a13b43ac7f50d7b01d6cc79e05633a`.
+- Tests: `6239a47c951c26d91cb7233a2bdd234284fd581a`, `768d924f025dd6e5cab719ae65aeb9b42f70db09`, `c56dec1752d267130c536e39d2c96163cceb3eae`.
 
 ### Production smoke ve CI
-- Production kontrolünde request/enrollment/free-time sayıları 0; test için sahte öğrenci/section eklenmedi.
-- Candidate RPC ve health RPC boş veri üzerinde temiz döndü.
-- Regression sözleşmesi HOME_CLASS isolation, uppercase request-kind, locked preservation, advisory capacity lock, alternative resolution ve timetable feedback davranışını kilitler.
-- Final code head CI: run `33015602242`, head `4521f613c37b63b1ebcbb0bd6d2aff58f25d040d`; unit/regression, migration/replay, tenant/route, timetable authority, Phase 2/3/4/5, auth/delegated permission, production build, route-tree, TypeScript ve forward migration policy **SUCCESS**.
+- Lovable Cloud V4 introspection: 7 ana RPC mevcut; overlay operation/emits_event/notified_at kolonları mevcut.
+- Kontrol anında bugün için 0 absence lesson ve 0 overlay vardı; production'a sahte kriz/öğretmen verisi eklenmedi.
+- Final code head `c56dec1752d267130c536e39d2c96163cceb3eae`; CI run `33020382676`: unit/regression, migration/replay, tenant/route, timetable authority, Phase 2/3/4/5, auth/delegated permission, production build, route-tree, TypeScript ve forward migration policy **SUCCESS**.
 
 ### Tekrar açılma koşulu
-Bölüm 6 yalnız request/offering/section semantiği değişirse, capacity/locked/HARD free-time leakage bulunursa veya production/benchmark regression gösterirse yeniden açılır. Student demand'in timetable üretimine daha ileri çift yönlü entegrasyonu mevcut conflict objective üzerinden geliştirilir; sectioning authority kopyalanmaz.
+Bölüm 7 yalnız absence snapshot, qualification/fairness, daily overlay, chain, SPLIT/JOIN, notification veya HARD teacher/class/room/building semantiğinde regression bulunursa yeniden açılır. Zaman pattern/date/shift genişlemesi Bölüm 8'de bu date-scoped overlay authority'yi tüketir; ikinci substitution motoru açılmaz.
 
 ---
 
-## Bölüm 7 — Substitution tam kapanış — NEXT
-Akış: absence overlay → qualification → availability → fairness → direct cover → chain swaps → move/split/join/cancel/create daily overlay → room/class impact → notifications/audit → UI → tests → CI.
-
-## Bölüm 8 — Zaman modeli
+## Bölüm 8 — Zaman modeli — NEXT
 Akış: week pattern/date range/term/calendar → multiple sessions/shifts → period durations/breaks → activity applicability → validator → solver → room/building travel authority → reports → tests → CI.
 
 ## Bölüm 9 — Incremental score & performans
