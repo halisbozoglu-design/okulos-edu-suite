@@ -1,0 +1,40 @@
+{
+  "schema_version_target": 30,
+  "updated_on": "2026-08-26",
+  "base_manifest_schema_version": 29,
+  "base_manifest_large_batch_atom_total": 2070,
+  "unmerged_completed_deltas": [
+    {"family":"ADMIN_INTEGRITY_UNION_INVESTIGATION_REMAINING_100PLUS_V19","atomized_rule_count":125,"staging_doc":"docs/legal-investigation-assets-ethics-union-batch-100plus-v19.md"},
+    {"family":"FACILITIES_SECURITY_HEALTH_VEHICLES_100PLUS_V20","atomized_rule_count":128,"staging_doc":"docs/legal-facilities-security-health-vehicles-batch-100plus-v20.md"}
+  ],
+  "completed_focus": {
+    "legal_family": "EDUCATION_FRAMEWORK_LAWS_100PLUS_V21",
+    "articles": ["1739-current","222-current","3308-current","5580-current"],
+    "staging_doc": "docs/legal-education-framework-laws-batch-100plus-v21.md",
+    "atomized_rule_count": 132,
+    "new_source_atom_count": 132,
+    "article_verified_increment": 0,
+    "migration_count": 0,
+    "source_urls": [
+      "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.1739.pdf",
+      "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.222.pdf",
+      "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.3308.pdf",
+      "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.5580.pdf",
+      "https://mevzuat.meb.gov.tr/"
+    ],
+    "reason": "132 fast-batch law-level atoms staged across national education principles, compulsory primary education, vocational education and private teaching institutions. Existing MESEM/OOKY truths are cross-linked; final exact clause/amendment/duplicate audit is deferred to end."
+  },
+  "large_batch_atom_total_after_unmerged_deltas": 2455,
+  "last_reliable_article_verified": 390,
+  "last_reliable_article_verified_percent": 17.5,
+  "current_focus": {
+    "legal_family": "SCHOOL_TYPE_SPECIAL_REGULATIONS_REMAINING_100PLUS_V22",
+    "primary_source": "https://mevzuat.meb.gov.tr/",
+    "goal": "Continue fast >=100-atom coverage across remaining school-type-specific regulations and laws, prioritizing private teaching institutions regulation, preschool/primary education institutions regulation, special education remaining gaps, project schools/BILSEM/HEM/open education and other uncovered institution types before final global audit."
+  },
+  "next_target": {
+    "family": "SCHOOL_TYPE_SPECIAL_REGULATIONS_REMAINING_100PLUS_V22",
+    "minimum_batch": 100,
+    "action": "Process >=100 additional non-duplicate provenance-linked atoms from current official MEB/mevzuat sources for still-uncovered school-type-specific regulations; preserve school_type and feature filters, avoid migration unless necessary, and keep ARTICLE_VERIFIED at 390 until durable workflow_id binding exists."
+  }
+}
