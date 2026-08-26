@@ -15,7 +15,7 @@ const protectedDefinitions={
 "function:restore_schedule_restore_point":"20260820070022_f45563b6-c4ac-481c-8724-7cb6c3e1832b.sql",
 "function:get_schedule_preparation_readiness":"20260821015500_schedule_phase3_authority_closure.sql",
 "function:get_schedule_integrity_report_core_v2":"20260819220922_a4c09d54-71d0-4cea-b33c-b6e815f5d7f1.sql",
-"function:get_schedule_scenario_hard_issues_v2":"20260826231000_schedule_generic_constraint_parity.sql",
+"function:get_schedule_scenario_hard_issues_v2":"20260826235000_schedule_room_building_parity_v2.sql",
 "function:get_schedule_integrity_report":"20260821094548_d494d34a-aceb-44aa-abba-54f1073092b9.sql",
 "function:calculate_schedule_scenario_score_v2":"20260826124000_schedule_student_conflict_objective_v1.sql",
 "view:schedule_scenario_status_v2":"20260819214719_d99727ed-5f70-4c00-8e01-20b68d28c926.sql"};
