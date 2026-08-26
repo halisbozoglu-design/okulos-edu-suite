@@ -12,8 +12,8 @@ Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki sistemlerin toplam ders p
 ## Bölüm sırası
 1. Öğrenci çakışma optimizasyonu — **CLOSED 2026-08-26**
 2. Blok ders + LNS motoru — **CLOSED 2026-08-26**
-3. Derin ejection-chain — NEXT
-4. Generic constraint parity
+3. Derin ejection-chain — **CLOSED 2026-08-26**
+4. Generic constraint parity — NEXT
 5. Oda/bina parity kapanışı
 6. Student sectioning tam kapanış
 7. Substitution tam kapanış
@@ -164,8 +164,55 @@ Bölüm 2 yalnız yeni block-pattern semantiği, gerçek regression veya benchma
 
 ---
 
-## Bölüm 3 — Derin ejection-chain — NEXT
-Akış: depth-2 mevcut backend audit -> bounded depth 3-5 search -> cycle prevention -> move cost -> student/room/relation-aware scoring -> canonical batch preview -> atomic apply -> UI öneri listesi -> undo -> tests -> CI.
+## Bölüm 3 — Derin ejection-chain — CLOSED
+
+### Existing backend audit
+- `repair_schedule_scenario_core_v2` yalnızca tek adımlık geri izleme (one-step backtracking) yapabiliyordu; çakışan ikinci/üçüncü dersi çözmek için yeterli değildi.
+- `suggest_schedule_ejection_chain_v1` fiilen depth-2 çalışıyor ve blocker modeli olarak global aynı-saat doluluğunu (same-clock occupancy) kullanıyordu; gerçek okul ızgaralarında öğretmen/sınıf/derslik çakışması yerine boş olmayan her hücreyi blocker ilan ederek işe yaramaz öneriler üretiyordu.
+
+### New planner: `src/lib/schedule-ejection-chain.ts`
+- Sınırlandırılmış derinlik 3–5 arama; her düğümde expansion budget ve imza tabanlı cycle prevention.
+- Bloker tespiti: aynı öğretmen, aynı sınıf, aynı derslik ve student-conflict ağırlıklarına göre yapılır; global slot occupancy artık blocker modeli değildir.
+- Her arama düğümü `get_schedule_atomic_move_plan_v1()` çağırır; blok componentler atomik kalır ve Bölüm 2 invariant'ları bozulamaz.
+- Her tam zincir yalnızca `preview_schedule_batch_move_v1` canonical HARD validasyonundan geçtikten sonra kabul edilir.
+
+### Apply path
+- `applyEjectionChain`: önce hedef zincir için immediate re-preview çalıştırır, ardından `move_schedule_slots_batch_v1` ile tek atomik transaction uygular.
+- Otomatik restore point oluşturulur; mevcut undo/history path'i (`restore_schedule_restore_point`) korunur.
+
+### Candidate ranking
+- Önce MEDIUM: student-conflict çakışmaları ve planning-relation cezaları.
+- Ardından SOFT: öğretmen/sınıf boşlukları, geç saat, planning soft penalties ve hareket/oda-değişimi maliyeti.
+
+### UI / operasyon
+- Yeni route `/schedule-ejection-chain`: kaynak ders, hedef gün/saat, depth 3/4/5 seçimi, sıralı aday listesi, her adayda depth/hamle sayısı/MEDIUM/SOFT/movement cost.
+- Route mevcut timetable navigation'dan (`src/routes/timetable.tsx`) bağlandı: `Derin Ejection-Chain` ve `Zincir Düzeltme` etiketleriyle.
+- `/schedule` feature ailesi altında sınıflandırıldı; yeni `system_feature_catalog` kaydı açılmadı.
+
+### Test / kalite kapısı
+- `tests/schedule-ejection-chain.test.ts` içinde yedi regression testi:
+  - Çelişkili hedefleri aynı atomik satır için reddetme.
+  - Atomik çok-satırlı blok satırının korunması.
+  - Kaynak-bazlı (resource-aware) bloklama; global slot occupancy değil.
+  - İlgisiz aynı-saat dersinin blocker sayılmaması.
+  - Student-conflict ağırlıklarının blocker sinyali üretmesi.
+  - Hipotetik `applyMoves` kaynak satırları mutasyona uğratmıyor.
+  - `scoreEjectionCandidate` lexicographic uyumlu ve movement cost içeriyor.
+- CI run `32993983161`, head `de55e8c2ab013c4c95ff636b64888b7483f62503`: unit tests, migrations, replay safety, tenant, authority, Phase 2-5, production build, route-tree, TypeScript ve forward migration policy **SUCCESS**.
+- Bir önceki CI denemesinde 23/23 test geçmiş, yalnızca route classification hatası nedeniyle düşmüştü; `de55e8c2ab013c4c95ff636b64888b7483f62503` ile route mapping düzeltildi, guard'lar gevşetilmedi.
+
+### Forward migrations
+Bölüm 3 **0 yeni migration** ekledi; mevcut block-aware batch RPC'ler (`preview_schedule_batch_move_v1`, `move_schedule_slots_batch_v1`, `get_schedule_atomic_move_plan_v1`) yeniden kullanıldı.
+
+### Ana commitler
+- `07be50aa2c62ea78a3bb4a17c352b3e2ef493b07` — ejection-chain planner core
+- `222c788af3442228a6413e99e59f1c3785326e72` — resource-aware blocker model + cycle prevention
+- `a10645e4a2a58023f3ac17ff61403eba697986d5` — canonical batch preview integration
+- `ba0918a1fec38b80eba3ccaee5d99de0777c08d2` — UI route and candidate ranking
+- `de55e8c2ab013c4c95ff636b64888b7483f62503` — route classification fix and CI closure
+
+### Tekrar açılma koşulu
+Bölüm 3 yalnızca gerçek regression, canonical HARD leakage, atomik blok kırılması veya benchmark kanıtıyla bounded chain search'in yanlış olduğu gösterilirse yeniden açılır.
 
 ## Bölüm 4 — Generic constraint parity
 Akış: Timefold/UniTime/aSc/FET constraint matrisi -> canonical ontology -> selector/activity semantics -> HARD/MEDIUM/SOFT/OFF evaluator -> DB validation gerektiği yerler -> local/external solver parity -> kural UI -> explanations -> exhaustive tests -> parity audit -> CI.
