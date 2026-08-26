@@ -20,7 +20,7 @@ const protectedDefinitions = {
   "function:get_schedule_integrity_report_core_v2": "20260819220922_a4c09d54-71d0-4cea-b33c-b6e815f5d7f1.sql",
   "function:get_schedule_scenario_hard_issues_v2": "20260821094548_d494d34a-aceb-44aa-abba-54f1073092b9.sql",
   "function:get_schedule_integrity_report": "20260821094548_d494d34a-aceb-44aa-abba-54f1073092b9.sql",
-  "function:calculate_schedule_scenario_score_v2": "20260821020500_schedule_phase3_scoped_quality_score.sql",
+  "function:calculate_schedule_scenario_score_v2": "20260826124000_schedule_student_conflict_objective_v1.sql",
   "view:schedule_scenario_status_v2": "20260819214719_d99727ed-5f70-4c00-8e01-20b68d28c926.sql",
 };
 
