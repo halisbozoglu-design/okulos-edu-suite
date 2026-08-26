@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -887,6 +887,74 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "institutions"
             referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      class_timetable_application_selections: {
+        Row: {
+          active: boolean
+          class_id: string
+          created_at: string
+          extra_hours: number | null
+          id: string
+          rule_id: string
+          selection_scope: string
+          settings: Json
+          subject_choice: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          class_id: string
+          created_at?: string
+          extra_hours?: number | null
+          id?: string
+          rule_id: string
+          selection_scope?: string
+          settings?: Json
+          subject_choice?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          class_id?: string
+          created_at?: string
+          extra_hours?: number | null
+          id?: string
+          rule_id?: string
+          selection_scope?: string
+          settings?: Json
+          subject_choice?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_timetable_application_selections_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "class_timetable_application_selections_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_timetable_application_selections_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_timetable_application_selections_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "official_timetable_application_rules"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -2244,6 +2312,56 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_rule_definitions: {
+        Row: {
+          active: boolean
+          condition_note: string | null
+          domain: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          parameters: Json
+          rule_code: string
+          source_id: string | null
+          subject_type: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          condition_note?: string | null
+          domain: string
+          effective_from: string
+          effective_to?: string | null
+          id?: string
+          parameters: Json
+          rule_code: string
+          source_id?: string | null
+          subject_type: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          condition_note?: string | null
+          domain?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          parameters?: Json
+          rule_code?: string
+          source_id?: string | null
+          subject_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_rule_definitions_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "legal_rule_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       legal_rule_sources: {
         Row: {
           active: boolean
@@ -2963,6 +3081,36 @@ export type Database = {
           },
         ]
       }
+      official_curriculum_catalog_status: {
+        Row: {
+          branch_name: string
+          field_name: string
+          institution_type: string
+          reason: string | null
+          source_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          branch_name: string
+          field_name: string
+          institution_type: string
+          reason?: string | null
+          source_url?: string | null
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          branch_name?: string
+          field_name?: string
+          institution_type?: string
+          reason?: string | null
+          source_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       official_curriculum_profiles: {
         Row: {
           academic_support_hours: number | null
@@ -3071,6 +3219,482 @@ export type Database = {
           total_hour_target?: number | null
           updated_at?: string
           vocational_hours?: number | null
+        }
+        Relationships: []
+      }
+      official_general_timetable_profiles: {
+        Row: {
+          active: boolean
+          applicability_status: string
+          constraints: Json
+          effective_academic_year: string
+          elective_hours: number
+          fixed_hours: number
+          free_activity_hours: number
+          grade_level: number
+          guidance_hours: number
+          id: string
+          program_variant: string
+          school_subtype: string
+          school_type: string
+          source_decision_date: string | null
+          source_decision_no: string
+          source_page: number | null
+          source_url: string
+          total_hours: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          applicability_status?: string
+          constraints?: Json
+          effective_academic_year: string
+          elective_hours?: number
+          fixed_hours: number
+          free_activity_hours?: number
+          grade_level: number
+          guidance_hours?: number
+          id?: string
+          program_variant?: string
+          school_subtype?: string
+          school_type: string
+          source_decision_date?: string | null
+          source_decision_no: string
+          source_page?: number | null
+          source_url: string
+          total_hours: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          applicability_status?: string
+          constraints?: Json
+          effective_academic_year?: string
+          elective_hours?: number
+          fixed_hours?: number
+          free_activity_hours?: number
+          grade_level?: number
+          guidance_hours?: number
+          id?: string
+          program_variant?: string
+          school_subtype?: string
+          school_type?: string
+          source_decision_date?: string | null
+          source_decision_no?: string
+          source_page?: number | null
+          source_url?: string
+          total_hours?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      official_general_timetable_rows: {
+        Row: {
+          active: boolean
+          category: string
+          constraints: Json
+          course_id: string
+          id: string
+          profile_id: string
+          source_page: number | null
+          weekly_hours: number
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          constraints?: Json
+          course_id: string
+          id?: string
+          profile_id: string
+          source_page?: number | null
+          weekly_hours: number
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          constraints?: Json
+          course_id?: string
+          id?: string
+          profile_id?: string
+          source_page?: number | null
+          weekly_hours?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_general_timetable_rows_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "official_general_timetable_rows_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "official_general_timetable_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_institution_timetable_overrides: {
+        Row: {
+          active: boolean
+          constraints: Json
+          effective_from: string
+          effective_to: string | null
+          id: string
+          institution_code: string
+          scope_code: string
+          source_decision_no: string | null
+          source_url: string | null
+        }
+        Insert: {
+          active?: boolean
+          constraints?: Json
+          effective_from: string
+          effective_to?: string | null
+          id?: string
+          institution_code: string
+          scope_code: string
+          source_decision_no?: string | null
+          source_url?: string | null
+        }
+        Update: {
+          active?: boolean
+          constraints?: Json
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          institution_code?: string
+          scope_code?: string
+          source_decision_no?: string | null
+          source_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_institution_timetable_overrides_scope_code_fkey"
+            columns: ["scope_code"]
+            isOneToOne: false
+            referencedRelation: "official_timetable_scope_catalog"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      official_source_change_queue: {
+        Row: {
+          applied_at: string | null
+          approval_required: boolean
+          approved_at: string | null
+          change_type: string
+          detected_at: string
+          effective_from: string | null
+          id: string
+          note: string | null
+          parse_required: boolean
+          parsed_at: string | null
+          parser_result: Json
+          previous_snapshot_id: string | null
+          snapshot_id: string
+          source_id: string
+          status: string
+        }
+        Insert: {
+          applied_at?: string | null
+          approval_required?: boolean
+          approved_at?: string | null
+          change_type?: string
+          detected_at?: string
+          effective_from?: string | null
+          id?: string
+          note?: string | null
+          parse_required?: boolean
+          parsed_at?: string | null
+          parser_result?: Json
+          previous_snapshot_id?: string | null
+          snapshot_id: string
+          source_id: string
+          status?: string
+        }
+        Update: {
+          applied_at?: string | null
+          approval_required?: boolean
+          approved_at?: string | null
+          change_type?: string
+          detected_at?: string
+          effective_from?: string | null
+          id?: string
+          note?: string | null
+          parse_required?: boolean
+          parsed_at?: string | null
+          parser_result?: Json
+          previous_snapshot_id?: string | null
+          snapshot_id?: string
+          source_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_source_change_queue_previous_snapshot_id_fkey"
+            columns: ["previous_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "official_source_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "official_source_change_queue_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "official_source_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "official_source_change_queue_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "official_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_source_registry: {
+        Row: {
+          active: boolean
+          authority: string
+          check_mode: string
+          created_at: string
+          id: string
+          last_changed_at: string | null
+          last_checked_at: string | null
+          last_content_hash: string | null
+          parser_kind: string
+          source_key: string
+          source_type: string
+          source_url: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          authority?: string
+          check_mode?: string
+          created_at?: string
+          id?: string
+          last_changed_at?: string | null
+          last_checked_at?: string | null
+          last_content_hash?: string | null
+          parser_kind?: string
+          source_key: string
+          source_type: string
+          source_url: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          authority?: string
+          check_mode?: string
+          created_at?: string
+          id?: string
+          last_changed_at?: string | null
+          last_checked_at?: string | null
+          last_content_hash?: string | null
+          parser_kind?: string
+          source_key?: string
+          source_type?: string
+          source_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      official_source_snapshots: {
+        Row: {
+          content_hash: string
+          decision_no: string | null
+          document_date: string | null
+          effective_from: string | null
+          effective_to: string | null
+          http_status: number | null
+          id: string
+          metadata: Json
+          raw_location: string | null
+          retrieved_at: string
+          source_id: string
+          title: string | null
+        }
+        Insert: {
+          content_hash: string
+          decision_no?: string | null
+          document_date?: string | null
+          effective_from?: string | null
+          effective_to?: string | null
+          http_status?: number | null
+          id?: string
+          metadata?: Json
+          raw_location?: string | null
+          retrieved_at?: string
+          source_id: string
+          title?: string | null
+        }
+        Update: {
+          content_hash?: string
+          decision_no?: string | null
+          document_date?: string | null
+          effective_from?: string | null
+          effective_to?: string | null
+          http_status?: number | null
+          id?: string
+          metadata?: Json
+          raw_location?: string | null
+          retrieved_at?: string
+          source_id?: string
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_source_snapshots_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "official_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_timetable_application_profiles: {
+        Row: {
+          profile_id: string
+          rule_id: string
+        }
+        Insert: {
+          profile_id: string
+          rule_id: string
+        }
+        Update: {
+          profile_id?: string
+          rule_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_timetable_application_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "official_general_timetable_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "official_timetable_application_profiles_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "official_timetable_application_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      official_timetable_application_rules: {
+        Row: {
+          active: boolean
+          application_total_max: number | null
+          application_total_min: number | null
+          approval_scope: string | null
+          base_total_hours: number
+          code: string
+          configuration: Json
+          grades: number[]
+          id: string
+          norm_countable_cap: number
+          school_type: string
+          source_decision_no: string
+          source_url: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          application_total_max?: number | null
+          application_total_min?: number | null
+          approval_scope?: string | null
+          base_total_hours?: number
+          code: string
+          configuration?: Json
+          grades: number[]
+          id?: string
+          norm_countable_cap?: number
+          school_type: string
+          source_decision_no: string
+          source_url: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          application_total_max?: number | null
+          application_total_min?: number | null
+          approval_scope?: string | null
+          base_total_hours?: number
+          code?: string
+          configuration?: Json
+          grades?: number[]
+          id?: string
+          norm_countable_cap?: number
+          school_type?: string
+          source_decision_no?: string
+          source_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      official_timetable_scope_catalog: {
+        Row: {
+          active: boolean
+          authority_unit: string
+          base_code: string | null
+          code: string
+          constraints: Json
+          effective_from: string | null
+          grade_end: number | null
+          grade_start: number | null
+          program_variant: string | null
+          schedule_mode: string
+          school_subtype: string | null
+          school_type: string
+          source_decision_date: string | null
+          source_decision_no: string | null
+          source_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          authority_unit: string
+          base_code?: string | null
+          code: string
+          constraints?: Json
+          effective_from?: string | null
+          grade_end?: number | null
+          grade_start?: number | null
+          program_variant?: string | null
+          schedule_mode: string
+          school_subtype?: string | null
+          school_type: string
+          source_decision_date?: string | null
+          source_decision_no?: string | null
+          source_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          authority_unit?: string
+          base_code?: string | null
+          code?: string
+          constraints?: Json
+          effective_from?: string | null
+          grade_end?: number | null
+          grade_start?: number | null
+          program_variant?: string | null
+          schedule_mode?: string
+          school_subtype?: string | null
+          school_type?: string
+          source_decision_date?: string | null
+          source_decision_no?: string | null
+          source_url?: string | null
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -4649,6 +5273,78 @@ export type Database = {
           },
         ]
       }
+      schedule_compute_workers: {
+        Row: {
+          active: boolean
+          avg_latency_ms: number | null
+          capabilities: Json
+          connection_mode: string
+          cpu_threads: number | null
+          created_at: string
+          current_load: number
+          display_name: string
+          endpoint_url: string | null
+          gpu_memory_mb: number | null
+          gpu_model: string | null
+          health: string
+          id: string
+          last_heartbeat: string | null
+          lease_seconds: number
+          max_parallel: number
+          priority: number
+          software_version: string | null
+          updated_at: string
+          worker_key: string
+          worker_type: string
+        }
+        Insert: {
+          active?: boolean
+          avg_latency_ms?: number | null
+          capabilities?: Json
+          connection_mode?: string
+          cpu_threads?: number | null
+          created_at?: string
+          current_load?: number
+          display_name: string
+          endpoint_url?: string | null
+          gpu_memory_mb?: number | null
+          gpu_model?: string | null
+          health?: string
+          id?: string
+          last_heartbeat?: string | null
+          lease_seconds?: number
+          max_parallel?: number
+          priority?: number
+          software_version?: string | null
+          updated_at?: string
+          worker_key: string
+          worker_type: string
+        }
+        Update: {
+          active?: boolean
+          avg_latency_ms?: number | null
+          capabilities?: Json
+          connection_mode?: string
+          cpu_threads?: number | null
+          created_at?: string
+          current_load?: number
+          display_name?: string
+          endpoint_url?: string | null
+          gpu_memory_mb?: number | null
+          gpu_model?: string | null
+          health?: string
+          id?: string
+          last_heartbeat?: string | null
+          lease_seconds?: number
+          max_parallel?: number
+          priority?: number
+          software_version?: string | null
+          updated_at?: string
+          worker_key?: string
+          worker_type?: string
+        }
+        Relationships: []
+      }
       schedule_duty_optimization: {
         Row: {
           adjacent_weight: number
@@ -5263,6 +5959,79 @@ export type Database = {
             columns: ["scenario_id"]
             isOneToOne: false
             referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_repair_suggestions: {
+        Row: {
+          action_code: string
+          applied_at: string | null
+          created_at: string
+          description: string
+          estimated_gain: number | null
+          hard_rule_impact: boolean
+          id: string
+          legal_safe: boolean
+          proposed_change: Json
+          rank: number
+          requires_approval: boolean
+          scenario_id: string
+          title: string
+          unplaced_item_id: string | null
+        }
+        Insert: {
+          action_code: string
+          applied_at?: string | null
+          created_at?: string
+          description: string
+          estimated_gain?: number | null
+          hard_rule_impact?: boolean
+          id?: string
+          legal_safe?: boolean
+          proposed_change?: Json
+          rank?: number
+          requires_approval?: boolean
+          scenario_id: string
+          title: string
+          unplaced_item_id?: string | null
+        }
+        Update: {
+          action_code?: string
+          applied_at?: string | null
+          created_at?: string
+          description?: string
+          estimated_gain?: number | null
+          hard_rule_impact?: boolean
+          id?: string
+          legal_safe?: boolean
+          proposed_change?: Json
+          rank?: number
+          requires_approval?: boolean
+          scenario_id?: string
+          title?: string
+          unplaced_item_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_repair_suggestions_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_repair_suggestions_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_repair_suggestions_unplaced_item_id_fkey"
+            columns: ["unplaced_item_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_unplaced_items"
             referencedColumns: ["id"]
           },
         ]
@@ -5946,6 +6715,143 @@ export type Database = {
             referencedColumns: ["teacher_id"]
           },
         ]
+      }
+      schedule_solve_attempts: {
+        Row: {
+          attempt_no: number
+          claimed_at: string | null
+          diagnostics: Json
+          duration_ms: number | null
+          finished_at: string | null
+          hard_issue_count: number | null
+          id: string
+          job_id: string
+          lease_until: string | null
+          profile_key: string | null
+          result_payload: Json
+          scenario_id: string | null
+          score: number | null
+          seed: number | null
+          started_at: string | null
+          status: string
+          unplaced_count: number | null
+          worker_id: string | null
+        }
+        Insert: {
+          attempt_no: number
+          claimed_at?: string | null
+          diagnostics?: Json
+          duration_ms?: number | null
+          finished_at?: string | null
+          hard_issue_count?: number | null
+          id?: string
+          job_id: string
+          lease_until?: string | null
+          profile_key?: string | null
+          result_payload?: Json
+          scenario_id?: string | null
+          score?: number | null
+          seed?: number | null
+          started_at?: string | null
+          status?: string
+          unplaced_count?: number | null
+          worker_id?: string | null
+        }
+        Update: {
+          attempt_no?: number
+          claimed_at?: string | null
+          diagnostics?: Json
+          duration_ms?: number | null
+          finished_at?: string | null
+          hard_issue_count?: number | null
+          id?: string
+          job_id?: string
+          lease_until?: string | null
+          profile_key?: string | null
+          result_payload?: Json
+          scenario_id?: string | null
+          score?: number | null
+          seed?: number | null
+          started_at?: string | null
+          status?: string
+          unplaced_count?: number | null
+          worker_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_solve_attempts_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_solve_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_solve_attempts_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_solve_attempts_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_solve_attempts_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_compute_workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_solve_jobs: {
+        Row: {
+          candidate_count: number
+          compute_preference: string
+          config: Json
+          created_at: string
+          finished_at: string | null
+          id: string
+          institution_code: string
+          mode: string
+          quality_target: number
+          requested_by: string | null
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          candidate_count?: number
+          compute_preference?: string
+          config?: Json
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          institution_code?: string
+          mode?: string
+          quality_target?: number
+          requested_by?: string | null
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          candidate_count?: number
+          compute_preference?: string
+          config?: Json
+          created_at?: string
+          finished_at?: string | null
+          id?: string
+          institution_code?: string
+          mode?: string
+          quality_target?: number
+          requested_by?: string | null
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: []
       }
       schedule_sync_group_members: {
         Row: {
@@ -7567,8 +8473,10 @@ export type Database = {
           approved_by: string | null
           id: string
           institution_code: string | null
+          note: string | null
           period: number
           reason: string
+          source: string
           teacher_id: string
           weekday: number
         }
@@ -7578,8 +8486,10 @@ export type Database = {
           approved_by?: string | null
           id?: string
           institution_code?: string | null
+          note?: string | null
           period: number
           reason?: string
+          source?: string
           teacher_id: string
           weekday: number
         }
@@ -7589,8 +8499,10 @@ export type Database = {
           approved_by?: string | null
           id?: string
           institution_code?: string | null
+          note?: string | null
           period?: number
           reason?: string
+          source?: string
           teacher_id?: string
           weekday?: number
         }
@@ -8555,6 +9467,10 @@ export type Database = {
       }
     }
     Functions: {
+      accept_schedule_worker_result_v1: {
+        Args: { p_attempt_id: string }
+        Returns: string
+      }
       apply_approved_payroll_activities: {
         Args: { p_month: number; p_run_id: string; p_year: number }
         Returns: number
@@ -8586,6 +9502,14 @@ export type Database = {
       apply_schedule_scenario_pre_phase3: {
         Args: { p_scenario_id: string }
         Returns: number
+      }
+      approve_official_source_change_v1: {
+        Args: {
+          p_calendar_event_type?: string
+          p_calendar_title?: string
+          p_queue_id: string
+        }
+        Returns: string
       }
       approve_payroll_activity: {
         Args: { p_activity_id: string; p_approve?: boolean }
@@ -8726,6 +9650,24 @@ export type Database = {
         }
         Returns: string
       }
+      audit_mesem_catalog_completeness_v1: {
+        Args: never
+        Returns: {
+          branch_name: string
+          field_name: string
+          issue_type: string
+          reason: string
+        }[]
+      }
+      audit_mtal_catalog_completeness_v1: {
+        Args: never
+        Returns: {
+          branch_name: string
+          field_name: string
+          issue_type: string
+          reason: string
+        }[]
+      }
       audit_mtal_curriculum_v1: {
         Args: never
         Returns: {
@@ -8754,6 +9696,14 @@ export type Database = {
       calculate_schedule_scenario_score_v2: {
         Args: { p_scenario_id: string }
         Returns: number
+      }
+      calculate_teacher_load_limits_v1: {
+        Args: {
+          p_full_day_preschool?: boolean
+          p_role?: string
+          p_teacher_type: string
+        }
+        Returns: Json
       }
       can_access_institution: {
         Args: { p_institution_code: string }
@@ -9115,6 +10065,20 @@ export type Database = {
           total_weekly_hours: number
         }[]
       }
+      get_iho_application_options_v1: {
+        Args: { p_grade: number }
+        Returns: {
+          allowed_subjects: Json
+          approval_scope: string
+          code: string
+          configuration: Json
+          label: string
+          requires_subject: boolean
+          selection_scope: string
+          total_max: number
+          total_min: number
+        }[]
+      }
       get_my_active_institution_code: { Args: never; Returns: string }
       get_my_institution_code: { Args: never; Returns: string }
       get_my_permissions: {
@@ -9261,6 +10225,19 @@ export type Database = {
           rooms_configured: boolean
           total_rows: number
           unassigned_rows: number
+        }[]
+      }
+      get_schedule_compute_capabilities_v1: {
+        Args: never
+        Returns: {
+          avg_latency_ms: number
+          current_load: number
+          display_name: string
+          health: string
+          max_parallel: number
+          recommended: boolean
+          worker_key: string
+          worker_type: string
         }[]
       }
       get_schedule_configuration_issues_before_scoped_rules_v2: {
@@ -9570,6 +10547,10 @@ export type Database = {
           imported_students: number
         }[]
       }
+      import_local_schedule_candidate_v1: {
+        Args: { p_rows: Json; p_title?: string }
+        Returns: string
+      }
       import_personnel_registry: {
         Args: { p_file_name: string; p_rows: Json }
         Returns: Json
@@ -9617,6 +10598,15 @@ export type Database = {
         Args: { p_academic_year_id: string }
         Returns: number
       }
+      mark_official_source_change_parsed_v1: {
+        Args: {
+          p_approval_required?: boolean
+          p_effective_from?: string
+          p_parser_result: Json
+          p_queue_id: string
+        }
+        Returns: undefined
+      }
       materialize_workshop_block_rule_v1: {
         Args: { p_course_id: string }
         Returns: undefined
@@ -9629,6 +10619,15 @@ export type Database = {
           p_weekday: number
         }
         Returns: number
+      }
+      move_schedule_slot_v1: {
+        Args: {
+          p_classroom_id?: string
+          p_period: number
+          p_schedule_id: string
+          p_weekday: number
+        }
+        Returns: string
       }
       normalize_class_key: {
         Args: { p_class_name: string; p_program_type: string }
@@ -9677,6 +10676,15 @@ export type Database = {
           teacher_id: string
           work_date: string
         }[]
+      }
+      plan_schedule_solve_job_v1: {
+        Args: {
+          p_candidate_count?: number
+          p_compute_preference?: string
+          p_mode?: string
+          p_quality_target?: number
+        }
+        Returns: string
       }
       prepare_quran_split: {
         Args: {
@@ -9740,6 +10748,23 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      preserve_manual_schedule_v1: {
+        Args: { p_preserve?: boolean }
+        Returns: number
+      }
+      preview_schedule_move_v1: {
+        Args: {
+          p_classroom_id?: string
+          p_period: number
+          p_schedule_id: string
+          p_weekday: number
+        }
+        Returns: Json
+      }
+      preview_schedule_swap_v1: {
+        Args: { p_left_id: string; p_right_id: string }
+        Returns: Json
+      }
       publish_current_schedule: {
         Args: {
           p_academic_year?: string
@@ -9793,9 +10818,36 @@ export type Database = {
         Args: { p_class_id: string }
         Returns: string
       }
+      refresh_schedule_repair_suggestions_v1: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       refresh_schedule_scenario_explanation_v1: {
         Args: { p_scenario_id: string }
         Returns: undefined
+      }
+      register_official_source_snapshot_v1: {
+        Args: {
+          p_authority?: string
+          p_content_hash: string
+          p_decision_no?: string
+          p_document_date?: string
+          p_effective_from?: string
+          p_effective_to?: string
+          p_http_status?: number
+          p_metadata?: Json
+          p_raw_location?: string
+          p_source_key: string
+          p_source_type: string
+          p_source_url: string
+          p_title?: string
+        }
+        Returns: {
+          changed: boolean
+          queue_id: string
+          snapshot_id: string
+          source_id: string
+        }[]
       }
       register_push_subscription: {
         Args: {
@@ -9804,6 +10856,20 @@ export type Database = {
           p_p256dh: string
           p_platform?: string
           p_user_agent?: string
+        }
+        Returns: string
+      }
+      register_schedule_compute_worker_v1: {
+        Args: {
+          p_capabilities?: Json
+          p_cpu_threads?: number
+          p_display_name: string
+          p_gpu_memory_mb?: number
+          p_gpu_model?: string
+          p_max_parallel?: number
+          p_software_version?: string
+          p_worker_key: string
+          p_worker_type: string
         }
         Returns: string
       }
@@ -9838,6 +10904,19 @@ export type Database = {
       rescore_schedule_scenario_v2: {
         Args: { p_scenario_id: string }
         Returns: number
+      }
+      resolve_class_iho_timetable_v1: {
+        Args: { p_class: string }
+        Returns: Json
+      }
+      resolve_iho_application_v1: {
+        Args: {
+          p_code: string
+          p_extra?: number
+          p_grade: number
+          p_subject?: string
+        }
+        Returns: Json
       }
       resolve_pre_registered_teacher: {
         Args: { p_institution_code: string; p_tckn: string }
@@ -9955,6 +11034,16 @@ export type Database = {
         Args: { p_academic_year_id: string }
         Returns: boolean
       }
+      set_class_iho_application_v1: {
+        Args: {
+          p_class: string
+          p_code: string
+          p_extra?: number
+          p_settings?: Json
+          p_subject?: string
+        }
+        Returns: Json
+      }
       set_duty_month_lock: {
         Args: { p_locked: boolean; p_month: string }
         Returns: undefined
@@ -9981,6 +11070,17 @@ export type Database = {
       }
       set_personnel_teaching_area: {
         Args: { p_teaching_area_id?: string; p_user_id: string }
+        Returns: boolean
+      }
+      set_teacher_slot_unavailable_v1: {
+        Args: {
+          p_blocked: boolean
+          p_note?: string
+          p_period: number
+          p_source?: string
+          p_teacher_id: string
+          p_weekday: number
+        }
         Returns: boolean
       }
       set_user_permission: {
@@ -10156,6 +11256,10 @@ export type Database = {
         }
         Returns: string
       }
+      swap_schedule_slots_v1: {
+        Args: { p_left_id: string; p_right_id: string }
+        Returns: Json
+      }
       sync_all_quran_plans_to_timetable: {
         Args: never
         Returns: {
@@ -10297,6 +11401,24 @@ export type Database = {
       vocational_suggest_group_count: {
         Args: { p_grade: number; p_special?: number; p_students: number }
         Returns: number
+      }
+      worker_claim_schedule_attempt_v1: {
+        Args: { p_worker_key: string }
+        Returns: Json
+      }
+      worker_complete_schedule_attempt_v1: {
+        Args: {
+          p_attempt_id: string
+          p_duration_ms?: number
+          p_error?: string
+          p_result: Json
+          p_worker_key: string
+        }
+        Returns: boolean
+      }
+      worker_heartbeat_schedule_v1: {
+        Args: { p_latency_ms?: number; p_load?: number; p_worker_key: string }
+        Returns: boolean
       }
       workshop_block_patterns: {
         Args: { p_daily_capacity: number; p_total: number }
