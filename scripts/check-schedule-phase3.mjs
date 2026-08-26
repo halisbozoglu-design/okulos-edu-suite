@@ -53,7 +53,7 @@ for(const token of [
   '"function:get_schedule_preparation_readiness": "20260821015500_schedule_phase3_authority_closure.sql"',
   '"function:get_schedule_scenario_hard_issues_v2": "20260821094548_d494d34a-aceb-44aa-abba-54f1073092b9.sql"',
   '"function:get_schedule_integrity_report": "20260821094548_d494d34a-aceb-44aa-abba-54f1073092b9.sql"',
-  '"function:calculate_schedule_scenario_score_v2": "20260821020500_schedule_phase3_scoped_quality_score.sql"',
+  '"function:calculate_schedule_scenario_score_v2": "20260826124000_schedule_student_conflict_objective_v1.sql"',
 ]) if(!authority.includes(token)){console.error(`Faz 3 authority kaydı eksik: ${token}`);process.exit(1);}
 
 const phase3=texts.find((x)=>x.file==="20260821015500_schedule_phase3_authority_closure.sql")?.text??"";
