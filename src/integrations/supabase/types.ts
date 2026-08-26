@@ -10535,6 +10535,15 @@ export type Database = {
             Args: { p_code: string; p_scope?: Json; p_user_id: string }
             Returns: boolean
           }
+      heartbeat_schedule_compute_worker_v1: {
+        Args: {
+          p_avg_latency_ms?: number
+          p_current_load?: number
+          p_health?: string
+          p_worker_key: string
+        }
+        Returns: boolean
+      }
       import_class_summaries: {
         Args: { p_file_name: string; p_rows: Json }
         Returns: Json
