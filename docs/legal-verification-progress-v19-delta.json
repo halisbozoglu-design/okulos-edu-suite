@@ -1,0 +1,33 @@
+{
+  "schema_version_target": 30,
+  "updated_on": "2026-08-26",
+  "base_manifest_sha": "4981da86dcc9539e587e3b3d1a73e398bc528c81",
+  "completed_focus_add": {
+    "legal_family": "ADMIN_INTEGRITY_UNION_INVESTIGATION_100PLUS_V19",
+    "articles": ["4483-current", "3628-current", "5176-current", "4688-current"],
+    "staging_doc": "docs/legal-investigation-assets-ethics-union-batch-100plus-v19.md",
+    "atomized_rule_count": 125,
+    "new_source_atom_count": 125,
+    "article_verified_increment": 0,
+    "migration_count": 0,
+    "source_urls": [
+      "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4483.pdf",
+      "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.3628.pdf",
+      "https://www.etik.gov.tr/media/uidnvdn5/1-5-5176.pdf",
+      "https://www.etik.gov.tr/mevzuat/etik-mevzuati/",
+      "https://www.csgb.gov.tr/media/1316/4688-say%C4%B1l%C4%B1-kamu-goerevlileri-sendikalar%C4%B1-ve-toplu-soezle%C5%9Fmeler-kanunu.pdf"
+    ],
+    "reason": "125 fast-batch atoms staged across 4483 investigation-permission, 3628 asset-declaration/anti-corruption, 5176 statutory ethics and 4688 union/collective-agreement interfaces. Final exact clause/duplicate audit deferred to global end pass."
+  },
+  "large_batch_atom_total": 2195,
+  "current_focus": {
+    "legal_family": "REMAINING_GENERAL_ADMIN_AND_SCHOOL_COMPLIANCE_100PLUS_V20",
+    "primary_source": "https://www.mevzuat.gov.tr/",
+    "goal": "Continue fast >=100-atom coverage across remaining general administrative/school-compliance laws and current MEB operational regulations before the final global correctness/missing/duplicate audit."
+  },
+  "next_target": {
+    "family": "REMAINING_GENERAL_ADMIN_AND_SCHOOL_COMPLIANCE_100PLUS_V20",
+    "minimum_batch": 100,
+    "action": "Process >=100 additional non-duplicate provenance-linked atoms from still-uncovered current official sources, prioritizing public property/public housing, private security/access, tobacco/alcohol/school-environment health, emergency/civil-defense, official vehicles/facilities and other school-relevant administrative families; no migration unless required; keep ARTICLE_VERIFIED at 390 until durable workflow_id binding exists."
+  }
+}
