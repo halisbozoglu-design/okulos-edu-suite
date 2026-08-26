@@ -13,8 +13,8 @@ Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki sistemlerin toplam ders p
 1. Öğrenci çakışma optimizasyonu — **CLOSED 2026-08-26**
 2. Blok ders + LNS motoru — **CLOSED 2026-08-26**
 3. Derin ejection-chain — **CLOSED 2026-08-26**
-4. Generic constraint parity — NEXT
-5. Oda/bina parity kapanışı
+4. Generic constraint parity — **CLOSED 2026-08-26**
+5. Oda/bina parity kapanışı — NEXT
 6. Student sectioning tam kapanış
 7. Substitution tam kapanış
 8. Zaman modeli: odd/even week, tarih/dönem, çoklu vardiya
@@ -214,10 +214,82 @@ Bölüm 3 **0 yeni migration** ekledi; mevcut block-aware batch RPC'ler (`previe
 ### Tekrar açılma koşulu
 Bölüm 3 yalnızca gerçek regression, canonical HARD leakage, atomik blok kırılması veya benchmark kanıtıyla bounded chain search'in yanlış olduğu gösterilirse yeniden açılır.
 
-## Bölüm 4 — Generic constraint parity
-Akış: Timefold/UniTime/aSc/FET constraint matrisi -> canonical ontology -> selector/activity semantics -> HARD/MEDIUM/SOFT/OFF evaluator -> DB validation gerektiği yerler -> local/external solver parity -> kural UI -> explanations -> exhaustive tests -> parity audit -> CI.
+---
 
-## Bölüm 5 — Oda/bina parity kapanışı
+## Bölüm 4 — Generic constraint parity — CLOSED
+
+### Canonical ontology ve activity semantiği
+- Generic relation çekirdeği 26 canonical tipe genişletildi; bilinmeyen relation type production tanımına kabul edilmez.
+- `[2]`, `[3]`, `[2,2]` gibi bloklarda satır değil **activity-level** değerlendirme yapılır; `block_key` varsa blok tek activity, yoksa satır tek activity kabul edilir.
+- Selector kapsamları assignment, course, teacher ve class düzeylerinde çalışır.
+- Relation seviyeleri `HARD`, `MEDIUM`, `SOFT`, `OFF` olarak ayrıdır; OFF hesaplanmaz.
+
+### 26 canonical relation tipi
+- Zaman: `SAME_TIME`, `DIFFERENT_TIME`, `SAME_START`, `SAME_DAY`, `DIFFERENT_DAY`, `OVERLAP`, `NOT_OVERLAP`, `MIN_GAP`, `MAX_GAP`, `MIN_DAYS`, `MAX_DAYS`, `ADJACENT`.
+- Sıra/blok: `ORDERED`, `CONSECUTIVE`, `GROUPED`.
+- Oda ilişkisi: `SAME_ROOM`, `DIFFERENT_ROOM`, `SAME_ROOM_IF_CONSECUTIVE`.
+- Yerleşim: `STARTS_DAY`, `ENDS_DAY`, `PREFERRED_START`, `PREFERRED_SLOT`, `FORBIDDEN_SLOT`.
+- Set-level: `MAX_SIMULTANEOUS`, `MAX_OCCUPIED_SLOTS`, `MAX_DIFFERENT_ROOMS`.
+- `PREFERRED_START` yalnız başlangıç saatini, `PREFERRED_SLOT` ise activity'nin kapladığı tam slot kümesini değerlendirir.
+
+### Local solver + canonical Cloud parity
+- `src/lib/schedule-constraint-ontology.ts` canonical tip kataloğunu taşır.
+- `src/lib/schedule-planning-relations.ts` unary, binary ve n-ary/set-level ilişkileri aynı semantikle puanlar.
+- Candidate incremental scoring yalnız adayın eklediği yeni cezayı hesaplar; placed state mutasyona uğratılmaz.
+- Cloud evaluator mevcut kanıtlanmış unary/binary evaluator üzerine v2 composition ile set-level ve gelişmiş ilişkileri ekler; eski v1 davranışı silinmedi.
+- Scenario HARD audit `validate_schedule_scenario_v2` ve `get_schedule_scenario_hard_issues_v2` zincirine bağlandı.
+- Manual batch preview/apply generic HARD assertion çalıştırır; transaction-sonu deferred HARD guard sessiz ihlali engeller.
+
+### Objective vector
+Server scenario seçimi düz integer toplam skora bırakılmadı. Authoritative karşılaştırma sırası:
+1. HARD
+2. unplaced
+3. MEDIUM
+4. SOFT
+5. legacy score
+
+`get_schedule_scenario_objective_vector_v1` bu vektörü üretir. `/schedule-scenario-comparison` önerilen senaryoyu bu lexicographic sıra ile seçer.
+
+### UI / operasyon
+- `/schedule-rules-relations` mevcut `/schedule` feature ailesinde ve `schedule.rules` yetki modeli altında çalışır; yeni feature adası açılmadı.
+- Kullanıcı JSON yazmadan ilişki tipi, seviye, sol/sağ kapsam, parametre, ağırlık ve açıklama seçebilir.
+- Unary tiplerde sağ kapsam gizlenir; set-level ve parametreli tipler kendi form alanlarını açar.
+- Ekran aktif programdaki generic HARD/MEDIUM/SOFT özetini gösterir.
+
+### Test / parity kapısı
+- `tests/schedule-planning-relations.test.ts` 26 tipin ontology, binary, unary, set-level, mode ayrımı ve candidate incremental davranışını kilitler.
+- Özellikle `ADJACENT`, `SAME_ROOM_IF_CONSECUTIVE`, `PREFERRED_START != PREFERRED_SLOT`, `GROUPED`, `MAX_SIMULTANEOUS`, `MAX_OCCUPIED_SLOTS`, `MAX_DIFFERENT_ROOMS` regression altında.
+- Son CI'da toplam **42/42 test** geçti.
+- CI run `33010428054`, head `1c2b80b653e8058e6db7b284ee7c06286f857bd0`: migration/replay, tenant/route, timetable authority, edge-slot, Phase 2, Phase 3, Phase 4 testing, Phase 5 reporting, auth/delegated permission, production build, route-tree, TypeScript ve forward migration policy **SUCCESS**.
+- Authority/Phase guardları kaldırılmadı; yeni canonical migration ve lexicographic sözleşmeye taşındı.
+
+### Production smoke ve forward migrations
+Production smoke'ta `ADJACENT`, non-adjacent ihlal, `PREFERRED_START` ve `PREFERRED_SLOT` ayrımı doğrulandı. `smallint -> generate_series` ambiguity gerçek smoke sırasında yakalandı; uygulanmış migration değiştirilmeden ayrı forward fix ile giderildi.
+
+Forward-only migrationlar:
+- `20260826231000_schedule_generic_constraint_parity.sql`
+- `20260826233000_schedule_generic_constraint_set_parity.sql`
+- `20260826234000_schedule_generic_constraint_series_cast_fix.sql`
+
+### Ana commitler
+- `1989626fb78e62390f4a527da63f78fe57483e21` — generic server parity
+- `a954dfdc49ce5e260c425303ef67206841a9d710` — generic relation rules UI
+- `939cd5a81eb838b41cd33ac307dd56d29e2c8f12` — lexicographic scenario comparison
+- `59ec929f032c8e3daa2bb50dccff544610458c86` / `264937499818dc73f950869181d3b8e7d318f0d4` — 26-tip ontology/local evaluator
+- `0a414e0afe95f21c6378eb7d53f2ef0c0e87b2f6` — set-level Cloud parity migration
+- `968c83e81d92f538e8e0bb571da15f82eb2c8ba4` — 26-tip UI parity
+- `4b4fb638e29bab41a1c24276f56e7c5308b22e91` — exhaustive relation regression
+- `b462d0709551bbab15b7c272cecc396c9ae5250c` — generate_series cast forward fix
+- `13c28530da88a81873470e5b7e0775bde6e41a4c` — route/feature classification
+- `759d7ef3f5af3e6f5b2e3656f27e60e831ce201a` — authority pointers
+- `eee3849cf1dbd1ef8d8a84e65c9825c8b12d79fe` / `1c2b80b653e8058e6db7b284ee7c06286f857bd0` — Phase guard alignment
+
+### Tekrar açılma koşulu
+Bölüm 4 yalnız yeni activity-relation semantiği, gerçek local/server parity hatası, HARD leakage veya rakip constraint auditinde activity-relation kategorisinde eksik bulunursa yeniden açılır. Oda kapasitesi, room feature/equipment, bina/floor/travel ve fiziksel kaynak uygunluğu Bölüm 5 kapsamıdır.
+
+---
+
+## Bölüm 5 — Oda/bina parity kapanışı — NEXT
 Akış: physical/virtual/shared room audit -> features/capacity/equipment -> building/floor/travel -> break-aware transfer -> room preferences -> aggregate capacity -> solver assignment/score -> manual validator -> reports/UI -> tests -> CI.
 
 ## Bölüm 6 — Student sectioning tam kapanış
