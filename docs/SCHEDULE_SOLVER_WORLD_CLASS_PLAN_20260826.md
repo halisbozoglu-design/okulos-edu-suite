@@ -11,8 +11,8 @@ Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki sistemlerin toplam ders p
 
 ## Bölüm sırası
 1. Öğrenci çakışma optimizasyonu — **CLOSED 2026-08-26**
-2. Blok ders + LNS motoru — NEXT
-3. Derin ejection-chain
+2. Blok ders + LNS motoru — **CLOSED 2026-08-26**
+3. Derin ejection-chain — NEXT
 4. Generic constraint parity
 5. Oda/bina parity kapanışı
 6. Student sectioning tam kapanış
@@ -74,22 +74,97 @@ Bölüm 1 yalnız student request/enrollment semantiğinde resmi/ürün gereksin
 
 ---
 
-## Bölüm 2 — Blok ders + LNS motoru — NEXT
-Kapanış akışı:
-1. Activity/block canonical representation audit.
-2. Locked + generated block ownership/identity.
-3. Atomic block move/swap operators.
-4. Ruin-and-recreate neighborhoods: teacher-day, class-day, course/activity-block, room/building, conflict hotspot.
-5. Repair/reinsert: regret + ejection-aware insertion.
-6. LNS acceptance/portfolio: LA/Tabu/SA/Great Deluge/VND ile ortak lexicographic score.
-7. Adaptive neighborhood statistics hazırlanır fakat Bölüm 10 öğrenme katmanına veri taşır.
-8. Local CPU + external worker payload parity.
-9. Canonical server audit/rescore sonrası candidate kabulü.
-10. UI: optimize edilen kapsam ve blok bütünlüğü görünür; manuel kilitler korunur.
-11. Unit/fuzz/benchmark: blok kopması=0, HARD leakage=0, dense instance quality regression yok.
-12. CI + handoff yeşil olmadan CLOSED değil.
+## Bölüm 2 — Blok ders + LNS motoru — CLOSED
 
-## Bölüm 3 — Derin ejection-chain
+### Canonical blok kimliği
+- Yeni paralel blok tablosu açılmadı; mevcut `course_schedule_rules.block_pattern`, `normalize_schedule_block_pattern_v2`, `get_schedule_activity_instances_v1`, `schedule_current_block_matches_phase3_v1` ve scenario block guard canonical authority olarak korundu.
+- `[2]`, `[2,2]`, `[3]`, `[2,1]` gibi patternler activity componentlere ayrılır.
+- Local solver her component'e `activity_key` ve `activity_duration` verir; optimizasyon tek satır değil tüm activity üzerinde çalışır.
+- Kilitli contiguous run gerçek pattern multisetinden düşülür; remaining componentler üretilir. Patternle uyuşmayan locked run HARD kaliteyi bozar ve aday complete olamaz.
+
+### Atomik blok move / swap
+- Local search duration>1 activityleri tek nesne olarak söker ve yeniden yerleştirir; blok içinden tek ders saati koparılamaz.
+- Mevcut manuel UI RPC isimleri korunarak block-aware wrapper yapıldı: `preview_schedule_move_v1`, `move_schedule_slot_v1`, `preview_schedule_swap_v1`, `swap_schedule_slots_v1`.
+- `get_schedule_atomic_move_plan_v1()` satırın normal activity mi blok component mi olduğunu belirler.
+- Blok ise seçilen saatin component içi offsetini koruyarak tüm component hedefe taşınır.
+- Tüm hareket `preview_schedule_batch_move_v1` / `move_schedule_slots_batch_v1` üzerinden canonical upsert validatorına gider; tek satır başarısız olursa transaction rollback.
+- Hareket sonrası `schedule_current_block_matches_phase3_v1()` tekrar doğrulanır. Pattern bozulursa rollback.
+- Hedefte aynı assignment'ın başka bloğuyla birleşip pattern bozma ihtimali `BLOCK_WOULD_MERGE` ile reddedilir.
+
+### LNS motoru
+Gerçek ruin-and-recreate portfolio:
+- `TEACHER_DAY`
+- `CLASS_DAY`
+- `COURSE_BLOCK`
+- `CONFLICT_HOTSPOT`
+- `LOW_QUALITY_ZONE`
+- `RANDOM_SMALL`
+
+Ruin yalnız kilitsiz **activity** gruplarını kaldırır. Recreate mevcut fail-first / Regret construction, planning relations ve student-conflict MEDIUM objective'i kullanır.
+
+Kabul sırası lexicographic:
+1. HARD
+2. MEDIUM
+3. SOFT
+
+Recreate unplaced üretirse, HARD ihlal üretirse veya lexicographic kaliteyi kötüleştirirse tüm neighborhood rollback olur. Best-solution retention korunur.
+
+### Metaheuristic + LNS bağlantısı
+- Construction sonrası mevcut LA / Tabu / Simulated Annealing / Great Deluge / VND portfolio activity-atomic hale getirildi.
+- LNS bu local-search katmanının ardından ikinci büyük-neighborhood iyileştirme fazıdır.
+- Aynı seed deterministik replay verir.
+- LNS telemetry: iterations, accepted, improved, rejected, ruinedActivities ve neighborhood sayaçları.
+- Adaptive öğrenme bu telemetriyi ileride Bölüm 10'da kullanacak; bu bölümde gizli öğrenme yapılmaz.
+
+### CPU / GPU / external / DB
+- Browser CPU worker payload `enableLns` ve `lnsIterations` taşır; varsayılan güçlü akışta LNS açıktır.
+- WebGPU candidate ranking aynı HARD -> unplaced -> MEDIUM -> SOFT semantiğini kullanır; GPU desteği yoksa sahte GPU ilan edilmez.
+- External worker claim zaten `job.config` aldığı için mevcut protokol genişletilmeden `ADVANCED` job config içine `BLOCK_AWARE_V1` LNS policy, 6 neighborhood, locked/block preservation, lexicographic acceptance ve iteration budget yazılır.
+- Harici worker yoksa planner mevcut davranışla db-native fallback yapar.
+- Local/remote bulunan hiçbir aday server audit olmadan uygulanmaz: scenario import -> repair -> rescore -> hard/room/applicability status.
+
+### UI / açıklanabilirlik
+- Mevcut drag/drop ve swap arayüzü client tarafında ayrı blok kural motoru taşımadan backend wrapperlar sayesinde blok-atomik çalışır.
+- `/schedule-validation` dedicated block integrity görünümü içerir: sınıf/ders/öğretmen, beklenen pattern, gerçek pattern ve UYGUN/BOZUK.
+- Bozuk blok yayın hazır durumunu kapatır.
+- LNS son kullanıcı için varsayılan güçlü optimizasyon davranışıdır; normal kullanıcıdan algoritma seçmesi beklenmez. `enableLns/lnsIterations` solver kontratında gelişmiş/benchmark kullanımına açıktır.
+
+### Test / benchmark kapısı
+Regression suite şu garantileri taşır:
+- `[2,2]` local search + LNS boyunca iki contiguous çift ders olarak kalır.
+- `[3]` hiçbir optimizasyon adımında parçalanmaz.
+- Geçerli kilitli `[2]` component korunur, yalnız remaining `[2]` üretilir.
+- LNS aynı baseline çözüme göre lexicographic olarak daha kötü sonuç döndüremez.
+- Aynı seed deterministiktir.
+- 30-seed medium suite HARD leakage=0 ve yüksek feasibility kapısını korur.
+- Existing relation/student-conflict/import/voice regressionlar korunur.
+- İlk CI denemesi kilitli-run ilk saatinin activityye eklenmediğini yakaladı; test gevşetilmedi, motor `c2a9602f724a24c27412f7d94e6fec39f264b94d` ile düzeltildi.
+- Düzeltme sonrası unit/benchmark, migration/replay, tenant, authority, Phase 2-5, production build, route-tree ve TypeScript **SUCCESS**.
+
+### Production Cloud / forward migrations
+Cloud-first uygulanıp aynı SQL forward migration olarak repoya işlendi:
+- `20260826164500_schedule_block_lns_closure.sql`
+- `20260826165500_schedule_block_atomic_wrappers.sql`
+- `20260826170500_schedule_external_lns_job_config.sql`
+
+Production smoke'ta block atomic move/swap/integrity ve external-LNS planner fonksiyon imzaları doğrulandı. Test için production'a sahte timetable/job verisi eklenmedi.
+
+### Ana commitler
+- `638b1b0aedccf0ffab607e1aa1501c1e05ef17a5` — atomic block-aware LNS core
+- `4c7686449648f6e265c7d56986933cd33a4ad63b` — block/LNS regression gates
+- `9b06aa67113047dcae44197b34ecae1644f1027d` — local LNS controls/telemetry
+- `5daadd446f4c6a5180b86f41e6497727ba71a05c` — canonical block move + integrity RPCs
+- `60cd611fad8efefd894dbd8cb8e284aee7c85078` — existing move/swap block-aware wrappers
+- `490ac007ca11b4cd28655f5c3a0daa0efdfc462c` — validation UI block integrity
+- `c419ee31ea2d9d4d34bcd24f9f407c15b6bcee41` — external worker LNS policy
+- `c2a9602f724a24c27412f7d94e6fec39f264b94d` — locked-run correctness fix
+
+### Tekrar açılma koşulu
+Bölüm 2 yalnız yeni block-pattern semantiği, gerçek regression veya benchmarkta activity atomicity/LNS kabul hatası bulunursa açılır. Daha derin multi-activity ejection search Bölüm 3; adaptive neighborhood öğrenmesi Bölüm 10 kapsamıdır.
+
+---
+
+## Bölüm 3 — Derin ejection-chain — NEXT
 Akış: depth-2 mevcut backend audit -> bounded depth 3-5 search -> cycle prevention -> move cost -> student/room/relation-aware scoring -> canonical batch preview -> atomic apply -> UI öneri listesi -> undo -> tests -> CI.
 
 ## Bölüm 4 — Generic constraint parity
