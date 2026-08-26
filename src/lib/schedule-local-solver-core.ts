@@ -1,34 +1,437 @@
-import {evaluateCandidateRelations,evaluatePlanningRelations,type PlanningActivity,type PlanningRelation,type PlanningSelector} from "@/lib/schedule-planning-relations";
-export type LocalAssignment={assignment_id:string;teacher_id:string;class_id:string;course_id:string;assigned_hours:number};
-export type LocalLockedRow={assignment_id:string;teacher_id:string;class_id:string|null;weekday:number;period:number;classroom_id?:string|null;subgroup_id?:string|null;locked:boolean;activity_key?:string|null;activity_duration?:number|null};
-export type LocalUnavailable={teacher_id:string;weekday:number;period:number};
-export type LocalTeacherConstraint={teacher_id:string;max_daily_hours:number|null;max_consecutive_hours:number|null};
-export type LocalCourseRule={course_id:string;block_pattern?:number[]|null;max_per_day:number|null;prohibited_days:number[]|null;prohibited_periods:number[]|null};
-export type LocalStudentConflictWeight={left_assignment_id:string;right_assignment_id:string;student_weight:number;severity_weight:number};
-export type LocalSearchStrategy="AUTO"|"LATE_ACCEPTANCE"|"TABU"|"SIMULATED_ANNEALING"|"GREAT_DELUGE"|"VND";
-export type LocalProblem={days:number[];periods:number;assignments:LocalAssignment[];locked:LocalLockedRow[];unavailable:LocalUnavailable[];teacherConstraints:LocalTeacherConstraint[];courseRules:LocalCourseRule[];planningRelations?:PlanningRelation[];studentConflictWeights?:LocalStudentConflictWeight[];seed:number;strategy?:LocalSearchStrategy};
-export type LocalScore={hard:number;medium:number;soft:number};
-export type LocalCandidate={rows:LocalLockedRow[];failed:number;complete:boolean;seed:number;score:LocalScore;iterations:number;strategy:LocalSearchStrategy};
-type Cell={d:number;s:number;score:number};type Task={a:LocalAssignment;duration:number;componentNo:number;activityKey:string};
-const key=(...v:(string|number|null)[])=>v.join('|');function rng(seed:number){let s=seed|0;return()=>((s=Math.imul(1664525,s)+1013904223|0)>>>0)/4294967296}function lexBetter(a:LocalScore,b:LocalScore){return a.hard!==b.hard?a.hard<b.hard:a.medium!==b.medium?a.medium<b.medium:a.soft<b.soft}function cloneRows(rows:LocalLockedRow[]){return rows.map(x=>({...x}))}
-export function solveLocalSchedule(p:LocalProblem):LocalCandidate{const R=rng(p.seed),strategy=p.strategy??"AUTO",relations=p.planningRelations??[],conflicts=p.studentConflictWeights??[],rows:LocalLockedRow[]=[...p.locked],tb=new Set<string>(),cb=new Set<string>(),un=new Set(p.unavailable.map(x=>key(x.teacher_id,x.weekday,x.period))),td=new Map<string,number>(),cd=new Map<string,number>(),tp=new Map<string,Set<number>>(),slotAssignments=new Map<string,Set<string>>(),cc=new Map(p.courseRules.map(x=>[x.course_id,x])),tc=new Map(p.teacherConstraints.map(x=>[x.teacher_id,x])),am=new Map(p.assignments.map(x=>[x.assignment_id,x])),conflictMap=new Map<string,number>();
- for(const c of conflicts){const a=c.left_assignment_id<c.right_assignment_id?c.left_assignment_id:c.right_assignment_id,b=c.left_assignment_id<c.right_assignment_id?c.right_assignment_id:c.left_assignment_id;conflictMap.set(key(a,b),Number(c.severity_weight)||Number(c.student_weight)||0)}
- const pairPenalty=(a:string,b:string)=>{if(a===b||!conflictMap.size)return 0;return conflictMap.get(a<b?key(a,b):key(b,a))??0};
- const selectorMatchesTask=(t:Task,s:PlanningSelector)=>{const a=t.a;return(!s.activity_key||t.activityKey===s.activity_key)&&(!s.assignment_id||a.assignment_id===s.assignment_id)&&(!s.course_id||a.course_id===s.course_id)&&(!s.teacher_id||a.teacher_id===s.teacher_id)&&(!s.class_id||a.class_id===s.class_id)};
- const dependencyBias=(t:Task)=>{let b=0;for(const r of relations){if(r.mode!=="HARD")continue;const k=r.relation_type.toUpperCase();if(k!=="ORDERED"&&k!=="CONSECUTIVE")continue;if(selectorMatchesTask(t,r.left_selector))b+=1000;if(selectorMatchesTask(t,r.right_selector))b-=1000}return b};
- const activities=():PlanningActivity[]=>{if(!relations.length)return[];const m=new Map<string,LocalLockedRow[]>();for(const r of rows){const k=r.activity_key??`locked:${r.assignment_id}:${r.weekday}:${r.period}`,a=m.get(k);if(a)a.push(r);else m.set(k,[r])}const out:PlanningActivity[]=[];for(const [activity_key,rs] of m){const first=rs[0]!,a=am.get(first.assignment_id);if(!a)continue;out.push({activity_key,assignment_id:a.assignment_id,course_id:a.course_id,teacher_id:a.teacher_id,class_id:a.class_id,weekday:first.weekday,start:Math.min(...rs.map(x=>x.period)),end:Math.max(...rs.map(x=>x.period))})}return out};
- const taskActivity=(t:Task,d:number,s:number):PlanningActivity=>({activity_key:t.activityKey,assignment_id:t.a.assignment_id,course_id:t.a.course_id,teacher_id:t.a.teacher_id,class_id:t.a.class_id,weekday:d,start:s,end:s+t.duration-1});
- const add=(a:LocalAssignment,d:number,s:number,locked=false,activityKey?:string,duration=1)=>{rows.push({assignment_id:a.assignment_id,teacher_id:a.teacher_id,class_id:a.class_id,weekday:d,period:s,locked,activity_key:activityKey??null,activity_duration:duration});tb.add(key(a.teacher_id,d,s));cb.add(key(a.class_id,d,s));const sk=key(d,s),ss=slotAssignments.get(sk)??new Set<string>();ss.add(a.assignment_id);slotAssignments.set(sk,ss);const tk=key(a.teacher_id,d),ck=key(a.class_id,a.course_id,d);td.set(tk,(td.get(tk)??0)+1);cd.set(ck,(cd.get(ck)??0)+1);const ps=tp.get(tk)??new Set<number>();ps.add(s);tp.set(tk,ps)};
- const del=(r:LocalLockedRow)=>{tb.delete(key(r.teacher_id,r.weekday,r.period));if(r.class_id)cb.delete(key(r.class_id,r.weekday,r.period));const sk=key(r.weekday,r.period),ss=slotAssignments.get(sk);ss?.delete(r.assignment_id);if(ss&&!ss.size)slotAssignments.delete(sk);const a=am.get(r.assignment_id),tk=key(r.teacher_id,r.weekday);td.set(tk,Math.max(0,(td.get(tk)??1)-1));tp.get(tk)?.delete(r.period);if(a&&r.class_id){const ck=key(r.class_id,a.course_id,r.weekday);cd.set(ck,Math.max(0,(cd.get(ck)??1)-1))}};
- const consecutiveOk=(teacher:string,d:number,start:number,duration:number,max:number|null|undefined)=>{if(!max)return true;const ps=new Set(tp.get(key(teacher,d))??[]);for(let s=start;s<start+duration;s++)ps.add(s);let run=0,best=0;for(let i=1;i<=p.periods;i++){run=ps.has(i)?run+1:0;if(run>best)best=run}return best<=max};
- const studentPenalty=(assignmentId:string,d:number,start:number,duration:number)=>{if(!conflictMap.size)return 0;let v=0;for(let s=start;s<start+duration;s++)for(const other of slotAssignments.get(key(d,s))??[])v+=pairPenalty(assignmentId,other);return v};
- const cand=(task:Task):Cell[]=>{const a=task.a,rule=cc.get(a.course_id),cons=tc.get(a.teacher_id),out:Cell[]=[],placed=relations.length?activities():[];for(const d of p.days)for(let s=1;s<=p.periods-task.duration+1;s++){if(rule?.prohibited_days?.includes(d))continue;let blocked=false;for(let k=0;k<task.duration;k++){const slot=s+k;if(tb.has(key(a.teacher_id,d,slot))||cb.has(key(a.class_id,d,slot))||un.has(key(a.teacher_id,d,slot))||rule?.prohibited_periods?.includes(slot)){blocked=true;break}}if(blocked)continue;const tdk=key(a.teacher_id,d),cdk=key(a.class_id,a.course_id,d),teacherDaily=td.get(tdk)??0,courseDaily=cd.get(cdk)??0;if(cons?.max_daily_hours&&teacherDaily+task.duration>cons.max_daily_hours)continue;if(rule?.max_per_day&&courseDaily+task.duration>rule.max_per_day)continue;if(!consecutiveOk(a.teacher_id,d,s,task.duration,cons?.max_consecutive_hours))continue;const rel=relations.length?evaluateCandidateRelations(taskActivity(task,d,s),placed,relations):{hard:0,medium:0,soft:0};if(rel.hard>0)continue;const student=studentPenalty(a.assignment_id,d,s,task.duration);let score=teacherDaily*3+courseDaily*8+Math.max(0,s+task.duration-1-6)*2+(rel.medium+student)*100+rel.soft+R()*.35;if(tb.has(key(a.teacher_id,d,s-1))||tb.has(key(a.teacher_id,d,s+task.duration)))score-=2;out.push({d,s,score})}return out.sort((x,y)=>x.score-y.score)};
- const addTask=(task:Task,d:number,s:number)=>{for(let k=0;k<task.duration;k++)add(task.a,d,s+k,false,task.activityKey,task.duration)};
- const lockedCount=new Map<string,number>();for(const x of p.locked){tb.add(key(x.teacher_id,x.weekday,x.period));if(x.class_id)cb.add(key(x.class_id,x.weekday,x.period));const sk=key(x.weekday,x.period),ss=slotAssignments.get(sk)??new Set<string>();ss.add(x.assignment_id);slotAssignments.set(sk,ss);const tk=key(x.teacher_id,x.weekday);td.set(tk,(td.get(tk)??0)+1);const ps=tp.get(tk)??new Set<number>();ps.add(x.period);tp.set(tk,ps);const a=am.get(x.assignment_id);if(a&&x.class_id){const ck=key(x.class_id,a.course_id,x.weekday);cd.set(ck,(cd.get(ck)??0)+1)}lockedCount.set(x.assignment_id,(lockedCount.get(x.assignment_id)??0)+1)}
- const tasks:Task[]=[];for(const a of p.assignments){const locked=lockedCount.get(a.assignment_id)??0,remaining=Math.max(0,a.assigned_hours-locked),rule=cc.get(a.course_id),pattern=(rule?.block_pattern??[]).map(Number).filter(x=>x>0),valid=locked===0&&pattern.length>0&&pattern.reduce((x,y)=>x+y,0)===a.assigned_hours,parts=valid?pattern:Array.from({length:remaining},()=>1);parts.forEach((duration,i)=>tasks.push({a,duration,componentNo:i+1,activityKey:`${a.assignment_id}:${i+1}`}))}let failed=0;
- while(tasks.length){let bi=0,bc:Cell[]|null=null,bestDep=-Infinity,bestRegret=-1,bestScarcity=1e9;for(let i=0;i<tasks.length;i++){const task=tasks[i]!,cs=cand(task),dep=dependencyBias(task),regret=cs.length?(cs[1]?.score??cs[0]!.score+50)-cs[0]!.score:Number.POSITIVE_INFINITY,scarcity=cs.length;if(dep>bestDep||(dep===bestDep&&(regret>bestRegret+1e-9||(Math.abs(regret-bestRegret)<1e-9&&scarcity<bestScarcity)))){bi=i;bc=cs;bestDep=dep;bestRegret=regret;bestScarcity=scarcity}}const task=tasks.splice(bi,1)[0]!;if(!bc?.length){failed+=task.duration;continue}const pick=bc[Math.floor(R()*Math.min(2,bc.length))]!;addTask(task,pick.d,pick.s)}
- const scoreNow=(hard=failed):LocalScore=>{const teacherDay=new Map<string,number[]>(),classDay=new Map<string,number[]>(),courseDay=new Map<string,number>();let late=0;for(const r of rows){const a=am.get(r.assignment_id);late+=Math.max(0,r.period-6);const tk=key(r.teacher_id,r.weekday),ck=key(r.class_id,r.weekday);teacherDay.set(tk,[...(teacherDay.get(tk)??[]),r.period]);classDay.set(ck,[...(classDay.get(ck)??[]),r.period]);if(a){const dk=key(a.class_id,a.course_id,r.weekday);courseDay.set(dk,(courseDay.get(dk)??0)+1)}}let gaps=0;for(const ps of[...teacherDay.values(),...classDay.values()]){const a=[...new Set(ps)].sort((x,y)=>x-y);if(a.length>1)gaps+=(a.at(-1)??0)-(a[0]??0)+1-a.length}let spread=0;for(const a of p.assignments){const counts=p.days.map(d=>courseDay.get(key(a.class_id,a.course_id,d))??0),used=counts.filter(Boolean);if(used.length>1)spread+=Math.max(...used)-Math.min(...used)}let student=0;if(conflictMap.size)for(const ss of slotAssignments.values()){const ids=[...ss];for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)student+=pairPenalty(ids[i]!,ids[j]!)}const rel=relations.length?evaluatePlanningRelations(activities(),relations):{hard:0,medium:0,soft:0};return{hard:hard+rel.hard,medium:rel.medium+student,soft:gaps*8+late*2+spread*3+rel.soft}};
- let iterations=0;const constructed=scoreNow(failed);if(!failed&&constructed.hard===0){let current=constructed,best=current,bestRows=cloneRows(rows);const initialSoft=Math.max(1,current.soft+current.medium*100),lateSize=Math.max(32,Math.min(400,rows.length*2)),history=Array.from({length:lateSize},()=>current.medium*100+current.soft),tabuTenure=Math.max(5,Math.min(31,Math.ceil(rows.length*.04))),tabuUntil=new Map<string,number>(),limit=Math.min(6000,Math.max(700,rows.length*28)),phaseSpan=Math.max(1,Math.floor(limit/5)),portfolio:LocalSearchStrategy[]=["LATE_ACCEPTANCE","TABU","SIMULATED_ANNEALING","GREAT_DELUGE","VND"];
-  for(let it=0;it<limit;it++){iterations=it+1;const active=strategy==="AUTO"?portfolio[Math.min(portfolio.length-1,Math.floor(it/phaseSpan))]!:strategy,movable=rows.filter(x=>!x.locked&&(x.activity_duration??1)===1);if(!movable.length)break;const r=movable[Math.floor(R()*movable.length)]!,a=am.get(r.assignment_id);if(!a)continue;const task:Task={a,duration:1,componentNo:1,activityKey:r.activity_key??`${a.assignment_id}:single`},oldD=r.weekday,oldS=r.period;del(r);rows.splice(rows.indexOf(r),1);const choices=cand(task).slice(0,active==="VND"?16:8);let accepted=false;for(const target of choices){addTask(task,target.d,target.s);const next=scoreNow(0),curVal=current.medium*100+current.soft,nextVal=next.medium*100+next.soft,bestVal=best.medium*100+best.soft,aspiration=lexBetter(next,best),tabu=(tabuUntil.get(a.assignment_id)??-1)>it,delta=nextVal-curVal,temp=Math.max(.25,initialSoft*(1-it/limit)),water=bestVal+(initialSoft-bestVal)*Math.max(0,1-it/limit);let ok=false;if(active==="LATE_ACCEPTANCE")ok=nextVal<=curVal||nextVal<=history[it%lateSize]!;else if(active==="TABU")ok=!tabu||aspiration;else if(active==="SIMULATED_ANNEALING")ok=delta<=0||R()<Math.exp(-delta/temp);else if(active==="GREAT_DELUGE")ok=nextVal<=water;else if(active==="VND")ok=nextVal<curVal;if(next.hard===0&&(!tabu||aspiration||active==="TABU")&&ok){current=next;accepted=true;tabuUntil.set(a.assignment_id,it+tabuTenure);if(lexBetter(next,best)){best=next;bestRows=cloneRows(rows)}break}const rr=rows.pop();if(rr)del(rr)}if(!accepted)add(a,oldD,oldS,false,r.activity_key??undefined,1);history[it%lateSize]=current.medium*100+current.soft;if(best.medium===0&&best.soft===0)break}
-  rows.splice(0,rows.length,...bestRows);return{rows,failed:0,complete:true,seed:p.seed,score:best,iterations,strategy}}
- const finalScore=scoreNow(failed);return{rows,failed,complete:failed===0&&finalScore.hard===0,seed:p.seed,score:finalScore,iterations,strategy}}
+import {
+  evaluateCandidateRelations,
+  evaluatePlanningRelations,
+  type PlanningActivity,
+  type PlanningRelation,
+  type PlanningSelector,
+} from "@/lib/schedule-planning-relations";
+
+export type LocalAssignment = {
+  assignment_id: string;
+  teacher_id: string;
+  class_id: string;
+  course_id: string;
+  assigned_hours: number;
+};
+
+export type LocalLockedRow = {
+  assignment_id: string;
+  teacher_id: string;
+  class_id: string | null;
+  weekday: number;
+  period: number;
+  classroom_id?: string | null;
+  subgroup_id?: string | null;
+  locked: boolean;
+  activity_key?: string | null;
+  activity_duration?: number | null;
+};
+
+export type LocalUnavailable = { teacher_id: string; weekday: number; period: number };
+export type LocalTeacherConstraint = {
+  teacher_id: string;
+  max_daily_hours: number | null;
+  max_consecutive_hours: number | null;
+};
+export type LocalCourseRule = {
+  course_id: string;
+  block_pattern?: number[] | null;
+  max_per_day: number | null;
+  prohibited_days: number[] | null;
+  prohibited_periods: number[] | null;
+};
+export type LocalStudentConflictWeight = {
+  left_assignment_id: string;
+  right_assignment_id: string;
+  student_weight: number;
+  severity_weight: number;
+};
+export type LocalSearchStrategy =
+  | "AUTO"
+  | "LATE_ACCEPTANCE"
+  | "TABU"
+  | "SIMULATED_ANNEALING"
+  | "GREAT_DELUGE"
+  | "VND";
+
+export type LnsNeighborhood =
+  | "RANDOM_SMALL"
+  | "TEACHER_DAY"
+  | "CLASS_DAY"
+  | "COURSE_BLOCK"
+  | "CONFLICT_HOTSPOT"
+  | "LOW_QUALITY_ZONE";
+
+export type LocalProblem = {
+  days: number[];
+  periods: number;
+  assignments: LocalAssignment[];
+  locked: LocalLockedRow[];
+  unavailable: LocalUnavailable[];
+  teacherConstraints: LocalTeacherConstraint[];
+  courseRules: LocalCourseRule[];
+  planningRelations?: PlanningRelation[];
+  studentConflictWeights?: LocalStudentConflictWeight[];
+  seed: number;
+  strategy?: LocalSearchStrategy;
+  enableLns?: boolean;
+  lnsIterations?: number;
+};
+
+export type LocalScore = { hard: number; medium: number; soft: number };
+export type LnsStats = {
+  enabled: boolean;
+  iterations: number;
+  accepted: number;
+  improved: number;
+  rejected: number;
+  ruinedActivities: number;
+  neighborhoods: Record<LnsNeighborhood, number>;
+};
+export type LocalCandidate = {
+  rows: LocalLockedRow[];
+  failed: number;
+  complete: boolean;
+  seed: number;
+  score: LocalScore;
+  iterations: number;
+  strategy: LocalSearchStrategy;
+  lns: LnsStats;
+};
+
+type Cell = { d: number; s: number; score: number };
+type Task = {
+  a: LocalAssignment;
+  duration: number;
+  componentNo: number;
+  activityKey: string;
+};
+type ActivityPlacement = {
+  key: string;
+  assignment: LocalAssignment;
+  duration: number;
+  rows: LocalLockedRow[];
+  locked: boolean;
+};
+
+const key = (...v: (string | number | null)[]) => v.join("|");
+const ZERO_LNS = (): LnsStats => ({
+  enabled: false,
+  iterations: 0,
+  accepted: 0,
+  improved: 0,
+  rejected: 0,
+  ruinedActivities: 0,
+  neighborhoods: {
+    RANDOM_SMALL: 0,
+    TEACHER_DAY: 0,
+    CLASS_DAY: 0,
+    COURSE_BLOCK: 0,
+    CONFLICT_HOTSPOT: 0,
+    LOW_QUALITY_ZONE: 0,
+  },
+});
+
+function rng(seed: number) {
+  let s = seed | 0;
+  return () => ((s = (Math.imul(1664525, s) + 1013904223) | 0) >>> 0) / 4294967296;
+}
+
+function lexCompare(a: LocalScore, b: LocalScore) {
+  if (a.hard !== b.hard) return a.hard - b.hard;
+  if (a.medium !== b.medium) return a.medium - b.medium;
+  return a.soft - b.soft;
+}
+function lexBetter(a: LocalScore, b: LocalScore) {
+  return lexCompare(a, b) < 0;
+}
+function lexNotWorse(a: LocalScore, b: LocalScore) {
+  return lexCompare(a, b) <= 0;
+}
+function cloneRows(rows: LocalLockedRow[]) {
+  return rows.map((x) => ({ ...x }));
+}
+function normalizePattern(rule: LocalCourseRule | undefined, total: number) {
+  const p = (rule?.block_pattern ?? []).map(Number).filter((x) => Number.isInteger(x) && x > 0);
+  return p.length && p.reduce((a, b) => a + b, 0) === total ? p : Array.from({ length: total }, () => 1);
+}
+function consecutiveRuns(rows: LocalLockedRow[]) {
+  const byDay = new Map<number, number[]>();
+  for (const r of rows) byDay.set(r.weekday, [...(byDay.get(r.weekday) ?? []), r.period]);
+  const runs: Array<{ day: number; start: number; length: number; periods: number[] }> = [];
+  for (const [day, ps0] of byDay) {
+    const ps = [...new Set(ps0)].sort((a, b) => a - b);
+    let start = ps[0], last = ps[0], bucket: number[] = [];
+    for (const p of ps) {
+      if (start == null) {
+        start = p;
+        last = p;
+        bucket = [p];
+      } else if (p === last! + 1) {
+        bucket.push(p);
+        last = p;
+      } else if (p !== last) {
+        runs.push({ day, start, length: bucket.length, periods: bucket });
+        start = p;
+        last = p;
+        bucket = [p];
+      }
+    }
+    if (start != null && bucket.length) runs.push({ day, start, length: bucket.length, periods: bucket });
+  }
+  return runs;
+}
+
+export function solveLocalSchedule(p: LocalProblem): LocalCandidate {
+  const R = rng(p.seed);
+  const strategy = p.strategy ?? "AUTO";
+  const relations = p.planningRelations ?? [];
+  const conflicts = p.studentConflictWeights ?? [];
+  const assignmentMap = new Map(p.assignments.map((x) => [x.assignment_id, x]));
+  const courseRules = new Map(p.courseRules.map((x) => [x.course_id, x]));
+  const teacherConstraints = new Map(p.teacherConstraints.map((x) => [x.teacher_id, x]));
+  const unavailable = new Set(p.unavailable.map((x) => key(x.teacher_id, x.weekday, x.period)));
+  const conflictMap = new Map<string, number>();
+  for (const c of conflicts) {
+    const a = c.left_assignment_id < c.right_assignment_id ? c.left_assignment_id : c.right_assignment_id;
+    const b = c.left_assignment_id < c.right_assignment_id ? c.right_assignment_id : c.left_assignment_id;
+    conflictMap.set(key(a, b), Number(c.severity_weight) || Number(c.student_weight) || 0);
+  }
+  const pairPenalty = (a: string, b: string) => {
+    if (a === b || !conflictMap.size) return 0;
+    return conflictMap.get(a < b ? key(a, b) : key(b, a)) ?? 0;
+  };
+
+  let baseHard = 0;
+  const rows: LocalLockedRow[] = [];
+  const taskQueue: Task[] = [];
+  const lockedByAssignment = new Map<string, LocalLockedRow[]>();
+  for (const r of p.locked) {
+    if (!r.assignment_id) continue;
+    lockedByAssignment.set(r.assignment_id, [...(lockedByAssignment.get(r.assignment_id) ?? []), { ...r, locked: true }]);
+  }
+  for (const a of p.assignments) {
+    const pattern = normalizePattern(courseRules.get(a.course_id), a.assigned_hours);
+    const locked = lockedByAssignment.get(a.assignment_id) ?? [];
+    const remainingPattern = [...pattern];
+    let lockedNo = 0;
+    for (const run of consecutiveRuns(locked)) {
+      const idx = remainingPattern.indexOf(run.length);
+      if (idx < 0) {
+        baseHard++;
+        continue;
+      }
+      remainingPattern.splice(idx, 1);
+      lockedNo++;
+      const activityKey = `${a.assignment_id}:locked:${lockedNo}`;
+      for (const period of run.periods) {
+        const original = locked.find((x) => x.weekday === run.day && x.period === period)!;
+        rows.push({ ...original, activity_key: activityKey, activity_duration: run.length, locked: true });
+      }
+    }
+    for (const r of locked) {
+      if (!rows.some((x) => x.assignment_id === r.assignment_id && x.weekday === r.weekday && x.period === r.period)) {
+        rows.push({ ...r, activity_key: `${a.assignment_id}:invalid-locked:${r.weekday}:${r.period}`, activity_duration: 1, locked: true });
+      }
+    }
+    remainingPattern.forEach((duration, i) => taskQueue.push({ a, duration, componentNo: i + 1, activityKey: `${a.assignment_id}:component:${i + 1}:${duration}` }));
+  }
+
+  const teacherBusy = new Set<string>();
+  const classBusy = new Set<string>();
+  const teacherDaily = new Map<string, number>();
+  const courseDaily = new Map<string, number>();
+  const teacherPeriods = new Map<string, Set<number>>();
+  const slotAssignments = new Map<string, Set<string>>();
+
+  const indexRow = (r: LocalLockedRow) => {
+    teacherBusy.add(key(r.teacher_id, r.weekday, r.period));
+    if (r.class_id) classBusy.add(key(r.class_id, r.weekday, r.period));
+    const tk = key(r.teacher_id, r.weekday);
+    teacherDaily.set(tk, (teacherDaily.get(tk) ?? 0) + 1);
+    const ps = teacherPeriods.get(tk) ?? new Set<number>();
+    ps.add(r.period);
+    teacherPeriods.set(tk, ps);
+    const a = assignmentMap.get(r.assignment_id);
+    if (a && r.class_id) {
+      const ck = key(r.class_id, a.course_id, r.weekday);
+      courseDaily.set(ck, (courseDaily.get(ck) ?? 0) + 1);
+    }
+    const sk = key(r.weekday, r.period);
+    const ss = slotAssignments.get(sk) ?? new Set<string>();
+    ss.add(r.assignment_id);
+    slotAssignments.set(sk, ss);
+  };
+  const unindexRow = (r: LocalLockedRow) => {
+    teacherBusy.delete(key(r.teacher_id, r.weekday, r.period));
+    if (r.class_id) classBusy.delete(key(r.class_id, r.weekday, r.period));
+    const tk = key(r.teacher_id, r.weekday);
+    teacherDaily.set(tk, Math.max(0, (teacherDaily.get(tk) ?? 1) - 1));
+    teacherPeriods.get(tk)?.delete(r.period);
+    const a = assignmentMap.get(r.assignment_id);
+    if (a && r.class_id) {
+      const ck = key(r.class_id, a.course_id, r.weekday);
+      courseDaily.set(ck, Math.max(0, (courseDaily.get(ck) ?? 1) - 1));
+    }
+    const sk = key(r.weekday, r.period);
+    const ss = slotAssignments.get(sk);
+    ss?.delete(r.assignment_id);
+    if (ss && !ss.size) slotAssignments.delete(sk);
+  };
+  for (const r of rows) indexRow(r);
+
+  function groupActivities(): ActivityPlacement[] {
+    const groups = new Map<string, LocalLockedRow[]>();
+    for (const r of rows) {
+      const k = r.activity_key ?? `${r.assignment_id}:row:${r.weekday}:${r.period}`;
+      groups.set(k, [...(groups.get(k) ?? []), r]);
+    }
+    const out: ActivityPlacement[] = [];
+    for (const [k, rs] of groups) {
+      const a = assignmentMap.get(rs[0]!.assignment_id);
+      if (!a) continue;
+      rs.sort((x, y) => x.period - y.period);
+      out.push({ key: k, assignment: a, duration: rs.length, rows: rs, locked: rs.some((x) => x.locked) });
+    }
+    return out;
+  }
+  const activities = (): PlanningActivity[] => {
+    if (!relations.length) return [];
+    return groupActivities().map((g) => ({ activity_key: g.key, assignment_id: g.assignment.assignment_id, course_id: g.assignment.course_id, teacher_id: g.assignment.teacher_id, class_id: g.assignment.class_id, weekday: g.rows[0]!.weekday, start: Math.min(...g.rows.map((x) => x.period)), end: Math.max(...g.rows.map((x) => x.period)) }));
+  };
+  const taskActivity = (t: Task, d: number, s: number): PlanningActivity => ({ activity_key: t.activityKey, assignment_id: t.a.assignment_id, course_id: t.a.course_id, teacher_id: t.a.teacher_id, class_id: t.a.class_id, weekday: d, start: s, end: s + t.duration - 1 });
+  const selectorMatchesTask = (t: Task, s: PlanningSelector) => (!s.activity_key || t.activityKey === s.activity_key) && (!s.assignment_id || t.a.assignment_id === s.assignment_id) && (!s.course_id || t.a.course_id === s.course_id) && (!s.teacher_id || t.a.teacher_id === s.teacher_id) && (!s.class_id || t.a.class_id === s.class_id);
+  const dependencyBias = (t: Task) => {
+    let b = 0;
+    for (const r of relations) {
+      if (r.mode !== "HARD") continue;
+      const k = r.relation_type.toUpperCase();
+      if (k !== "ORDERED" && k !== "CONSECUTIVE") continue;
+      if (selectorMatchesTask(t, r.left_selector)) b += 1000;
+      if (selectorMatchesTask(t, r.right_selector)) b -= 1000;
+    }
+    return b;
+  };
+  const consecutiveOk = (teacher: string, d: number, start: number, duration: number, max: number | null | undefined) => {
+    if (!max) return true;
+    const ps = new Set(teacherPeriods.get(key(teacher, d)) ?? []);
+    for (let s = start; s < start + duration; s++) ps.add(s);
+    let run = 0, best = 0;
+    for (let i = 1; i <= p.periods; i++) { run = ps.has(i) ? run + 1 : 0; best = Math.max(best, run); }
+    return best <= max;
+  };
+  const studentPenalty = (assignmentId: string, d: number, start: number, duration: number) => {
+    if (!conflictMap.size) return 0;
+    let v = 0;
+    for (let s = start; s < start + duration; s++) for (const other of slotAssignments.get(key(d, s)) ?? []) v += pairPenalty(assignmentId, other);
+    return v;
+  };
+  const candidateCells = (task: Task): Cell[] => {
+    const a = task.a, rule = courseRules.get(a.course_id), cons = teacherConstraints.get(a.teacher_id), out: Cell[] = [], placed = relations.length ? activities() : [];
+    for (const d of p.days) for (let s = 1; s <= p.periods - task.duration + 1; s++) {
+      if (rule?.prohibited_days?.includes(d)) continue;
+      let blocked = false;
+      for (let k = 0; k < task.duration; k++) {
+        const slot = s + k;
+        if (teacherBusy.has(key(a.teacher_id, d, slot)) || classBusy.has(key(a.class_id, d, slot)) || unavailable.has(key(a.teacher_id, d, slot)) || rule?.prohibited_periods?.includes(slot)) { blocked = true; break; }
+      }
+      if (blocked) continue;
+      const tdk = key(a.teacher_id, d), cdk = key(a.class_id, a.course_id, d), td = teacherDaily.get(tdk) ?? 0, cd = courseDaily.get(cdk) ?? 0;
+      if (cons?.max_daily_hours && td + task.duration > cons.max_daily_hours) continue;
+      if (rule?.max_per_day && cd + task.duration > rule.max_per_day) continue;
+      if (!consecutiveOk(a.teacher_id, d, s, task.duration, cons?.max_consecutive_hours)) continue;
+      const rel = relations.length ? evaluateCandidateRelations(taskActivity(task, d, s), placed, relations) : { hard: 0, medium: 0, soft: 0 };
+      if (rel.hard > 0) continue;
+      const student = studentPenalty(a.assignment_id, d, s, task.duration);
+      let score = td * 3 + cd * 8 + Math.max(0, s + task.duration - 1 - 6) * 2 + (rel.medium + student) * 100 + rel.soft + R() * 0.35;
+      if (teacherBusy.has(key(a.teacher_id, d, s - 1)) || teacherBusy.has(key(a.teacher_id, d, s + task.duration))) score -= 2;
+      out.push({ d, s, score });
+    }
+    return out.sort((x, y) => x.score - y.score);
+  };
+  const placeTask = (task: Task, d: number, s: number) => {
+    for (let k = 0; k < task.duration; k++) {
+      const row: LocalLockedRow = { assignment_id: task.a.assignment_id, teacher_id: task.a.teacher_id, class_id: task.a.class_id, weekday: d, period: s + k, locked: false, activity_key: task.activityKey, activity_duration: task.duration };
+      rows.push(row); indexRow(row);
+    }
+  };
+  const removeRows = (toRemove: LocalLockedRow[]) => { for (const r of toRemove) { const idx = rows.indexOf(r); if (idx >= 0) rows.splice(idx, 1); unindexRow(r); } };
+  const toTask = (g: ActivityPlacement): Task => ({ a: g.assignment, duration: g.duration, componentNo: 0, activityKey: g.key });
+
+  let failed = 0;
+  const construct = (tasks: Task[]) => {
+    const q = [...tasks]; let localFailed = 0;
+    while (q.length) {
+      let bi = 0, bc: Cell[] | null = null, bestDep = -Infinity, bestRegret = -1, bestScarcity = 1e9;
+      for (let i = 0; i < q.length; i++) {
+        const task = q[i]!, cs = candidateCells(task), dep = dependencyBias(task), regret = cs.length ? (cs[1]?.score ?? cs[0]!.score + 50) - cs[0]!.score : Number.POSITIVE_INFINITY, scarcity = cs.length;
+        if (dep > bestDep || (dep === bestDep && (regret > bestRegret + 1e-9 || (Math.abs(regret - bestRegret) < 1e-9 && scarcity < bestScarcity)))) { bi = i; bc = cs; bestDep = dep; bestRegret = regret; bestScarcity = scarcity; }
+      }
+      const task = q.splice(bi, 1)[0]!;
+      if (!bc?.length) { localFailed += task.duration; continue; }
+      const pick = bc[Math.floor(R() * Math.min(2, bc.length))]!; placeTask(task, pick.d, pick.s);
+    }
+    return localFailed;
+  };
+  failed += construct(taskQueue);
+
+  const scoreNow = (unplaced = failed): LocalScore => {
+    const teacherDay = new Map<string, number[]>(), classDay = new Map<string, number[]>(), courseDay = new Map<string, number>(); let late = 0;
+    for (const r of rows) {
+      const a = assignmentMap.get(r.assignment_id); late += Math.max(0, r.period - 6);
+      const tk = key(r.teacher_id, r.weekday), ck = key(r.class_id, r.weekday); teacherDay.set(tk, [...(teacherDay.get(tk) ?? []), r.period]); classDay.set(ck, [...(classDay.get(ck) ?? []), r.period]);
+      if (a) { const dk = key(a.class_id, a.course_id, r.weekday); courseDay.set(dk, (courseDay.get(dk) ?? 0) + 1); }
+    }
+    let gaps = 0;
+    for (const ps of [...teacherDay.values(), ...classDay.values()]) { const a = [...new Set(ps)].sort((x, y) => x - y); if (a.length > 1) gaps += (a.at(-1) ?? 0) - (a[0] ?? 0) + 1 - a.length; }
+    let spread = 0;
+    for (const a of p.assignments) { const counts = p.days.map((d) => courseDay.get(key(a.class_id, a.course_id, d)) ?? 0), used = counts.filter(Boolean); if (used.length > 1) spread += Math.max(...used) - Math.min(...used); }
+    let student = 0;
+    if (conflictMap.size) for (const ss of slotAssignments.values()) { const ids = [...ss]; for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++) student += pairPenalty(ids[i]!, ids[j]!); }
+    const rel = relations.length ? evaluatePlanningRelations(activities(), relations) : { hard: 0, medium: 0, soft: 0 };
+    return { hard: baseHard + unplaced + rel.hard, medium: rel.medium + student, soft: gaps * 8 + late * 2 + spread * 3 + rel.soft };
+  };
+
+  let iterations = 0, current = scoreNow(failed), best = current, bestRows = cloneRows(rows);
+  if (failed === 0 && current.hard === 0) {
+    const initial = Math.max(1, current.medium * 100 + current.soft), lateSize = Math.max(32, Math.min(400, rows.length * 2)), history = Array.from({ length: lateSize }, () => current.medium * 100 + current.soft), tabuTenure = Math.max(5, Math.min(31, Math.ceil(rows.length * 0.04))), tabuUntil = new Map<string, number>(), limit = Math.min(5000, Math.max(600, rows.length * 22)), phaseSpan = Math.max(1, Math.floor(limit / 5)), portfolio: LocalSearchStrategy[] = ["LATE_ACCEPTANCE", "TABU", "SIMULATED_ANNEALING", "GREAT_DELUGE", "VND"];
+    for (let it = 0; it < limit; it++) {
+      iterations = it + 1; const active = strategy === "AUTO" ? portfolio[Math.min(portfolio.length - 1, Math.floor(it / phaseSpan))]! : strategy, movable = groupActivities().filter((x) => !x.locked); if (!movable.length) break;
+      const g = movable[Math.floor(R() * movable.length)]!, oldRows = cloneRows(g.rows); removeRows(g.rows); const task = toTask(g), choices = candidateCells(task).slice(0, active === "VND" ? 16 : 8); let accepted = false;
+      for (const target of choices) {
+        placeTask(task, target.d, target.s); const next = scoreNow(0), curVal = current.medium * 100 + current.soft, nextVal = next.medium * 100 + next.soft, bestVal = best.medium * 100 + best.soft, aspiration = lexBetter(next, best), tabu = (tabuUntil.get(g.key) ?? -1) > it, delta = nextVal - curVal, temp = Math.max(0.25, initial * (1 - it / limit)), water = bestVal + (initial - bestVal) * Math.max(0, 1 - it / limit); let ok = false;
+        if (active === "LATE_ACCEPTANCE") ok = nextVal <= curVal || nextVal <= history[it % lateSize]!; else if (active === "TABU") ok = !tabu || aspiration; else if (active === "SIMULATED_ANNEALING") ok = delta <= 0 || R() < Math.exp(-delta / temp); else if (active === "GREAT_DELUGE") ok = nextVal <= water; else if (active === "VND") ok = nextVal < curVal;
+        if (next.hard === 0 && (!tabu || aspiration || active === "TABU") && ok) { current = next; accepted = true; tabuUntil.set(g.key, it + tabuTenure); if (lexBetter(next, best)) { best = next; bestRows = cloneRows(rows); } break; }
+        const placed = groupActivities().find((x) => x.key === g.key); if (placed) removeRows(placed.rows);
+      }
+      if (!accepted) for (const r of oldRows) { rows.push(r); indexRow(r); }
+      history[it % lateSize] = current.medium * 100 + current.soft; if (best.medium === 0 && best.soft === 0) break;
+    }
+    rows.splice(0, rows.length, ...bestRows); teacherBusy.clear(); classBusy.clear(); teacherDaily.clear(); courseDaily.clear(); teacherPeriods.clear(); slotAssignments.clear(); for (const r of rows) indexRow(r); current = best;
+  }
+
+  const lns = ZERO_LNS(); lns.enabled = p.enableLns !== false && failed === 0 && current.hard === 0;
+  if (lns.enabled) {
+    const neighborhoods: LnsNeighborhood[] = ["TEACHER_DAY", "CLASS_DAY", "COURSE_BLOCK", "CONFLICT_HOTSPOT", "LOW_QUALITY_ZONE", "RANDOM_SMALL"], limit = Math.max(12, Math.min(180, p.lnsIterations ?? Math.ceil(rows.length * 0.7)));
+    const activityPenalty = (g: ActivityPlacement) => { let v = 0; for (const r of g.rows) { v += Math.max(0, r.period - 6) * 2; const sameSlot = slotAssignments.get(key(r.weekday, r.period)) ?? new Set<string>(); for (const other of sameSlot) v += pairPenalty(r.assignment_id, other) * 100; } return v; };
+    const chooseRuin = (kind: LnsNeighborhood): ActivityPlacement[] => {
+      const all = groupActivities().filter((x) => !x.locked); if (!all.length) return [];
+      if (kind === "TEACHER_DAY") { const seed = all[Math.floor(R() * all.length)]!, d = seed.rows[0]!.weekday; return all.filter((x) => x.assignment.teacher_id === seed.assignment.teacher_id && x.rows[0]!.weekday === d); }
+      if (kind === "CLASS_DAY") { const seed = all[Math.floor(R() * all.length)]!, d = seed.rows[0]!.weekday; return all.filter((x) => x.assignment.class_id === seed.assignment.class_id && x.rows[0]!.weekday === d); }
+      if (kind === "COURSE_BLOCK") { const seed = all[Math.floor(R() * all.length)]!; return all.filter((x) => x.assignment.class_id === seed.assignment.class_id && x.assignment.course_id === seed.assignment.course_id); }
+      if (kind === "CONFLICT_HOTSPOT") return all.map((x) => ({ x, p: activityPenalty(x) })).sort((a, b) => b.p - a.p).slice(0, Math.max(2, Math.min(8, Math.ceil(all.length * 0.12)))).map((x) => x.x);
+      if (kind === "LOW_QUALITY_ZONE") return all.map((x) => ({ x, p: activityPenalty(x) + x.rows.reduce((s, r) => s + Math.max(0, r.period - 5), 0) })).sort((a, b) => b.p - a.p).slice(0, Math.max(2, Math.min(10, Math.ceil(all.length * 0.15)))).map((x) => x.x);
+      return [...all].sort(() => R() - 0.5).slice(0, Math.max(2, Math.min(6, Math.ceil(all.length * 0.08))));
+    };
+    for (let it = 0; it < limit; it++) {
+      lns.iterations++; const kind = neighborhoods[it % neighborhoods.length]!; lns.neighborhoods[kind]++; const ruined = chooseRuin(kind); if (!ruined.length) continue; lns.ruinedActivities += ruined.length;
+      const beforeRows = cloneRows(rows), before = scoreNow(0), tasks = ruined.map(toTask); for (const g of ruined) removeRows(g.rows); const recreateFailed = construct(tasks), after = scoreNow(recreateFailed);
+      if (recreateFailed === 0 && after.hard === 0 && lexNotWorse(after, before)) { lns.accepted++; if (lexBetter(after, before)) lns.improved++; current = after; if (lexBetter(after, best)) { best = after; bestRows = cloneRows(rows); } }
+      else { lns.rejected++; rows.splice(0, rows.length, ...beforeRows); teacherBusy.clear(); classBusy.clear(); teacherDaily.clear(); courseDaily.clear(); teacherPeriods.clear(); slotAssignments.clear(); for (const r of rows) indexRow(r); current = before; }
+    }
+    rows.splice(0, rows.length, ...bestRows); teacherBusy.clear(); classBusy.clear(); teacherDaily.clear(); courseDaily.clear(); teacherPeriods.clear(); slotAssignments.clear(); for (const r of rows) indexRow(r);
+  }
+
+  const finalScore = scoreNow(failed);
+  return { rows, failed, complete: failed === 0 && finalScore.hard === 0, seed: p.seed, score: finalScore, iterations, strategy, lns };
+}
