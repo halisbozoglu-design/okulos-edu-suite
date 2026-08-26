@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, CheckCircle2, FileUp, GripVertical, Lock, Pencil, Plus, RefreshCw, ShieldCheck, Trash2, Unlock } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FileUp, GripVertical, History, Lock, Pencil, Plus, RefreshCw, ShieldCheck, Trash2, Undo2, Unlock } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { ScheduleVoiceCommand } from "@/components/okulos/ScheduleVoiceCommand";
 import { Badge } from "@/components/ui/badge";
