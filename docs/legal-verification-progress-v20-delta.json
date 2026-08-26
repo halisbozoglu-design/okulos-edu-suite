@@ -1,0 +1,44 @@
+{
+  "schema_version_target": 30,
+  "updated_on": "2026-08-26",
+  "base_manifest_sha": "4981da86dcc9539e587e3b3d1a73e398bc528c81",
+  "base_large_batch_atom_total": 2070,
+  "pending_completed_focus": [
+    {
+      "legal_family": "ADMIN_INTEGRITY_UNION_INVESTIGATION_REMAINING_100PLUS_V19",
+      "staging_doc": "docs/legal-investigation-assets-ethics-union-batch-100plus-v19.md",
+      "atomized_rule_count": 125,
+      "article_verified_increment": 0,
+      "migration_count": 0,
+      "source_urls": [
+        "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4483.pdf",
+        "https://www.mevzuat.gov.tr/MevzuatMetin/1.5.3628.pdf",
+        "https://www.etik.gov.tr/media/uidnvdn5/1-5-5176.pdf",
+        "https://www.csgb.gov.tr/media/1316/4688-say%C4%B1l%C4%B1-kamu-goerevlileri-sendikalar%C4%B1-ve-toplu-soezle%C5%9Fmeler-kanunu.pdf"
+      ]
+    },
+    {
+      "legal_family": "FACILITIES_SECURITY_HEALTH_VEHICLES_100PLUS_V20",
+      "staging_doc": "docs/legal-facilities-security-health-vehicles-batch-100plus-v20.md",
+      "atomized_rule_count": 128,
+      "article_verified_increment": 0,
+      "migration_count": 0,
+      "source_urls": [
+        "https://www5.tbmm.gov.tr/tutanaklar/KANUNLAR_KARARLAR/kanuntbmmc066/kanunmgkc066/kanunmgkc06602946.pdf",
+        "https://www.egm.gov.tr/ozelguvenlik/mevzuat-ozel-guvenlik",
+        "https://www.tarimorman.gov.tr/TADAB/Belgeler/Kanunlar/kanun_4207.pdf",
+        "https://edirne.meb.gov.tr/meb_iys_dosyalar/2015_03/31040322_afet_ve_acil_durumlara_iliskin_temel_mevzuat.pdf",
+        "https://www5.tbmm.gov.tr/tutanaklar/TUTANAK/MBK_/d00/c004/mbk_00004064.pdf"
+      ]
+    }
+  ],
+  "resulting_large_batch_atom_total": 2323,
+  "article_verified": 390,
+  "article_verified_percent": 17.5,
+  "next_focus": {
+    "legal_family": "FOUNDATIONAL_EDUCATION_LAWS_AND_REMAINING_SCHOOL_TYPES_100PLUS_V21",
+    "minimum_batch": 100,
+    "goal": "Continue fast coverage across 1739 National Education Basic Law, 222 Primary Education and Education Law, 3308 Vocational Education Law, 5580 Private Education Institutions Law and remaining school-type-specific current regulations/directives; final full correctness/missing/duplicate audit remains deferred until coverage is complete."
+  },
+  "note": "Delta preserves fast-batch progress without rewriting the large manifest in this pass; fold into canonical manifest during next compact consolidation/final audit. No ARTICLE_VERIFIED increase without exact workflow_id binding."
+}
