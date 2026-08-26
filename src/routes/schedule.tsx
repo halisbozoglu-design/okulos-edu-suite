@@ -34,6 +34,8 @@ function ScheduleManager(){
  const [teacherFilter,setTeacherFilter]=useState(""),[classFilter,setClassFilter]=useState(""),[subjectFilter,setSubjectFilter]=useState(""),[roomFilter,setRoomFilter]=useState(""),[editor,setEditor]=useState<Editor|null>(null),[draggingId,setDraggingId]=useState<string|null>(null),[dropTarget,setDropTarget]=useState<string|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState<string|null>(null),[success,setSuccess]=useState<string|null>(null),[profileLoadError,setProfileLoadError]=useState<string|null>(null),[integrityLoadError,setIntegrityLoadError]=useState<string|null>(null);const fileRef=useRef<HTMLInputElement>(null);
  const [hover,setHover]=useState<HoverPreview|null>(null),[swapPrompt,setSwapPrompt]=useState<SwapPrompt|null>(null),[undoPoint,setUndoPoint]=useState<RestorePoint|null>(null);const previewSeq=useRef(0);
  const [selectedIds,setSelectedIds]=useState<string[]>([]);
+ const [viewMode,setViewMode]=useState<ViewMode>("ALL");
+
  const load=useCallback(async()=>{const [a,r,g,s,u,p,i]=await Promise.all([
   supabase.from("schedule_assignment_options").select("*").order("composite_key").order("course_name"),
   supabase.from("classrooms").select("id,name,room_type,capacity,department").eq("active",true).order("name"),
