@@ -1,0 +1,10 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":2955,
+  "completed_focus":{"legal_family":"STUDENT_REGISTRATION_BOARDS_TRANSPORT_OPEN_100PLUS_V27","staging_doc":"docs/legal-student-registration-boards-transport-deepening-batch-100plus-v27.md","atomized_rule_count":120,"migration_count":0,"source_urls":["https://mevzuat.meb.gov.tr/dosyalar/1657.pdf","https://mevzuat.meb.gov.tr/dosyalar/2260.pdf","https://resmigazete.gov.tr/eskiler/2024/08/20240801-2.htm","https://resmigazete.gov.tr/eskiler/2024/10/20241022-2.htm"]},
+  "large_batch_atom_total_after_delta":3075,
+  "article_verified":{"base":414,"increment":6,"result":420,"master_total":2229,"percent":18.84,"batch_doc":"docs/legal-article-verified-batch-v27.md","workflow_ids":["HB-1671","HB-1672","HB-1673","HB-1674","HB-0053","HB-0055"]},
+  "duplicate_not_counted":[{"workflow_id":"HB-1675","reason":"already ARTICLE_VERIFIED in older primary-education batch; current OOKY Md22/8 match does not create a second count"}],
+  "migration_count":0,
+  "next_focus":{"minimum_batch":100,"goal":"Continue exact ARTICLE_VERIFIED promotion from remaining current OOKY student-affairs, board/commission, transport and special-education master candidates while maintaining >=100 new provenance-linked atoms."}
+}
