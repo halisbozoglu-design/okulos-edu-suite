@@ -1,0 +1,54 @@
+name: Timefold world benchmark
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/world/**'
+      - 'benchmarks/timefold-adapter/**'
+      - 'tools/schedule_world_benchmark.ts'
+      - 'tools/schedule_world_export_cases.ts'
+      - 'tools/schedule_timefold_world_benchmark.ts'
+      - '.github/workflows/schedule-timefold-world-benchmark.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  timefold:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: benchmarks/timefold-adapter/pom.xml
+      - run: bun install --frozen-lockfile
+      - name: Export canonical cases
+        run: bun tools/schedule_world_export_cases.ts --out /tmp/okulos-world-cases.ndjson
+      - name: Build Timefold adapter
+        working-directory: benchmarks/timefold-adapter
+        run: mvn -q -DskipTests package
+      - name: Run real Timefold common-hard benchmark
+        run: java -jar benchmarks/timefold-adapter/target/timefold-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/timefold-raw.ndjson
+      - name: Canonical post-score and gate
+        run: bun tools/schedule_timefold_world_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/timefold-raw.ndjson --out /tmp/schedule-timefold-world-benchmark.json --ci
+      - name: Failure diagnostics
+        if: failure()
+        run: |
+          echo '--- raw tail ---'
+          tail -20 /tmp/timefold-raw.ndjson 2>/dev/null || true
+          echo '--- aggregate ---'
+          cat /tmp/schedule-timefold-world-benchmark.json 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: schedule-timefold-world-benchmark-${{ github.sha }}
+          path: |
+            /tmp/schedule-timefold-world-benchmark.json
+            /tmp/timefold-raw.ndjson
+          if-no-files-found: ignore
+          retention-days: 30
