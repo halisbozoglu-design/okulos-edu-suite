@@ -1,6 +1,6 @@
 {
   "schema":"OKULOS_PARITY_GATE_V1",
-  "updated":"2026-08-27",
+  "updated":"2026-08-28",
   "claim_policy":"Any PARTIAL/FAIL or competitor NOT_RUN blocks parity/superiority claim.",
   "rows":[
     {"id":"lex-score","capability":"HARD/MEDIUM/SOFT lexicographic objective","okulos":"PASS","evidence":"src/lib/schedule-local-solver-incremental-core.ts"},
@@ -22,7 +22,7 @@
     {"id":"exact-oracle","capability":"CP-SAT exact small-instance oracle with optimality evidence","okulos":"PASS","evidence":"Section 12 CP-SAT closure"},
     {"id":"explainability","capability":"Why here/why not/objective delta/root cause/intervention/audit","okulos":"PASS","evidence":"Section 14 release/explainability closure"},
     {"id":"meb-native","capability":"Native MEB/MTAL/MESEM model/provenance advantage","okulos":"PASS","evidence":"official schedule parsers + MTAL/MESEM structural benchmark profiles"},
-    {"id":"competitor-benchmark","capability":"Same-contract Timefold/UniTime/FET/aSc executable benchmark evidence","okulos":"PARTIAL","evidence":"FET 6.8.5, Timefold 2.5.0 and official UniTime CPSolver@3abbcaaf26d739d25e45c8e191b7ef94bc15cc26 ran on the same GitHub runner with 6 profiles x 30 seeds each. All 540 external common-HARD runs are feasible, hard=0, unplaced=0, deterministic and budget-pass after independent canonical HARD audit/post-score. Workflow 33102654560, artifact 9659256457, frozen evidence benchmarks/world/external-same-runner-20260827.json. aSc remains NOT_RUN because no documented repeatable headless/CLI generation entrypoint was verified. External objectives are not apples-to-apples, so parity/superiority closure remains blocked."}
+    {"id":"competitor-benchmark","capability":"Same-contract Timefold/UniTime/FET/aSc executable benchmark evidence","okulos":"PARTIAL","evidence":"FET 6.8.5, Timefold 2.5.0 and official UniTime CPSolver@3abbcaaf26d739d25e45c8e191b7ef94bc15cc26 ran on the same GitHub runner with 6 profiles x 30 seeds each. All 540 external common-HARD runs are feasible, hard=0, unplaced=0, deterministic and budget-pass after independent canonical HARD audit/post-score. Workflow 33102654560, artifact 9659256457, frozen evidence benchmarks/world/external-same-runner-20260827.json. aSc remains NOT_RUN: no documented repeatable headless/CLI generation entrypoint is verified. A conservative aSc 2012 XML input adapter now exports benchmark periods/teachers/classes/subjects/lessons, ALL/ODD/EVEN week codes and documented unscoped teacher time-off, but deliberately reports INPUT_PARTIAL while teacher daily/consecutive XML mapping, scoped time-off/generic relations and executable generation remain unverified. External objectives are not apples-to-apples, so parity/superiority closure remains blocked. Latest source chain including aSc input guards and GPU lexicographic safety passed CI 33125340878."}
   ],
   "competitors":{"Timefold":"RUN_COMMON_HARD","UniTime":"RUN_COMMON_HARD","FET":"RUN_COMMON_HARD","aSc":"NOT_RUN","CP-SAT":"EXACT_GATE","Okulos":"BUILT_IN"}
 }
