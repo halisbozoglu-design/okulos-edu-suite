@@ -1,0 +1,35 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":3915,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_PANSION_MTAL_OPEN_100PLUS_V35",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v35.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=20169487&MevzuatTur=21&MevzuatTertip=5",
+      "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
+      "https://resmigazete.gov.tr/eskiler/2024/10/20241022-2.htm"
+    ]
+  },
+  "large_batch_atom_total_after_delta":4035,
+  "article_verified":{
+    "base":451,
+    "increment":1,
+    "result":452,
+    "master_total":2229,
+    "percent":20.2782,
+    "batch_doc":"docs/legal-article-verified-batch-v35.md",
+    "workflow_ids":["HB-2201"]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-0406","reason":"entity matches Md8 but legacy September timing is not stated by current regulation"},
+    {"family":"MONTHLY_PANSION_TRANSFER_ROWS","reason":"handbook month labels are not universal statutory deadlines"},
+    {"workflow_ids":["HB-2204","HB-2205","HB-2206","HB-2209"],"reason":"exact current open-education/MTEGM article binding still required"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Resolve exact current clauses for MTAL/open-education commissions and continue high-confidence master bindings; keep handbook timing separate from statutory deadlines."
+  }
+}
