@@ -19,8 +19,8 @@ Bir bölüm Cloud/veri, solver, canonical validator/score, UI/rapor, test/benchm
 10. Adaptive/elite solver — **CLOSED 2026-08-27**
 11. Hybrid compute closure — **CLOSED 2026-08-27**
 12. CP-SAT exact oracle — **CLOSED 2026-08-27**
-13. World benchmark package — **NEXT**
-14. Release/explainability
+13. World benchmark package — **CLOSED 2026-08-27**
+14. Release/explainability — **NEXT**
 15. Final parity + superiority gate
 
 ## 1 — Student conflict — CLOSED
@@ -128,10 +128,25 @@ Reopen only for normalized-export drift, unsupported HARD rules being mislabeled
 
 ---
 
-## 13 — World benchmark package — NEXT
-Synthetic small/medium/large/dense + MTAL + MESEM + anonymized real + compatible ITC. Compare OkulOS, Timefold, UniTime/ITC-compatible, CP-SAT and fair external FET/aSc where possible. Same input hash/hardware/wall-clock, >=30 seeds; feasible rate, HARD, unplaced, objective vector, conflicts, room/travel, gaps, runtime p50/p95, time-to-first-feasible/time-to-best, memory, replay.
+## 13 — World benchmark package — CLOSED
 
-## 14 — Release/explainability
+### Fair benchmark contract
+`benchmarks/world/manifest.json` defines `OKULOS_WORLD_BENCHMARK_V1`, 30 seeds, an 8000 ms per-solve wall-clock budget and six structural profiles: synthetic small/medium/large/dense plus MEB-oriented MTAL and MESEM. `benchmarks/world/README.md` defines one adapter/result contract for all engines: same normalized input SHA-256, same budget, recorded hardware/runtime, explicit solver status and common feasibility/objective/runtime/memory/replay fields. Unsupported or unavailable engines are never replaced with estimates.
+
+### Runner / evidence artifact
+`tools/schedule_world_benchmark.ts` runs the canonical incremental OkulOS solver on every profile, computes stable input hashes and records feasible rate, HARD, unplaced, MEDIUM/SOFT, runtime p50/p95, time-to-first-feasible, time-to-best, heap delta and deterministic replay. CI runs all six profiles × 30 seeds = 180 real OkulOS solves on every push and uploads `schedule-world-benchmark-<sha>.json` as a retained evidence artifact. Regression `tests/schedule-world-benchmark-package.test.ts` locks seed count, profile set, fairness language, deterministic generator and comparable metric schema.
+
+### First canonical baseline
+CI `33086715135`, head `94368a072739d85cd6a59571948220610aabf6a1`, AMD EPYC 7763 / 4 logical CPUs / Linux x64 / Bun 1.4.0. All 180 OkulOS runs were feasible with HARD=0, unplaced=0, deterministic replay PASS and under the 8000 ms budget. Runtime p95: synthetic-small 36 ms, medium 89 ms, large 498 ms, dense 329 ms, MTAL 312 ms, MESEM 116 ms. Same run executed the real OR-Tools gate: CP-SAT OPTIMAL, objective=bound=0, gap=0, wall 17 ms. Artifact ID `9652532614`; durable human-readable evidence is `docs/SCHEDULE_WORLD_BENCHMARK_BASELINE_20260827.md`.
+
+### Competitor truth boundary
+Timefold, UniTime, FET and aSc are `NOT_RUN` until a compatible executable/licensed adapter is actually executed under the same contract. No vendor claim or synthetic estimate is recorded as a benchmark result. Likewise, synthetic MTAL/MESEM profiles are structural MEB profiles and are not mislabeled as anonymized real-school data; a real/ITC row can enter only with versioned provenance/privacy evidence. Therefore Section 13 closes the reproducible benchmark package and OkulOS/CP-SAT evidence, **not** a superiority claim. Final external parity/superiority remains blocked in Section 15.
+
+Reopen for seed count <30, input-hash drift, budget mismatch, missing hardware provenance, replay failure, benchmark artifact loss, fabricated competitor rows, or a claimed real/ITC row without provenance.
+
+---
+
+## 14 — Release/explainability — NEXT
 Why here/why not, objective delta, root cause, intervention count, restore/audit, publish gate, benchmark artifact, release regression gate, operator/admin UX, mobile/large-grid.
 
 ## 15 — Final parity + superiority gate
