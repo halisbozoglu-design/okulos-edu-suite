@@ -160,3 +160,9 @@
     color: var(--color-foreground);
   }
 }
+
+/* Large scroll-bounded card/button pools skip off-screen layout/paint work. */
+.max-h-40.overflow-auto > button {
+  content-visibility: auto;
+  contain-intrinsic-size: 32px;
+}
