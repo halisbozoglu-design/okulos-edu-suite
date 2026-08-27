@@ -1,0 +1,25 @@
+{
+  "schema": "OKULOS_CP_SAT_ORACLE_V1",
+  "tenant": "TEST",
+  "time_profile": {"teaching_days":[1,2,3,4,5],"periods_per_day":4},
+  "assignments": [
+    {"assignment_id":"a1","teacher_id":"t1","class_id":"c1","course_id":"math","assigned_hours":2,"allowed_periods":[1,2,3,4]},
+    {"assignment_id":"a2","teacher_id":"t2","class_id":"c1","course_id":"eng","assigned_hours":2,"allowed_periods":[1,2,3,4]},
+    {"assignment_id":"a3","teacher_id":"t1","class_id":"c2","course_id":"sci","assigned_hours":2,"allowed_periods":[1,2,3,4]},
+    {"assignment_id":"a4","teacher_id":"t3","class_id":"c2","course_id":"hist","assigned_hours":2,"allowed_periods":[1,2,3,4]},
+    {"assignment_id":"a5","teacher_id":"t2","class_id":"c3","course_id":"math","assigned_hours":2,"allowed_periods":[1,2,3,4]},
+    {"assignment_id":"a6","teacher_id":"t3","class_id":"c3","course_id":"eng","assigned_hours":2,"allowed_periods":[1,2,3,4]}
+  ],
+  "locked_rows": [{"assignment_id":"a1","weekday":1,"period":1}],
+  "teacher_unavailability": [{"teacher_id":"t1","weekday":5,"period":4}],
+  "planning_relations": [
+    {"id":"r1","relation_type":"FORBIDDEN_SLOT","mode":"HARD","weight":1,"left_selector":{"teacher_id":"t2"},"right_selector":{},"parameters":{"weekday":1,"period":4}},
+    {"id":"r2","relation_type":"PREFERRED_SLOT","mode":"SOFT","weight":2,"left_selector":{"course_id":"math"},"right_selector":{},"parameters":{"periods":[1,2]}}
+  ],
+  "student_conflict_weights": [
+    {"left_assignment_id":"a1","right_assignment_id":"a4","student_weight":3,"severity_weight":3},
+    {"left_assignment_id":"a2","right_assignment_id":"a3","student_weight":2,"severity_weight":2},
+    {"left_assignment_id":"a5","right_assignment_id":"a6","student_weight":2,"severity_weight":2}
+  ],
+  "canonical_objective_order":["HARD","UNPLACED","MEDIUM","SOFT","LEGACY"]
+}
