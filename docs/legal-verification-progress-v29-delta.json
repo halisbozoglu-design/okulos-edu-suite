@@ -1,0 +1,39 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":3195,
+  "completed_focus":{
+    "legal_family":"HEM_OAB_STUDENT_TRANSPORT_DEEPENING_100PLUS_V29",
+    "staging_doc":"docs/legal-hem-oab-student-transport-deepening-batch-100plus-v29.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1924.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2260.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":3315,
+  "article_verified":{
+    "base":425,
+    "increment":1,
+    "result":426,
+    "master_total":2229,
+    "percent":19.1117,
+    "batch_doc":"docs/legal-article-verified-batch-v29.md",
+    "workflow_ids":["HB-2221"],
+    "official_source":"https://mevzuat.meb.gov.tr/dosyalar/1924.pdf",
+    "verified_article":"39",
+    "verified_paragraph":"1-3"
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2222","reason":"master title does not one-to-one match current HEM Md38-41 board titles"},
+    {"workflow_id":"HB-2223","reason":"OAB exact article candidate retained; current official MEB endpoint was not reliably resolvable in this pass"},
+    {"workflow_id":"HB-2224","reason":"same official-source resolution guard"},
+    {"workflow_id":"HB-2225","reason":"same official-source resolution guard"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "minimum_batch":100,
+    "goal":"Continue exact ARTICLE_VERIFIED promotion from current official HEM, OOKY, transport, special-education and OAB sources; prioritize resolvable exact master matches and keep withholding ambiguous/outdated rows."
+  }
+}
