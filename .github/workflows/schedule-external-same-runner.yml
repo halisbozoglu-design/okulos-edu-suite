@@ -6,10 +6,12 @@ on:
     paths:
       - 'benchmarks/world/**'
       - 'benchmarks/timefold-adapter/**'
+      - 'benchmarks/unitime-adapter/**'
       - 'tools/schedule_world_benchmark.ts'
       - 'tools/schedule_world_export_cases.ts'
       - 'tools/schedule_fet_world_benchmark.ts'
       - 'tools/schedule_timefold_world_benchmark.ts'
+      - 'tools/schedule_unitime_world_benchmark.ts'
       - 'tools/schedule_external_same_runner_report.ts'
       - '.github/workflows/schedule-external-same-runner.yml'
 permissions:
@@ -26,12 +28,22 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-          cache-dependency-path: benchmarks/timefold-adapter/pom.xml
+          cache-dependency-path: |
+            benchmarks/timefold-adapter/pom.xml
+            benchmarks/unitime-adapter/pom.xml
       - run: bun install --frozen-lockfile
       - name: Install FET
         run: sudo apt-get update -qq && sudo apt-get install -y fet && fet-cl --version --outputdir=/tmp/fet-version
       - name: Build Timefold adapter
         working-directory: benchmarks/timefold-adapter
+        run: mvn -q -DskipTests package
+      - name: Build pinned UniTime CPSolver
+        run: |
+          git clone -q https://github.com/UniTime/cpsolver.git /tmp/cpsolver
+          git -C /tmp/cpsolver checkout -q 3abbcaaf26d739d25e45c8e191b7ef94bc15cc26
+          mvn -q -f /tmp/cpsolver/pom.xml -DskipTests -Dmaven.javadoc.skip=true install
+      - name: Build UniTime adapter
+        working-directory: benchmarks/unitime-adapter
         run: mvn -q -DskipTests package
       - name: Export canonical cases
         run: bun tools/schedule_world_export_cases.ts --out /tmp/okulos-world-cases.ndjson
@@ -43,8 +55,12 @@ jobs:
         run: java -jar benchmarks/timefold-adapter/target/timefold-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/timefold-raw.ndjson
       - name: Canonical post-score Timefold
         run: bun tools/schedule_timefold_world_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/timefold-raw.ndjson --out /tmp/timefold-world.json --ci
+      - name: Run UniTime CPSolver
+        run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/unitime-raw.ndjson
+      - name: Canonical post-score UniTime
+        run: bun tools/schedule_unitime_world_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/unitime-raw.ndjson --out /tmp/unitime-world.json --ci
       - name: Same-runner parity gate
-        run: bun tools/schedule_external_same_runner_report.ts --okulos /tmp/okulos-world.json --fet /tmp/fet-world.json --timefold /tmp/timefold-world.json --out /tmp/external-same-runner.json
+        run: bun tools/schedule_external_same_runner_report.ts --okulos /tmp/okulos-world.json --fet /tmp/fet-world.json --timefold /tmp/timefold-world.json --unitime /tmp/unitime-world.json --out /tmp/external-same-runner.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -54,6 +70,8 @@ jobs:
             /tmp/fet-world.json
             /tmp/timefold-world.json
             /tmp/timefold-raw.ndjson
+            /tmp/unitime-world.json
+            /tmp/unitime-raw.ndjson
             /tmp/external-same-runner.json
           if-no-files-found: ignore
           retention-days: 30
