@@ -1,0 +1,40 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":4035,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_MTAL_OPEN_EXACT_100PLUS_V36",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v36.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
+      "https://resmigazete.gov.tr/eskiler/2024/10/20241022-2.htm",
+      "https://mevzuat.meb.gov.tr/dosyalar/2255.pdf",
+      "https://mtegm.meb.gov.tr/meb_iys_dosyalar/2016_03/24093402_seflik_yonerge.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":4155,
+  "article_verified":{
+    "base":452,
+    "increment":1,
+    "result":453,
+    "master_total":2229,
+    "percent":20.3230,
+    "batch_doc":"docs/legal-article-verified-batch-v36.md",
+    "workflow_ids":["HB-2209"]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2204","reason":"current Open Education Regulation Md25/2-a scope is MAOL journeyman/master certificate exemption-equivalence commission, not the master AÖIHL-titled commission"},
+    {"workflow_id":"HB-2205","reason":"master area/branch quota commission title does not one-to-one match current OOKY Md25 general quota commission"},
+    {"workflow_id":"HB-2206","reason":"coordinator teacher assignment exists but exact named determination commission clause not established"},
+    {"workflow_id":"HB-2210","reason":"exact current annual talent-exam guide binding required"}
+  ],
+  "source_status_updates":[
+    {"source":"https://mevzuat.meb.gov.tr/dosyalar/443.pdf","status":"MULGA_HISTORICAL_ONLY","current_replacement":"RG 22.10.2024/32700 Open Education Institutions Regulation"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Continue high-confidence exact bindings from remaining master committee rows; prioritize BILSEM, talent-exam, special-education and current OOKY/MTEGM named commissions while converting handbook-only names/timings to withheld or split candidates."
+  }
+}
