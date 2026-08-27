@@ -1,0 +1,37 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":3675,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_PRIORITY_RPD_BEP_OAB_IYEP_V33",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v33.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://orgm.meb.gov.tr/meb_iys_dosyalar/2020_08/14231603_Rehberlik_ve_Psikolojik_DanYYma_Hizmetleri_YonetmeliYi_2.pdf",
+      "https://tut.meb.gov.tr/meb_iys_dosyalar/2025_03/07083213_ozelegitimhizmetleriyonetmeligi.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1532.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2023.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":3795,
+  "article_verified":{
+    "base":435,
+    "increment":11,
+    "result":446,
+    "master_total":2229,
+    "percent":20.009,
+    "batch_doc":"docs/legal-article-verified-batch-v33.md",
+    "workflow_ids":["HB-2175","HB-2195","HB-2176","HB-2196","HB-2177","HB-2197","HB-2178","HB-2198","HB-2179","HB-2199","HB-2185"]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_ids":["HB-2181","HB-2202"],"reason":"school-health management team exact current formation clause unresolved"},
+    {"workflow_ids":["HB-2182","HB-2203"],"reason":"psychosocial crisis team exact current organ/source formulation unresolved"},
+    {"workflow_ids":["HB-2180","HB-2200"],"reason":"Eser İnceleme ve Seçme Kurulu current exact source/article unresolved"},
+    {"workflow_id":"HB-2201","reason":"yatılılık/bursluluk current exact commission article reconciliation required"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Continue exact promotion from remaining high-confidence board/commission/student-operation master rows; target >20.5 while preserving current-source, duplicate and obsolete-timing guards."
+  }
+}
