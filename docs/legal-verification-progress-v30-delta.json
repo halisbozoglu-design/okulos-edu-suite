@@ -1,0 +1,38 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":3315,
+  "completed_focus":{
+    "legal_family":"OAB_RAM_SPED_TRANSPORT_DEEPENING_100PLUS_V30",
+    "staging_doc":"docs/legal-oab-ram-sped-transport-deepening-batch-100plus-v30.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1532.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1963.pdf",
+      "https://resmigazete.gov.tr/eskiler/2018/07/20180707-8.htm",
+      "https://mevzuat.meb.gov.tr/dosyalar/1924.pdf",
+      "https://resmigazete.gov.tr/eskiler/2024/08/20240801-2.htm"
+    ]
+  },
+  "large_batch_atom_total_after_delta":3435,
+  "article_verified":{
+    "base":426,
+    "increment":3,
+    "result":429,
+    "master_total":2229,
+    "percent":19.2463,
+    "batch_doc":"docs/legal-article-verified-batch-v30.md",
+    "workflow_ids":["HB-2223","HB-2224","HB-2228"]
+  },
+  "duplicate_guard":["HB-2225"],
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2222","reason":"legacy title does not one-to-one match current HEM Md38-41 organ titles"},
+    {"workflow_id":"HB-2227","reason":"RAM 'Merkez Komisyon Kurulu' title needs exact current legal-organ resolution"},
+    {"workflow_id":"HB-2229","reason":"school-health team formation requires exact current health-program source/clause"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "minimum_batch":100,
+    "goal":"Continue RAM/rehberlik, OOKY student operations, current health/safety boards, and exact transport/committee master bindings; prioritize high-confidence workflow_id matches and continue duplicate/outdated-source protection."
+  }
+}
