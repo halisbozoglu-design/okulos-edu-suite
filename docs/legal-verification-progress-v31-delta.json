@@ -1,0 +1,40 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":3435,
+  "completed_focus":{
+    "legal_family":"RAM_GUIDANCE_HEALTH_SPED_DEEPENING_100PLUS_V31",
+    "staging_doc":"docs/legal-ram-guidance-health-sped-deepening-batch-100plus-v31.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://orgm.meb.gov.tr/meb_iys_dosyalar/2020_08/31230315_RAM_YONERGESY.pdf",
+      "https://www.meb.gov.tr/rehberlik-ve-psikolojik-danisma-hizmetleri-yonetmeligi-yayimlandi/haber/21433/tr",
+      "https://orgm.meb.gov.tr/www/rehberlik-hizmetleri-mevzuat/icerik/1359",
+      "https://mevzuat.meb.gov.tr/dosyalar/2121.pdf",
+      "https://okulsagligi.meb.gov.tr/www/okul-sagligi-hizmetleri/icerik/29",
+      "https://resmigazete.gov.tr/eskiler/2018/07/20180707-8.htm"
+    ]
+  },
+  "large_batch_atom_total_after_delta":3555,
+  "article_verified":{
+    "base":429,
+    "increment":1,
+    "result":430,
+    "master_total":2229,
+    "percent":19.2912,
+    "batch_doc":"docs/legal-article-verified-batch-v31.md",
+    "workflow_ids":["HB-2227"],
+    "official_source":"https://orgm.meb.gov.tr/meb_iys_dosyalar/2020_08/31230315_RAM_YONERGESY.pdf",
+    "verified_article":"13",
+    "verified_paragraph":"1-3"
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2229","reason":"named School Health Management Team not directly tied to an exact current article/paragraph in confirmed official school-health sources"},
+    {"family":"RAM_MONTHLY_FIXED_TIME_ROWS","reason":"handbook's fixed 13:30 timing is not established as a universal current legal obligation"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "minimum_batch":100,
+    "goal":"Continue exact RAM/RPD, special-education, school-health and student-operation verification; prioritize master workflows whose operative action and timing are directly stated in current official clauses, while separating handbook/local practice from binding law."
+  }
+}
