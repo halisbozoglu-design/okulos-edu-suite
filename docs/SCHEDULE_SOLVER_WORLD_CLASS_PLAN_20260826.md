@@ -50,12 +50,12 @@ Sessions + period definitions, 1–24 canonical slots + local period; ALL/ODD/EV
 ## 9 — Incremental score & large-school performance — CLOSED
 Single incremental worker. `ScheduleHotspotIndex` covers slot/resource/activity/student adjacency. `IncrementalScheduleScore` maintains student conflict, teacher/class gap and late-period deltas; relation dirty-cache still delegates semantics to canonical evaluator. Migration `20260827012000_schedule_performance_indexes_v1.sql`; Lovable Cloud 4/4 performance indexes present. Timetable uses O(1) slot map + offscreen containment.
 
-Benchmark: 120 classes / 240 assignments / 5 seeds, 5/5 feasible. Closure p50 1802 ms, p95 1914 ms; later adaptive regression p50 1935 ms, p95 2023 ms, heap delta 6 MB. Gates: p95 <8000 ms, heap <256 MB, deterministic replay and linear index memory. CI `33032437412`, docs `33032882894`.
+Benchmark: 120 classes / 240 assignments / 5 seeds, 5/5 feasible. Closure p50 1802 ms, p95 1914 ms; latest Section 10 regression p50 1972 ms, p95 2129 ms, heap delta 0 MB. Gates: p95 <8000 ms, heap <256 MB, deterministic replay and linear index memory. CI `33032437412`, docs `33032882894`.
 
 ## 10 — Adaptive/elite solver — CLOSED
 
 ### Architecture
-Adaptive/elite is outer orchestration only. Canonical inner worker remains `schedule-local-solver-worker.ts` → `solveIncrementalSchedule`; there is no second constraint/score engine. Sections 8–9 semantics stay authoritative.
+Adaptive/elite is outer orchestration only. Canonical inner worker remains `schedule-local-solver-worker.ts` → `solveIncrementalSchedule`; there is no second constraint/score engine. Sections 8–9 semantics stay authoritative. A duplicate worker-level adaptive wrapper created during development was removed before closure so adaptive choice has one authority only: `schedule-local-solver.ts` + `schedule-adaptive-elite.ts`.
 
 ### Contextual operator learning
 Arms: LATE_ACCEPTANCE, TABU, SIMULATED_ANNEALING, GREAT_DELUGE, VND. `adaptiveContextKey` classifies SMALL/MEDIUM/LARGE × SPARSE/MIXED/DENSE. `chooseAdaptiveStrategies` applies UCB exploration/exploitation over persisted attempts/reward instead of fixed AUTO ordering. Telemetry learns candidate performance only; it cannot alter HARD rules.
@@ -67,14 +67,14 @@ Arms: LATE_ACCEPTANCE, TABU, SIMULATED_ANNEALING, GREAT_DELUGE, VND. `adaptiveCo
 `runLocalScheduleSolve` accepts optional explicit base seed. Attempt seeds are deterministically derived, parallel results are stored by attempt index rather than worker completion order, UCB planning is deterministic for the same priors/context, and the same relink seed reproduces the same relink problem and canonical solve result.
 
 ### Lovable Cloud telemetry
-Forward migration `20260827013000_schedule_adaptive_solver_v1.sql`. `schedule_solver_operator_telemetry` stores tenant/context/strategy attempts, wins and reward sum. RPCs: `get_schedule_solver_operator_priors_v1(text)` and `record_schedule_solver_operator_telemetry_v1(text,jsonb)`. Production smoke confirms table + both RPCs. Closure row count is 0 because no fake learning data was inserted.
+Forward migration `20260827013000_schedule_adaptive_solver_v1.sql`. `schedule_solver_operator_telemetry` stores tenant/context/strategy attempts, wins and reward sum. RPCs: `get_schedule_solver_operator_priors_v1(text)` and `record_schedule_solver_operator_telemetry_v1(text,jsonb)`. Production smoke confirms table + both RPCs. No fake learning data was inserted.
 
 ### UI / regression / benchmark
-UI `/schedule-adaptive-health` belongs to `/schedule` feature family and displays context, strategy, attempts, wins, win-rate, average reward and update time, with visible HARD-safety explanation. `tests/schedule-adaptive-elite.test.ts` covers UCB learning, elite diversity, deterministic relink replay, manual-lock normalization, telemetry aggregation, UI contract and feasibility across all five arms.
+UI `/schedule-adaptive-health` belongs to `/schedule` feature family and displays context, strategy, attempts, wins, win-rate, average reward and update time, with visible HARD-safety explanation. `tests/schedule-adaptive-elite.test.ts` covers UCB learning, elite diversity, deterministic relink replay, manual-lock normalization, telemetry aggregation, UI contract and feasibility across all five arms. `tests/schedule-adaptive-elite-benchmark.test.ts` benchmarks the same canonical helper/orchestrator semantics rather than a second solver.
 
-Adaptive core CI `33037753900` SUCCESS. Final UI/replay code CI `33037909733` SUCCESS. The same suite reran the Section 9 large-school gate: 120 classes / 240 assignments / 5 seeds, 5/5 feasible, p50 1935 ms, p95 2023 ms, heap delta 6 MB. Adaptive orchestration did not regress HARD or performance gates.
+Final canonical benchmark: 32 classes / 64 assignments / 3 runs, adaptive source pool feasible and baseline-safe, p95 878 ms (<12000 ms gate). Same CI reran Section 9 large-school gate: 120 classes / 240 assignments / 5 seeds, 5/5 feasible, p50 1972 ms, p95 2129 ms, heap delta 0 MB. Final code head `047225888d65f40cc97855c8839bd15a5f628683`; CI `33057237956` SUCCESS including regression, migration/replay, tenant/route/authority guards, production build, route tree, TypeScript and forward migration policy.
 
-Reopen only for replay drift, telemetry tenant leak, elite diversity collapse, relink HARD/manual-lock leakage, restart nondeterminism, or Section 9 gate regression.
+Reopen only for replay drift, telemetry tenant leak, elite diversity collapse, relink HARD/manual-lock leakage, restart nondeterminism, duplicate adaptive authority or Section 9 gate regression.
 
 ---
 
