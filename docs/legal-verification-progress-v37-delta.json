@@ -1,0 +1,39 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":4155,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_BILSEM_RPD_100PLUS_V37",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v37.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/2193.pdf",
+      "https://orgm.meb.gov.tr/meb_iys_dosyalar/2020_08/14231603_Rehberlik_ve_Psikolojik_DanYYma_Hizmetleri_YonetmeliYi_2.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2260.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":4275,
+  "article_verified":{
+    "base":453,
+    "increment":3,
+    "result":456,
+    "master_total":2229,
+    "percent":20.4576,
+    "batch_doc":"docs/legal-article-verified-batch-v37.md",
+    "workflow_ids":["HB-2211","HB-2213","HB-2219"]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2212","reason":"current BILSEM directive does not name a Sınıf/Şube Öğretmenler Kurulu"},
+    {"workflow_id":"HB-2210","reason":"talent-exam commission details are annual guide/general-letter dependent; durable provision binding not completed"},
+    {"workflow_ids":["HB-2214","HB-2215","HB-2216"],"reason":"OAB BILSEM applicability/duplicate reconciliation required before any recount"},
+    {"workflow_id":"HB-2217","reason":"exact current source clause unresolved"},
+    {"workflow_id":"HB-2218","reason":"exact current school-health team formation clause unresolved"}
+  ],
+  "blocked_legacy_source":"https://mevzuat.meb.gov.tr/dosyalar/524.pdf",
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Continue BILSEM exact organs (diagnosis commissions/project jury), current special-education named boards and other high-confidence master IDs; separate annual-guide parameters from durable provisions."
+  }
+}
