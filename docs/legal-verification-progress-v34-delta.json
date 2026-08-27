@@ -1,0 +1,36 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":3795,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_FOCUSED_DEEPENING_100PLUS_V34",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v34.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1703.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
+      "https://resmigazete.gov.tr/eskiler/2017/06/20170608-5.htm"
+    ]
+  },
+  "large_batch_atom_total_after_delta":3915,
+  "article_verified":{
+    "base":446,
+    "increment":5,
+    "result":451,
+    "master_total":2229,
+    "percent":20.2333,
+    "batch_doc":"docs/legal-article-verified-batch-v34.md",
+    "workflow_ids":["HB-2186","HB-2187","HB-2188","HB-2189","HB-2190"]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2201","reason":"current consolidated boarding regulation source/version must be resolved; old 716.pdf is repealed"},
+    {"workflow_ids":["HB-2181","HB-2202"],"reason":"school-health team exact formation clause unresolved"},
+    {"workflow_ids":["HB-2182","HB-2203"],"reason":"psychosocial crisis team exact current source binding required"},
+    {"workflow_ids":["HB-2204","HB-2205","HB-2206"],"reason":"school-type-specific commission exact current clauses required"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Continue exact promotion from current OOKY/OOEIKY/social-activities/MTAL/open-education/boarding sources; prioritize high-confidence master commission records and keep obsolete-source guard active."
+  }
+}
