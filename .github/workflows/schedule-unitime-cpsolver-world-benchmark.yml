@@ -1,0 +1,51 @@
+name: UniTime CPSolver world benchmark
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/world/**'
+      - 'benchmarks/unitime-cpsolver-adapter/**'
+      - 'tools/schedule_world_benchmark.ts'
+      - 'tools/schedule_world_export_cases.ts'
+      - 'tools/schedule_unitime_cpsolver_world_benchmark.ts'
+      - '.github/workflows/schedule-unitime-cpsolver-world-benchmark.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unitime-cpsolver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: benchmarks/unitime-cpsolver-adapter/pom.xml
+      - run: bun install --frozen-lockfile
+      - name: Export canonical cases
+        run: bun tools/schedule_world_export_cases.ts --out /tmp/okulos-world-cases.ndjson
+      - name: Build UniTime CPSolver adapter
+        working-directory: benchmarks/unitime-cpsolver-adapter
+        run: mvn -q -DskipTests package
+      - name: Run real UniTime CPSolver common-hard benchmark
+        run: java -jar benchmarks/unitime-cpsolver-adapter/target/unitime-cpsolver-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/unitime-cpsolver-raw.ndjson
+      - name: Canonical post-score and gate
+        run: bun tools/schedule_unitime_cpsolver_world_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/unitime-cpsolver-raw.ndjson --out /tmp/schedule-unitime-cpsolver-world-benchmark.json --ci
+      - name: Failure diagnostics
+        if: failure()
+        run: |
+          tail -20 /tmp/unitime-cpsolver-raw.ndjson 2>/dev/null || true
+          cat /tmp/schedule-unitime-cpsolver-world-benchmark.json 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: schedule-unitime-cpsolver-world-benchmark-${{ github.sha }}
+          path: |
+            /tmp/schedule-unitime-cpsolver-world-benchmark.json
+            /tmp/unitime-cpsolver-raw.ndjson
+          if-no-files-found: ignore
+          retention-days: 30
