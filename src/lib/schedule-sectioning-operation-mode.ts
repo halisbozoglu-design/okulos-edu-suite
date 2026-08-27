@@ -1,0 +1,8 @@
+export type ScheduleSectioningOperationMode="TIMETABLE_AND_SECTIONING"|"TIMETABLE_ONLY"|"SECTIONING_ONLY";
+export type ScheduleSectioningOperationModeSpec={id:ScheduleSectioningOperationMode;label:string;description:string;primaryAction:"OPEN_SOLVER"|"RUN_SECTIONING";timetableMutable:boolean;sectioningMutable:boolean;truth:string};
+export const SCHEDULE_SECTIONING_OPERATION_MODES:Record<ScheduleSectioningOperationMode,ScheduleSectioningOperationModeSpec>={
+ TIMETABLE_AND_SECTIONING:{id:"TIMETABLE_AND_SECTIONING",label:"Program + Öğrenci Dağılımı",description:"Önce canonical ders programı adayını üret, ardından öğrenci sectioning ve conflict repair çalıştır. Şu an güvenli iki aşamalı akıştır; tek çağrılı joint optimizer değildir.",primaryAction:"OPEN_SOLVER",timetableMutable:true,sectioningMutable:true,truth:"TWO_PHASE"},
+ TIMETABLE_ONLY:{id:"TIMETABLE_ONLY",label:"Yalnız Ders Programı",description:"Master timetable üretir; öğrenci section enrollment'larını değiştirmez.",primaryAction:"OPEN_SOLVER",timetableMutable:true,sectioningMutable:false,truth:"TIMETABLE_ONLY"},
+ SECTIONING_ONLY:{id:"SECTIONING_ONLY",label:"Yalnız Öğrenci Grupları",description:"Mevcut timetable sabit kalır; yalnız öğrenci section enrollment'ları yeniden dağıtılır ve çakışmalar onarılır.",primaryAction:"RUN_SECTIONING",timetableMutable:false,sectioningMutable:true,truth:"SECTIONING_ONLY"}
+};
+export const SECTIONING_OPERATION_POLICY="Operasyon modu yalnız hangi mevcut canonical otoritenin çalıştırılacağını belirler; timetable ve sectioning tek bir joint solver gibi gösterilmez. TIMETABLE_AND_SECTIONING mevcut durumda açıkça iki aşamalıdır.";
