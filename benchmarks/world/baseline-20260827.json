@@ -1,0 +1,47 @@
+{
+  "schema": "OKULOS_WORLD_BENCHMARK_V1",
+  "source_commit": "94368a072739d85cd6a59571948220610aabf6a1",
+  "ci_run_id": 33086715135,
+  "artifact_id": 9652532614,
+  "generated_at": "2026-08-27T15:16:09.037Z",
+  "seed_count": 30,
+  "wall_clock_budget_ms": 8000,
+  "hardware": {
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "logical_cpus": 4,
+    "bun": "1.4.0"
+  },
+  "solver_status": [
+    {"id":"okulos","status":"BUILT_IN","adapter":"tools/schedule_world_benchmark.ts"},
+    {"id":"cp-sat","status":"EXACT_GATE","adapter":"tools/schedule_cpsat_oracle.py"},
+    {"id":"timefold","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
+    {"id":"unitime","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
+    {"id":"fet","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
+    {"id":"asc","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"}
+  ],
+  "cp_sat_exact_gate": {
+    "status": "OPTIMAL",
+    "objective": 0,
+    "bound": 0,
+    "gap": 0,
+    "wall_ms": 17,
+    "deterministic": true,
+    "scope_parity": true,
+    "unsupported_guard": true
+  },
+  "results": [
+    {"profile_id":"synthetic-small","kind":"SYNTHETIC","input_hash":"9f330c51808ae149a5b1c351837970efb832e2aacebd08a5cb57432ae9819f9a","runs":30,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":0,"runtime_p50_ms":24,"runtime_p95_ms":36,"time_to_first_feasible_p50_ms":24,"time_to_best_p50_ms":24,"heap_delta_mb":4,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"synthetic-medium","kind":"SYNTHETIC","input_hash":"ed65290190b2c71586d064560daccca39558214b903df5a5513690facc96988c","runs":30,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":0,"runtime_p50_ms":77,"runtime_p95_ms":89,"time_to_first_feasible_p50_ms":77,"time_to_best_p50_ms":77,"heap_delta_mb":2,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"synthetic-large","kind":"SYNTHETIC","input_hash":"1750346953ca23cd3ed04af7c6db062e6497d8ba969b8696a2fd69874de8d1d1","runs":30,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":0,"runtime_p50_ms":462,"runtime_p95_ms":498,"time_to_first_feasible_p50_ms":462,"time_to_best_p50_ms":462,"heap_delta_mb":0,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"synthetic-dense","kind":"SYNTHETIC","input_hash":"8970af1231dc63845dd9753e7954d6282552f56c62b181ac8e2d3a0dd36936ac","runs":30,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":24,"runtime_p50_ms":315,"runtime_p95_ms":329,"time_to_first_feasible_p50_ms":315,"time_to_best_p50_ms":315,"heap_delta_mb":5,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"mtal","kind":"MEB_MTAL","input_hash":"2cd42572187685ae7c2fa44f5ca152ed53ccd339201234fe389d306d050f19c2","runs":30,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":16,"runtime_p50_ms":293,"runtime_p95_ms":312,"time_to_first_feasible_p50_ms":293,"time_to_best_p50_ms":293,"heap_delta_mb":3,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"mesem","kind":"MEB_MESEM","input_hash":"275792425ce809df81e822f8ecd0ef89e2a87e00c2e92c1fdca725a590d99608","runs":30,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":0,"runtime_p50_ms":109,"runtime_p95_ms":116,"time_to_first_feasible_p50_ms":109,"time_to_best_p50_ms":109,"heap_delta_mb":0,"deterministic_replay":true,"budget_pass":true}
+  ],
+  "claim_policy": {
+    "external_not_run_is_not_evidence": true,
+    "superiority_claim_allowed": false,
+    "superiority_gate_section": 15
+  }
+}
