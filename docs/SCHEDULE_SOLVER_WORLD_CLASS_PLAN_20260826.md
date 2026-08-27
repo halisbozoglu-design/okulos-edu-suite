@@ -18,8 +18,8 @@ Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki timetable kabiliyetini ka
 6. Student sectioning tam kapanış — **CLOSED 2026-08-27**
 7. Substitution tam kapanış — **CLOSED 2026-08-27**
 8. Zaman modeli: odd/even week, tarih/dönem, çoklu vardiya — **CLOSED 2026-08-27**
-9. Incremental score & büyük okul performansı — **NEXT**
-10. Adaptive/elite solver
+9. Incremental score & büyük okul performansı — **CLOSED 2026-08-27**
+10. Adaptive/elite solver — **NEXT**
 11. Hybrid compute kapanışı
 12. CP-SAT exact oracle
 13. Dünya benchmark paketi
@@ -120,10 +120,47 @@ Bölüm 8 yalnız scope overlap, odd/even applicability, academic calendar/date 
 
 ---
 
-## Bölüm 9 — Incremental score & performans — NEXT
-Akış: profile → hotspot indexes → delta score → cached relation/student/room/time conflict deltas → partial recompute → large-grid virtualization → 100+ class benchmark → memory/p95 gates → CI.
+## Bölüm 9 — Incremental score & performans — CLOSED
 
-## Bölüm 10 — Adaptive/elite solver
+### Incremental runtime authority
+- Production worker tek solver authority kullanır; ikinci solver açılmadı.
+- `ScheduleHotspotIndex` slot, öğretmen, sınıf, ders-gün/activity ve student-conflict adjacency lookup'larını indeksler.
+- `IncrementalScheduleScore` add/remove delta ile student conflict, teacher/class gap ve late-period bileşenlerini günceller.
+- Relation cache yalnız etkilenen relation'ı dirty yapar; relation semantiği yeniden yazılmaz, canonical evaluator nihai kararı verir.
+- Bölüm 8'in ODD/EVEN, tarih/dönem, session ve atomic block semantiği aynen korunur.
+
+### Database lookup indexes
+- Forward-only migration: `20260827012000_schedule_performance_indexes_v1.sql`.
+- `idx_teacher_schedule_perf_active_slot`: active weekly timetable slot/resource lookup.
+- `idx_scenario_rows_perf_slot`: scenario slot/resource lookup.
+- `idx_student_schedule_enrollments_assignment` ve `idx_student_schedule_enrollments_student`: sectioning/student-conflict adjacency lookup.
+- Production Lovable Cloud `pg_indexes` smoke 2026-08-27 tarihinde dört indexin de mevcut olduğunu doğruladı.
+
+### UI large-grid containment
+- Ana timetable grid slot erişimi `slotMap` ile O(1) lookup kullanır.
+- Yerleşmeyen/eksik saat havuzu scroll-bounded tutulur; offscreen item layout/paint maliyeti browser `content-visibility:auto` + intrinsic-size containment ile sınırlandırılır.
+- Manual move/swap ve canonical hard-preview davranışı değişmedi.
+
+### Benchmark ve gates
+- Synthetic büyük okul: 120 sınıf / 240 assignment / 5 seed.
+- Feasible: 5/5.
+- GitHub runner solve runtime: p50 **1802 ms**, p95 **1914 ms**.
+- p95 gate: `< 8000 ms`; ölçüm gate'i rahat geçti, eşik gevşetilmedi.
+- Index memory lineer büyüme regression gate'i ve heap `<256 MB` gate'i eklendi; benchmark koşusunda ölçülen heap delta 0 MB.
+- Deterministic replay ve exact student delta regressionları test edilir.
+- Benchmark test-case toplam koşu süresi Bun'ın varsayılan 5s case timeout'unu geçtiği için yalnız runner timeout 30s yapıldı; solve performans eşiği değiştirilmedi.
+
+### Kapanış kanıtı
+- UI performance commit: `4139f8892bec206c99068fbab6d6b542d4b3957e`.
+- Final code CI run `33032437412` — **SUCCESS**.
+- Cloud index smoke: 4/4 expected indexes present.
+
+### Tekrar açılma koşulu
+Bölüm 9; delta score ile full canonical score arasında semantik sapma, non-linear hotspot/index memory büyümesi, p95 gate regressionı, deterministic replay kaybı, büyük grid performans regressionı veya time-scope/room/student cache stale sonucu üretirse yeniden açılır. Adaptive operator seçimi Bölüm 10 kapsamıdır.
+
+---
+
+## Bölüm 10 — Adaptive/elite solver — NEXT
 Akış: operator telemetry → contextual bandit/weight update → elite pool → diversity metric → path relinking/crossover → restart policy → reproducibility controls → benchmark → CI.
 
 ## Bölüm 11 — Hybrid compute kapanışı
