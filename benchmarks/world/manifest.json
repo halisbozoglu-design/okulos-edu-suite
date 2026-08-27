@@ -13,9 +13,9 @@
   "solvers": [
     {"id":"okulos","status":"BUILT_IN","adapter":"tools/schedule_world_benchmark.ts"},
     {"id":"cp-sat","status":"EXACT_GATE","adapter":"tools/schedule_cpsat_oracle.py"},
-    {"id":"timefold","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
+    {"id":"timefold","status":"NOT_RUN","adapter":"benchmarks/timefold-adapter","adapter_contract":"benchmarks/world/README.md"},
     {"id":"unitime","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
-    {"id":"fet","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
+    {"id":"fet","status":"RUN_COMMON_HARD","adapter":"tools/schedule_fet_world_benchmark.ts","evidence":"docs/SCHEDULE_FET_BENCHMARK_EVIDENCE_20260827.md","comparable_objective":false},
     {"id":"asc","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"}
   ],
   "required_metrics": ["feasible_rate","hard","unplaced","medium","soft","runtime_p50_ms","runtime_p95_ms","time_to_first_feasible_p50_ms","time_to_best_p50_ms","heap_delta_mb","deterministic_replay"]
