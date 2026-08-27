@@ -37,7 +37,7 @@ This evidence is deliberately `COMMON_HARD_ONLY`. External adapters are not prov
 - Report feasible rate, HARD, unplaced, objective vector, runtime p50/p95, time-to-first-feasible, time-to-best, memory and replay.
 - `RUN_COMMON_HARD` means the executable really ran but does not imply objective comparability.
 - `RUN_COMPARABLE` is required before an external engine can satisfy the superiority gate.
-- No parity/superiority claim is allowed from `NOT_RUN`, incompatible, unsupported or objective-incomparable evidence.
+- No superiority claim is allowed from `NOT_RUN`, incompatible, unsupported or objective-incomparable evidence; parity also remains blocked while any capability row is `PARTIAL`/`FAIL` or any competitor is `NOT_RUN`/`UNVERIFIED`.
 
 ## Profiles
 The manifest includes synthetic small/medium/large/dense plus MEB-oriented MTAL and MESEM structural profiles. Anonymized real/ITC inputs can be added only as versioned fixtures with provenance and privacy review; absence of such a fixture must remain explicit rather than synthesized and labeled “real”.
