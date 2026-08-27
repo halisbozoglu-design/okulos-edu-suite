@@ -53,98 +53,29 @@ Single incremental worker. `ScheduleHotspotIndex` covers slot/resource/activity/
 Benchmark: 120 classes / 240 assignments / 5 seeds, 5/5 feasible. Closure p50 1802 ms, p95 1914 ms; latest Section 10 regression p50 1972 ms, p95 2129 ms, heap delta 0 MB. Gates: p95 <8000 ms, heap <256 MB, deterministic replay and linear index memory. CI `33032437412`, docs `33032882894`.
 
 ## 10 — Adaptive/elite solver — CLOSED
-
-### Architecture
-Adaptive/elite is outer orchestration only. Canonical inner worker remains `schedule-local-solver-worker.ts` → `solveIncrementalSchedule`; there is no second constraint/score engine. Sections 8–9 semantics stay authoritative. A duplicate worker-level adaptive wrapper created during development was removed before closure so adaptive choice has one authority only: `schedule-local-solver.ts` + `schedule-adaptive-elite.ts`.
-
-### Contextual operator learning
-Arms: LATE_ACCEPTANCE, TABU, SIMULATED_ANNEALING, GREAT_DELUGE, VND. `adaptiveContextKey` classifies SMALL/MEDIUM/LARGE × SPARSE/MIXED/DENSE. `chooseAdaptiveStrategies` applies UCB exploration/exploitation over persisted attempts/reward instead of fixed AUTO ordering. Telemetry learns candidate performance only; it cannot alter HARD rules.
-
-### Elite / diversity / relinking / restart
-`selectElite` admits only complete HARD=0 candidates and prevents near-duplicate pool collapse with assignment-placement Jaccard diversity. `mostDiverseGuide` selects a distant elite. `buildRelinkProblem` transfers whole assignment genes using deterministic seed; original manually locked assignments cannot become relink genes. `normalizeRelinkCandidate` removes synthetic relink locks so only true manual locks remain. Low elite/score diversity triggers a higher-exploration deterministic restart.
-
-### Reproducibility
-`runLocalScheduleSolve` accepts optional explicit base seed. Attempt seeds are deterministically derived, parallel results are stored by attempt index rather than worker completion order, UCB planning is deterministic for the same priors/context, and the same relink seed reproduces the same relink problem and canonical solve result.
-
-### Lovable Cloud telemetry
-Forward migration `20260827013000_schedule_adaptive_solver_v1.sql`. `schedule_solver_operator_telemetry` stores tenant/context/strategy attempts, wins and reward sum. RPCs: `get_schedule_solver_operator_priors_v1(text)` and `record_schedule_solver_operator_telemetry_v1(text,jsonb)`. Production smoke confirms table + both RPCs. No fake learning data was inserted.
-
-### UI / regression / benchmark
-UI `/schedule-adaptive-health` belongs to `/schedule` feature family and displays context, strategy, attempts, wins, win-rate, average reward and update time, with visible HARD-safety explanation. `tests/schedule-adaptive-elite.test.ts` covers UCB learning, elite diversity, deterministic relink replay, manual-lock normalization, telemetry aggregation, UI contract and feasibility across all five arms. `tests/schedule-adaptive-elite-benchmark.test.ts` benchmarks the same canonical helper/orchestrator semantics rather than a second solver.
-
-Final canonical benchmark: 32 classes / 64 assignments / 3 runs, adaptive source pool feasible and baseline-safe, p95 878 ms (<12000 ms gate). Same CI reran Section 9 large-school gate: 120 classes / 240 assignments / 5 seeds, 5/5 feasible, p50 1972 ms, p95 2129 ms, heap delta 0 MB. Final code head `047225888d65f40cc97855c8839bd15a5f628683`; CI `33057237956` SUCCESS including regression, migration/replay, tenant/route/authority guards, production build, route tree, TypeScript and forward migration policy.
-
-Reopen only for replay drift, telemetry tenant leak, elite diversity collapse, relink HARD/manual-lock leakage, restart nondeterminism, duplicate adaptive authority or Section 9 gate regression.
-
----
+Adaptive/elite is outer orchestration only; canonical inner worker remains `solveIncrementalSchedule`. UCB strategy selection, elite diversity, deterministic path relinking/restart, persisted tenant telemetry and replay-safe base seeds are closed. Migration `20260827013000_schedule_adaptive_solver_v1.sql`; UI `/schedule-adaptive-health`; final code CI `33057237956`.
 
 ## 11 — Hybrid compute closure — CLOSED
-
-### V2 job / resource authority
-Forward-only migration `20260827014000_schedule_hybrid_compute_v2.sql` adds explicit `budget_ms`, `deadline_at`, `base_seed` and cancellation reason to solve jobs plus result fingerprint/audit state to attempts. `get_schedule_compute_capabilities_v2` routes by health, heartbeat freshness, free parallel slots, load ratio, latency and priority. `plan_schedule_solve_job_v2` enforces a 5s–300s budget and deterministically derives attempt seeds from the supplied base seed.
-
-### Lease / heartbeat / failover
-External CPU/GPU attempts use a real `lease_until`. `heartbeat_schedule_worker_attempt_v2` can renew a lease only up to the job deadline. `reap_stale_schedule_worker_attempts_v2` handles expired deadlines, expired leases and stale worker heartbeats; it prefers the same worker type and supports GPU→CPU fallback without silently extending the job budget. Client timeout explicitly invokes `cancel_schedule_solve_job_v2`, so abandoned jobs are not left running.
-
-### Canonical external problem parity
-`worker_claim_schedule_attempt_v2` exports the same scheduling semantics used by Sections 4/6/8: ALL/ODD/EVEN, date/term/session and allowed canonical periods, planning relations, student-conflict weights, locked rows, unavailability, teacher constraints and course rules. External compute is therefore no longer optimizing a legacy subset of the timetable problem.
-
-### Raw-result acceptance authority
-External workers submit only raw `rows`; a worker-provided scenario ID is not an authority. `worker_complete_schedule_attempt_v2` rejects expired submissions, fingerprints results and marks duplicates. `accept_schedule_worker_result_v2` is tenant-scoped and idempotent; it imports the raw candidate through `import_local_schedule_candidate_v1`, then requires canonical server `schedule_scenario_status_v2` to report applicable=true, HARD=0, unplaced=0 and room issues=0 before marking the attempt ACCEPTED. Late, duplicate and rejected results keep explicit audit state and diagnostics.
-
-### Client / UI / health
-`src/lib/schedule-remote-accelerator.ts` uses only V2 capability, planning, status, acceptance and cancellation RPCs; it no longer reads attempt tables directly or calls V1 result acceptance. UI `/schedule-hybrid-health` belongs to `/schedule` and exposes heartbeat freshness, available slots, load, lease, latency and tenant health counters with the canonical acceptance chain shown to the operator.
-
-### Regression / production smoke / CI
-Regression `tests/schedule-hybrid-compute-v2.test.ts` locks budget/seed, load-aware routing, lease/failover, Section 4/6/8 payload parity, fingerprint/dedup, canonical audit, V2-only client and health UI. Production Lovable Cloud smoke: solve-job V2 columns 4/4, attempt audit columns 3/3, V2 functions 10/10; no fake V2 jobs were created. Final code head `7dba12fd8240c3782398ae056e66b1e45139e71e`; CI `33076987315` SUCCESS including regression, migration/replay, tenant/route/authority guards, production build, generated route tree, TypeScript and forward migration policy.
-
-Reopen only for tenant leakage, expired lease acceptance, timeout jobs left active, duplicate raw results accepted twice, external payload losing canonical Section 4/6/8 semantics, worker result bypassing server HARD/room/unplaced audit, or Section 9 performance/replay regression.
-
----
+V2 jobs carry budget/deadline/base seed; worker routing is heartbeat/load/capacity aware; leases, stale reaping, GPU→CPU fallback, duplicate/stale raw result handling and canonical server audit are closed. External worker payload preserves Sections 4/6/8 semantics. Migration `20260827014000_schedule_hybrid_compute_v2.sql`; UI `/schedule-hybrid-health`; CI `33076987315`.
 
 ## 12 — CP-SAT exact oracle — CLOSED
-
-### Role and authority
-CP-SAT is a verification oracle, not a second publishing authority. `tools/schedule_cpsat_oracle.py` uses Google OR-Tools CP-SAT to solve the supported normalized submodel exactly/bounded. Any candidate intended for product use still requires OkulOS canonical server audit. The oracle never silently approximates an unsupported HARD rule. A temporary duplicate browser-oracle/route introduced during follow-up was removed; `/schedule-exact-oracle` + `tools/schedule_cpsat_oracle.py` remain the single oracle authority.
-
-### Canonical normalized export
-Forward migrations `20260827015000_schedule_cpsat_oracle_v1.sql` and `20260827015100_schedule_cpsat_oracle_health_v1.sql`. `get_schedule_exact_oracle_problem_v1()` exports tenant-scoped `OKULOS_CP_SAT_ORACLE_V1`: active time profile, assignments with Section 8 time-domain fields, locked rows, HARD teacher unavailability, planning relations, student-conflict weights and canonical objective order. Export is permission-gated with `schedule.generate`.
-
-### Exact supported model and objective
-The CP-SAT runner enforces assignment hour count, teacher collision, class collision, allowed canonical periods/session-domain, HARD teacher unavailability and locked placements. Teacher/class collision and student-conflict terms are scope-aware: mutually exclusive ODD/EVEN weeks, distinct explicit terms, or disjoint valid date ranges may share a physical canonical slot; overlapping ALL/ODD/EVEN/date/term scopes still collide. It maps student-conflict weights to MEDIUM and supports unary `FORBIDDEN_SLOT` / `PREFERRED_SLOT` selectors over assignment/course/teacher/class. Supported objective is lexicographic MEDIUM → SOFT through a safe integer scale; HARD and placement completeness are constraints rather than penalties. Solver is deterministic for the same input/seed (`num_search_workers=1`).
-
-### Unsupported-constraint truthfulness
-Unsupported relation types, `activity_key` selectors, unsupported right selectors, empty slot domains and lock-outside-domain conditions are explicitly reported. If any unsupported item is HARD, public status is `UNSUPPORTED` even if CP-SAT can optimize the remaining submodel; therefore OkulOS never labels a partial HARD model as the full canonical optimum. `full_model_exact` is true only when the normalized exported instance has no unsupported items; CP-SAT is still not a publishing authority and its returned rows require canonical server audit before any product use.
-
-### Bound / gap / ledger
-Runner emits SHA-256 input hash, CP-SAT status, public status, objective, `BestObjectiveBound`, relative gap, wall time, unsupported list, deterministic rows and diagnostics. `schedule_exact_oracle_runs` records tenant-scoped proof metadata through `record_schedule_exact_oracle_result_v1`; RLS is enabled and `/schedule-exact-oracle` reads only permission-gated health/export RPCs. Production smoke reverified on 2026-08-27: table 1/1, oracle RPCs 3/3, fake production oracle runs 0.
-
-### UI / exact regression / CI
-UI `/schedule-exact-oracle` belongs to `/schedule`; it shows canonical export counts and latest status/objective/bound/gap/wall/unsupported evidence, with an explicit warning that CP-SAT is not publishing authority. `tests/fixtures/schedule-cpsat-oracle-small.json` is the supported exact fixture. `tools/test_schedule_cpsat_oracle.py` requires OPTIMAL, gap=0, full-model-exact=true, deterministic replay, exact assignment-hour counts, teacher/class collision freedom, lock preservation, forbidden-slot enforcement, Section 8 ODD/EVEN + term/date scope parity, overlapping-scope collision, and an UNSUPPORTED result after injecting an unsupported HARD relation.
-
-CI installs Python 3.12 + pinned `ortools==9.14.6206` and executes the real CP-SAT gate on every build. Scope-parity repair head `4eeda47645803321f546790292152e91c1ed2d27`; CI `33082890598` SUCCESS including real CP-SAT solve, unit/regression, migrations/replay, tenant/route/authority guards, production build, generated route tree, TypeScript and forward migration policy.
-
-Reopen only for normalized-export drift, unsupported HARD rules being mislabeled exact, nondeterministic replay under the same seed, objective/bound/gap inconsistency, tenant leakage, direct CP-SAT publish bypass, or canonical Section 8/11 semantics disappearing from export/runner.
-
----
+`tools/schedule_cpsat_oracle.py` uses pinned OR-Tools CP-SAT as a verification oracle, never as publishing authority. Normalized export preserves time scope, locks, HARD unavailability, relations and student-conflict weights; unsupported HARD semantics are explicit `UNSUPPORTED`. Migrations `20260827015000_schedule_cpsat_oracle_v1.sql`, `20260827015100_schedule_cpsat_oracle_health_v1.sql`; UI `/schedule-exact-oracle`; CI `33082890598`.
 
 ## 13 — World benchmark package — CLOSED
 
 ### Fair benchmark contract
 `benchmarks/world/manifest.json` defines `OKULOS_WORLD_BENCHMARK_V1`, 30 seeds, an 8000 ms per-solve wall-clock budget and six structural profiles: synthetic small/medium/large/dense plus MEB-oriented MTAL and MESEM. `benchmarks/world/README.md` defines one adapter/result contract for all engines: same normalized input SHA-256, same budget, recorded hardware/runtime, explicit solver status and common feasibility/objective/runtime/memory/replay fields. Unsupported or unavailable engines are never replaced with estimates.
 
-### Runner / evidence artifact
-`tools/schedule_world_benchmark.ts` runs the canonical incremental OkulOS solver on every profile, computes stable input hashes and records feasible rate, HARD, unplaced, MEDIUM/SOFT, runtime p50/p95, time-to-first-feasible, time-to-best, heap delta and deterministic replay. CI runs all six profiles × 30 seeds = 180 real OkulOS solves on every push and uploads `schedule-world-benchmark-<sha>.json` as a retained evidence artifact. Regression `tests/schedule-world-benchmark-package.test.ts` locks seed count, profile set, fairness language, deterministic generator and comparable metric schema.
+### Project-native evidence
+Benchmark evidence is versioned inside the project. Canonical frozen baseline: `benchmarks/world/baseline-20260827.json`. CI additionally uploads `schedule-world-benchmark-<sha>.json`; CI artifacts are supplemental, not the sole source of truth. Historical baseline files are immutable evidence and new measurements receive a new versioned file.
 
-### First canonical baseline
-CI `33086715135`, head `94368a072739d85cd6a59571948220610aabf6a1`, AMD EPYC 7763 / 4 logical CPUs / Linux x64 / Bun 1.4.0. All 180 OkulOS runs were feasible with HARD=0, unplaced=0, deterministic replay PASS and under the 8000 ms budget. Runtime p95: synthetic-small 36 ms, medium 89 ms, large 498 ms, dense 329 ms, MTAL 312 ms, MESEM 116 ms. Same run executed the real OR-Tools gate: CP-SAT OPTIMAL, objective=bound=0, gap=0, wall 17 ms. Artifact ID `9652532614`; durable human-readable evidence is `docs/SCHEDULE_WORLD_BENCHMARK_BASELINE_20260827.md`.
+### Runner / baseline
+`tools/schedule_world_benchmark.ts` runs the canonical incremental OkulOS solver on every profile. CI `33086715135`, head `94368a072739d85cd6a59571948220610aabf6a1`, executed six profiles × 30 seeds = 180 real OkulOS solves on AMD EPYC 7763 / 4 logical CPUs / Linux x64 / Bun 1.4.0. All runs were feasible with HARD=0, unplaced=0 and deterministic replay; runtime p95: small 36 ms, medium 89 ms, large 498 ms, dense 329 ms, MTAL 312 ms, MESEM 116 ms. Same CI ran the real CP-SAT gate: OPTIMAL, objective=bound=0, gap=0, 17 ms. Artifact ID `9652532614`; structured baseline is `benchmarks/world/baseline-20260827.json`.
 
 ### Competitor truth boundary
-Timefold, UniTime, FET and aSc are `NOT_RUN` until a compatible executable/licensed adapter is actually executed under the same contract. No vendor claim or synthetic estimate is recorded as a benchmark result. Likewise, synthetic MTAL/MESEM profiles are structural MEB profiles and are not mislabeled as anonymized real-school data; a real/ITC row can enter only with versioned provenance/privacy evidence. Therefore Section 13 closes the reproducible benchmark package and OkulOS/CP-SAT evidence, **not** a superiority claim. Final external parity/superiority remains blocked in Section 15.
+Timefold, UniTime, FET and aSc remain `NOT_RUN` until compatible executable/licensed adapters are actually executed under the same contract. No estimate or vendor claim is recorded as benchmark evidence. Synthetic MTAL/MESEM are structural profiles, not anonymized real-school data. Therefore Section 13 closes the reproducible benchmark package and current OkulOS/CP-SAT evidence, not a superiority claim. Final parity/superiority remains gated by Section 15.
 
-Reopen for seed count <30, input-hash drift, budget mismatch, missing hardware provenance, replay failure, benchmark artifact loss, fabricated competitor rows, or a claimed real/ITC row without provenance.
-
----
+Reopen for seed count <30, input-hash drift, budget mismatch, missing hardware provenance, replay failure, project baseline loss, fabricated competitor rows, or a claimed real/ITC row without provenance.
 
 ## 14 — Release/explainability — NEXT
 Why here/why not, objective delta, root cause, intervention count, restore/audit, publish gate, benchmark artifact, release regression gate, operator/admin UX, mobile/large-grid.
