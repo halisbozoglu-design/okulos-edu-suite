@@ -5,7 +5,7 @@
   "rows":[
     {"id":"lex-score","capability":"HARD/MEDIUM/SOFT lexicographic objective","okulos":"PASS","evidence":"src/lib/schedule-local-solver-incremental-core.ts"},
     {"id":"multi-metaheuristic","capability":"Tabu/SA/Late Acceptance/Great Deluge/VND portfolio","okulos":"PASS","evidence":"src/lib/schedule-local-solver-incremental-core.ts"},
-    {"id":"construction-breadth","capability":"First-fit/FFD/cheapest/regret construction breadth","okulos":"PARTIAL","evidence":"Current construction is fail-first/regret-like; not every named construction family is independently implemented."},
+    {"id":"construction-breadth","capability":"First-fit/FFD/cheapest/regret construction breadth","okulos":"PASS","evidence":"src/lib/schedule-construction-heuristics.ts + tests/schedule-construction-heuristics.test.ts + incremental solver integration; CI 33095475464 unit/CP-SAT/30-seed/build/TS green"},
     {"id":"incremental-score","capability":"Incremental score/indexed hotspot evaluation","okulos":"PASS","evidence":"src/lib/schedule-local-incremental-score.ts"},
     {"id":"time-room-joint","capability":"Time + room solved jointly as first-class variables","okulos":"PARTIAL","evidence":"Time solver + canonical room repair/audit exist; local placement does not assign all room variables jointly."},
     {"id":"room-model","capability":"Room capacity/features/shared pools/buildings/travel","okulos":"PASS","evidence":"Section 5 closure + room/building parity tests"},
