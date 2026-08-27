@@ -1,0 +1,40 @@
+{
+  "updated_on":"2026-08-28",
+  "base_large_batch_atom_total":4395,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_HEM_SPECIAL_ED_BILSEM_100PLUS_V39",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v39.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1924.pdf",
+      "https://hbogm.meb.gov.tr/www/quothayat-boyu-ogrenme-kurumlari-yonetmeligiquotnde-degisiklik-yapildi/icerik/1798",
+      "https://hbogm.meb.gov.tr/www/hayat-boyu-ogrenme-kurumlari-yonetmeligi039nde-neler-degisti/icerik/1801",
+      "https://orgm.meb.gov.tr/alt_sayfalar/mevzuat/Ozel_Egitim_Hizmetleri_Yonetmeligi_son.pdf",
+      "https://orgm.meb.gov.tr/meb_iys_dosyalar/2025_01/21164037_5378sayiliengellilervebazikanunvekanunhukmundekararnamelerdedegisiklikyapilmasihakkindakanun.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2193.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":4515,
+  "article_verified":{
+    "base":457,
+    "increment":0,
+    "result":457,
+    "master_total":2229,
+    "percent":20.5025,
+    "batch_doc":"docs/legal-article-verified-batch-v39.md",
+    "workflow_ids":[]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2222","reason":"legacy HEM organ title does not one-to-one match current HBÖKY Md35-41 named organs"},
+    {"workflow_ids":["HB-2218","HB-2229"],"reason":"school-health source/scope reconciliation unresolved"},
+    {"workflow_id":"HB-2210","reason":"annual talent-exam guide dependency remains"},
+    {"workflow_id":"HB-2212","reason":"current BILSEM directive has no named Sınıf/Şube Öğretmenler Kurulu"},
+    {"workflow_ids":["HB-2214","HB-2215","HB-2216"],"reason":"OAB/BILSEM applicability and duplicate reconciliation required"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Resolve durable master workflow IDs for current HEM Md35-41 organs, BILSEM diagnosis commissions/project jury and special-education evaluation boards; promote only exact one-to-one matches and keep legacy titles withheld."
+  }
+}
