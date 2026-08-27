@@ -1,0 +1,28 @@
+{
+  "schema":"OKULOS_PARITY_GATE_V1",
+  "updated":"2026-08-27",
+  "claim_policy":"Any PARTIAL/FAIL or competitor NOT_RUN blocks parity/superiority claim.",
+  "rows":[
+    {"id":"lex-score","capability":"HARD/MEDIUM/SOFT lexicographic objective","okulos":"PASS","evidence":"src/lib/schedule-local-solver-incremental-core.ts"},
+    {"id":"multi-metaheuristic","capability":"Tabu/SA/Late Acceptance/Great Deluge/VND portfolio","okulos":"PASS","evidence":"src/lib/schedule-local-solver-incremental-core.ts"},
+    {"id":"construction-breadth","capability":"First-fit/FFD/cheapest/regret construction breadth","okulos":"PARTIAL","evidence":"Current construction is fail-first/regret-like; not every named construction family is independently implemented."},
+    {"id":"incremental-score","capability":"Incremental score/indexed hotspot evaluation","okulos":"PASS","evidence":"src/lib/schedule-local-incremental-score.ts"},
+    {"id":"time-room-joint","capability":"Time + room solved jointly as first-class variables","okulos":"PARTIAL","evidence":"Time solver + canonical room repair/audit exist; local placement does not assign all room variables jointly."},
+    {"id":"room-model","capability":"Room capacity/features/shared pools/buildings/travel","okulos":"PASS","evidence":"Section 5 closure + room/building parity tests"},
+    {"id":"student-conflict","capability":"Student demand/conflict minimization","okulos":"PASS","evidence":"Sections 1 and 6 closures"},
+    {"id":"student-sectioning","capability":"Batch + online sectioning, alternatives/substitutes/priorities","okulos":"PASS","evidence":"src/routes/student-sectioning.tsx"},
+    {"id":"generic-relations","capability":"Generic time/room/sequence/capacity relationship engine","okulos":"PASS","evidence":"src/lib/schedule-constraint-ontology.ts"},
+    {"id":"relation-breadth","capability":"Competitor-long-tail relation breadth including interval/free-day/tag-specific families","okulos":"PARTIAL","evidence":"26 canonical relation types; long-tail competitor-specific families are not all native types."},
+    {"id":"time-model","capability":"Sessions/date ranges/term/odd-even/time overrides","okulos":"PASS","evidence":"Section 8 canonical time model closure"},
+    {"id":"blocks","capability":"Atomic multi-period/split component lessons","okulos":"PASS","evidence":"Section 2 block + LNS closure"},
+    {"id":"ejection","capability":"Interactive bounded ejection-chain repair","okulos":"PASS","evidence":"Section 3 deep ejection-chain closure"},
+    {"id":"manual-safe","capability":"Preview/apply/restore canonical HARD-safe manual editing","okulos":"PASS","evidence":"schedule move/swap + restore point authority"},
+    {"id":"substitution","capability":"Operational absence/cover/move/swap/cancel/split/join overlay","okulos":"PASS","evidence":"Section 7 substitution closure"},
+    {"id":"hybrid","capability":"DB/browser CPU/WebGPU/external worker orchestration with failover","okulos":"PASS","evidence":"Section 11 hybrid compute closure"},
+    {"id":"exact-oracle","capability":"CP-SAT exact small-instance oracle with optimality evidence","okulos":"PASS","evidence":"Section 12 CP-SAT closure"},
+    {"id":"explainability","capability":"Why here/why not/objective delta/root cause/intervention/audit","okulos":"PASS","evidence":"Section 14 release/explainability closure"},
+    {"id":"meb-native","capability":"Native MEB/MTAL/MESEM model/provenance advantage","okulos":"PASS","evidence":"official schedule parsers + MTAL/MESEM structural benchmark profiles"},
+    {"id":"competitor-benchmark","capability":"Same-contract Timefold/UniTime/FET/aSc executable benchmark evidence","okulos":"FAIL","evidence":"Competitor slots intentionally remain NOT_RUN."}
+  ],
+  "competitors":{"Timefold":"NOT_RUN","UniTime":"NOT_RUN","FET":"NOT_RUN","aSc":"NOT_RUN","CP-SAT":"EXACT_GATE","Okulos":"BUILT_IN"}
+}
