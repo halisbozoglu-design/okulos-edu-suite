@@ -7,7 +7,7 @@
     {"id":"multi-metaheuristic","capability":"Tabu/SA/Late Acceptance/Great Deluge/VND portfolio","okulos":"PASS","evidence":"src/lib/schedule-local-solver-incremental-core.ts"},
     {"id":"construction-breadth","capability":"First-fit/FFD/cheapest/regret construction breadth","okulos":"PASS","evidence":"src/lib/schedule-construction-heuristics.ts + tests/schedule-construction-heuristics.test.ts + incremental solver integration; CI 33095475464 unit/CP-SAT/30-seed/build/TS green"},
     {"id":"incremental-score","capability":"Incremental score/indexed hotspot evaluation","okulos":"PASS","evidence":"src/lib/schedule-local-incremental-score.ts"},
-    {"id":"time-room-joint","capability":"Time + room solved jointly as first-class variables","okulos":"PARTIAL","evidence":"Time solver + canonical room repair/audit exist; local placement does not assign all room variables jointly."},
+    {"id":"time-room-joint","capability":"Time + room solved jointly as first-class variables","okulos":"PASS","evidence":"src/lib/schedule-local-solver-incremental-core.ts enumerates (day,start,classroom_id) tuples with room collision/capacity/type/features/required/preferred/prohibited eligibility; tests/schedule-time-room-joint.test.ts; CI 33096844786 unit/CP-SAT/30-seed/parity/build/TS green"},
     {"id":"room-model","capability":"Room capacity/features/shared pools/buildings/travel","okulos":"PASS","evidence":"Section 5 closure + room/building parity tests"},
     {"id":"student-conflict","capability":"Student demand/conflict minimization","okulos":"PASS","evidence":"Sections 1 and 6 closures"},
     {"id":"student-sectioning","capability":"Batch + online sectioning, alternatives/substitutes/priorities","okulos":"PASS","evidence":"src/routes/student-sectioning.tsx"},
