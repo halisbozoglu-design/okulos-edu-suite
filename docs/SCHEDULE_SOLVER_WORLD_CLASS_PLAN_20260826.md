@@ -20,8 +20,8 @@ Bir bölüm Cloud/veri, solver, canonical validator/score, UI/rapor, test/benchm
 11. Hybrid compute closure — **CLOSED 2026-08-27**
 12. CP-SAT exact oracle — **CLOSED 2026-08-27**
 13. World benchmark package — **CLOSED 2026-08-27**
-14. Release/explainability — **NEXT**
-15. Final parity + superiority gate
+14. Release/explainability — **CLOSED 2026-08-27**
+15. Final parity + superiority gate — **NEXT**
 
 ## 1 — Student conflict — CLOSED
 MEDIUM objective; PRIMARY > ALTERNATIVE > SUBSTITUTE. Canonical Cloud report/summary/score; local/server parity. Migrations `20260826124000`, `20260826124100`.
@@ -77,8 +77,12 @@ Timefold, UniTime, FET and aSc remain `NOT_RUN` until compatible executable/lice
 
 Reopen for seed count <30, input-hash drift, budget mismatch, missing hardware provenance, replay failure, project baseline loss, fabricated competitor rows, or a claimed real/ITC row without provenance.
 
-## 14 — Release/explainability — NEXT
-Why here/why not, objective delta, root cause, intervention count, restore/audit, publish gate, benchmark artifact, release regression gate, operator/admin UX, mobile/large-grid.
+## 14 — Release/explainability — CLOSED
+Canonical explainability yeni bir solver/constraint authority oluşturmaz. `/schedule-scenario-comparison` objective vektörünü `get_schedule_scenario_objective_vector_v1`, nedenleri `schedule_scenario_explanations`, müdahaleleri `schedule_repair_suggestions` üzerinden tüketir; Why here, Why not, HARD/unplaced/MEDIUM/SOFT objective delta, root cause ve intervention count operatöre görünürdür. `/schedule-archive` canonical `get_schedule_integrity_report` + `publish_current_schedule` yayın kapısını korur; publication history hash/revision/zaman kanıtı ve restore-point zinciri audit/geri dönüşü sağlar. Frozen world benchmark baseline ve CI artifact kimliği release yüzünde görünür; çalıştırılmamış rakipler NOT_RUN kalır.
 
-## 15 — Final parity + superiority gate
+Regression guard: `tests/schedule-release-explainability.test.ts`. Kod CI `33094479926`: unit/regression, CP-SAT, 30-seed world benchmark, artifact upload, migration/authority guards, production build, route tree, TypeScript ve forward migration policy SUCCESS. Section 14 yeni migration gerektirmedi; mevcut canonical Lovable Cloud veri/validator otoritesi yeniden kullanıldı. Handoff: `docs/SCHEDULE_RELEASE_EXPLAINABILITY_HANDOFF_20260827.md`.
+
+Reopen if frontend invents an independent score/rule authority, server publish/integrity gate can be bypassed, restore/publication audit evidence is lost, objective order drifts, explainability stops consuming canonical server evidence, or release benchmark/regression gates are removed.
+
+## 15 — Final parity + superiority gate — NEXT
 Competitor capability matrix row-by-row PASS/PARTIAL/FAIL. Unresolved FAIL/PARTIAL prevents parity closure. “World's best” is allowed only after common benchmarks show 0 HARD, equal/higher feasible rate and Pareto superiority or statistical equivalence under equal budgets, plus independently demonstrated MEB/MTAL/MESEM product advantage.
