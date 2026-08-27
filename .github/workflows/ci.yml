@@ -67,6 +67,9 @@ jobs:
       - name: Run 30-seed world benchmark gate
         run: bun tools/schedule_world_benchmark.ts --ci --out /tmp/schedule-world-benchmark.json
 
+      - name: Report final parity truth gate
+        run: bun tools/schedule_parity_gate.ts
+
       - name: Upload world benchmark evidence
         uses: actions/upload-artifact@v4
         with:
