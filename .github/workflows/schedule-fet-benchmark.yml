@@ -1,0 +1,31 @@
+name: FET world benchmark
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - tools/schedule_fet_world_benchmark.ts
+      - tests/schedule-fet-adapter.test.ts
+      - .github/workflows/schedule-fet-benchmark.yml
+permissions:
+  contents: read
+jobs:
+  fet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - run: bun install --frozen-lockfile
+      - name: Adapter regression
+        run: bun test tests/schedule-fet-adapter.test.ts
+      - name: Install FET executable
+        run: sudo apt-get update -qq && sudo apt-get install -y fet && command -v fet-cl
+      - name: Run real FET common-core benchmark
+        run: bun tools/schedule_fet_world_benchmark.ts --ci --out /tmp/schedule-fet-world-benchmark.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: schedule-fet-world-benchmark-${{ github.sha }}
+          path: /tmp/schedule-fet-world-benchmark.json
+          retention-days: 30
