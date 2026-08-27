@@ -1,0 +1,17 @@
+import {describe,expect,test} from "bun:test";
+import {candidateRelevantPlanningRelations,compilePlanningRelationDispatch,COMPILED_RELATION_DISPATCH_POLICY,evaluateCandidateRelationsCompiled} from "../src/lib/schedule-compiled-relation-dispatch";
+import {evaluateCandidateRelations,type PlanningActivity,type PlanningRelation} from "../src/lib/schedule-planning-relations";
+const candidate:PlanningActivity={activity_key:"a1",assignment_id:"A",course_id:"M",teacher_id:"T1",class_id:"C1",weekday:2,start:3,end:3,tags:["LAB"]};
+const placed:PlanningActivity[]=[{activity_key:"b1",assignment_id:"B",course_id:"F",teacher_id:"T2",class_id:"C2",weekday:2,start:3,end:3},{activity_key:"c1",assignment_id:"C",course_id:"M",teacher_id:"T3",class_id:"C3",weekday:1,start:1,end:1}];
+const relations:PlanningRelation[]=[
+{id:"1",relation_type:"DIFFERENT_TIME",mode:"HARD",weight:1,left_selector:{assignment_id:"A"},right_selector:{assignment_id:"B"},parameters:{}},
+{id:"2",relation_type:"PREFERRED_DAYS",mode:"SOFT",weight:4,left_selector:{course_id:"M"},right_selector:{},parameters:{days:[1]}},
+{id:"3",relation_type:"SAME_DAY",mode:"MEDIUM",weight:2,left_selector:{assignment_id:"X"},right_selector:{assignment_id:"B"},parameters:{}},
+{id:"4",relation_type:"PREFERRED_PERIODS",mode:"SOFT",weight:3,left_selector:{activity_tag:"LAB"},right_selector:{},parameters:{periods:[1,2]}},
+];
+describe("compiled planning relation dispatch",()=>{
+ test("compiled dispatch preserves exact canonical candidate score",()=>{const c=compilePlanningRelationDispatch(relations);expect(evaluateCandidateRelationsCompiled(candidate,placed,c)).toEqual(evaluateCandidateRelations(candidate,placed,relations))});
+ test("drops relations that cannot involve the candidate while allowing harmless false positives",()=>{const picked=candidateRelevantPlanningRelations(candidate,compilePlanningRelationDispatch(relations));expect(picked.map(x=>x.id)).toContain("1");expect(picked.map(x=>x.id)).toContain("2");expect(picked.map(x=>x.id)).toContain("4");expect(picked.map(x=>x.id)).not.toContain("3")});
+ test("canonical evaluator remains final scoring authority",()=>expect(COMPILED_RELATION_DISPATCH_POLICY).toContain("evaluateCandidateRelations nihai relation scorer"));
+ test("large irrelevant relation set is substantially reduced",()=>{const many:PlanningRelation[]=[];for(let i=0;i<1000;i++)many.push({id:`x${i}`,relation_type:"SAME_DAY",mode:"SOFT",weight:1,left_selector:{assignment_id:`Z${i}`},right_selector:{assignment_id:`Q${i}`},parameters:{}});many.push(relations[0]!);const picked=candidateRelevantPlanningRelations(candidate,compilePlanningRelationDispatch(many));expect(picked.length).toBeLessThan(10);expect(evaluateCandidateRelationsCompiled(candidate,placed,compilePlanningRelationDispatch(many))).toEqual(evaluateCandidateRelations(candidate,placed,many))});
+});
