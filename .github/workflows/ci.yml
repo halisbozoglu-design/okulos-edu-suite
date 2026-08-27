@@ -64,6 +64,16 @@ jobs:
       - name: Run CP-SAT exact oracle gate
         run: PYTHONPATH=tools python tools/test_schedule_cpsat_oracle.py
 
+      - name: Run 30-seed world benchmark gate
+        run: bun tools/schedule_world_benchmark.ts --ci --out /tmp/schedule-world-benchmark.json
+
+      - name: Upload world benchmark evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: schedule-world-benchmark-${{ github.sha }}
+          path: /tmp/schedule-world-benchmark.json
+          retention-days: 30
+
       - name: Check Supabase migrations
         run: node scripts/check-migrations.mjs
 
