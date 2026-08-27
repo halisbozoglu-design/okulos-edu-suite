@@ -1,0 +1,37 @@
+{
+  "updated_on":"2026-08-27",
+  "base_large_batch_atom_total":3555,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_FOCUSED_DEEPENING_100PLUS_V32",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v32.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1703.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1657.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2260.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1963.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":3675,
+  "article_verified":{
+    "base":430,
+    "increment":5,
+    "result":435,
+    "master_total":2229,
+    "percent":19.5155,
+    "batch_doc":"docs/legal-article-verified-batch-v32.md",
+    "workflow_ids":["HB-2172","HB-2173","HB-2191","HB-2192","HB-2193"]
+  },
+  "duplicate_guard":["HB-2171"],
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2174","reason":"exact current organ-name/article reconciliation required"},
+    {"workflow_id":"HB-2194","reason":"exact current organ-name/article reconciliation required"},
+    {"family":"RAM_MONTHLY_APPOINTMENT_ROWS","reason":"handbook month labels are not proven universal legal deadlines"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Continue high-confidence exact master bindings from current OOEIKY/OOKY/Education Boards/RAM/SPED sources; favor verification over opening new legal families and preserve duplicate/outdated-timing guards."
+  }
+}
