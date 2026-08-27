@@ -10,10 +10,11 @@ export async function evaluateParityGate(){
  const entries=Object.entries(m.competitors).filter(([engine])=>external(engine));
  const notRun=entries.filter(([,status])=>isNotRun(status));
  const notComparable=entries.filter(([,status])=>!isComparable(status));
+ const parityPass=unresolved.length===0&&notRun.length===0;
  return{
   schema:m.schema,
-  parity_pass:unresolved.length===0,
-  superiority_claim_allowed:unresolved.length===0&&notRun.length===0&&notComparable.length===0,
+  parity_pass:parityPass,
+  superiority_claim_allowed:parityPass&&notComparable.length===0,
   unresolved,
   competitor_not_run:notRun.map(([engine,status])=>({engine,status})),
   competitor_not_comparable:notComparable.map(([engine,status])=>({engine,status}))
