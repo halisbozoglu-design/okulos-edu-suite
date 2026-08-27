@@ -1,0 +1,39 @@
+{
+  "updated_on":"2026-08-28",
+  "base_large_batch_atom_total":4275,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_ESER_SCHOOL_HEALTH_SPECIAL_ED_100PLUS_V38",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v38.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1850.pdf",
+      "https://resmigazete.gov.tr/eskiler/2017/06/20170608-5.htm",
+      "https://dhgm.meb.gov.tr/tebligler-dergisi/2022/2774_Nisan_2022.pdf",
+      "https://okulsagligi.meb.gov.tr/meb_iys_dosyalar/2017_03/24172657_OKUL_SAYLIYININ_KORUNMASI_VE_GELYYTYRLMESY_PROGRAMI_UYGULAMA_KILAVUZU_3256836380940747639.pdf",
+      "https://tut.meb.gov.tr/meb_iys_dosyalar/2025_03/07083213_ozelegitimhizmetleriyonetmeligi.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":4395,
+  "article_verified":{
+    "base":456,
+    "increment":1,
+    "result":457,
+    "master_total":2229,
+    "percent":20.5025,
+    "batch_doc":"docs/legal-article-verified-batch-v38.md",
+    "workflow_ids":["HB-2217"]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2218","reason":"current 2022 MEB school-health-nurse directive and general school-health program guide define different scope/composition; master scope must be reconciled before exact promotion"},
+    {"workflow_id":"HB-2229","reason":"same school-health organ family; duplicate/scope reconciliation required"},
+    {"workflow_id":"HB-2210","reason":"talent-exam commission remains annual-guide dependent; durable exact provision not yet bound"},
+    {"workflow_id":"HB-2212","reason":"current BILSEM directive does not name a Sınıf/Şube Öğretmenler Kurulu"},
+    {"workflow_ids":["HB-2214","HB-2215","HB-2216"],"reason":"OAB BILSEM applicability/duplicate reconciliation required"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Continue current named BILSEM diagnosis/project-jury organs and special-education/HEM master rows; resolve exact master IDs before promotion and keep school-health source-scope conflict withheld until reconciled."
+  }
+}
