@@ -1,179 +1,94 @@
-# OkulOS Ders Programı Motoru — World-Class Parity ve Üstünlük Planı
+# OkulOS Ders Programı Motoru — World-Class Execution Plan
 
-Tarih: 2026-08-26
-Durum: authoritative execution plan
+Tarih: 2026-08-26  
+Durum: authoritative
 
 ## Çalışma kuralı
-Bir bölüm; veri modeli/Cloud, solver, canonical validator/score, UI/rapor, test/benchmark, CI ve handoff tamamlanmadan CLOSED sayılamaz. CLOSED olmadan sonraki bölüme geçilmez. Uygulanmış migrationlar değiştirilmez; yalnız forward-only ve mümkün olan en küçük migrationlar eklenir. Production DB Lovable Cloud PostgreSQL'dir; Lovable AI/chat kullanılmaz. HARD ihlal sessizce gevşetilmez.
-
-## Nihai hedef
-Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki timetable kabiliyetini kapsamak; MEB/MTAL/MESEM semantiği, mevzuat güvenliği, açıklanabilirlik ve operasyonel kullanımda ileri gitmek. “Dünyanın en iyisi” yalnız ortak, tekrarlanabilir benchmark kanıtından sonra kullanılabilir.
+Bir bölüm Cloud/veri, solver, canonical validator/score, UI/rapor, test/benchmark, CI ve handoff tamamlanmadan CLOSED değildir. Uygulanmış migration değiştirilmez; küçük forward-only migration eklenir. Production DB Lovable Cloud PostgreSQL'dir; Lovable AI/chat kullanılmaz. HARD kural sessiz gevşetilmez; bilinmeyen veri tahmin edilmez.
 
 ## Bölüm sırası
-1. Öğrenci çakışma optimizasyonu — **CLOSED 2026-08-26**
-2. Blok ders + LNS motoru — **CLOSED 2026-08-26**
-3. Derin ejection-chain — **CLOSED 2026-08-26**
+1. Student conflict — **CLOSED 2026-08-26**
+2. Block + LNS — **CLOSED 2026-08-26**
+3. Deep ejection-chain — **CLOSED 2026-08-26**
 4. Generic constraint parity — **CLOSED 2026-08-26**
-5. Oda/bina parity kapanışı — **CLOSED 2026-08-26**
-6. Student sectioning tam kapanış — **CLOSED 2026-08-27**
-7. Substitution tam kapanış — **CLOSED 2026-08-27**
-8. Zaman modeli: odd/even week, tarih/dönem, çoklu vardiya — **CLOSED 2026-08-27**
-9. Incremental score & büyük okul performansı — **CLOSED 2026-08-27**
-10. Adaptive/elite solver — **NEXT**
-11. Hybrid compute kapanışı
+5. Room/building parity — **CLOSED 2026-08-26**
+6. Student sectioning — **CLOSED 2026-08-27**
+7. Substitution — **CLOSED 2026-08-27**
+8. Canonical time model — **CLOSED 2026-08-27**
+9. Incremental score & large-school performance — **CLOSED 2026-08-27**
+10. Adaptive/elite solver — **CLOSED 2026-08-27**
+11. Hybrid compute closure — **NEXT**
 12. CP-SAT exact oracle
-13. Dünya benchmark paketi
-14. Release/açıklanabilirlik
-15. Final parity audit ve superiority gate
+13. World benchmark package
+14. Release/explainability
+15. Final parity + superiority gate
+
+## 1 — Student conflict — CLOSED
+MEDIUM objective; PRIMARY > ALTERNATIVE > SUBSTITUTE. Canonical Cloud report/summary/score; local/server parity. Migrations `20260826124000`, `20260826124100`.
+
+## 2 — Block + LNS — CLOSED
+Atomic `[2]`, `[2,2]`, `[3]`, `[2,1]`; move/swap/LNS blocks cannot split. Neighborhoods teacher-day, class-day, course-block, hotspot, low-quality, random-small. Lexicographic acceptance. Migrations `20260826164500`, `20260826165500`, `20260826170500`.
+
+## 3 — Deep ejection-chain — CLOSED
+Depth 3–5, bounded expansion/cycle prevention, resource-aware blockers, atomic batch preview/apply, restore point. UI `/schedule-ejection-chain`; CI `32993983161`.
+
+## 4 — Generic constraint parity — CLOSED
+26 canonical relation types; HARD/MEDIUM/SOFT/OFF; unary/binary/set. Objective HARD → unplaced → MEDIUM → SOFT → legacy. UI `/schedule-rules-relations`; migrations `20260826231000`, `20260826233000`, `20260826234000`; CI `33010428054`.
+
+## 5 — Room/building parity — CLOSED
+Building/floor, break/travel, room pools; pool is shared/virtual-room authority. HARD capacity/features/collision/pool/transfer; SOFT room/building preference/capacity waste. Migrations `20260826235000`, `20260826235500`; CI `33014655258`.
+
+## 6 — Student sectioning — CLOSED
+PRIMARY/ALTERNATIVE/SUBSTITUTE; HOME_CLASS/OFFERING/CROSS_CLASS. Single candidate authority, online sectioning, fail-first batch, conflict repair, capacity lock, explanations. UI `/student-sectioning`; migration `20260827000500`; CI `33015602242`, docs `33019041990`.
+
+## 7 — Substitution — CLOSED
+Weekly schedule immutable; daily COVER/MOVE/SWAP/CANCEL/CREATE/SPLIT/JOIN overlay. Exact absence IDs, qualification/availability/fairness/building checks, direct+chain cover, atomic HARD audit/revert, delegated `substitutes.manage`. UI `/substitutes`; migrations `20260827002000`, `20260827002500`, `20260827003000`; CI `33020382676`, docs `33020566641`.
+
+## 8 — Canonical time model — CLOSED
+Sessions + period definitions, 1–24 canonical slots + local period; ALL/ODD/EVEN + term/date + parity anchor; academic calendar and slot overrides. Current/scenario/generator/local solver/student conflict/room/substitution share temporal semantics. Unknown clocks are never invented. UI `/schedule-time-model`, `/schedule-time-overrides`; migrations `20260827010000`, `20260827010500`, `20260827011000`; CI `33027244816`, docs `33027372638`.
+
+## 9 — Incremental score & large-school performance — CLOSED
+Single incremental worker. `ScheduleHotspotIndex` covers slot/resource/activity/student adjacency. `IncrementalScheduleScore` maintains student conflict, teacher/class gap and late-period deltas; relation dirty-cache still delegates semantics to canonical evaluator. Migration `20260827012000_schedule_performance_indexes_v1.sql`; Lovable Cloud 4/4 performance indexes present. Timetable uses O(1) slot map + offscreen containment.
+
+Benchmark: 120 classes / 240 assignments / 5 seeds, 5/5 feasible. Closure p50 1802 ms, p95 1914 ms; later adaptive regression p50 1935 ms, p95 2023 ms, heap delta 6 MB. Gates: p95 <8000 ms, heap <256 MB, deterministic replay and linear index memory. CI `33032437412`, docs `33032882894`.
+
+## 10 — Adaptive/elite solver — CLOSED
+
+### Architecture
+Adaptive/elite is outer orchestration only. Canonical inner worker remains `schedule-local-solver-worker.ts` → `solveIncrementalSchedule`; there is no second constraint/score engine. Sections 8–9 semantics stay authoritative.
+
+### Contextual operator learning
+Arms: LATE_ACCEPTANCE, TABU, SIMULATED_ANNEALING, GREAT_DELUGE, VND. `adaptiveContextKey` classifies SMALL/MEDIUM/LARGE × SPARSE/MIXED/DENSE. `chooseAdaptiveStrategies` applies UCB exploration/exploitation over persisted attempts/reward instead of fixed AUTO ordering. Telemetry learns candidate performance only; it cannot alter HARD rules.
+
+### Elite / diversity / relinking / restart
+`selectElite` admits only complete HARD=0 candidates and prevents near-duplicate pool collapse with assignment-placement Jaccard diversity. `mostDiverseGuide` selects a distant elite. `buildRelinkProblem` transfers whole assignment genes using deterministic seed; original manually locked assignments cannot become relink genes. `normalizeRelinkCandidate` removes synthetic relink locks so only true manual locks remain. Low elite/score diversity triggers a higher-exploration deterministic restart.
+
+### Reproducibility
+`runLocalScheduleSolve` accepts optional explicit base seed. Attempt seeds are deterministically derived, parallel results are stored by attempt index rather than worker completion order, UCB planning is deterministic for the same priors/context, and the same relink seed reproduces the same relink problem and canonical solve result.
+
+### Lovable Cloud telemetry
+Forward migration `20260827013000_schedule_adaptive_solver_v1.sql`. `schedule_solver_operator_telemetry` stores tenant/context/strategy attempts, wins and reward sum. RPCs: `get_schedule_solver_operator_priors_v1(text)` and `record_schedule_solver_operator_telemetry_v1(text,jsonb)`. Production smoke confirms table + both RPCs. Closure row count is 0 because no fake learning data was inserted.
+
+### UI / regression / benchmark
+UI `/schedule-adaptive-health` belongs to `/schedule` feature family and displays context, strategy, attempts, wins, win-rate, average reward and update time, with visible HARD-safety explanation. `tests/schedule-adaptive-elite.test.ts` covers UCB learning, elite diversity, deterministic relink replay, manual-lock normalization, telemetry aggregation, UI contract and feasibility across all five arms.
+
+Adaptive core CI `33037753900` SUCCESS. Final UI/replay code CI `33037909733` SUCCESS. The same suite reran the Section 9 large-school gate: 120 classes / 240 assignments / 5 seeds, 5/5 feasible, p50 1935 ms, p95 2023 ms, heap delta 6 MB. Adaptive orchestration did not regress HARD or performance gates.
+
+Reopen only for replay drift, telemetry tenant leak, elite diversity collapse, relink HARD/manual-lock leakage, restart nondeterminism, or Section 9 gate regression.
 
 ---
 
-## Bölüm 1 — Öğrenci çakışma optimizasyonu — CLOSED
-- Öğrenci çakışması MEDIUM objective; `allow_overlap=true` hariç; PRIMARY > ALTERNATIVE > SUBSTITUTE + priority ağırlığı.
-- Canonical Cloud: `student_conflict_penalty`, `get_schedule_assignment_student_conflict_weights_v2`, `get_schedule_student_conflict_report_v2`, `get_schedule_scenario_student_conflict_summary_v1`.
-- Local CPU/WebGPU/server objective aynı semantiği kullanır.
-- Migrations: `20260826124000_schedule_student_conflict_objective_v1.sql`, `20260826124100_schedule_student_conflict_report_alignment.sql`.
+## 11 — Hybrid compute closure — NEXT
+DB/browser CPU/WebGPU/external CPU-GPU capability → job budget → candidate race → heartbeat/load → timeout/failover → canonical server audit → duplicate/stale result handling → UI health → tests → CI.
 
-## Bölüm 2 — Blok ders + LNS motoru — CLOSED
-- `[2]`, `[2,2]`, `[3]`, `[2,1]` activity-atomic; move/swap/local search/LNS blok parçalayamaz.
-- LNS: TEACHER_DAY, CLASS_DAY, COURSE_BLOCK, CONFLICT_HOTSPOT, LOW_QUALITY_ZONE, RANDOM_SMALL.
-- HARD→MEDIUM→SOFT lexicographic kabul; kötüleşmede rollback.
-- Migrations: `20260826164500_schedule_block_lns_closure.sql`, `20260826165500_schedule_block_atomic_wrappers.sql`, `20260826170500_schedule_external_lns_job_config.sql`.
+## 12 — CP-SAT exact oracle
+Normalized export → same HARD semantics → objective mapping → exact/bound solve on small-medium → optimality gap → regression oracle → unsupported constraint reporting → CI.
 
-## Bölüm 3 — Derin ejection-chain — CLOSED
-- Bounded depth 3–5, expansion budget, cycle prevention; blocker modeli teacher/class/classroom/student-conflict resource bazlıdır.
-- Her node atomic move plan, her chain canonical batch preview; apply restore-point korumalıdır.
-- UI `/schedule-ejection-chain`; CI run `32993983161` SUCCESS.
+## 13 — World benchmark package
+Synthetic small/medium/large/dense + MTAL + MESEM + anonymized real + compatible ITC. Compare OkulOS, Timefold, UniTime/ITC-compatible, CP-SAT and fair external FET/aSc where possible. Same input hash/hardware/wall-clock, >=30 seeds; feasible rate, HARD, unplaced, objective vector, conflicts, room/travel, gaps, runtime p50/p95, time-to-first-feasible/time-to-best, memory, replay.
 
-## Bölüm 4 — Generic constraint parity — CLOSED
-- 26 canonical relation tipi; HARD/MEDIUM/SOFT/OFF; unary/binary/n-ary set evaluation.
-- Objective: HARD → unplaced → MEDIUM → SOFT → legacy.
-- UI `/schedule-rules-relations`.
-- Migrations: `20260826231000_schedule_generic_constraint_parity.sql`, `20260826233000_schedule_generic_constraint_set_parity.sql`, `20260826234000_schedule_generic_constraint_series_cast_fix.sql`.
-- CI run `33010428054` SUCCESS.
+## 14 — Release/explainability
+Why here/why not, objective delta, root cause, intervention count, restore/audit, publish gate, benchmark artifact, release regression gate, operator/admin UX, mobile/large-grid.
 
-## Bölüm 5 — Oda/bina parity — CLOSED
-- Canonical model: `schedule_buildings`, classroom building/floor, `schedule_period_breaks`, `schedule_building_travel`, `schedule_room_pools`.
-- Shared/virtual room için tek authority `schedule_room_pools`.
-- HARD: capacity, required room özellikleri, exact-room collision, pool simultaneous/aggregate capacity, break-aware building transfer.
-- SOFT: preferred room/building/features, capacity waste, building changes.
-- Migrations: `20260826235000_schedule_room_building_parity_v2.sql`, `20260826235500_schedule_room_reoptimize_v2.sql`.
-- CI run `33014655258` SUCCESS.
-
-## Bölüm 6 — Student sectioning — CLOSED
-- PRIMARY / ALTERNATIVE / SUBSTITUTE; HOME_CLASS / OFFERING / CROSS_CLASS.
-- Tek candidate authority: `get_student_section_candidates_v2`; online, fail-first batch, conflict repair ve explanation aynı semantiği tüketir.
-- Locked enrollment korunur; capacity unknown tahmin edilmez; advisory lock capacity race'i engeller.
-- UI `/student-sectioning`; migration `20260827000500_schedule_student_sectioning_v2.sql`.
-- Final code CI `33015602242`, docs closure CI `33019041990`, SUCCESS.
-
-## Bölüm 7 — Substitution — CLOSED
-- Haftalık `teacher_schedule` immutable; tarih bazlı `schedule_daily_overlays` operation vocabulary: COVER/MOVE/SWAP/CANCEL/CREATE/SPLIT/JOIN.
-- Exact absence snapshot: `source_schedule_id`, `course_id`, `classroom_id`, `subgroup_id`.
-- Canonical V4 candidate authority qualification, availability, fairness, duty ve building-transfer nedenlerini açıklar.
-- Direct + iki adımlı chain cover atomik apply edilir; teacher/class/subgroup/room/pool/building HARD audit ve operation-group rollback vardır.
-- SPLIT gerçek subgroup, JOIN `effective_class_ids[]` taşır; bildirim overlay seviyesinde WebPush/Telegram dağıtımına ayrılmıştır.
-- Delegated authority `substitutes.manage`; UI `/substitutes`.
-- Migrations: `20260827002000_schedule_substitution_v4.sql`, `20260827002500_schedule_substitution_split_join_v4.sql`, `20260827003000_schedule_substitution_permission_alignment_v4.sql`.
-- Final code CI `33020382676`, authoritative docs CI `33020566641`, SUCCESS.
-
-## Bölüm 8 — Zaman modeli — CLOSED
-
-### Canonical time domain
-- `schedule_sessions` ve `schedule_period_definitions` çoklu vardiya/session modelidir.
-- Canonical slot aralığı 1–24; `local_period` kullanıcıya vardiya içi ders numarasını gösterir.
-- `schedule_time_profiles.week_parity_anchor` tek/çift hafta referansını belirler.
-- `teacher_course_assignments`: `week_pattern` (`ALL/ODD/EVEN`), `valid_from`, `valid_to`, `term_no`, `schedule_session_id`.
-- `school_classes`, `teacher_schedule`, `schedule_scenario_rows`, `teacher_unavailability` session-aware'dır.
-- Production'da bilinmeyen gerçek ders saatleri tahmin edilmez; tek mevcut session legacy davranışı korur. Çoklu session için saat bilgisi eksikse health/preflight conservative davranır.
-
-### Tarih ve applicability authority
-- `is_teaching_day()` aktif akademik yıl + aktif time profile öğretim günleri + `school_calendar_events` üzerinden karar verir; Cumartesi gibi kuruma özel öğretim günü desteklenir.
-- Assignment applicability; tarih aralığı, dönem, ALL/ODD/EVEN ve `week_parity_anchor` ile hesaplanır.
-- ODD ve EVEN scope'lar aynı canonical slotu paylaşabilir; ALL↔ODD/EVEN, aynı dönem ve kesişen tarih aralıkları gerçek resource collision üretir.
-- `schedule_calendar_slot_overrides` tarih/session/slot bazlı OPEN/CLOSED istisnaları taşır.
-
-### HARD validator / solver parity
-- Current schedule ve scenario teacher/class/room collision yalnız time scope'lar gerçekten kesişiyorsa HARD'dır.
-- Session dışı canonical slot reddedilir; room-pool ve building-transfer guardları aynı scope semantics'i kullanır.
-- DB-native generator günlük yük, çalışma günü, consecutive, teacher/class occupancy ve adjacency hesabını scope-aware yapar.
-- Browser CPU/LNS worker `schedule-local-solver-time-core.ts` kullanır; assignment allowed periods + scope overlap + student conflict aynı canonical semantiğe bağlıdır.
-- Student conflict summary/report ODD↔EVEN'i yanlış conflict saymaz; room candidate/objective yalnız overlapping scope satırlarını tüketir.
-
-### Günlük operasyon entegrasyonu
-- `get_teacher_schedule_for_date_v1` yalnız o tarihte uygulanabilir weekly rows'u döndürür.
-- Substitution effective-day ve `report-absence` date-applicable authority'yi kullanır; ODD/EVEN veya dönem dışı ders için sahte absence lesson oluşmaz.
-
-### UI / forward migrations / tests
-- UI `/schedule-time-model`: week parity, session, canonical/local period, gerçek saat, class→session ve assignment hafta/dönem/tarih/session yönetimi.
-- UI `/schedule-time-overrides`: tarih bazlı OPEN/CLOSED slot override; iki route da `/schedule` feature family altındadır.
-- Migrations: `20260827010000_schedule_time_model_v1.sql`, `20260827010500_schedule_time_scope_validator_v1.sql`, `20260827011000_schedule_time_scope_solver_v1.sql`.
-- Regression: `tests/schedule-time-model.test.ts`; ODD/EVEN sharing, ALL overlap, term/date disjointness, allowed session slots, server/local parity, absence applicability ve “fake clock yok” sözleşmeleri.
-- Type contract fix: `a6a32ff9e84b4285e1514d2832ed1cbbb79ea491` (`schedule_session_id` undefined yerine canonical null).
-
-### Production smoke / closure CI
-- Tenant `774380`: 1 session; active class without session 0; active assignment without session 0; period definition 0 (bilerek, gerçek saat bilinmediği için sahte veri eklenmedi).
-- Final code CI run `33027244816`: 80/80 tests, migration/replay, tenant/route, timetable authority, Phase guards, auth/delegated permission, production build, route-tree, TypeScript ve forward migration policy **SUCCESS**.
-
-### Tekrar açılma koşulu
-Bölüm 8 yalnız scope overlap, odd/even applicability, academic calendar/date override, session/period mapping, variable clock, room/building temporal collision veya substitution date applicability regression'ında yeniden açılır. Performans/delta-score optimizasyonu Bölüm 9'da bu canonical time domain'i tüketir; ikinci zaman motoru açılmaz.
-
----
-
-## Bölüm 9 — Incremental score & performans — CLOSED
-
-### Incremental runtime authority
-- Production worker tek solver authority kullanır; ikinci solver açılmadı.
-- `ScheduleHotspotIndex` slot, öğretmen, sınıf, ders-gün/activity ve student-conflict adjacency lookup'larını indeksler.
-- `IncrementalScheduleScore` add/remove delta ile student conflict, teacher/class gap ve late-period bileşenlerini günceller.
-- Relation cache yalnız etkilenen relation'ı dirty yapar; relation semantiği yeniden yazılmaz, canonical evaluator nihai kararı verir.
-- Bölüm 8'in ODD/EVEN, tarih/dönem, session ve atomic block semantiği aynen korunur.
-
-### Database lookup indexes
-- Forward-only migration: `20260827012000_schedule_performance_indexes_v1.sql`.
-- `idx_teacher_schedule_perf_active_slot`: active weekly timetable slot/resource lookup.
-- `idx_scenario_rows_perf_slot`: scenario slot/resource lookup.
-- `idx_student_schedule_enrollments_assignment` ve `idx_student_schedule_enrollments_student`: sectioning/student-conflict adjacency lookup.
-- Production Lovable Cloud `pg_indexes` smoke 2026-08-27 tarihinde dört indexin de mevcut olduğunu doğruladı.
-
-### UI large-grid containment
-- Ana timetable grid slot erişimi `slotMap` ile O(1) lookup kullanır.
-- Yerleşmeyen/eksik saat havuzu scroll-bounded tutulur; offscreen item layout/paint maliyeti browser `content-visibility:auto` + intrinsic-size containment ile sınırlandırılır.
-- Manual move/swap ve canonical hard-preview davranışı değişmedi.
-
-### Benchmark ve gates
-- Synthetic büyük okul: 120 sınıf / 240 assignment / 5 seed.
-- Feasible: 5/5.
-- GitHub runner solve runtime: p50 **1802 ms**, p95 **1914 ms**.
-- p95 gate: `< 8000 ms`; ölçüm gate'i rahat geçti, eşik gevşetilmedi.
-- Index memory lineer büyüme regression gate'i ve heap `<256 MB` gate'i eklendi; benchmark koşusunda ölçülen heap delta 0 MB.
-- Deterministic replay ve exact student delta regressionları test edilir.
-- Benchmark test-case toplam koşu süresi Bun'ın varsayılan 5s case timeout'unu geçtiği için yalnız runner timeout 30s yapıldı; solve performans eşiği değiştirilmedi.
-
-### Kapanış kanıtı
-- UI performance commit: `4139f8892bec206c99068fbab6d6b542d4b3957e`.
-- Final code CI run `33032437412` — **SUCCESS**.
-- Cloud index smoke: 4/4 expected indexes present.
-
-### Tekrar açılma koşulu
-Bölüm 9; delta score ile full canonical score arasında semantik sapma, non-linear hotspot/index memory büyümesi, p95 gate regressionı, deterministic replay kaybı, büyük grid performans regressionı veya time-scope/room/student cache stale sonucu üretirse yeniden açılır. Adaptive operator seçimi Bölüm 10 kapsamıdır.
-
----
-
-## Bölüm 10 — Adaptive/elite solver — NEXT
-Akış: operator telemetry → contextual bandit/weight update → elite pool → diversity metric → path relinking/crossover → restart policy → reproducibility controls → benchmark → CI.
-
-## Bölüm 11 — Hybrid compute kapanışı
-Akış: DB/browser CPU/WebGPU/external CPU-GPU capability → job budget → candidate race → heartbeat/load → timeout/failover → canonical server audit → duplicate/stale result handling → UI health → tests → CI.
-
-## Bölüm 12 — CP-SAT exact oracle
-Akış: normalized export → same HARD semantics → objective mapping → exact/bound solve on small-medium instances → gap calculation → regression oracle → unavailable constraints explicitly reported → CI tooling.
-
-## Bölüm 13 — Dünya benchmark paketi
-Sets: synthetic small/medium/large, dense, MTAL, MESEM, anonymized real snapshots, compatible ITC. Rakipler: OkulOS, Timefold, UniTime/ITC-compatible, CP-SAT; FET/aSc için adil dış çalıştırma mümkün olan kapsam. Aynı input hash, hardware, wall-clock budget, >=30 seed. Ölçümler: feasible rate, HARD, unplaced, normalized objective vector, student conflicts, room/travel feasibility, gaps, late load, runtime p50/p95, time-to-first-feasible, time-to-best, memory, deterministic replay.
-
-## Bölüm 14 — Release ve açıklanabilirlik
-Akış: “neden burada?”, “neden olmaz?”, objective delta, root cause, intervention count, restore/audit, publish gate, benchmark artifact, release regression gate, operator/admin UX, mobile/large grid.
-
-## Bölüm 15 — Final parity audit
-Rakip kabiliyet matrisi satır satır PASS/PARTIAL/FAIL. FAIL/PARTIAL varsa parity tamamlanmış sayılmaz. “Dünyanın en iyisi” yalnız ortak benchmarklarda 0 HARD, yüksek/eş feasible rate, aynı süre bütçesinde Pareto üstünlüğü veya istatistiksel eşdeğerlik ve MEB/MTAL/MESEM ürün üstünlüğü ayrı ayrı kanıtlandığında kullanılabilir.
+## 15 — Final parity + superiority gate
+Competitor capability matrix row-by-row PASS/PARTIAL/FAIL. Unresolved FAIL/PARTIAL prevents parity closure. “World's best” is allowed only after common benchmarks show 0 HARD, equal/higher feasible rate and Pareto superiority or statistical equivalence under equal budgets, plus independently demonstrated MEB/MTAL/MESEM product advantage.
