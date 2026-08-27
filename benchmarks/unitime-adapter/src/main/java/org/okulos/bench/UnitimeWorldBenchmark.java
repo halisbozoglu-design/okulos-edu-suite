@@ -100,7 +100,8 @@ public final class UnitimeWorldBenchmark {
     cfg.setProperty("Value.Class","org.cpsolver.ifs.heuristics.GeneralValueSelection");
     cfg.setProperty("Value.WeightConflicts","1");
     cfg.setProperty("Variable.Class","org.cpsolver.ifs.heuristics.GeneralVariableSelection");
-    Solver<Activity,Location> solver=new Solver<>(cfg);solver.setInitalSolution(b.model);solver.start();solver.getSolverThread().join();
+    Solver<Activity,Location> solver=new Solver<>(cfg);solver.setInitalSolution(b.model);solver.start();
+    Thread solverThread=solver.getSolverThread();if(solverThread!=null)solverThread.join();
     Solution<Activity,Location> sol=solver.lastSolution();sol.restoreBest();Assignment<Activity,Location> asg=sol.getAssignment();
     long ms=Math.round((System.nanoTime()-t0)/1_000_000.0);int unplaced=asg.nrUnassignedVariables(b.model);ArrayNode rows=M.createArrayNode();
     var signature=new ArrayList<String>();for(var e:b.activities.entrySet()){Location x=asg.getValue(e.getValue());if(x!=null){int day=x.getSlot()/c.get("problem").get("periods").asInt()+1,period=x.getSlot()%c.get("problem").get("periods").asInt()+1;ObjectNode q=M.createObjectNode();q.put("assignment_id",e.getKey());q.put("weekday",day);q.put("period",period);rows.add(q);signature.add(e.getKey()+"@"+day+":"+period);}}
