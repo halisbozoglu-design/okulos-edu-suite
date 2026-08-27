@@ -16,50 +16,19 @@ import ai.timefold.solver.core.config.solver.SolverConfig;
 import ai.timefold.solver.core.config.solver.termination.TerminationConfig;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.*;
 import java.nio.file.*;
 import java.time.Duration;
 import java.util.*;
 
 public final class TimefoldWorldBenchmark {
   static final ObjectMapper M=new ObjectMapper();
-
-  public static final class Slot{
-    public int day,period; public Slot(){} public Slot(int d,int p){day=d;period=p;}
-    public int getDay(){return day;} public int getPeriod(){return period;}
-    public boolean equals(Object o){return o instanceof Slot s&&s.day==day&&s.period==period;} public int hashCode(){return Objects.hash(day,period);}
-  }
-  public static final class TeacherLimit{
-    public String teacherId; public Integer maxDailyHours,maxConsecutiveHours; public TeacherLimit(){}
-    public TeacherLimit(String t,Integer d,Integer c){teacherId=t;maxDailyHours=d;maxConsecutiveHours=c;}
-  }
-  @PlanningEntity public static final class Lesson{
-    @PlanningId public String id; public String teacherId,classId,weekPattern;
-    @PlanningVariable(valueRangeProviderRefs="slotRange") public Slot slot;
-    public Lesson(){} public Lesson(String i,String t,String c,String w){id=i;teacherId=t;classId=c;weekPattern=w==null?"ALL":w;}
-  }
-  @PlanningSolution public static final class Timetable{
-    @ProblemFactCollectionProperty @ValueRangeProvider(id="slotRange") public List<Slot> slots;
-    @ProblemFactCollectionProperty public List<TeacherLimit> limits;
-    @PlanningEntityCollectionProperty public List<Lesson> lessons;
-    @PlanningScore public HardSoftScore score;
-    public Timetable(){} public Timetable(List<Slot>s,List<TeacherLimit>l,List<Lesson>x){slots=s;limits=l;lessons=x;}
-  }
-  public static final class ScoreCalc implements EasyScoreCalculator<Timetable,HardSoftScore>{
-    static boolean overlap(String a,String b){return !("ODD".equals(a)&&"EVEN".equals(b)||"EVEN".equals(a)&&"ODD".equals(b));}
-    public HardSoftScore calculateScore(Timetable t){int hard=0;var ls=t.lessons;
-      for(int i=0;i<ls.size();i++){var a=ls.get(i);if(a.slot==null)continue;for(int j=i+1;j<ls.size();j++){var b=ls.get(j);if(b.slot==null||!a.slot.equals(b.slot)||!overlap(a.weekPattern,b.weekPattern))continue;if(a.teacherId.equals(b.teacherId)||a.classId.equals(b.classId))hard++;}}
-      for(var lim:t.limits)for(int day:t.slots.stream().map(s->s.day).distinct().toList())for(String ctx:List.of("ODD","EVEN")){
-        var ps=new ArrayList<Integer>();for(var l:ls)if(l.slot!=null&&l.slot.day==day&&l.teacherId.equals(lim.teacherId)&&!(("ODD".equals(ctx)&&"EVEN".equals(l.weekPattern))||("EVEN".equals(ctx)&&"ODD".equals(l.weekPattern))))ps.add(l.slot.period);
-        if(lim.maxDailyHours!=null&&ps.size()>lim.maxDailyHours)hard+=ps.size()-lim.maxDailyHours;
-        if(lim.maxConsecutiveHours!=null){var set=new HashSet<>(ps);int run=0,best=0,max=t.slots.stream().mapToInt(s->s.period).max().orElse(0);for(int p=1;p<=max;p++){run=set.contains(p)?run+1:0;best=Math.max(best,run);}if(best>lim.maxConsecutiveHours)hard+=best-lim.maxConsecutiveHours;}
-      }
-      return HardSoftScore.of(-hard,0);
-    }
-  }
-  static Timetable problem(JsonNode c){var p=c.get("problem"),slots=new ArrayList<Slot>();for(var d:p.get("days"))for(int h=1;h<=p.get("periods").asInt();h++)slots.add(new Slot(d.asInt(),h));var limits=new ArrayList<TeacherLimit>();for(var x:p.get("teacherConstraints"))limits.add(new TeacherLimit(x.get("teacher_id").asText(),nullableInt(x.get("max_daily_hours")),nullableInt(x.get("max_consecutive_hours"))));var lessons=new ArrayList<Lesson>();for(var a:p.get("assignments"))lessons.add(new Lesson(a.get("assignment_id").asText(),a.get("teacher_id").asText(),a.get("class_id").asText(),a.hasNonNull("week_pattern")?a.get("week_pattern").asText():"ALL"));return new Timetable(slots,limits,lessons);}
+  public static final class Slot{public int day,period;public Slot(){}public Slot(int d,int p){day=d;period=p;}public int getDay(){return day;}public int getPeriod(){return period;}public boolean equals(Object o){return o instanceof Slot s&&s.day==day&&s.period==period;}public int hashCode(){return Objects.hash(day,period);}}
+  public static final class TeacherLimit{public String teacherId;public Integer maxDailyHours,maxConsecutiveHours;public TeacherLimit(){}public TeacherLimit(String t,Integer d,Integer c){teacherId=t;maxDailyHours=d;maxConsecutiveHours=c;}}
+  @PlanningEntity public static final class Lesson{@PlanningId public String id;public String teacherId,classId,weekPattern;@PlanningVariable(valueRangeProviderRefs="slotRange") public Slot slot;public Lesson(){}public Lesson(String i,String t,String c,String w){id=i;teacherId=t;classId=c;weekPattern=w==null?"ALL":w;}}
+  @PlanningSolution public static final class Timetable{@ProblemFactCollectionProperty @ValueRangeProvider(id="slotRange") public List<Slot> slots;@ProblemFactCollectionProperty public List<TeacherLimit> limits;@PlanningEntityCollectionProperty public List<Lesson> lessons;@PlanningScore public HardSoftScore score;public Timetable(){}public Timetable(List<Slot>s,List<TeacherLimit>l,List<Lesson>x){slots=s;limits=l;lessons=x;}}
+  public static final class ScoreCalc implements EasyScoreCalculator<Timetable,HardSoftScore>{static boolean overlap(String a,String b){return !("ODD".equals(a)&&"EVEN".equals(b)||"EVEN".equals(a)&&"ODD".equals(b));}public HardSoftScore calculateScore(Timetable t){int hard=0;var ls=t.lessons;for(int i=0;i<ls.size();i++){var a=ls.get(i);if(a.slot==null)continue;for(int j=i+1;j<ls.size();j++){var b=ls.get(j);if(b.slot==null||!a.slot.equals(b.slot)||!overlap(a.weekPattern,b.weekPattern))continue;if(a.teacherId.equals(b.teacherId)||a.classId.equals(b.classId))hard++;}}for(var lim:t.limits)for(int day:t.slots.stream().map(s->s.day).distinct().toList())for(String ctx:List.of("ODD","EVEN")){var ps=new ArrayList<Integer>();for(var l:ls)if(l.slot!=null&&l.slot.day==day&&l.teacherId.equals(lim.teacherId)&&!(("ODD".equals(ctx)&&"EVEN".equals(l.weekPattern))||("EVEN".equals(ctx)&&"ODD".equals(l.weekPattern))))ps.add(l.slot.period);if(lim.maxDailyHours!=null&&ps.size()>lim.maxDailyHours)hard+=ps.size()-lim.maxDailyHours;if(lim.maxConsecutiveHours!=null){var set=new HashSet<>(ps);int run=0,best=0,max=t.slots.stream().mapToInt(s->s.period).max().orElse(0);for(int p=1;p<=max;p++){run=set.contains(p)?run+1:0;best=Math.max(best,run);}if(best>lim.maxConsecutiveHours)hard+=best-lim.maxConsecutiveHours;}}return HardSoftScore.of(-hard,0);}}
+  static Timetable problem(JsonNode c){JsonNode p=c.get("problem");var slots=new ArrayList<Slot>();for(var d:p.get("days"))for(int h=1;h<=p.get("periods").asInt();h++)slots.add(new Slot(d.asInt(),h));var limits=new ArrayList<TeacherLimit>();for(var x:p.get("teacherConstraints"))limits.add(new TeacherLimit(x.get("teacher_id").asText(),nullableInt(x.get("max_daily_hours")),nullableInt(x.get("max_consecutive_hours"))));var lessons=new ArrayList<Lesson>();for(var a:p.get("assignments"))lessons.add(new Lesson(a.get("assignment_id").asText(),a.get("teacher_id").asText(),a.get("class_id").asText(),a.hasNonNull("week_pattern")?a.get("week_pattern").asText():"ALL"));return new Timetable(slots,limits,lessons);}
   static Integer nullableInt(JsonNode n){return n==null||n.isNull()?null:n.asInt();}
   static String sig(Timetable t){var a=new ArrayList<String>();for(var l:t.lessons)a.add(l.id+"@"+(l.slot==null?"null":l.slot.day+":"+l.slot.period));Collections.sort(a);return String.join("|",a);}
   static Timetable solve(JsonNode c){long seed=c.get("seed").asLong(),budget=c.get("wall_clock_budget_ms").asLong();var term=new TerminationConfig().withSpentLimit(Duration.ofMillis(budget)).withBestScoreFeasible(true);var cfg=new SolverConfig().withSolutionClass(Timetable.class).withEntityClasses(Lesson.class).withEasyScoreCalculatorClass(ScoreCalc.class).withRandomSeed(seed).withTerminationConfig(term);Solver<Timetable>s=SolverFactory.<Timetable>create(cfg).buildSolver();return s.solve(problem(c));}
