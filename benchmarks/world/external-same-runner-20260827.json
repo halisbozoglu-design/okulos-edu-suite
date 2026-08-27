@@ -1,0 +1,67 @@
+{
+  "schema": "OKULOS_EXTERNAL_SAME_RUNNER_EVIDENCE_V1",
+  "date": "2026-08-27",
+  "workflow_run_id": 33102654560,
+  "head_sha": "c9413f02b5f9e3ad0e56a9c7132876de37e9d141",
+  "artifact_id": 9659256457,
+  "artifact_name": "schedule-external-same-runner-c9413f02b5f9e3ad0e56a9c7132876de37e9d141",
+  "comparison_mode": "COMMON_HARD_ONLY",
+  "same_runner": true,
+  "objective_comparable": false,
+  "superiority_claim_allowed": false,
+  "hardware": {
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "logical_cpus": 4,
+    "bun": "1.4.0"
+  },
+  "profiles": ["synthetic-small", "synthetic-medium", "synthetic-large", "synthetic-dense", "mtal", "mesem"],
+  "seeds_per_profile": 30,
+  "solvers": {
+    "FET": {
+      "version": "6.8.5",
+      "status": "RUN_COMMON_HARD",
+      "runs": 180,
+      "feasible_rate": 1,
+      "hard_max": 0,
+      "unplaced_max": 0,
+      "deterministic_replay": true,
+      "budget_pass": true,
+      "runtime_p95_ms": {"synthetic-small":20,"synthetic-medium":27,"synthetic-large":63,"synthetic-dense":42,"mtal":52,"mesem":35}
+    },
+    "Timefold": {
+      "version": "2.5.0",
+      "status": "RUN_COMMON_HARD",
+      "runs": 180,
+      "feasible_rate": 1,
+      "hard_max": 0,
+      "unplaced_max": 0,
+      "deterministic_replay": true,
+      "budget_pass": true,
+      "runtime_p95_ms": {"synthetic-small":64,"synthetic-medium":169,"synthetic-large":1825,"synthetic-dense":560,"mtal":691,"mesem":260}
+    },
+    "UniTime": {
+      "version": "cpsolver@3abbcaaf26d739d25e45c8e191b7ef94bc15cc26",
+      "status": "RUN_COMMON_HARD",
+      "runs": 180,
+      "feasible_rate": 1,
+      "hard_max": 0,
+      "unplaced_max": 0,
+      "deterministic_replay": true,
+      "budget_pass": true,
+      "runtime_p95_ms": {"synthetic-small":10,"synthetic-medium":7,"synthetic-large":14,"synthetic-dense":13,"mtal":6,"mesem":2}
+    },
+    "aSc": {
+      "status": "NOT_RUN",
+      "reason": "Official XML import/export is documented, but no documented repeatable headless/CLI timetable-generation entrypoint was verified. Manual GUI generation is not accepted as same-runner benchmark evidence."
+    }
+  },
+  "truth_boundary": [
+    "External adapters map the common HARD core and outputs are independently audited/post-scored by OkulOS.",
+    "External adapters are not proven to optimize the identical canonical MEDIUM/SOFT objective.",
+    "Runtime is therefore not an apples-to-apples superiority ranking.",
+    "aSc remains NOT_RUN until a reproducible executable generation path is verified.",
+    "No world's-best or superiority claim is allowed from this evidence."
+  ]
+}
