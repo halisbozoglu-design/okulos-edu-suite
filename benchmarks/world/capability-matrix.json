@@ -12,7 +12,7 @@
     {"id":"student-conflict","capability":"Student demand/conflict minimization","okulos":"PASS","evidence":"Sections 1 and 6 closures"},
     {"id":"student-sectioning","capability":"Batch + online sectioning, alternatives/substitutes/priorities","okulos":"PASS","evidence":"src/routes/student-sectioning.tsx"},
     {"id":"generic-relations","capability":"Generic time/room/sequence/capacity relationship engine","okulos":"PASS","evidence":"src/lib/schedule-constraint-ontology.ts"},
-    {"id":"relation-breadth","capability":"Competitor-long-tail relation breadth including interval/free-day/tag-specific families","okulos":"PARTIAL","evidence":"26 canonical relation types; long-tail competitor-specific families are not all native types."},
+    {"id":"relation-breadth","capability":"Competitor-long-tail relation breadth including interval/free-day/tag-specific families","okulos":"PASS","evidence":"40 native relation types + activity_tag selector in src/lib/schedule-constraint-ontology.ts and src/lib/schedule-planning-relations.ts; regression coverage in tests/schedule-planning-relations.test.ts; CI 33095855004 unit/CP-SAT/30-seed/build/TS/migration-policy green"},
     {"id":"time-model","capability":"Sessions/date ranges/term/odd-even/time overrides","okulos":"PASS","evidence":"Section 8 canonical time model closure"},
     {"id":"blocks","capability":"Atomic multi-period/split component lessons","okulos":"PASS","evidence":"Section 2 block + LNS closure"},
     {"id":"ejection","capability":"Interactive bounded ejection-chain repair","okulos":"PASS","evidence":"Section 3 deep ejection-chain closure"},
