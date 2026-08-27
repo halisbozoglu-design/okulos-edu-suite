@@ -2,6 +2,17 @@
 
 This package is evidence, not marketing. A solver is compared only when it consumes the same normalized instance hash, receives the same wall-clock budget, runs on the recorded hardware class, and returns the same result schema. Missing external binaries/licenses are reported as `NOT_RUN`; they are never replaced by estimates.
 
+## Project-native evidence
+The benchmark result is stored in the repository instead of relying on chat output.
+
+- Canonical manifest: `benchmarks/world/manifest.json`
+- Current frozen baseline: `benchmarks/world/baseline-20260827.json`
+- Runner: `tools/schedule_world_benchmark.ts`
+- Regression contract: `tests/schedule-world-benchmark-package.test.ts`
+- CI also uploads a per-commit JSON artifact named `schedule-world-benchmark-<commit>`.
+
+A new benchmark run must create a new versioned baseline file; historical baselines are evidence and are not overwritten.
+
 ## Required external adapter input
 JSON: `{schema,input_hash,profile_id,seed,wall_clock_budget_ms,problem}`. `problem` is the normalized OkulOS timetable instance. Adapters must not relax HARD rules or invent missing qualification/capacity/time data.
 
