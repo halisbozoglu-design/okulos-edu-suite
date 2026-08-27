@@ -1,0 +1,9 @@
+import {describe,expect,test} from "bun:test";
+import {solveAdaptiveEliteSchedule} from "../src/lib/schedule-adaptive-elite-solver";
+import {solveIncrementalSchedule} from "../src/lib/schedule-local-solver-incremental-core";
+import type {LocalProblem} from "../src/lib/schedule-local-solver-time-core";
+const lex=(a:{hard:number;medium:number;soft:number},b:{hard:number;medium:number;soft:number})=>a.hard-b.hard||a.medium-b.medium||a.soft-b.soft;
+function p(seed:number):LocalProblem{const n=64;return{days:[1,2,3,4,5],periods:9,assignments:Array.from({length:n},(_,i)=>({assignment_id:`a${i}`,teacher_id:`t${i%32}`,class_id:`c${i%32}`,course_id:`q${i%8}`,assigned_hours:1,week_pattern:i%10===0?"ODD" as const:i%10===1?"EVEN" as const:"ALL" as const})),locked:[],unavailable:[],teacherConstraints:Array.from({length:32},(_,i)=>({teacher_id:`t${i}`,max_daily_hours:6,max_consecutive_hours:4})),courseRules:Array.from({length:8},(_,i)=>({course_id:`q${i}`,block_pattern:[1],max_per_day:2,prohibited_days:null,prohibited_periods:null})),planningRelations:[],studentConflictWeights:[],seed,enableLns:true,lnsIterations:8}}
+describe("adaptive elite benchmark",()=>{
+ test("adaptive portfolio is feasible, baseline-safe and bounded",()=>{const times:number[]=[];for(const seed of[17,31,47]){const x=p(seed),base=solveIncrementalSchedule({...x,strategy:"AUTO"}),t=performance.now(),a=solveAdaptiveEliteSchedule(x,{rounds:5,eliteSize:4,stagnationLimit:3});times.push(performance.now()-t);expect(a.complete).toBe(true);expect(a.score.hard).toBe(0);expect(lex(a.score,base.score)).toBeLessThanOrEqual(0);expect(a.adaptive.operatorStats.reduce((s,v)=>s+v.pulls,0)).toBe(5)}const p95=[...times].sort((a,b)=>a-b).at(-1)??0;console.log("SCHEDULE_ADAPTIVE_BENCH",JSON.stringify({classes:32,assignments:64,runs:3,p95_ms:Math.round(p95)}));expect(p95).toBeLessThan(12000)},30000);
+});
