@@ -17,8 +17,8 @@ Bir bölüm Cloud/veri, solver, canonical validator/score, UI/rapor, test/benchm
 8. Canonical time model — **CLOSED 2026-08-27**
 9. Incremental score & large-school performance — **CLOSED 2026-08-27**
 10. Adaptive/elite solver — **CLOSED 2026-08-27**
-11. Hybrid compute closure — **NEXT**
-12. CP-SAT exact oracle
+11. Hybrid compute closure — **CLOSED 2026-08-27**
+12. CP-SAT exact oracle — **NEXT**
 13. World benchmark package
 14. Release/explainability
 15. Final parity + superiority gate
@@ -78,10 +78,31 @@ Reopen only for replay drift, telemetry tenant leak, elite diversity collapse, r
 
 ---
 
-## 11 — Hybrid compute closure — NEXT
-DB/browser CPU/WebGPU/external CPU-GPU capability → job budget → candidate race → heartbeat/load → timeout/failover → canonical server audit → duplicate/stale result handling → UI health → tests → CI.
+## 11 — Hybrid compute closure — CLOSED
 
-## 12 — CP-SAT exact oracle
+### V2 job / resource authority
+Forward-only migration `20260827014000_schedule_hybrid_compute_v2.sql` adds explicit `budget_ms`, `deadline_at`, `base_seed` and cancellation reason to solve jobs plus result fingerprint/audit state to attempts. `get_schedule_compute_capabilities_v2` routes by health, heartbeat freshness, free parallel slots, load ratio, latency and priority. `plan_schedule_solve_job_v2` enforces a 5s–300s budget and deterministically derives attempt seeds from the supplied base seed.
+
+### Lease / heartbeat / failover
+External CPU/GPU attempts use a real `lease_until`. `heartbeat_schedule_worker_attempt_v2` can renew a lease only up to the job deadline. `reap_stale_schedule_worker_attempts_v2` handles expired deadlines, expired leases and stale worker heartbeats; it prefers the same worker type and supports GPU→CPU fallback without silently extending the job budget. Client timeout explicitly invokes `cancel_schedule_solve_job_v2`, so abandoned jobs are not left running.
+
+### Canonical external problem parity
+`worker_claim_schedule_attempt_v2` exports the same scheduling semantics used by Sections 4/6/8: ALL/ODD/EVEN, date/term/session and allowed canonical periods, planning relations, student-conflict weights, locked rows, unavailability, teacher constraints and course rules. External compute is therefore no longer optimizing a legacy subset of the timetable problem.
+
+### Raw-result acceptance authority
+External workers submit only raw `rows`; a worker-provided scenario ID is not an authority. `worker_complete_schedule_attempt_v2` rejects expired submissions, fingerprints results and marks duplicates. `accept_schedule_worker_result_v2` is tenant-scoped and idempotent; it imports the raw candidate through `import_local_schedule_candidate_v1`, then requires canonical server `schedule_scenario_status_v2` to report applicable=true, HARD=0, unplaced=0 and room issues=0 before marking the attempt ACCEPTED. Late, duplicate and rejected results keep explicit audit state and diagnostics.
+
+### Client / UI / health
+`src/lib/schedule-remote-accelerator.ts` uses only V2 capability, planning, status, acceptance and cancellation RPCs; it no longer reads attempt tables directly or calls V1 result acceptance. UI `/schedule-hybrid-health` belongs to `/schedule` and exposes heartbeat freshness, available slots, load, lease, latency and tenant health counters with the canonical acceptance chain shown to the operator.
+
+### Regression / production smoke / CI
+Regression `tests/schedule-hybrid-compute-v2.test.ts` locks budget/seed, load-aware routing, lease/failover, Section 4/6/8 payload parity, fingerprint/dedup, canonical audit, V2-only client and health UI. Production Lovable Cloud smoke: solve-job V2 columns 4/4, attempt audit columns 3/3, V2 functions 10/10; no fake V2 jobs were created. Final code head `7dba12fd8240c3782398ae056e66b1e45139e71e`; CI `33076987315` SUCCESS including regression, migration/replay, tenant/route/authority guards, production build, generated route tree, TypeScript and forward migration policy.
+
+Reopen only for tenant leakage, expired lease acceptance, timeout jobs left active, duplicate raw results accepted twice, external payload losing canonical Section 4/6/8 semantics, worker result bypassing server HARD/room/unplaced audit, or Section 9 performance/replay regression.
+
+---
+
+## 12 — CP-SAT exact oracle — NEXT
 Normalized export → same HARD semantics → objective mapping → exact/bound solve on small-medium → optimality gap → regression oracle → unsupported constraint reporting → CI.
 
 ## 13 — World benchmark package
