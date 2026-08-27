@@ -53,6 +53,17 @@ jobs:
       - name: Run unit and parser regression tests
         run: bun test
 
+      - name: Setup Python for CP-SAT oracle
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install OR-Tools oracle dependency
+        run: python -m pip install --disable-pip-version-check ortools==9.14.6206
+
+      - name: Run CP-SAT exact oracle gate
+        run: PYTHONPATH=tools python tools/test_schedule_cpsat_oracle.py
+
       - name: Check Supabase migrations
         run: node scripts/check-migrations.mjs
 
