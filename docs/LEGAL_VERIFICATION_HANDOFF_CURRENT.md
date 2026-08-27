@@ -1,181 +1,77 @@
-# Okulos Mevzuat Doğrulama — Sohbet Devam/Handoff Dosyası
+# Okulos Mevzuat Doğrulama — Kanonik Handoff
 
-Güncelleme: 2026-08-27
-Durum: AKTİF — başka sohbette kaldığı yerden devam için kanonik handoff
-Repo: halisbozoglu-design/okulos-edu-suite
+Güncelleme: 2026-08-28
+Durum: AKTİF
+Repo: `halisbozoglu-design/okulos-edu-suite`
+Mode: `ARTICLE_VERIFIED_PRIORITY`
+Migration: **0**
 
-## 1. Yeni sohbette ilk yapılacaklar
+## Güncel kesin durum
+- Master workflow: **2.229**
+- ARTICLE_VERIFIED: **457 / 2.229 = %20,5025**
+- Kalan exact doğrulama: **1.772**
+- Büyük atomik mevzuat havuzu: **4.395**
+- Son tamamlanan batch: **V38**
+- Sonraki batch: **V39**
 
-1. Yalnız bu repo üzerinde çalış: `halisbozoglu-design/okulos-edu-suite`.
-2. Kullanıcı `Devam` / `Devam et` dediğinde soru sormadan bir sonraki mevzuat batchine başla.
-3. Cevabın ilk satırı: `Kullandığım model: GPT-5.6 Sol`.
-4. Önce bu dosyayı ve son progress delta dosyasını oku.
-5. Son tamamlanmış batch V36'dır. V37 henüz oluşturulmadı.
-6. Migration mümkünse 0; zorunlu değilse yeni migration açma.
+## V37
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-100plus-v37.md`
+  - commit `0a3cc801eb1a1f3b655148d1dfbe18d83a4b2df5`
+- Verification: `docs/legal-article-verified-batch-v37.md`
+  - commit `8d4ab1d548a3e772b7a64a8d79d33b5c6383112d`
+- Progress: `docs/legal-verification-progress-v37-delta.json`
+  - commit `d3a0a941e3b4124598b046d9e812e639b2d9cee5`
+- Exact additions: `HB-2211`, `HB-2213`, `HB-2219`
+- Result: **456/2229**; atom pool **4.275**
 
-## 2. Kesin güncel sayaç
+## V38
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-100plus-v38.md`
+  - commit `8e96b1409f1d1ef638f58811ec8b99f2b209ed9b`
+- Verification: `docs/legal-article-verified-batch-v38.md`
+  - commit `b9c01d189a14a1814cdb9e5f735f4c28cbf25b74`
+- Progress: `docs/legal-verification-progress-v38-delta.json`
+  - commit `b807f9204969f3857ce608ba765bf970f75398aa`
+- 120 support atoms added.
+- Exact addition:
+  - `HB-2217` — **Eser İnceleme ve Seçme Kurulu** → MEB Eğitim Kurumları Sosyal Etkinlikler Yönetmeliği **Md.12/2-a-b-ç**.
+- Result: **457/2229 = %20,5025**; atom pool **4.395**.
 
-- Master workflow toplamı: **2.229**
-- ARTICLE_VERIFIED: **453 / 2.229 = %20,32**
-- ARTICLE_VERIFIED kalan: **1.776**
-- Büyük atomik mevzuat havuzu: **4.155**
-- Son tamamlanan batch: **V36**
-- Migration: **0**
-
-Bu sayılar geriye alınmayacak ve eski sohbetlerdeki 390/410/420 vb. sayaçlara dönülmeyecek.
-
-## 3. Son tamamlanan V36
-
-Coverage:
-- `docs/legal-article-verified-focused-deepening-batch-100plus-v36.md`
-- commit: `f30bc4f2e261bf37bc72db12dcf0b88c72c1279e`
-
-Verification:
-- `docs/legal-article-verified-batch-v36.md`
-- commit: `d028010fb7988d84d6544a3de2ed2e63582068ea`
-
-Progress:
-- `docs/legal-verification-progress-v36-delta.json`
-- commit: `2a3f4ec5faead29c0d3b85688ff96c6dbdf7f378`
-
-V36 yeni ARTICLE_VERIFIED:
-- `HB-2209` — Şeflerin Belirlenmesi ve Teklifi Komisyonu (MTAL) → güncel OÖKY Md.84/B/3.
-
-V36 sonunda:
-- ARTICLE_VERIFIED = **453**
-- atom havuzu = **4.155**
-
-## 4. Bir sonraki tur: V37
-
-Öncelik yeni mevzuat ailesi açmak değil, mevcut 4.155 atom ile 2.229 master workflow arasındaki exact bağları artırmaktır.
-
-V37 önerilen odak:
-- BİLSEM kurulları
-- özel yetenek sınavı / değerlendirme komisyonları
-- özel eğitim komisyonları
-- kalan OÖKY/MTAL named commission kayıtları
-- yüksek güvenli öğrenci işlemleri / kurul-komisyon kayıtları
-
-Hedef:
-- en az 100 yeni/destek atomu; ideal 120+
-- ARTICLE_VERIFIED artışı sadece exact eşleşmede
-- oranı temiz şekilde %20,5+ yönüne taşımak
-
-## 5. ARTICLE_VERIFIED için değişmez kural
-
-Sayaç SADECE şu üçü aynı anda varsa artırılır:
-
+## ARTICLE_VERIFIED değişmez kuralı
+Sayaç yalnız şu üçü aynı anda birebir olduğunda artar:
 `workflow_id + güncel resmî kaynak + exact madde/fıkra`
 
-Ek kurallar:
-- Aynı workflow ikinci kez sayılmaz.
-- Handbook/el kitabı tek başına son hukuki otorite değildir.
-- Mülga/eski mevzuat current authority olarak kullanılmaz.
-- Handbookta yazan ay/saat/tarih, güncel mevzuatta evrensel yükümlülük değilse ARTICLE_VERIFIED yapılmaz.
-- Bir workflow birden fazla farklı hukuki işi birleştiriyorsa `WITHHELD/SPLIT` yapılır; sessizce normalize edilmez.
-- Yıllık kılavuz, takvim, parasal limit, katsayı, kira/ihale eşikleri `YEAR_PARAMETER` veya versioned child olmalıdır.
+Guardlar:
+- duplicate workflow ikinci kez sayılmaz;
+- mülga/eski kaynak current authority değildir;
+- handbook/el kitabı son hukuki otorite değildir;
+- legacy ay/saat/tarih current hükümde evrensel değilse hardcode edilmez;
+- compound workflow `WITHHELD/SPLIT` edilir;
+- yıllık kılavuz/takvim/limit/eşik `YEAR_PARAMETER` olarak sürümlenir.
 
-## 6. Kaynak hiyerarşisi
+## Açık kritik kayıtlar
+- `HB-2218` ve `HB-2229` — **Okul Sağlığı Yönetim Ekibi**: 2022 MEB okul sağlığı hemşiresi yönergesi ile genel okul sağlığı program kılavuzunun kapsam/bileşimi farklı; master scope reconcile edilmeden ARTICLE_VERIFIED yapılmaz.
+- `HB-2210` — Güzel Sanatlar/Spor Liseleri yetenek sınavı komisyonu: yıllık kılavuz/genel yazı bağımlılığı sürüyor; durable exact provision bulunmadan promote edilmez.
+- `HB-2212` — current BİLSEM Yönergesinde “Sınıf/Şube Öğretmenler Kurulu” adlı organ yok; withheld.
+- `HB-2214/2215/2216` — BİLSEM/OAB applicability + duplicate reconciliation bekliyor.
+- `HB-2204` — AÖİHL denklik komisyonu adı/scope current 2024 Açık Öğretim Md25/2-a ile birebir değil.
+- `HB-2205` — Alan/Dal Kontenjan Belirleme Komisyonu current OÖKY organ adıyla birebir değil.
+- `HB-2206` — named koordinatör öğretmen komisyonu exact hükmü çözülmedi.
+- `HB-2222` — HEM kurul adı current organ adıyla birebir değil.
+- `HB-0406`, `HB-0716` — legacy zamanlama guardları devam ediyor.
+- Eski pansiyon `716.pdf`, eski açık öğretim `443.pdf`, eski BİLSEM `524.pdf` current authority olarak kullanılmaz.
 
-`Kanun / CBK > güncel Yönetmelik > Yönerge/Usul-Esas > Genelge > yıllık kılavuz > yıllık çalışma takvimi > İl/İlçe yazısı > el kitabı/rehber`
+## V39 önceliği
+Yeni family açmaktan önce mevcut master satırları exact hükümlere bağla:
+1. BİLSEM named tanılama/değerlendirme komisyonları ve Proje Jürisi için karşılık gelen durable master workflow ID'lerini çöz.
+2. Özel eğitim named kurul/komisyon master kayıtlarını current ÖEHY ile eşleştir.
+3. HEM/hayat boyu öğrenme named kurul kayıtlarını current mevzuatla reconcile et.
+4. Okul Sağlığı Yönetim Ekibi scope çatışmasını çöz; zorla promote etme.
+5. HB-2210 için current GSL/Spor Lisesi yıllık kılavuz + durable parent rule ayrımını kur.
+6. En az 100 destek atomu hedefle; ARTICLE_VERIFIED yalnız exact eşleşmede artsın.
+7. Migration **0** kalsın.
 
-Resmî kaynak önceliği:
-- Resmî Gazete
-- mevzuat.gov.tr
-- MEB Mevzuat Sistemi
-- MEB/ORGM/MTEGM/TKB resmî PDF ve kılavuzları
-- ilgili resmî kurum siteleri
+## Repo sınırı
+Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
+`okul-kapisi` reposuna mevzuat doğrulama işi yazma.
 
-## 7. Bilinen kritik guard / bekleyen sorunlar
-
-- Eski pansiyon/yatılı kaynak `716.pdf` current authority olarak kullanılmayacak; güncel 2016+ konsolide yönetmelik esas.
-- V11 içindeki eski `BOARD-*` kayıtları final audit'te `ESKİ KAYNAK/YÜRÜRLÜKTEN KALKMIŞ` olarak düzeltilmeli.
-- `HB-0406`: komisyon doğru fakat legacy “Eylül” zamanlaması güncel Md.8'de evrensel süre değil → withheld.
-- `HB-0431`: OAB genel kurul + yönetim + denetim tek satır → split tercih.
-- `HB-0716`: legacy Ocak zamanlaması güncel OAB ilan hükmüyle uyuşmuyor → withheld.
-- `HB-2204`: AÖİHL Yüz Yüze Eğitim Denklik Komisyonu başlığı 2024 Açık Öğretim Kurumları Yönetmeliği Md.25/2-a kapsamıyla birebir değil → withheld.
-- `HB-2205`: “Alan/Dal Kontenjan Belirleme Komisyonu” organ adı güncel OÖKY ile birebir değil → withheld.
-- `HB-2206`: koordinatör öğretmen komisyonu exact güncel hüküm hâlâ çözülmeli.
-- `HB-2222`: HEM kurul adı güncel mevzuat organ adıyla birebir değil → withheld.
-- `HB-2229`: Okul Sağlığı Yönetim Ekibi exact güncel kuruluş maddesi bulunmadan sayılmayacak.
-- RAM handbookundaki “her gün 13:30” gibi sabit saatler yasal evrensel yükümlülük sayılmayacak.
-- OÖKY Md.22/9 için eski/güncel konsolide metin çelişkisi görüldü; current Resmî Gazete zinciriyle reconcile edilmeden ARTICLE_VERIFIED yapılmayacak.
-
-## 8. Yakın dönem ARTICLE_VERIFIED kilometre taşları
-
-- V26: 414
-- V27: 420
-- V28: 425
-- V29: 426
-- V30: 429
-- V31: 430
-- V32: 435
-- V33: 446
-- V34: 451
-- V35: 452
-- V36: **453**
-
-Bu zincir duplicate guard uygulanmış sayaçtır.
-
-## 9. Genel işleme mimarisi
-
-`GLOBAL SCAN → PARSE → CENTRAL LEGAL DIFF → SA REVIEW → SCHOOL TYPE FILTER → FEATURE FILTER → GEO FILTER → WORKFLOW/MODULE FILTER → ROLE/AUDIENCE ROUTE`
-
-Mevzuat değişikliği:
-`NEW DOCUMENT → PARSE → DRAFT/STAGING → CHANGE REVIEW → APPROVED → PUBLISHED`
-
-Etki seviyeleri:
-- L0 SAME/INFO
-- L1 PARAMETER
-- L2 PROCESS
-- L3 REMOVED/CONFLICT
-- NEW
-
-Historical completed task/notice asla geriye dönük mutate edilmez.
-
-## 10. Kurum/tenant mantığı
-
-`MASTER WORKFLOW → SCHOOL TYPE → TENANT SETTINGS → ANNUAL CALENDAR → YEAR-SPECIFIC INSTANCES`
-
-İlke: **Tarama global, işleme filtreli, bildirim hedefli.**
-
-Roller önce, kişi sonra atanır. Tenant override immutable core/source'u değiştirmez.
-
-## 11. Görev yaşam döngüsü
-
-`Planlandı → Atandı → Devam ediyor → Kanıt/Çıktı → Onay → Tamamlandı`
-
-Ek durumlar: gecikti / uygulanmaz.
-Kanıt: tutanak, resmî yazı, fotoğraf, takvim, rapor, ekran görüntüsü vb.
-
-## 12. Final audit — en sonda
-
-Kapsam ve exact verification yeterli düzeye geldiğinde tüm 2.229 workflow için tek global audit yapılacak:
-
-- DOĞRU
-- EKSİK
-- ESKİ KAYNAK
-- ÇAKIŞMA
-- YANLIŞ MADDE
-- TAMAM
-
-Final audit tamamlanmadan sistem “tam mevzuat doğrulanmış” sayılmayacak.
-
-## 13. Yeni sohbette kullanılacak kısa devam komutu
-
-Yeni sohbet bu dosyayı okuduktan sonra kullanıcı yalnızca `Devam` derse:
-
-- V36'dan sonra V37 başlat.
-- BİLSEM + özel yetenek/özel eğitim + OÖKY/MTAL named commission bloklarını tara.
-- 100+ atom oluştur.
-- Exact source/article/paragraph olan workflowları ARTICLE_VERIFIED yap.
-- duplicate ve old-source guard uygula.
-- yeni `legal-...-v37.md`, `legal-article-verified-batch-v37.md`, `legal-verification-progress-v37-delta.json` dosyalarını repo'ya yaz.
-- final yanıtta atom sayısı, yeni ARTICLE_VERIFIED sayısı/oranı, kalan workflow, dosyalar, commit SHA'ları ve migration sayısını kısa ver.
-
-## 14. Repo sınırı
-
-Bu sohbetin mevzuat/doğrulama işleri SADECE:
-`halisbozoglu-design/okulos-edu-suite`
-
-`okul-kapisi` reposuna yazma. Servis GPS/mobil uygulama başka çalışma alanıdır; yalnız okul yönetimi mevzuatı açısından ilgiliyse burada hukuki kural olarak ele alınabilir.
+Kullanıcı `Devam` dediğinde soru sormadan **V39** başlat.
