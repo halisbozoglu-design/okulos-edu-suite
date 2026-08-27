@@ -22,7 +22,7 @@
     {"id":"exact-oracle","capability":"CP-SAT exact small-instance oracle with optimality evidence","okulos":"PASS","evidence":"Section 12 CP-SAT closure"},
     {"id":"explainability","capability":"Why here/why not/objective delta/root cause/intervention/audit","okulos":"PASS","evidence":"Section 14 release/explainability closure"},
     {"id":"meb-native","capability":"Native MEB/MTAL/MESEM model/provenance advantage","okulos":"PASS","evidence":"official schedule parsers + MTAL/MESEM structural benchmark profiles"},
-    {"id":"competitor-benchmark","capability":"Same-contract Timefold/UniTime/FET/aSc executable benchmark evidence","okulos":"FAIL","evidence":"Competitor slots intentionally remain NOT_RUN."}
+    {"id":"competitor-benchmark","capability":"Same-contract Timefold/UniTime/FET/aSc executable benchmark evidence","okulos":"FAIL","evidence":"FET 6.8.5 and Timefold 2.5.0 ran on the same GitHub runner with 6 profiles x 30 seeds; all common-HARD runs feasible, hard=0, unplaced=0, deterministic and budget-pass. Workflow 33100523623, artifact 9658357544. UniTime and aSc remain NOT_RUN; objectives are not yet apples-to-apples, so superiority stays blocked."}
   ],
-  "competitors":{"Timefold":"NOT_RUN","UniTime":"NOT_RUN","FET":"NOT_RUN","aSc":"NOT_RUN","CP-SAT":"EXACT_GATE","Okulos":"BUILT_IN"}
+  "competitors":{"Timefold":"RUN_COMMON_HARD","UniTime":"NOT_RUN","FET":"RUN_COMMON_HARD","aSc":"NOT_RUN","CP-SAT":"EXACT_GATE","Okulos":"BUILT_IN"}
 }
