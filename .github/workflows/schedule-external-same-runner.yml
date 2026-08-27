@@ -1,0 +1,59 @@
+name: Schedule external same-runner parity
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/world/**'
+      - 'benchmarks/timefold-adapter/**'
+      - 'tools/schedule_world_benchmark.ts'
+      - 'tools/schedule_world_export_cases.ts'
+      - 'tools/schedule_fet_world_benchmark.ts'
+      - 'tools/schedule_timefold_world_benchmark.ts'
+      - 'tools/schedule_external_same_runner_report.ts'
+      - '.github/workflows/schedule-external-same-runner.yml'
+permissions:
+  contents: read
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: benchmarks/timefold-adapter/pom.xml
+      - run: bun install --frozen-lockfile
+      - name: Install FET
+        run: sudo apt-get update -qq && sudo apt-get install -y fet && fet-cl --version --outputdir=/tmp/fet-version
+      - name: Build Timefold adapter
+        working-directory: benchmarks/timefold-adapter
+        run: mvn -q -DskipTests package
+      - name: Export canonical cases
+        run: bun tools/schedule_world_export_cases.ts --out /tmp/okulos-world-cases.ndjson
+      - name: Run OkulOS
+        run: bun tools/schedule_world_benchmark.ts --out /tmp/okulos-world.json
+      - name: Run FET
+        run: bun tools/schedule_fet_world_benchmark.ts --ci --out /tmp/fet-world.json
+      - name: Run Timefold
+        run: java -jar benchmarks/timefold-adapter/target/timefold-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/timefold-raw.ndjson
+      - name: Canonical post-score Timefold
+        run: bun tools/schedule_timefold_world_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/timefold-raw.ndjson --out /tmp/timefold-world.json --ci
+      - name: Same-runner parity gate
+        run: bun tools/schedule_external_same_runner_report.ts --okulos /tmp/okulos-world.json --fet /tmp/fet-world.json --timefold /tmp/timefold-world.json --out /tmp/external-same-runner.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: schedule-external-same-runner-${{ github.sha }}
+          path: |
+            /tmp/okulos-world.json
+            /tmp/fet-world.json
+            /tmp/timefold-world.json
+            /tmp/timefold-raw.ndjson
+            /tmp/external-same-runner.json
+          if-no-files-found: ignore
+          retention-days: 30
