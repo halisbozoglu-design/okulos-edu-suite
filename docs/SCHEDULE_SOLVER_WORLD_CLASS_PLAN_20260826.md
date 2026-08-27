@@ -18,8 +18,8 @@ Bir bölüm Cloud/veri, solver, canonical validator/score, UI/rapor, test/benchm
 9. Incremental score & large-school performance — **CLOSED 2026-08-27**
 10. Adaptive/elite solver — **CLOSED 2026-08-27**
 11. Hybrid compute closure — **CLOSED 2026-08-27**
-12. CP-SAT exact oracle — **NEXT**
-13. World benchmark package
+12. CP-SAT exact oracle — **CLOSED 2026-08-27**
+13. World benchmark package — **NEXT**
 14. Release/explainability
 15. Final parity + superiority gate
 
@@ -102,10 +102,33 @@ Reopen only for tenant leakage, expired lease acceptance, timeout jobs left acti
 
 ---
 
-## 12 — CP-SAT exact oracle — NEXT
-Normalized export → same HARD semantics → objective mapping → exact/bound solve on small-medium → optimality gap → regression oracle → unsupported constraint reporting → CI.
+## 12 — CP-SAT exact oracle — CLOSED
 
-## 13 — World benchmark package
+### Role and authority
+CP-SAT is a verification oracle, not a second publishing authority. `tools/schedule_cpsat_oracle.py` uses Google OR-Tools CP-SAT to solve the supported normalized submodel exactly/bounded. Any candidate intended for product use still requires OkulOS canonical server audit. The oracle never silently approximates an unsupported HARD rule.
+
+### Canonical normalized export
+Forward migrations `20260827015000_schedule_cpsat_oracle_v1.sql` and `20260827015100_schedule_cpsat_oracle_health_v1.sql`. `get_schedule_exact_oracle_problem_v1()` exports tenant-scoped `OKULOS_CP_SAT_ORACLE_V1`: active time profile, assignments with Section 8 time-domain fields, locked rows, HARD teacher unavailability, planning relations, student-conflict weights and canonical objective order. Export is permission-gated with `schedule.generate`.
+
+### Exact supported model and objective
+The CP-SAT runner enforces assignment hour count, teacher collision, class collision, allowed canonical periods/session-domain, HARD teacher unavailability and locked placements. It maps student-conflict weights to MEDIUM and supports unary `FORBIDDEN_SLOT` / `PREFERRED_SLOT` selectors over assignment/course/teacher/class. Supported objective is lexicographic MEDIUM → SOFT through a safe integer scale; HARD and placement completeness are constraints rather than penalties. Solver is deterministic for the same input/seed (`num_search_workers=1`).
+
+### Unsupported-constraint truthfulness
+Unsupported relation types, `activity_key` selectors, unsupported right selectors, empty slot domains and lock-outside-domain conditions are explicitly reported. If any unsupported item is HARD, public status is `UNSUPPORTED` even if CP-SAT can optimize the remaining submodel; therefore OkulOS never labels a partial HARD model as the full canonical optimum. `full_model_exact` is true only when the normalized instance has no unsupported items.
+
+### Bound / gap / ledger
+Runner emits SHA-256 input hash, CP-SAT status, public status, objective, `BestObjectiveBound`, relative gap, wall time, unsupported list, deterministic rows and diagnostics. `schedule_exact_oracle_runs` records tenant-scoped proof metadata through `record_schedule_exact_oracle_result_v1`; RLS is enabled and `/schedule-exact-oracle` reads only permission-gated health/export RPCs. Production smoke: table 1/1, oracle RPCs 3/3, fake production oracle runs 0.
+
+### UI / exact regression / CI
+UI `/schedule-exact-oracle` belongs to `/schedule`; it shows canonical export counts and latest status/objective/bound/gap/wall/unsupported evidence, with an explicit warning that CP-SAT is not publishing authority. `tests/fixtures/schedule-cpsat-oracle-small.json` is the supported exact fixture. `tools/test_schedule_cpsat_oracle.py` requires OPTIMAL, gap=0, full-model-exact=true, deterministic replay, exact assignment-hour counts, teacher/class collision freedom, lock preservation, forbidden-slot enforcement and an UNSUPPORTED result after injecting an unsupported HARD relation.
+
+CI installs Python 3.12 + pinned `ortools==9.14.6206` and executes the real CP-SAT gate on every build. Final code head `4eef3f96a28e5e32a9fdaff919be93ea99db0816`; CI `33080513749` SUCCESS including real CP-SAT solve, migrations/replay, tenant/route/authority guards, production build, generated route tree, TypeScript and forward migration policy.
+
+Reopen only for normalized-export drift, unsupported HARD rules being mislabeled exact, nondeterministic replay under the same seed, objective/bound/gap inconsistency, tenant leakage, direct CP-SAT publish bypass, or canonical Section 8/11 semantics disappearing from export.
+
+---
+
+## 13 — World benchmark package — NEXT
 Synthetic small/medium/large/dense + MTAL + MESEM + anonymized real + compatible ITC. Compare OkulOS, Timefold, UniTime/ITC-compatible, CP-SAT and fair external FET/aSc where possible. Same input hash/hardware/wall-clock, >=30 seeds; feasible rate, HARD, unplaced, objective vector, conflicts, room/travel, gaps, runtime p50/p95, time-to-first-feasible/time-to-best, memory, replay.
 
 ## 14 — Release/explainability
