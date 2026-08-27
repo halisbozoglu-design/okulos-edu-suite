@@ -15,17 +15,16 @@ function ucb(stats:Map<LocalSearchStrategy,Stat>,total:number){let best=OPS[0]!,
 function deterministicSeed(base:number,round:number,salt:number){return (Math.imul((base^0x9e3779b9)>>>0,1664525)+1013904223+round*7919+salt*104729)>>>0}
 function chooseRelinkLocks(a:LocalCandidate,b:LocalCandidate,round:number){const by=new Map<string,LocalLockedRow[]>();for(const r of [...a.rows,...b.rows]){const k=r.assignment_id;by.set(k,[...(by.get(k)??[]),r])}const out:LocalLockedRow[]=[];for(const [id,rs] of [...by].sort(([x],[y])=>x.localeCompare(y))){const unique=new Map(rs.map(r=>[rowKey(r),r]));if(unique.size===1||(round+id.length)%3===0){for(const r of (unique.size===1?[...unique.values()]:rs.filter((_,i)=>i%2===round%2)).slice(0,8))out.push({...r,locked:true})}}return out}
 export function solveAdaptiveEliteSchedule(p:LocalProblem,opts?:{rounds?:number;eliteSize?:number;stagnationLimit?:number}):AdaptiveEliteCandidate{
- const rounds=Math.max(5,Math.min(24,opts?.rounds??10)),eliteSize=Math.max(2,Math.min(8,opts?.eliteSize??5)),stagnationLimit=Math.max(2,opts?.stagnationLimit??4);
- const stats=new Map<LocalSearchStrategy,Stat>(OPS.map(x=>[x,{pulls:0,improvements:0,reward:0}]));const elite:LocalCandidate[]=[];let best:LocalCandidate|null=null,restarts=0,pathRelinks=0,stagnation=0;
+ const rounds=Math.max(5,Math.min(24,opts?.rounds??8)),eliteSize=Math.max(2,Math.min(8,opts?.eliteSize??5)),stagnationLimit=Math.max(2,opts?.stagnationLimit??4);
+ const stats=new Map<LocalSearchStrategy,Stat>(OPS.map(x=>[x,{pulls:0,improvements:0,reward:0}]));const elite:LocalCandidate[]=[];const baseline=solveIncrementalSchedule({...p,seed:p.seed,strategy:"AUTO",enableLns:true,lnsIterations:p.lnsIterations??24});addElite(elite,baseline,eliteSize);let best:LocalCandidate=baseline,restarts=0,pathRelinks=0,stagnation=0;
  for(let round=0;round<rounds;round++){
-  const op=ucb(stats,round+1),seed=deterministicSeed(p.seed,round,restarts),before=best?scoreScalar(best.score):Number.POSITIVE_INFINITY;
+  const op=ucb(stats,round+1),seed=deterministicSeed(p.seed,round,restarts),before=scoreScalar(best.score);
   let candidate=solveIncrementalSchedule({...p,seed,strategy:op,enableLns:true,lnsIterations:p.lnsIterations??24});
   if(elite.length>=2&&round>=Math.floor(rounds/2)&&round%2===1){const a=elite[round%elite.length]!,b=elite[(round+1)%elite.length]!,locks=chooseRelinkLocks(a,b,round);if(locks.length){const relink=solveIncrementalSchedule({...p,seed:deterministicSeed(p.seed,round,999),strategy:op,locked:[...p.locked,...locks],enableLns:true,lnsIterations:16});pathRelinks++;if(relink.complete&&lex(relink.score,candidate.score)<0)candidate=relink}}
-  const after=scoreScalar(candidate.score),gain=Number.isFinite(before)?Math.max(0,before-after):candidate.complete?1:0,s=stats.get(op)!;s.pulls++;s.reward+=gain>0?Math.log1p(gain):0;if(gain>0)s.improvements++;
-  addElite(elite,candidate,eliteSize);if(!best||lex(candidate.score,best.score)<0){best=candidate;stagnation=0}else stagnation++;
-  if(stagnation>=stagnationLimit){restarts++;stagnation=0;const restart=solveIncrementalSchedule({...p,seed:deterministicSeed(p.seed,round,restarts*17),strategy:OPS[(round+restarts)%OPS.length],enableLns:true,lnsIterations:32});addElite(elite,restart,eliteSize);if(!best||lex(restart.score,best.score)<0)best=restart}
+  const after=scoreScalar(candidate.score),gain=Math.max(0,before-after),s=stats.get(op)!;s.pulls++;s.reward+=gain>0?Math.log1p(gain):0;if(gain>0)s.improvements++;
+  addElite(elite,candidate,eliteSize);if(lex(candidate.score,best.score)<0){best=candidate;stagnation=0}else stagnation++;
+  if(stagnation>=stagnationLimit){restarts++;stagnation=0;const restart=solveIncrementalSchedule({...p,seed:deterministicSeed(p.seed,round,restarts*17),strategy:OPS[(round+restarts)%OPS.length],enableLns:true,lnsIterations:32});addElite(elite,restart,eliteSize);if(lex(restart.score,best.score)<0)best=restart}
  }
- if(!best)best=solveIncrementalSchedule({...p,seed:p.seed,strategy:"AUTO",enableLns:true});
  let diversity=0,pairs=0;for(let i=0;i<elite.length;i++)for(let j=i+1;j<elite.length;j++){diversity+=candidateDiversity(elite[i]!,elite[j]!);pairs++}diversity=pairs?diversity/pairs:0;
  return {...best,adaptive:{rounds,restarts,pathRelinks,diversity,operatorStats:OPS.map(operator=>{const s=stats.get(operator)!;return{operator,pulls:s.pulls,improvements:s.improvements,reward:s.reward,meanReward:s.pulls?s.reward/s.pulls:0}})}};
 }
