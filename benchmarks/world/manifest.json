@@ -1,0 +1,22 @@
+{
+  "schema": "OKULOS_WORLD_BENCHMARK_V1",
+  "seed_count": 30,
+  "wall_clock_budget_ms": 8000,
+  "profiles": [
+    {"id":"synthetic-small","kind":"SYNTHETIC","classes":8,"assignments_per_class":2,"teachers":8,"courses":8,"periods":8,"density":"SPARSE"},
+    {"id":"synthetic-medium","kind":"SYNTHETIC","classes":24,"assignments_per_class":2,"teachers":20,"courses":12,"periods":9,"density":"MIXED"},
+    {"id":"synthetic-large","kind":"SYNTHETIC","classes":60,"assignments_per_class":2,"teachers":52,"courses":18,"periods":10,"density":"MIXED"},
+    {"id":"synthetic-dense","kind":"SYNTHETIC","classes":36,"assignments_per_class":3,"teachers":24,"courses":14,"periods":8,"density":"DENSE"},
+    {"id":"mtal","kind":"MEB_MTAL","classes":32,"assignments_per_class":3,"teachers":28,"courses":20,"periods":10,"density":"MIXED"},
+    {"id":"mesem","kind":"MEB_MESEM","classes":28,"assignments_per_class":2,"teachers":24,"courses":16,"periods":10,"density":"MIXED"}
+  ],
+  "solvers": [
+    {"id":"okulos","status":"BUILT_IN","adapter":"tools/schedule_world_benchmark.ts"},
+    {"id":"cp-sat","status":"EXACT_GATE","adapter":"tools/schedule_cpsat_oracle.py"},
+    {"id":"timefold","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
+    {"id":"unitime","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
+    {"id":"fet","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"},
+    {"id":"asc","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"}
+  ],
+  "required_metrics": ["feasible_rate","hard","unplaced","medium","soft","runtime_p50_ms","runtime_p95_ms","time_to_first_feasible_p50_ms","time_to_best_p50_ms","heap_delta_mb","deterministic_replay"]
+}
