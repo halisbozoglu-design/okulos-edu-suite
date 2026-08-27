@@ -7,7 +7,7 @@ Durum: authoritative execution plan
 Bir bölüm; veri modeli/Cloud, solver, canonical validator/score, UI/rapor, test/benchmark, CI ve handoff tamamlanmadan CLOSED sayılamaz. CLOSED olmadan sonraki bölüme geçilmez. Uygulanmış migrationlar değiştirilmez; yalnız forward-only ve mümkün olan en küçük migrationlar eklenir. Production DB Lovable Cloud PostgreSQL'dir; Lovable AI/chat kullanılmaz. HARD ihlal sessizce gevşetilmez.
 
 ## Nihai hedef
-Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki toplam timetable kabiliyetini kapsamak; MEB/MTAL/MESEM semantiği, mevzuat güvenliği, açıklanabilirlik ve operasyonel kullanımda ileri gitmek. “Dünyanın en iyisi” yalnız ortak, tekrarlanabilir benchmark kanıtından sonra kullanılabilir.
+Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki timetable kabiliyetini kapsamak; MEB/MTAL/MESEM semantiği, mevzuat güvenliği, açıklanabilirlik ve operasyonel kullanımda ileri gitmek. “Dünyanın en iyisi” yalnız ortak, tekrarlanabilir benchmark kanıtından sonra kullanılabilir.
 
 ## Bölüm sırası
 1. Öğrenci çakışma optimizasyonu — **CLOSED 2026-08-26**
@@ -17,8 +17,8 @@ Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki toplam timetable kabiliye
 5. Oda/bina parity kapanışı — **CLOSED 2026-08-26**
 6. Student sectioning tam kapanış — **CLOSED 2026-08-27**
 7. Substitution tam kapanış — **CLOSED 2026-08-27**
-8. Zaman modeli: odd/even week, tarih/dönem, çoklu vardiya — **NEXT**
-9. Incremental score & büyük okul performansı
+8. Zaman modeli: odd/even week, tarih/dönem, çoklu vardiya — **CLOSED 2026-08-27**
+9. Incremental score & büyük okul performansı — **NEXT**
 10. Adaptive/elite solver
 11. Hybrid compute kapanışı
 12. CP-SAT exact oracle
@@ -29,113 +29,99 @@ Timefold + UniTime + aSc + FET + CP-SAT sınıfındaki toplam timetable kabiliye
 ---
 
 ## Bölüm 1 — Öğrenci çakışma optimizasyonu — CLOSED
-- Öğrenci çakışması HARD değil MEDIUM objective; `allow_overlap=true` hariç; PRIMARY > ALTERNATIVE > SUBSTITUTE + priority ağırlığı.
+- Öğrenci çakışması MEDIUM objective; `allow_overlap=true` hariç; PRIMARY > ALTERNATIVE > SUBSTITUTE + priority ağırlığı.
 - Canonical Cloud: `student_conflict_penalty`, `get_schedule_assignment_student_conflict_weights_v2`, `get_schedule_student_conflict_report_v2`, `get_schedule_scenario_student_conflict_summary_v1`.
-- Local CPU/WebGPU/server objective aynı MEDIUM semantiğini kullanır.
+- Local CPU/WebGPU/server objective aynı semantiği kullanır.
 - Migrations: `20260826124000_schedule_student_conflict_objective_v1.sql`, `20260826124100_schedule_student_conflict_report_alignment.sql`.
-- CI: run `32967079420`, SUCCESS.
 
 ## Bölüm 2 — Blok ders + LNS motoru — CLOSED
-- Block authority: `course_schedule_rules.block_pattern`, `get_schedule_activity_instances_v1`, current/scenario block guards.
 - `[2]`, `[2,2]`, `[3]`, `[2,1]` activity-atomic; move/swap/local search/LNS blok parçalayamaz.
-- LNS neighborhoods: TEACHER_DAY, CLASS_DAY, COURSE_BLOCK, CONFLICT_HOTSPOT, LOW_QUALITY_ZONE, RANDOM_SMALL.
+- LNS: TEACHER_DAY, CLASS_DAY, COURSE_BLOCK, CONFLICT_HOTSPOT, LOW_QUALITY_ZONE, RANDOM_SMALL.
 - HARD→MEDIUM→SOFT lexicographic kabul; kötüleşmede rollback.
 - Migrations: `20260826164500_schedule_block_lns_closure.sql`, `20260826165500_schedule_block_atomic_wrappers.sql`, `20260826170500_schedule_external_lns_job_config.sql`.
-- Kilitli-run düzeltmesi: `c2a9602f724a24c27412f7d94e6fec39f264b94d`.
 
 ## Bölüm 3 — Derin ejection-chain — CLOSED
-- Bounded depth 3–5, expansion budget, cycle prevention.
-- Blocker modeli teacher/class/classroom/student-conflict resource bazlıdır; global slot occupancy değildir.
-- Her node `get_schedule_atomic_move_plan_v1`; her chain canonical batch preview; apply batch move + restore point.
-- UI `/schedule-ejection-chain`; mevcut `/schedule` feature ailesinde.
-- CI: run `32993983161`, SUCCESS.
+- Bounded depth 3–5, expansion budget, cycle prevention; blocker modeli teacher/class/classroom/student-conflict resource bazlıdır.
+- Her node atomic move plan, her chain canonical batch preview; apply restore-point korumalıdır.
+- UI `/schedule-ejection-chain`; CI run `32993983161` SUCCESS.
 
 ## Bölüm 4 — Generic constraint parity — CLOSED
-- 26 canonical relation tipi; HARD/MEDIUM/SOFT/OFF; activity-level block semantiği; unary/binary/n-ary set evaluation.
-- Canonical objective: HARD → unplaced → MEDIUM → SOFT → legacy.
+- 26 canonical relation tipi; HARD/MEDIUM/SOFT/OFF; unary/binary/n-ary set evaluation.
+- Objective: HARD → unplaced → MEDIUM → SOFT → legacy.
 - UI `/schedule-rules-relations`.
 - Migrations: `20260826231000_schedule_generic_constraint_parity.sql`, `20260826233000_schedule_generic_constraint_set_parity.sql`, `20260826234000_schedule_generic_constraint_series_cast_fix.sql`.
-- 42/42 relation regression; CI run `33010428054`, SUCCESS.
+- CI run `33010428054` SUCCESS.
 
-## Bölüm 5 — Oda/bina parity kapanışı — CLOSED
-- Canonical physical resource model: `schedule_buildings`, classroom building/floor, `schedule_period_breaks`, `schedule_building_travel`, `schedule_room_pools`.
-- Shared/virtual room için tek authority `schedule_room_pools`; `classrooms.max_simultaneous_activities` ikinci otorite değildir.
-- HARD: capacity, required room type/department/hardware, avoided room, exact-room collision, pool simultaneous/aggregate capacity, break-aware building transfer.
-- SOFT: preferred room type/department/hardware/building/room, capacity waste, building changes.
-- `assign_classrooms_to_scenario_core_v2` fail-first + minimum room cost; `optimize_classrooms_to_scenario_v2` unlocked atamaları reoptimize eder.
-- UI `/classrooms` ve `/room-assignment`.
+## Bölüm 5 — Oda/bina parity — CLOSED
+- Canonical model: `schedule_buildings`, classroom building/floor, `schedule_period_breaks`, `schedule_building_travel`, `schedule_room_pools`.
+- Shared/virtual room için tek authority `schedule_room_pools`.
+- HARD: capacity, required room özellikleri, exact-room collision, pool simultaneous/aggregate capacity, break-aware building transfer.
+- SOFT: preferred room/building/features, capacity waste, building changes.
 - Migrations: `20260826235000_schedule_room_building_parity_v2.sql`, `20260826235500_schedule_room_reoptimize_v2.sql`.
-- CI run `33014655258`, SUCCESS.
+- CI run `33014655258` SUCCESS.
 
-## Bölüm 6 — Student sectioning tam kapanış — CLOSED
-- Requests: PRIMARY / ALTERNATIVE / SUBSTITUTE; `HOME_CLASS`, `OFFERING`, `CROSS_CLASS` scope; uppercase request-kind canonical.
-- `get_student_section_candidates_v2` online/batch/explanation için tek feasibility authority; capacity unknown tahmin edilmez.
-- `section_student_v2`, `section_students_batch_v2`, `repair_student_sectioning_conflicts_v2`; locked enrollment korunur, tenant advisory lock capacity race'i engeller.
-- Student conflict objective Bölüm 1 authority'sini tüketir; ikinci conflict motoru açılmaz.
-- UI `/student-sectioning`; route `/schedule` feature ailesinde.
-- Migration: `20260827000500_schedule_student_sectioning_v2.sql`.
-- Core/UI/tests: `ca08476f5e81597b9db64d6c9f7d167cc91f10cb`, `5e363a5bfa914342e1485b975e5faab105e55365`, `1db5568856b555bb45cc9953392ce805ef701956`, `5011af48c5ae745ff49bc5e36bf2c3111f90ad10`, `4521f613c37b63b1ebcbb0bd6d2aff58f25d040d`.
-- Final code CI run `33015602242`, SUCCESS; authoritative docs closure run `33019041990`, SUCCESS.
+## Bölüm 6 — Student sectioning — CLOSED
+- PRIMARY / ALTERNATIVE / SUBSTITUTE; HOME_CLASS / OFFERING / CROSS_CLASS.
+- Tek candidate authority: `get_student_section_candidates_v2`; online, fail-first batch, conflict repair ve explanation aynı semantiği tüketir.
+- Locked enrollment korunur; capacity unknown tahmin edilmez; advisory lock capacity race'i engeller.
+- UI `/student-sectioning`; migration `20260827000500_schedule_student_sectioning_v2.sql`.
+- Final code CI `33015602242`, docs closure CI `33019041990`, SUCCESS.
 
-## Bölüm 7 — Substitution tam kapanış — CLOSED
+## Bölüm 7 — Substitution — CLOSED
+- Haftalık `teacher_schedule` immutable; tarih bazlı `schedule_daily_overlays` operation vocabulary: COVER/MOVE/SWAP/CANCEL/CREATE/SPLIT/JOIN.
+- Exact absence snapshot: `source_schedule_id`, `course_id`, `classroom_id`, `subgroup_id`.
+- Canonical V4 candidate authority qualification, availability, fairness, duty ve building-transfer nedenlerini açıklar.
+- Direct + iki adımlı chain cover atomik apply edilir; teacher/class/subgroup/room/pool/building HARD audit ve operation-group rollback vardır.
+- SPLIT gerçek subgroup, JOIN `effective_class_ids[]` taşır; bildirim overlay seviyesinde WebPush/Telegram dağıtımına ayrılmıştır.
+- Delegated authority `substitutes.manage`; UI `/substitutes`.
+- Migrations: `20260827002000_schedule_substitution_v4.sql`, `20260827002500_schedule_substitution_split_join_v4.sql`, `20260827003000_schedule_substitution_permission_alignment_v4.sql`.
+- Final code CI `33020382676`, authoritative docs CI `33020566641`, SUCCESS.
 
-### Canonical date-scoped overlay
-- Haftalık `teacher_schedule` source-of-truth olarak immutable kalır; günlük kriz/vekalet değişiklikleri `schedule_daily_overlays` içinde tarih bazlı tutulur.
-- Operation vocabulary: `COVER`, `MOVE`, `SWAP`, `CANCEL`, `CREATE`, `SPLIT`, `JOIN`.
-- `get_schedule_daily_effective_v1/v2` haftalık program + günlük overlay'i tek effective-day görünümünde birleştirir.
-- SPLIT gerçek `effective_subgroup_id`; JOIN gerçek `effective_class_ids[]` taşır. JOIN en az iki kaynak + tam bir emit; SPLIT en az iki parça gerektirir.
+## Bölüm 8 — Zaman modeli — CLOSED
 
-### Exact absence snapshot ve candidate authority
-- `absence_lessons` artık `source_schedule_id`, `course_id`, `classroom_id`, `subgroup_id` saklar; qualification subject-name tahminine bağlı değildir.
-- `get_substitute_candidates_v4`: qualification, duty, absence, teacher unavailability, effective-day time conflict, weekly/monthly fairness ve building-transfer nedenlerini açıkça döndürür.
-- HARD reasons: `ABSENT`, `UNAVAILABLE`, `TIME_CONFLICT`, `BUILDING_TRANSFER_NOT_ALLOWED`, `BUILDING_TRANSFER_TIME_INSUFFICIENT`.
-- Yeterlilik doğrulanamayan öğretmen acil fallback olarak ağır cezalı kalır; HARD fiziksel/zaman ihlali olan aday uygulanamaz.
+### Canonical time domain
+- `schedule_sessions` ve `schedule_period_definitions` çoklu vardiya/session modelidir.
+- Canonical slot aralığı 1–24; `local_period` kullanıcıya vardiya içi ders numarasını gösterir.
+- `schedule_time_profiles.week_parity_anchor` tek/çift hafta referansını belirler.
+- `teacher_course_assignments`: `week_pattern` (`ALL/ODD/EVEN`), `valid_from`, `valid_to`, `term_no`, `schedule_session_id`.
+- `school_classes`, `teacher_schedule`, `schedule_scenario_rows`, `teacher_unavailability` session-aware'dır.
+- Production'da bilinmeyen gerçek ders saatleri tahmin edilmez; tek mevcut session legacy davranışı korur. Çoklu session için saat bilgisi eksikse health/preflight conservative davranır.
 
-### Direct cover + chain
-- `assign_substitutes_for_day_v4` her direct atamadan sonra effective-day programı yeniden değerlendirir.
-- `suggest_substitution_chains_v4`: A yalnız kendi dersi nedeniyle meşgulse A'nın dersini feasible B'ye verip A'yı devamsız derse önerir.
-- `apply_substitution_chain_v4` iki adımı tek transaction içinde yeniden doğrular ve uygular.
+### Tarih ve applicability authority
+- `is_teaching_day()` aktif akademik yıl + aktif time profile öğretim günleri + `school_calendar_events` üzerinden karar verir; Cumartesi gibi kuruma özel öğretim günü desteklenir.
+- Assignment applicability; tarih aralığı, dönem, ALL/ODD/EVEN ve `week_parity_anchor` ile hesaplanır.
+- ODD ve EVEN scope'lar aynı canonical slotu paylaşabilir; ALL↔ODD/EVEN, aynı dönem ve kesişen tarih aralıkları gerçek resource collision üretir.
+- `schedule_calendar_slot_overrides` tarih/session/slot bazlı OPEN/CLOSED istisnaları taşır.
 
-### HARD validator, room/building ve rollback
-- `apply_schedule_daily_overlay_v1`: tenant/date advisory lock + all-or-nothing apply.
-- `assert_schedule_daily_overlay_hard_v1`: teacher, class/subgroup, exact room, shared room-pool simultaneous limit, aggregate capacity ve building transfer authority'lerini enforce eder.
-- JOIN edilen sınıfların öğrenci sayıları room-pool capacity hesabında toplanır; bilinmeyen kapasite tahmin edilmez.
-- `revert_schedule_daily_overlay_v1`: operation-group bazlı atomik geri alma; bağlı vekalet kaydını pasifleştirir, absence durumunu yeniden açar ve HARD audit'i tekrar çalıştırır.
-- `schedule_daily_overlay_audit` APPLY/REVERT izini tutar.
+### HARD validator / solver parity
+- Current schedule ve scenario teacher/class/room collision yalnız time scope'lar gerçekten kesişiyorsa HARD'dır.
+- Session dışı canonical slot reddedilir; room-pool ve building-transfer guardları aynı scope semantics'i kullanır.
+- DB-native generator günlük yük, çalışma günü, consecutive, teacher/class occupancy ve adjacency hesabını scope-aware yapar.
+- Browser CPU/LNS worker `schedule-local-solver-time-core.ts` kullanır; assignment allowed periods + scope overlap + student conflict aynı canonical semantiğe bağlıdır.
+- Student conflict summary/report ODD↔EVEN'i yanlış conflict saymaz; room candidate/objective yalnız overlapping scope satırlarını tüketir.
 
-### Bildirim ve authority ayrımı
-- `assign-substitutes` edge function artık vekil seçmez; `assign_substitutes_for_day_v4` Cloud authority'sini çağırır ve bildirilmemiş effective overlay görevlerini Web Push/Telegram'a taşır.
-- Notification state overlay seviyesindedir; chain'deki A ve B dahil tüm effective öğretmen görevleri bildirilebilir.
-- `report-absence` exact source IDs ile absence snapshot üretir.
+### Günlük operasyon entegrasyonu
+- `get_teacher_schedule_for_date_v1` yalnız o tarihte uygulanabilir weekly rows'u döndürür.
+- Substitution effective-day ve `report-absence` date-applicable authority'yi kullanır; ODD/EVEN veya dönem dışı ders için sahte absence lesson oluşmaz.
 
-### UI ve delegated permission
-- `/substitutes`: day health, nedenli candidate listesi, qualification/duty/fairness, HARD rejection, chain öneri/apply, active overlay, notification state ve operation-group undo.
-- `substitutes.manage` delegasyonu direct assignment, chain apply ve rollback için canonical DB yetkisidir; `schedule.edit` generic daily overlay müdahalesinde geçerlidir. Yetkisiz çağrı `NOT_AUTHORIZED` ile reddedilir.
+### UI / forward migrations / tests
+- UI `/schedule-time-model`: week parity, session, canonical/local period, gerçek saat, class→session ve assignment hafta/dönem/tarih/session yönetimi.
+- UI `/schedule-time-overrides`: tarih bazlı OPEN/CLOSED slot override; iki route da `/schedule` feature family altındadır.
+- Migrations: `20260827010000_schedule_time_model_v1.sql`, `20260827010500_schedule_time_scope_validator_v1.sql`, `20260827011000_schedule_time_scope_solver_v1.sql`.
+- Regression: `tests/schedule-time-model.test.ts`; ODD/EVEN sharing, ALL overlap, term/date disjointness, allowed session slots, server/local parity, absence applicability ve “fake clock yok” sözleşmeleri.
+- Type contract fix: `a6a32ff9e84b4285e1514d2832ed1cbbb79ea491` (`schedule_session_id` undefined yerine canonical null).
 
-### Forward migrations / commits
-- `20260827002000_schedule_substitution_v4.sql` — `f16433123d5dc08b7776edebc0c6bb5179e2a503`.
-- `20260827002500_schedule_substitution_split_join_v4.sql` — `b337c89c67b65432c399be162cb0e436948c19e2`.
-- `20260827003000_schedule_substitution_permission_alignment_v4.sql` — `79e5b7e754adbd9a59cc3fa43ee298d0bed18ab2`.
-- UI: `4d43e22c5ea438f185da0199b3d83f7abf407fc3`.
-- Exact absence edge: `6db884416db2cbc7b604c5062fd50c14bb6d85f3`.
-- Overlay notification edge: `9866533175a13b43ac7f50d7b01d6cc79e05633a`.
-- Tests: `6239a47c951c26d91cb7233a2bdd234284fd581a`, `768d924f025dd6e5cab719ae65aeb9b42f70db09`, `c56dec1752d267130c536e39d2c96163cceb3eae`.
-
-### Production smoke ve CI
-- Lovable Cloud V4 introspection: 7 ana RPC mevcut; overlay operation/emits_event/notified_at kolonları mevcut.
-- Kontrol anında bugün için 0 absence lesson ve 0 overlay vardı; production'a sahte kriz/öğretmen verisi eklenmedi.
-- Final code head `c56dec1752d267130c536e39d2c96163cceb3eae`; CI run `33020382676`: unit/regression, migration/replay, tenant/route, timetable authority, Phase 2/3/4/5, auth/delegated permission, production build, route-tree, TypeScript ve forward migration policy **SUCCESS**.
+### Production smoke / closure CI
+- Tenant `774380`: 1 session; active class without session 0; active assignment without session 0; period definition 0 (bilerek, gerçek saat bilinmediği için sahte veri eklenmedi).
+- Final code CI run `33027244816`: 80/80 tests, migration/replay, tenant/route, timetable authority, Phase guards, auth/delegated permission, production build, route-tree, TypeScript ve forward migration policy **SUCCESS**.
 
 ### Tekrar açılma koşulu
-Bölüm 7 yalnız absence snapshot, qualification/fairness, daily overlay, chain, SPLIT/JOIN, notification veya HARD teacher/class/room/building semantiğinde regression bulunursa yeniden açılır. Zaman pattern/date/shift genişlemesi Bölüm 8'de bu date-scoped overlay authority'yi tüketir; ikinci substitution motoru açılmaz.
+Bölüm 8 yalnız scope overlap, odd/even applicability, academic calendar/date override, session/period mapping, variable clock, room/building temporal collision veya substitution date applicability regression'ında yeniden açılır. Performans/delta-score optimizasyonu Bölüm 9'da bu canonical time domain'i tüketir; ikinci zaman motoru açılmaz.
 
 ---
 
-## Bölüm 8 — Zaman modeli — NEXT
-Akış: week pattern/date range/term/calendar → multiple sessions/shifts → period durations/breaks → activity applicability → validator → solver → room/building travel authority → reports → tests → CI.
-
-## Bölüm 9 — Incremental score & performans
-Akış: profile → hotspot indexes → delta score → cached relation/student/room conflict deltas → partial recompute → large-grid virtualization → 100+ class benchmark → memory/p95 gates → CI.
+## Bölüm 9 — Incremental score & performans — NEXT
+Akış: profile → hotspot indexes → delta score → cached relation/student/room/time conflict deltas → partial recompute → large-grid virtualization → 100+ class benchmark → memory/p95 gates → CI.
 
 ## Bölüm 10 — Adaptive/elite solver
 Akış: operator telemetry → contextual bandit/weight update → elite pool → diversity metric → path relinking/crossover → restart policy → reproducibility controls → benchmark → CI.
