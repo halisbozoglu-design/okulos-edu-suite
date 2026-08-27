@@ -1,2 +1,2 @@
-import {solveLocalSchedule,type LocalProblem} from "@/lib/schedule-local-solver-time-core";
-self.onmessage=(ev:MessageEvent<LocalProblem>)=>postMessage(solveLocalSchedule(ev.data));
+import {solveIncrementalSchedule,type LocalProblem} from "@/lib/schedule-local-solver-incremental-core";
+self.onmessage=(ev:MessageEvent<LocalProblem>)=>postMessage(solveIncrementalSchedule(ev.data));
