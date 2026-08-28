@@ -1,0 +1,55 @@
+{
+  "updated_on":"2026-08-28",
+  "base_large_batch_atom_total":5115,
+  "completed_focus":{
+    "legal_family":"BILSEM_RAM_SPED_OAB_300_V44",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-300-v44.md",
+    "atomized_rule_count":300,
+    "migration_count":0,
+    "new_candidate_doc":"docs/legal-new-current-organs-candidates-v44.md"
+  },
+  "large_batch_atom_total_after_delta":5415,
+  "article_verified":{
+    "base":464,
+    "increment":3,
+    "result":467,
+    "master_total":2229,
+    "percent":20.9511,
+    "remaining":1762,
+    "batch_doc":"docs/legal-article-verified-batch-v44.md",
+    "workflow_ids":["HB-2214","HB-2215","HB-2216"]
+  },
+  "new_current_named_org_candidates":[
+    "NEW-BILSEM-MERKEZ-TANILAMA",
+    "NEW-BILSEM-GORSEL-DEGERLENDIRME",
+    "NEW-BILSEM-MUZIK-DEGERLENDIRME",
+    "NEW-BILSEM-OKUL-YONLENDIRME",
+    "NEW-BILSEM-BOLGE-SOZLU",
+    "NEW-BILSEM-IL-OGRETMEN-DEGERLENDIRME",
+    "NEW-BILSEM-PROJE-JURISI",
+    "NEW-SPED-HIZMETLER-KURULU"
+  ],
+  "ram_normalization":{
+    "strategy":"COMPOUND_SPLIT_AND_COLLAPSE_MONTHLY_INSTANCES",
+    "pipeline":"APPLICATION_REFERRAL -> APPOINTMENT_DISTRIBUTION -> EDUCATIONAL_ASSESSMENT -> BOARD_MEETING -> DECISION_REPORT -> APPROVAL_RECORD -> OFFICIAL_MEASURE_FOLLOWUP",
+    "local_time_parameter":"13:30 is not national legal authority; store only as LOCAL_TIME_PARAMETER if configured",
+    "known_rows":["HB-0204","HB-0205","HB-0277","HB-0512","HB-0598","HB-0599","HB-0761","HB-0941","HB-0942","HB-1141"]
+  },
+  "withheld":[
+    {"workflow_id":"HB-2212","reason":"no current named BILSEM Sınıf/Şube Öğretmenler Kurulu in current directive"},
+    {"workflow_id":"HB-2218","reason":"school-health source/scope conflict unresolved"},
+    {"workflow_id":"HB-2227","reason":"RAM Merkez Komisyon Kurulu current exact named authority not established"},
+    {"workflow_id":"HB-0502","reason":"compound + obsolete annual-guide wording"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "batch":"V45",
+    "minimum_atoms":300,
+    "goals":[
+      "bind RAM atomic parent/child workflows to current ÖEHY articles without promoting local handbook timing",
+      "prepare Super Admin publication package for 8 NEW current named organs",
+      "scan remaining BILSEM monthly rows for exact Md29 operational matches",
+      "continue resolving HB-2227 and school-health conflicts"
+    ]
+  }
+}
