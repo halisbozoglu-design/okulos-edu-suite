@@ -7,6 +7,7 @@ The benchmark result is stored in the repository instead of relying on chat outp
 
 - Canonical manifest: `benchmarks/world/manifest.json`
 - Current frozen OkulOS baseline: `benchmarks/world/baseline-20260827.json`
+- Current frozen 101-seed stress evidence: `benchmarks/world/stress-20260828.json`
 - Frozen external same-runner evidence: `benchmarks/world/external-same-runner-20260827.json`
 - Capability/parity truth matrix: `benchmarks/world/capability-matrix.json`
 - Runner: `tools/schedule_world_benchmark.ts`
