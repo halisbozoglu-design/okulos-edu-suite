@@ -4,12 +4,13 @@
   "version": "0.1.0",
   "identifier": "tr.okulos.desktop",
   "build": {
-    "beforeBuildCommand": "bun run build",
+    "beforeBuildCommand": "cd .. && bun run build",
     "frontendDist": "../../.output/public"
   },
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "Okulos",
         "width": 1440,
         "height": 900,
