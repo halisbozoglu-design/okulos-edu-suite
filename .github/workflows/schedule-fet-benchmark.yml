@@ -32,6 +32,8 @@ jobs:
           sudo chmod +x /usr/local/bin/fet-cl
           fet-cl --version --outputdir=/tmp/fet-version
       - name: Run real FET common-core benchmark
+        env:
+          OKULOS_FET_BENCHMARK_VERSION: '7.10.2'
         run: bun tools/schedule_fet_world_benchmark.ts --ci --out /tmp/schedule-fet-world-benchmark.json
       - name: FET failure diagnostics
         if: failure()
@@ -42,8 +44,6 @@ jobs:
             echo "--- $f ---"
             head -80 "$f"
           done
-          echo '--- sample directory ---'
-          find /tmp/okulos-fet-synthetic-small-101 -maxdepth 4 -type f -print 2>/dev/null | head -80
           exit 0
       - uses: actions/upload-artifact@v4
         if: always()
