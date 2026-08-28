@@ -1,0 +1,33 @@
+name: aSc 2027 UI automation probe
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/asc_windows_ui_tree_probe.ps1'
+      - '.github/workflows/schedule-asc-ui-tree-probe.yml'
+permissions:
+  contents: read
+jobs:
+  ui-probe:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe aSc UI Automation tree
+        shell: pwsh
+        run: ./tools/asc_windows_ui_tree_probe.ps1 -InstallerUrl 'https://www.asctimetables.com/download/aScTimeTables_2027_7_1.exe' -OutFile "$env:RUNNER_TEMP\asc-ui-tree-probe.json"
+      - name: Truth guard
+        shell: pwsh
+        run: |
+          $r=Get-Content "$env:RUNNER_TEMP\asc-ui-tree-probe.json"|ConvertFrom-Json
+          if($r.status -ne 'UI_PROBED_NOT_GENERATED'){throw 'ASC_UI_STATUS_INVALID'}
+          if($r.generation_status -ne 'NOT_RUN'){throw 'ASC_GENERATION_MUST_REMAIN_NOT_RUN'}
+          if($r.node_count -lt 1){throw 'ASC_UI_TREE_EMPTY'}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: schedule-asc-ui-tree-probe-${{ github.sha }}
+          path: ${{ runner.temp }}\asc-ui-tree-probe.json
+          if-no-files-found: ignore
+          retention-days: 30
