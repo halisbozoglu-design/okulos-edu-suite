@@ -10,35 +10,38 @@ Migration: **0**
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
 - Kalan exact doğrulama: **1.762**
-- Büyük atomik mevzuat havuzu: **6.195**
-- Son tamamlanan batch: **V46**
-- Sonraki batch: **V47**
-
-## V45
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-300plus-v45.md` — `f9920cf7b6c64de769137b5cab1118a0c8d75cf7`
-- Verification: `docs/legal-article-verified-batch-v45.md` — `0bd7455a3906764a1253e6855e828399fb0e3862`
-- NEW_CANDIDATE publication pack: `docs/legal-new-organ-superadmin-publication-pack-v45.md` — `cfd3035cd20008f2845718450cb883189bb5a2e8`
-- Progress: `docs/legal-verification-progress-v45-delta.json` — `f8bff2563b4f1ef6eb3dec9241c8b405171a04e3`
-- Result: **467/2229**; atom pool **5.775**.
+- Büyük atomik mevzuat havuzu: **6.675**
+- Son tamamlanan batch: **V47**
+- Sonraki batch: **V48**
 
 ## V46 — 420 atom
 - Coverage: `docs/legal-article-verified-focused-deepening-batch-300plus-v46.md` — `47e7aa942e907533ccccf74bf3834a86f1df83db`
 - RAM counseling reconciliation: `docs/legal-ram-counseling-measure-reconciliation-v46.md` — `f13633774a6edb2b1a97c931f9d7750cb159db08`
 - Verification: `docs/legal-article-verified-batch-v46.md` — `387b4ab31e37885633c494dab14ffd5b0867a2b2`
 - Progress: `docs/legal-verification-progress-v46-delta.json` — `332afacc90769f29380d09e6e3f607f0691edb21`
-- **420 support atoms** added.
+- Result: **467/2229**; atom pool **6.195**.
+- NOTE: V46'daki `24.04.2026 / RG 33223` metadata ifadesi V47'de düzeltildi. Doğru sayı **33233**.
+
+## V47 — 480 atom
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-300plus-v47.md` — `710ba3feb128a1ddeb18adc27ea263fc50513834`
+- Verification: `docs/legal-article-verified-batch-v47.md` — `c3b17ce2ee9e4758c3f17e7febe1ac6b774d3299`
+- Progress: `docs/legal-verification-progress-v47-delta.json` — `329a092db6a80e4fd9d9c96f1845676dd8e210ae`
+- **480 support atoms** added.
 - ARTICLE_VERIFIED increment: **0**; result **467/2229 = %20,9511**.
-- Current authority recovered: ORGM current page confirms **24.04.2026 / RG 33223 Danışmanlık Tedbiri Kararlarının Uygulama Usul ve Esasları Hakkında Tebliğ**.
-- Counseling-measure workflows must use this current 2026 authority instead of stale historical Tebliğ copies.
-- `HB-0137`, `HB-0513`, `HB-0762` — `Öğrencilerin resmi tedbirlerinin alınması ve takip edilmesi`: `TEDBIR_SCOPE_REVIEW`; not exact ÖEHY Md44.
-- `HB-0943/HB-0944` — same March + same text; `DUPLICATE_EXTRACTION_REVIEW`; row also combines general RAM interview + counseling-measure execution, so `SPLIT_REQUIRED`.
-- `HB-0278`, `HB-0680` and analogous month rows belong to same counseling/interview family and must become canonical parent + calendar instances rather than independent legal parents.
-- `HB-0206`, `HB-0600`, `HB-0763`, `HB-1040` combine counseling-measure execution with Şiddet İl Eylem Planı; split before promotion.
-- `HB-0514` combines counseling measure and local manager meeting; split before promotion.
-- Current ÖEHY Md43-45 remains independent legal parent for RAM Özel Eğitim Değerlendirme Kurulu (`HB-2228`): formation / duties / working rules.
-- `tedbir` semantics are no longer guessed. Counseling measure, special-education assessment/placement and other official measures route to separate legal parents.
-- Monthly labels are calendar metadata, not national legal timing unless current source explicitly says so.
-- `13:30` remains `LOCAL_TIME_PARAMETER`.
+- Current authority: **24.04.2026 tarihli ve 33233 sayılı Resmî Gazete**'de yayımlanan `Danışmanlık Tedbiri Kararlarının Uygulama Usul ve Esasları Hakkında Tebliğ`.
+- Resmî Gazete daily issue + published Tebliğ PDF metadata prevails over ORGM listing typo `33223`.
+- 2026 Tebliğ durable parameter core extracted:
+  - Md7: MEB uygulayıcı/routing rules; school-linked child -> school counselor, counselor absent -> il/ilçe assignment, no school relation -> RAM.
+  - Md8: 15 günde bir / asgari 8 oturum; conditional online sessions in school holidays; max 15 files per counselor; application-plan source and role separation rules.
+  - Md9: 5 workday institutional assignment; 3 workday process start; family 10-day application; first interview + 5 workday court plan submission; monitoring, 3-month reporting, continuation/termination and mandatory notification branches.
+- General RAM client interview is legally separated from court-ordered counseling measure. Legacy text joined with `ve` must split to two process parents.
+- `HB-0278`, `HB-0680`, `HB-0943`, `HB-0944` and analogous month records remain LEGACY_CALENDAR_INSTANCE / SPLIT_REQUIRED; no whole-row promotion.
+- `HB-0943/HB-0944`: same March/source text; duplicate extraction risk.
+- `HB-1040` and analogous records: counseling + Şiddet İl Eylem Planı compound; split first.
+- Standalone monthly RAM consultancy rows such as `HB-0141`, `HB-0208`, `HB-0280`, `HB-0396`, `HB-0685`, `HB-0948` recovered; duplicate legal-parent counting prohibited until current source-exact RAM duty binding is established.
+- `HB-0602`: RAM school-guidance-program review text carrying PANSİYONLU scope label -> `SCOPE_ERROR_CANDIDATE`.
+- `HB-0603`: school-risk-map workflow appears incorrectly mapped to SOCIAL_ACTIVITIES family -> `LEGAL_FAMILY_ERROR_CANDIDATE`.
+- Old 2008 counseling communiqué/handbook rules are historical for future instances after 2026 current authority.
 
 ## ARTICLE_VERIFIED değişmez kuralı
 Sayaç yalnız `workflow_id + güncel resmî kaynak + exact madde/fıkra + matching operational/applicability scope` birebir olduğunda artar.
@@ -47,11 +50,12 @@ Guardlar:
 - ID-title ilişkisi tahmin edilmez.
 - duplicate/calendar-instance workflow ikinci kez sayılmaz.
 - named organ ve operational action ayrı workflow layerlarıdır.
-- `tedbir` sözcüğü hukuki türü belirlemek için tek başına yeterli değildir.
+- general RPD görüşmesi ile mahkeme kararlı danışmanlık tedbiri aynı workflow değildir.
+- `tedbir` sözcüğü tek başına hukuki tür belirlemez.
 - mülga/eski kaynak current authority değildir.
 - handbook/el kitabı provenance/evidence; son hukuki otorite değildir.
 - compound workflow `WITHHELD/SPLIT` edilir.
-- yanlış okul-kapsam etiketi publication öncesi düzeltilir.
+- yanlış scope ve legal-family publication öncesi düzeltilir.
 - yıllık kılavuz/takvim/limit/eşik `YEAR_PARAMETER`.
 - handbook sabit saatleri `LOCAL_TIME_PARAMETER`.
 - NEW current named organ `NEW_CANDIDATE -> SUPERADMIN -> MASTER_ID_ASSIGN -> PUBLISH` yolundan geçer.
@@ -65,17 +69,18 @@ Guardlar:
 - `HB-2210` — GSL/Spor Liseleri yetenek sınavı annual-guide dependent.
 - `HB-2204/2205/2206` — title/scope exact reconciliation bekliyor.
 - `HB-0502` — obsolete annual guide + monthly report compound.
-- RAM counseling/official-measure monthly families — split/duplicate/scope normalization devam ediyor.
+- RAM recurring counseling and consultancy families — parent/calendar-instance normalization sürüyor.
 
-## V47 önceliği — 300+ atom
-1. 2026 Danışmanlık Tedbiri Tebliğinin exact madde/fıkra atomlarını current masterdaki saf danışmanlık-tedbiri workflowlarıyla eşleştir; compound olmayan mevcut ID bulursan promote et.
-2. RAM genel görüşme işlerini current Rehberlik ve Psikolojik Danışma Hizmetleri Yönetmeliğiyle ayrı exact family olarak çöz.
-3. `HB-0943/HB-0944` duplicate kökenini canonical source satırı bazında kesinleştir.
-4. `HB-0137/0513/0762` generic official-measure family için legal-type discriminator geliştir; hukuki tür belli olmadan promote etme.
-5. BİLSEM Md29 operational duties ve 8 NEW_CANDIDATE organ publication alanlarını ilerlet.
-6. School Health `HB-2218/HB-2229` source-level split.
-7. Migration **0**.
+## V48 önceliği — 300+ atom
+1. Current 2026 Counseling Measure Communiqué için durable process template alanlarını tamamla: trigger, role routing, deadline engine, evidence, court-report lifecycle, conditional online-session rule, max-file capacity.
+2. Masterdaki counseling family için tüm ayların ID manifestini çıkar ve duplicate/split/calendar-instance sınıflandırmasını tamamla.
+3. RAM standalone consultancy / school-program review / risk-map workflows için current source-exact authority ara; source yoksa promote etme.
+4. `HB-0602` scope ve `HB-0603` legal-family correction paketini Super Admin staging formatına getir.
+5. General RPD client interview parentı için current RPD Regulation + RAM directive exact operational provision ara.
+6. BİLSEM Md29 duties ve NEW_CANDIDATE publication paketini ilerlet.
+7. School Health `HB-2218/HB-2229` conflict split.
+8. Migration **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V47** başlat ve tek mesajda minimum **300 atom** hedefle.
+Kullanıcı `Devam` dediğinde soru sormadan **V48** başlat; tek mesajda minimum **300 atom** hedefle.
