@@ -234,13 +234,13 @@ OKULOS_DERS_PROGRAMI_FINAL
 │   ├── ✅ 15.03 Timefold independent canonical parity
 │   ├── ✅ 15.04 UniTime comparable objective adapter
 │   ├── ✅ 15.05 UniTime fresh-JVM determinism probe
-│   ├── 🟡 15.06 UniTime full 180-run final gate
-│   ├── 🟡 15.07 Same-runner Okulos/FET/Timefold/UniTime final gate
+│   ├── ✅ 15.06 UniTime full 180-run final gate
+│   ├── ✅ 15.07 Same-runner Okulos/FET/Timefold/UniTime final gate
 │   ├── ✅ 15.08 FET 7.10.2 official executable/common-HARD
 │   ├── ✅ 15.09 aSc 2027 executable/signature/hash probe
 │   ├── ⚪ 15.10 aSc real GUI benchmark if reproducible environment exists
 │   ├── ⚪ 15.11 aSc executable is NOT product dependency
-│   └── ⬜ 15.12 Freeze new evidence + truth-sync manifest/matrix
+│   └── ✅ 15.12 Freeze new evidence + truth-sync manifest/matrix
 │
 ├── 16_TEST_MATRIX_SON_KAPILAR
 │   ├── ✅ 16.01 Unit/regression suite
@@ -281,6 +281,14 @@ OKULOS_DERS_PROGRAMI_FINAL
     ├── ⬜ 17.10 Final benchmark pack frozen
     └── ⬜ 17.11 DERS PROGRAMI CLOSED ✅
 ```
+
+## Güncel dış solver kanıt otoritesi
+
+- İnsan-okunur özet: `docs/SCHEDULE_EXTERNAL_SOLVER_FINAL_EVIDENCE_20260828.md`
+- Makine-okunur manifest: `docs/schedule-external-evidence-manifest-20260828.json`
+- UniTime 180-run gate: workflow `33166069959`, PASS.
+- Same-runner Okulos/FET/Timefold/UniTime gate: workflow `33166069957`, PASS.
+- Timefold ve UniTime canonical objective karşılaştırılabilir; FET common-HARD kapsamındadır. Bu nedenle blanket superiority claim hâlâ yasaktır.
 
 ## İlerleme raporlama kuralı
 
