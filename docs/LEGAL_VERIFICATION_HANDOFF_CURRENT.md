@@ -8,32 +8,36 @@ Migration: **0**
 
 ## Güncel kesin durum
 - Master workflow: **2.229**
-- ARTICLE_VERIFIED: **463 / 2.229 = %20,7716**
-- Kalan exact doğrulama: **1.766**
-- Büyük atomik mevzuat havuzu: **4.875**
-- Son tamamlanan batch: **V42**
-- Sonraki batch: **V43**
-
-## V41
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-100plus-v41.md` — `945ab708a2cb7cae0bb3e8e6dfdea394607b9bbf`
-- Verification: `docs/legal-article-verified-batch-v41.md` — `f6d4dfa1782cdac90ee4f838006e0e2e72bf2252`
-- Progress: `docs/legal-verification-progress-v41-delta.json` — `68396075d2f1206e37a01eee6dec49548012aae8`
-- Result: **459/2229**; atom pool **4.755**.
+- ARTICLE_VERIFIED: **464 / 2.229 = %20,8165**
+- Kalan exact doğrulama: **1.765**
+- Büyük atomik mevzuat havuzu: **5.115**
+- Son tamamlanan batch: **V43**
+- Sonraki batch: **V44**
 
 ## V42
 - Coverage: `docs/legal-article-verified-focused-deepening-batch-100plus-v42.md` — `dffdd5dc677e72442fffb0a15d10b7655164f355`
 - Verification: `docs/legal-article-verified-batch-v42.md` — `da43c165284d75fdf75107f2019f1ac55da7757f`
 - Progress: `docs/legal-verification-progress-v42-delta.json` — `0fd7a5274399b6efabdc5783d80e3cc032aa69af`
-- 120 support atoms added.
-- Canonical/durable master artifacts recovered from File Library; exact retained mappings recovered for `HB-2223..2227`.
-- Exact additions:
-  - `HB-2223` — Okul-Aile Birliği Genel Kurulu (HEM) → OAB Yönetmeliği Md9; Md8 + scope definitions supporting.
-  - `HB-2224` — Okul-Aile Birliği Yönetim Kurulu (HEM) → Md12.
-  - `HB-2225` — Okul-Aile Birliği Denetleme Kurulu (HEM) → Md14.
-  - `HB-2226` — Eser İnceleme ve Seçme Kurulu (HEM) → Sosyal Etkinlikler Yönetmeliği Md12/2-a-b-ç; HEM applicability Md7/4 and non-formal scope Md1-2.
-- Old OAB candidate Md18/25 was a finance similarity candidate, not exact organ-formation authority; corrected before promotion.
-- `HB-2227` exact retained title is Merkez Komisyon Kurulu (RAM); current exact named authority not established, so WITHHELD.
-- Result: **463/2229 = %20,7716**; atom pool **4.875**.
+- Result: **463/2229**; atom pool **4.875**.
+
+## V43 — 200+ batch
+- Master crosswalk: `docs/legal-master-id-crosswalk-v43.md` — `0b491db281ca31d109d1a97bf1d6c2560fc66bc7`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-200plus-v43.md` — `f3fc1b78215fa5c890689da8a62de9be3f559872`
+- Verification: `docs/legal-article-verified-batch-v43.md` — `0bc30d97431ba970619b0a835e37535140c9a5e2`
+- Progress: `docs/legal-verification-progress-v43-delta.json` — `18d19c46cd199010dbd4a56aa556f3062742e0f5`
+- **240 support atoms** added.
+- Exact addition:
+  - `HB-0501` — İl tanılama sınav komisyonunun kurulması → current BİLSEM Yönergesi Md28; Md29 supporting duties.
+- Canonical BİLSEM crosswalk recovered/classified for `HB-0123`, `HB-0500`, `HB-0501`, `HB-0502`, `HB-0503`, `HB-0586`, `HB-0669`, `HB-0748`.
+- `HB-0123`: legacy generic BİLSEM İl Komisyonu wording; current directive separates provincial diagnosis commission and talent-area evaluation commissions → SPLIT/RENAME.
+- `HB-0502`: obsolete 2018-2019 guide publication + monthly report → SPLIT + OLD_YEAR_PARAMETER.
+- `HB-0500`: annual identification/placement guide dependent → YEAR_PARAMETER.
+- `HB-0503/HB-0586`: information-meeting workflow lacks exact durable universal clause → WITHHELD.
+- `HB-0669`: group screening placement + monthly reporting is compound → SPLIT.
+- `HB-0748`: monthly report exact current provision still required.
+- RAM recurring Özel Eğitim Değerlendirme Kurulu rows recovered, including `HB-0136`, `HB-0205`, `HB-0278`, `HB-0512`, `HB-0598`, `HB-0599`, `HB-0679`, `HB-0761`, `HB-0858`, `HB-0941`, `HB-0942`, `HB-1039`, `HB-1140` and analogous copies.
+- RAM legacy rows frequently combine evaluation + board meeting + report + director approval + fixed `13:30` + sometimes official-measure/year-end reporting. Fixed handbook time is **not** universal legal requirement; compound rows require atomic split before promotion.
+- Result: **464/2229 = %20,8165**; atom pool **5.115**.
 
 ## ARTICLE_VERIFIED değişmez kuralı
 Sayaç yalnız `workflow_id + güncel resmî kaynak + exact madde/fıkra + matching operational/applicability scope` birebir olduğunda artar.
@@ -45,25 +49,29 @@ Guardlar:
 - handbook/el kitabı yalnız provenance/evidence, son hukuki otorite değildir;
 - similarity candidate current exact maddeyle düzeltilmeden promote edilmez;
 - compound workflow `WITHHELD/SPLIT` edilir;
-- yıllık kılavuz/takvim/limit/eşik `YEAR_PARAMETER` olarak sürümlenir.
+- yıllık kılavuz/takvim/limit/eşik `YEAR_PARAMETER` olarak sürümlenir;
+- handbook sabit saatleri (örn. RAM 13:30) universal legal rule yapılmaz.
 
 ## Açık kritik kayıtlar
 - `HB-2227` — RAM Merkez Komisyon Kurulu current exact named authority bulunmadı.
 - `HB-2222` — legacy HEM organ adı current organlarla birebir değil.
 - `HB-2229` / `HB-2218` — Okul Sağlığı source/scope/composition reconciliation bekliyor.
-- `HB-2214/2215/2216` — BİLSEM/OAB applicability + duplicate reconciliation; recovered master artifacts üzerinden yeniden çöz.
+- `HB-2214/2215/2216` — BİLSEM/OAB applicability + duplicate reconciliation.
 - `HB-2210` — GSL/Spor Liseleri yetenek sınavı annual-guide dependent.
 - `HB-2212` — current BİLSEM Yönergesinde Sınıf/Şube Öğretmenler Kurulu yok.
 - `HB-2204/2205/2206` — title/scope exact reconciliation bekliyor.
+- RAM recurring monthly rows — atomic split required before count.
 
-## V43 önceliği
-1. Recovered durable master artifacts içinde BİLSEM current named organlarını ara ve exact retained workflow ID varsa bağla: Md26, Md28, Md30, Md31, Md32, Md34, Md35, Md40.
-2. Özel Eğitim Hizmetleri Kurulu Md39-42 için exact retained master ID ara.
-3. `HB-2214/2215/2216` BİLSEM OAB kayıtlarını HEM OAB çözümündeki yöntemle scope + duplicate audit yap.
-4. `HB-2227` için current exact RAM authority yoksa WITHHELD bırak; benzer isimle normalize etme.
-5. Okul Sağlığı kayıtlarını source-scope split çözülmeden promote etme.
-6. En az 100, tercihen 120 support atom; migration **0**.
+## V44 önceliği — yine büyük batch
+1. 200+ support atom hedefle.
+2. Recovered canonical master içinde BİLSEM current named organs için exact workflow ID ara: Md26, Md30, Md31, Md32, Md34, Md35, Md40.
+3. `HB-0748` aylık faaliyet raporu için current exact BİLSEM directive provision ara.
+4. RAM recurring rows için atomic decomposition map oluştur: BOARD_FORMATION / ASSESSMENT / DECISION / REPORT / APPROVAL / YEAR_END_REPORT / LOCAL_TIME_PARAMETER.
+5. Özel Eğitim Değerlendirme Kurulu current consolidated maddelerini bu atomik parçalara bağla; whole-row değil atomic exact doğrula.
+6. Özel Eğitim Hizmetleri Kurulu Md39-42 için retained master ID aramaya devam et.
+7. `HB-2214/2215/2216` BİLSEM OAB duplicate/scope audit.
+8. Migration **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V43** başlat.
+Kullanıcı `Devam` dediğinde soru sormadan **V44** başlat; tek mesajda mümkün olduğunca fazla iş yap.
