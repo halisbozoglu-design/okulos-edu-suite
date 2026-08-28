@@ -1,0 +1,19 @@
+{
+  "batch": "V45",
+  "date": "2026-08-28",
+  "master_workflow_count": 2229,
+  "article_verified_before": 467,
+  "article_verified_increment": 0,
+  "article_verified_after": 467,
+  "article_verified_percent": 20.9511,
+  "remaining_exact": 1762,
+  "atom_pool_before": 5415,
+  "support_atoms_added": 360,
+  "atom_pool_after": 5775,
+  "migration": 0,
+  "new_candidate_organs": 8,
+  "ram_parent": "HB-2228",
+  "ram_recurring_policy": "LEGACY_CALENDAR_INSTANCE_SPLIT",
+  "special_education_services_board": "NEW_CANDIDATE",
+  "next_batch": "V46"
+}
