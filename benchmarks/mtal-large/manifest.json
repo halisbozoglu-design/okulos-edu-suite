@@ -1,0 +1,12 @@
+{
+  "schema": "OKULOS_MTAL_LARGE_CORPUS_V1",
+  "seed_count": 7,
+  "wall_clock_budget_ms": 8000,
+  "provenance": "Synthetic MEB/MTAL structural stress data; contains no real institution, teacher or student records.",
+  "profiles": [
+    {"id":"mtal-large-mixed","classes":72,"assignments_per_class":3,"teachers":60,"courses":24,"periods":10,"workshop_course_mod":0,"shifted":false,"general_rooms":0,"workshop_rooms":0},
+    {"id":"mtal-large-workshops","classes":40,"assignments_per_class":3,"teachers":36,"courses":20,"periods":10,"workshop_course_mod":4,"shifted":false,"general_rooms":6,"workshop_rooms":3},
+    {"id":"mtal-large-shifted","classes":48,"assignments_per_class":3,"teachers":44,"courses":24,"periods":10,"workshop_course_mod":6,"shifted":true,"general_rooms":6,"workshop_rooms":3}
+  ],
+  "required_gates": ["feasible_rate_1","hard_0","unplaced_0","atomic_blocks","room_eligibility","deterministic_replay","runtime_budget"]
+}
