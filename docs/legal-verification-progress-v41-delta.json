@@ -1,0 +1,36 @@
+{
+  "updated_on":"2026-08-28",
+  "base_large_batch_atom_total":4635,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_OAB_RAM_BILSEM_ID_RECONCILIATION_100PLUS_V41",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v41.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://orgm.meb.gov.tr/meb_iys_dosyalar/2021_09/13145613_Ozel_EYitim_Hizmetleri_YonetmeliYi_son.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2193.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1532.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":4755,
+  "article_verified":{
+    "base":459,
+    "increment":0,
+    "result":459,
+    "master_total":2229,
+    "percent":20.5922,
+    "batch_doc":"docs/legal-article-verified-batch-v41.md",
+    "workflow_ids":[]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_ids":["HB-2223","HB-2224","HB-2225","HB-2226","HB-2227"],"reason":"exact retained title/source mapping could not be recovered reliably from repository code search; guessed promotion prohibited"},
+    {"workflow_id":"HB-2222","reason":"legacy HEM organ title mismatch"},
+    {"workflow_ids":["HB-2218","HB-2229"],"reason":"school-health source/scope conflict unresolved"},
+    {"workflow_ids":["HB-2214","HB-2215","HB-2216"],"reason":"OAB/BILSEM applicability + duplicate reconciliation required"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Recover the canonical master workflow inventory/source that generated HB- IDs, then bind current BILSEM Md26/Md28/Md40 and Special Education Services Board Md39-42 without inferred IDs. Continue 100+ atom legal deepening in parallel."
+  }
+}
