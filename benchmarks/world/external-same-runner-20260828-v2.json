@@ -1,0 +1,27 @@
+{
+  "schema":"OKULOS_EXTERNAL_SAME_RUNNER_EVIDENCE_V3",
+  "date":"2026-08-28",
+  "workflow_run_id":33162816626,
+  "head_sha":"d021ecc9c0dec183a2e73eb706cfdc9b26046c25",
+  "artifact_id":9683469554,
+  "artifact_name":"schedule-external-same-runner-d021ecc9c0dec183a2e73eb706cfdc9b26046c25",
+  "artifact_zip_sha256":"89175d9cfdfe73bb9a5bd5c69b3719cac93e88c137d1de63ac9802362c089edb",
+  "same_runner":true,
+  "profiles":["synthetic-small","synthetic-medium","synthetic-large","synthetic-dense","mtal","mesem"],
+  "seeds_per_profile":30,
+  "objective_comparable":false,
+  "superiority_claim_allowed":false,
+  "solvers":{
+    "Okulos":{"status":"RUN"},
+    "Timefold":{"version":"2.5.0","status":"RUN_COMPARABLE","runs":180,"comparable_objective":true,"objective_parity":true},
+    "UniTime":{"version":"cpsolver@3abbcaaf26d739d25e45c8e191b7ef94bc15cc26","status":"RUN_COMPARABLE","runs":180,"objective_mapping":"WORLD_CANONICAL_LEX_HARD_UNPLACED_MEDIUM_SOFT_INDEPENDENT_POSTSCORE_PARITY","comparable_objective":true,"objective_parity":true,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"deterministic_replay":true,"fresh_process_replay":true,"budget_pass":true},
+    "FET":{"version":"6.8.5","status":"RUN_COMMON_HARD","comparable_objective":false},
+    "aSc":{"status":"NOT_RUN","reason":"No documented repeatable headless/CLI timetable-generation entrypoint has been verified."}
+  },
+  "truth_boundary":[
+    "Timefold and UniTime independently matched canonical HARD -> unplaced -> MEDIUM -> SOFT on the 180-run corpus.",
+    "FET remains common-HARD only and is not objective-comparable.",
+    "aSc remains NOT_RUN.",
+    "Full cross-solver objective comparison is incomplete; no superiority claim is allowed."
+  ]
+}
