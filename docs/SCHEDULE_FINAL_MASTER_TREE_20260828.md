@@ -252,7 +252,7 @@ OKULOS_DERS_PROGRAMI_FINAL
 │   ├── ✅ 16.07 Production Web build
 │   ├── ✅ 16.08 TypeScript exact checks
 │   ├── ✅ 16.09 100+ seed stress benchmark
-│   ├── ⬜ 16.10 Impossible/near-impossible instance suite
+│   ├── ✅ 16.10 Impossible/near-impossible instance suite
 │   ├── ⬜ 16.11 Large MTAL stress corpus
 │   ├── ⬜ 16.12 Large MESEM stress corpus
 │   ├── ⬜ 16.13 Room/building extreme corpus
@@ -297,6 +297,15 @@ OKULOS_DERS_PROGRAMI_FINAL
 - Altı profil × 101 deterministik seed = 606 koşu; feasible rate `1`, HARD `0`, unplaced `0`, deterministic replay ve 8 saniye bütçesi tüm profillerde PASS.
 - Artifact SHA-256: `127b3a3b9d3ec87afd8489f54a0fae9396ad61d6e6a5292fad3e089bf9d58156`.
 - Bu OkulOS-native stres kapısıdır; dış solver üstünlük iddiası üretmez.
+
+## Güncel imkânsız/yakın-imkânsız vaka kanıtı
+
+- Makine-okunur kanıt: `benchmarks/world/impossible-near-impossible-20260829.json`.
+- Workflow `33213504020`, job `98991906525`, artifact `9702486381`, PASS.
+- Beş gerçek imkânsız vaka fail-closed reddedildi; dört sınırda uygulanabilir vaka eksiksiz çözüldü.
+- Native motor ve sabit OR-Tools `9.14.6206` CP-SAT oracle sınıflandırması 9/9 eşleşti; deterministik replay PASS, uygulanabilir vakalarda HARD `0` ve unplaced `0`.
+- Artifact SHA-256: `57c06bae1f87d817a9a3d2265e6c8445642e3269931b81ea005bf2137b29826a`.
+- Bu kapı yalnız doğruluk/fail-closed kanıtıdır; dış solver üstünlük iddiası üretmez.
 
 ## İlerleme raporlama kuralı
 

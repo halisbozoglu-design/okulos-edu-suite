@@ -10,6 +10,8 @@ on:
       - 'tools/schedule_impossible_cpsat_oracle.py'
       - 'tests/schedule-impossible-near-impossible.test.ts'
       - 'tests/fixtures/schedule-impossible-near-impossible.json'
+      - 'benchmarks/world/impossible-near-impossible-20260829.json'
+      - 'docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md'
       - '.github/workflows/schedule-impossible-near-impossible.yml'
   push:
     branches: [main]
@@ -19,6 +21,8 @@ on:
       - 'tools/schedule_impossible_cpsat_oracle.py'
       - 'tests/schedule-impossible-near-impossible.test.ts'
       - 'tests/fixtures/schedule-impossible-near-impossible.json'
+      - 'benchmarks/world/impossible-near-impossible-20260829.json'
+      - 'docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md'
       - '.github/workflows/schedule-impossible-near-impossible.yml'
 
 permissions:
