@@ -42,15 +42,18 @@ jobs:
         run: mvn -q -DskipTests package
       - name: Run real UniTime CPSolver world benchmark
         run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/unitime-raw.ndjson
-      - name: Fresh JVM deterministic replay
-        run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-replay-cases.ndjson /tmp/unitime-replay-raw.ndjson
+      - name: Fresh JVM replay A
+        run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-replay-cases.ndjson /tmp/unitime-replay-a.ndjson
+      - name: Fresh JVM replay B
+        run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-replay-cases.ndjson /tmp/unitime-replay-b.ndjson
       - name: Canonical post-score and fresh-process gate
-        run: bun tools/schedule_unitime_process_replay_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/unitime-raw.ndjson --replay /tmp/unitime-replay-raw.ndjson --out /tmp/schedule-unitime-world-benchmark.json --ci
+        run: bun tools/schedule_unitime_process_replay_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/unitime-raw.ndjson --replay-a /tmp/unitime-replay-a.ndjson --replay-b /tmp/unitime-replay-b.ndjson --out /tmp/schedule-unitime-world-benchmark.json --ci
       - name: Failure diagnostics
         if: failure()
         run: |
           tail -20 /tmp/unitime-raw.ndjson 2>/dev/null || true
-          cat /tmp/unitime-replay-raw.ndjson 2>/dev/null || true
+          cat /tmp/unitime-replay-a.ndjson 2>/dev/null || true
+          cat /tmp/unitime-replay-b.ndjson 2>/dev/null || true
           cat /tmp/schedule-unitime-world-benchmark.json 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         if: always()
@@ -59,6 +62,7 @@ jobs:
           path: |
             /tmp/schedule-unitime-world-benchmark.json
             /tmp/unitime-raw.ndjson
-            /tmp/unitime-replay-raw.ndjson
+            /tmp/unitime-replay-a.ndjson
+            /tmp/unitime-replay-b.ndjson
           if-no-files-found: ignore
           retention-days: 30
