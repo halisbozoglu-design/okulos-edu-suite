@@ -12,6 +12,7 @@
     "test:parsers": "bun test tests/schedule-import.test.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "desktop:build": "bunx @tauri-apps/cli@2.11.4 build --config desktop/src-tauri/tauri.conf.json",
     "vapid:generate": "node scripts/generate-vapid-keys.mjs"
   },
   "dependencies": {
