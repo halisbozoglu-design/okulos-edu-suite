@@ -1,0 +1,28 @@
+{
+  "batch": "V43",
+  "date": "2026-08-28",
+  "migration": 0,
+  "master_workflow_count": 2229,
+  "article_verified_before": 463,
+  "article_verified_increment": 1,
+  "article_verified_after": 464,
+  "article_verified_percent": 20.8165,
+  "remaining_exact": 1765,
+  "atom_pool_before": 4875,
+  "support_atoms_added": 240,
+  "atom_pool_after": 5115,
+  "newly_verified": [
+    {
+      "workflow_id": "HB-0501",
+      "title": "İl tanılama sınav komisyonunun kurulması",
+      "source": "Millî Eğitim Bakanlığı Bilim ve Sanat Merkezleri Yönergesi",
+      "article": "28",
+      "supporting_article": "29",
+      "official_url": "https://mevzuat.meb.gov.tr/dosyalar/2193.pdf"
+    }
+  ],
+  "recovered_master_crosswalk": "docs/legal-master-id-crosswalk-v43.md",
+  "withheld": ["HB-0123", "HB-0500", "HB-0502", "HB-0503", "HB-0586", "HB-0669", "HB-0748"],
+  "ram_guard": "Recurring Special Education Evaluation Board legacy rows require atomic split; fixed 13:30 handbook time is not a universal legal requirement.",
+  "next_batch": "V44"
+}
