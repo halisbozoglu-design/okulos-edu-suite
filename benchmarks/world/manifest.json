@@ -14,8 +14,8 @@
     {"id":"okulos","status":"BUILT_IN","adapter":"tools/schedule_world_benchmark.ts"},
     {"id":"cp-sat","status":"EXACT_GATE","adapter":"tools/schedule_cpsat_oracle.py"},
     {"id":"timefold","status":"RUN_COMPARABLE","adapter":"benchmarks/timefold-adapter","evidence":"benchmarks/world/external-same-runner-20260828.json","workflow_run_id":33128382948,"artifact_id":9669826383,"objective_mapping":"WORLD_CANONICAL_LEX_HARD_UNPLACED_MEDIUM_SOFT_INDEPENDENT_POSTSCORE_PARITY","comparable_objective":true,"objective_parity":true},
-    {"id":"unitime","status":"RUN_COMMON_HARD","adapter":"benchmarks/unitime-adapter/src/main/java/org/okulos/bench/UnitimeWorldBenchmark.java","evidence":"benchmarks/world/external-same-runner-20260828.json","comparable_objective":false},
-    {"id":"fet","status":"RUN_COMMON_HARD","adapter":"tools/schedule_fet_world_benchmark.ts","evidence":"benchmarks/world/external-same-runner-20260828.json","comparable_objective":false},
+    {"id":"unitime","status":"RUN_COMPARABLE","adapter":"benchmarks/unitime-adapter/src/main/java/org/okulos/bench/UnitimeWorldBenchmark.java","evidence":"benchmarks/world/external-same-runner-20260828-v2.json","workflow_run_id":33162816626,"artifact_id":9683469554,"objective_mapping":"WORLD_CANONICAL_LEX_HARD_UNPLACED_MEDIUM_SOFT_INDEPENDENT_POSTSCORE_PARITY","comparable_objective":true,"objective_parity":true},
+    {"id":"fet","status":"RUN_COMMON_HARD","adapter":"tools/schedule_fet_world_benchmark.ts","evidence":"benchmarks/world/external-same-runner-20260828-v2.json","comparable_objective":false},
     {"id":"asc","status":"NOT_RUN","adapter_contract":"benchmarks/world/README.md"}
   ],
   "required_metrics": ["feasible_rate","hard","unplaced","medium","soft","runtime_p50_ms","runtime_p95_ms","time_to_first_feasible_p50_ms","time_to_best_p50_ms","heap_delta_mb","deterministic_replay"]
