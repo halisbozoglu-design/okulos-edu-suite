@@ -12,6 +12,7 @@ The benchmark result is stored in the repository instead of relying on chat outp
 - Runner: `tools/schedule_world_benchmark.ts`
 - Regression contract: `tests/schedule-world-benchmark-package.test.ts`
 - CI also uploads per-commit benchmark artifacts.
+- The dedicated stress workflow runs six profiles × 101 deterministic seeds (606 cases) with `--seeds 101 --min-seeds 100` and retains its evidence artifact for 90 days.
 
 A new benchmark run must create a new versioned evidence file; historical evidence is not overwritten.
 
@@ -34,7 +35,7 @@ This evidence is deliberately `COMMON_HARD_ONLY`. External adapters are not prov
 - Record OS/runtime/CPU and solver version.
 - At least 30 deterministic seeds for stochastic solvers.
 - CP-SAT exact/bound evidence is reported separately from heuristic runtime rankings.
-- Report feasible rate, HARD, unplaced, objective vector, runtime p50/p95, time-to-first-feasible, time-to-best, memory and replay.
+- Report feasible rate, HARD, unplaced, objective vector, runtime p50/p95/max, over-budget count/seeds, time-to-first-feasible, time-to-best, memory and replay.
 - `RUN_COMMON_HARD` means the executable really ran but does not imply objective comparability.
 - `RUN_COMPARABLE` is required before an external engine can satisfy the superiority gate.
 - No superiority claim is allowed from `NOT_RUN`, incompatible, unsupported or objective-incomparable evidence; parity also remains blocked while any capability row is `PARTIAL`/`FAIL` or any competitor is `NOT_RUN`/`UNVERIFIED`.
