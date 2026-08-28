@@ -253,7 +253,7 @@ OKULOS_DERS_PROGRAMI_FINAL
 │   ├── ✅ 16.08 TypeScript exact checks
 │   ├── ✅ 16.09 100+ seed stress benchmark
 │   ├── ✅ 16.10 Impossible/near-impossible instance suite
-│   ├── ⬜ 16.11 Large MTAL stress corpus
+│   ├── ✅ 16.11 Large MTAL stress corpus
 │   ├── ⬜ 16.12 Large MESEM stress corpus
 │   ├── ⬜ 16.13 Room/building extreme corpus
 │   ├── ⬜ 16.14 Sectioning extreme corpus
@@ -306,6 +306,15 @@ OKULOS_DERS_PROGRAMI_FINAL
 - Native motor ve sabit OR-Tools `9.14.6206` CP-SAT oracle sınıflandırması 9/9 eşleşti; deterministik replay PASS, uygulanabilir vakalarda HARD `0` ve unplaced `0`.
 - Artifact SHA-256: `57c06bae1f87d817a9a3d2265e6c8445642e3269931b81ea005bf2137b29826a`.
 - Bu kapı yalnız doğruluk/fail-closed kanıtıdır; dış solver üstünlük iddiası üretmez.
+
+## Güncel büyük MTAL corpus kanıtı
+
+- Manifest: `benchmarks/mtal-large/manifest.json`; makine-okunur CI kanıtı: `benchmarks/mtal-large/evidence-20260829.json`.
+- Workflow `33215378532`, job `98997696733`, artifact `9703162270`, PASS.
+- Üç yapısal profil × yedi deterministik seed = 21 gerçek çözüm; 216-assignment karma MTAL, atölye blok/oda uygunluğu ve vardiya/izinli-saat profilleri kapsandı.
+- 21/21 feasible; HARD `0`, unplaced `0`, atomik blok, oda türü/özellik, deterministik replay ve 8 saniye bütçesi PASS.
+- GitHub p95 süreleri `1819 / 1781 / 1415 ms`; artifact SHA-256 `165cf10bb917d5472150301b95510a70d5f54ca3c0743f0a8eca76c33605c0d5`.
+- Corpus açıkça sentetik MEB/MTAL yapısal veridir; gerçek kurum, öğretmen veya öğrenci kaydı içerdiği iddia edilmez.
 
 ## İlerleme raporlama kuralı
 

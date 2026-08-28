@@ -1,0 +1,36 @@
+{
+  "schema": "OKULOS_MTAL_LARGE_EVIDENCE_V1",
+  "generated_at": "2026-08-28T22:06:43.584Z",
+  "source": {
+    "workflow_run_id": 33215378532,
+    "job_id": 98997696733,
+    "artifact_id": 9703162270,
+    "artifact_sha256": "165cf10bb917d5472150301b95510a70d5f54ca3c0743f0a8eca76c33605c0d5",
+    "head_sha": "97621370d9d3915a1021e54a3292af70b9ddd24a",
+    "retention_days": 90
+  },
+  "provenance": "Synthetic MEB/MTAL structural stress data; contains no real institution, teacher or student records.",
+  "seed_count": 7,
+  "wall_clock_budget_ms": 8000,
+  "summary": {
+    "profiles": 3,
+    "runs": 21,
+    "feasible": 21,
+    "hard_max": 0,
+    "unplaced_max": 0,
+    "atomic_blocks": true,
+    "room_eligibility": true,
+    "deterministic_replay": true,
+    "budget_pass": true
+  },
+  "results": [
+    {"profile_id":"mtal-large-mixed","runs":7,"assignments":216,"scheduled_rows":216,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"runtime_p50_ms":1758,"runtime_p95_ms":1819,"runtime_max_ms":1819,"pass":true},
+    {"profile_id":"mtal-large-workshops","runs":7,"assignments":120,"scheduled_rows":150,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"runtime_p50_ms":1727,"runtime_p95_ms":1781,"runtime_max_ms":1781,"pass":true},
+    {"profile_id":"mtal-large-shifted","runs":7,"assignments":144,"scheduled_rows":168,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"runtime_p50_ms":1223,"runtime_p95_ms":1415,"runtime_max_ms":1415,"pass":true}
+  ],
+  "claims": {
+    "structural_mtal_stress": true,
+    "real_school_dataset": false,
+    "external_solver_superiority": false
+  }
+}
