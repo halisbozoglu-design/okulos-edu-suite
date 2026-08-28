@@ -32,8 +32,17 @@ jobs:
             benchmarks/timefold-adapter/pom.xml
             benchmarks/unitime-adapter/pom.xml
       - run: bun install --frozen-lockfile
-      - name: Install FET
-        run: sudo apt-get update -qq && sudo apt-get install -y fet && fet-cl --version --outputdir=/tmp/fet-version
+      - name: Install official FET 7.10.2
+        run: |
+          curl -fsSL https://lalescu.ro/liviu/fet/download/bin/fet-7.10.2-bin.tar.xz -o /tmp/fet-7.10.2-bin.tar.xz
+          echo '983aef889f6afe8ace7fb1bd79e1bd82879a5f9291e5f052e83325336f74cc98  /tmp/fet-7.10.2-bin.tar.xz' | sha256sum -c -
+          sudo mkdir -p /opt/fet-7.10.2
+          sudo tar -xJf /tmp/fet-7.10.2-bin.tar.xz -C /opt/fet-7.10.2 --strip-components=1
+          FET_CL="$(find /opt/fet-7.10.2 -type f -name fet-cl -perm -u+x | head -1)"
+          test -n "$FET_CL"
+          printf '#!/bin/sh\nexec "%s" "$@"\n' "$FET_CL" | sudo tee /usr/local/bin/fet-cl >/dev/null
+          sudo chmod +x /usr/local/bin/fet-cl
+          fet-cl --version --outputdir=/tmp/fet-version
       - name: Build Timefold adapter
         working-directory: benchmarks/timefold-adapter
         run: mvn -q -DskipTests package
@@ -50,6 +59,8 @@ jobs:
       - name: Run OkulOS
         run: bun tools/schedule_world_benchmark.ts --out /tmp/okulos-world.json
       - name: Run FET
+        env:
+          OKULOS_FET_BENCHMARK_VERSION: '7.10.2'
         run: bun tools/schedule_fet_world_benchmark.ts --ci --out /tmp/fet-world.json
       - name: Run Timefold
         run: java -jar benchmarks/timefold-adapter/target/timefold-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/timefold-raw.ndjson
