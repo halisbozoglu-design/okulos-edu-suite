@@ -4,5 +4,5 @@ import {evaluateParityGate} from "../tools/schedule_parity_gate";
 describe("final parity/superiority truth gate",()=>{
  test("unresolved capability rows block parity",async()=>{const r=await evaluateParityGate();expect(r.parity_pass).toBe(false);expect(r.unresolved.some(x=>x.id==="competitor-benchmark"&&x.okulos==="PARTIAL")).toBe(true)});
  test("only genuinely unrun competitors are reported as not run",async()=>{const r=await evaluateParityGate();expect(r.competitor_not_run.map(x=>x.engine)).toEqual(["aSc"]);expect(r.competitor_not_run.some(x=>["Timefold","UniTime","FET"].includes(x.engine))).toBe(false)});
- test("remaining non-comparable evidence cannot unlock superiority",async()=>{const r=await evaluateParityGate();expect(r.superiority_claim_allowed).toBe(false);expect(r.competitor_not_comparable.map(x=>x.engine)).toEqual(expect.arrayContaining(["UniTime","FET","aSc"]));expect(r.competitor_not_comparable.some(x=>x.engine==="Timefold")).toBe(false)});
+ test("remaining non-comparable evidence cannot unlock superiority",async()=>{const r=await evaluateParityGate();expect(r.superiority_claim_allowed).toBe(false);expect(r.competitor_not_comparable.map(x=>x.engine)).toEqual(expect.arrayContaining(["FET","aSc"]));expect(r.competitor_not_comparable.some(x=>["Timefold","UniTime"].includes(x.engine))).toBe(false)});
 });
