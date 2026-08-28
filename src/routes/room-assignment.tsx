@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AlertTriangle, Building2, CheckCircle2, RefreshCw, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Button } from "@/components/ui/button";
+import { explainScheduleRoomIssue } from "@/lib/schedule-room-issue-explainer";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/room-assignment")({ head: () => ({ meta: [{ title: "Derslik Atama — OkulOS" }] }), component: RoomAssignment });
@@ -82,11 +83,12 @@ function RoomAssignment() {
         {st ? <div className="mt-3 grid grid-cols-5 gap-2 text-center"><div className="rounded-lg bg-muted/50 p-2"><p className="text-lg font-semibold">{st.assigned_rows}</p><p className="text-[10px] text-muted-foreground">Derslikli</p></div><div className="rounded-lg bg-muted/50 p-2"><p className="text-lg font-semibold">{st.unassigned_rows}</p><p className="text-[10px] text-muted-foreground">Dersliksiz</p></div><div className="rounded-lg bg-muted/50 p-2"><p className="text-lg font-semibold">{st.room_issue_count}</p><p className="text-[10px] text-muted-foreground">Atama sorunu</p></div><div className="rounded-lg bg-muted/50 p-2"><p className="text-lg font-semibold">{sm?.hard ?? "—"}</p><p className="text-[10px] text-muted-foreground">Room HARD</p></div><div className="rounded-lg bg-muted/50 p-2"><p className="text-lg font-semibold">{sm?.soft ?? "—"}</p><p className="text-[10px] text-muted-foreground">Room SOFT</p></div></div> : null}
         {stale ? <p className="mt-3 rounded-lg border border-red-200 bg-red-50 p-2 text-xs text-red-800">Program girdileri değişmiş veya senaryo revision bilgisi doğrulanamamış. Derslik ataması için senaryoyu yeniden üretin.</p> : null}
         {st && !st.rooms_configured ? <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">Aktif derslik tanımı yok. Önce derslik envanterini girin.</p> : null}
-        {si.length ? <div className="mt-3 max-h-36 overflow-auto rounded-lg border border-red-200 bg-red-50 p-2 text-xs text-red-800">{si.map((x) => <div key={x.id} className="py-1">{x.schedule_scenario_rows?.class_name} · {x.schedule_scenario_rows?.subject} · {x.detail ?? x.reason}</div>)}</div> : null}
+        {si.length ? <div className="mt-3 max-h-52 space-y-2 overflow-auto rounded-lg border border-red-200 bg-red-50 p-2 text-xs text-red-900">{si.map((x) => { const ex=explainScheduleRoomIssue(x.reason,x.detail); return <div key={x.id} className="rounded-md border border-red-200 bg-white/70 p-2"><div className="font-semibold">{x.schedule_scenario_rows?.class_name} · {x.schedule_scenario_rows?.subject} · {ex.title}</div><div className="mt-1 text-red-800">{ex.action}</div><div className="mt-1 text-[10px] text-muted-foreground">Canonical neden: {x.reason}{x.detail?` · ${x.detail}`:""}</div></div> })}</div> : null}
         <div className="mt-3 grid gap-2 sm:grid-cols-2"><Button className="gap-2" onClick={() => void assign(s.id, false)} disabled={busy === s.id || Boolean(loadError) || stale || !st?.rooms_configured}><Sparkles className="size-4"/>{busy === s.id ? "Çalışıyor…" : "Eksik Derslikleri Ata"}</Button><Button variant="outline" className="gap-2" onClick={() => void assign(s.id, true)} disabled={busy === s.id || Boolean(loadError) || stale || !st?.rooms_configured}><RefreshCw className="size-4"/>Derslikleri Yeniden Optimize Et</Button></div>
       </section>;
     })}</div>
     {!scenarios.length && !loadError ? <div className="mt-4 rounded-xl border bg-muted/30 p-6 text-center text-sm text-muted-foreground">Önce Program Çözücü ile güncel bir senaryo üretin.</div> : null}
+    <p className="mt-4 rounded-xl border bg-muted/30 p-3 text-xs"><b>Otorite sınırı:</b> Bu açıklamalar yalnız canonical room issue nedenini kullanıcı diline çevirir. Derslik uygunluğu ve HARD kararını server room authority verir.</p>
     <Button variant="ghost" className="mt-4 gap-2" onClick={() => void load()}><RefreshCw className="size-4"/>Yenile</Button>
   </AppShell>;
 }
