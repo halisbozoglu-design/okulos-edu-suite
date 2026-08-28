@@ -1,0 +1,6 @@
+export type DesktopComputeBackend='CPU_ONLY'|'CPU_GPU_HYBRID';
+export type DesktopSolverEffort='FAST'|'BALANCED'|'DEEP';
+export type DesktopComputeCapabilities={logicalCpuCount:number;gpuAvailable:boolean;gpuAdapterName?:string|null;memoryGb?:number|null};
+export type DesktopComputePlan={backend:DesktopComputeBackend;cpuWorkers:number;gpuCandidateBatching:boolean;gpuObjectiveAuthority:false;compiledConstraintDispatch:true;portfolioSearch:true;effort:DesktopSolverEffort};
+export function buildDesktopComputePlan(c:DesktopComputeCapabilities,effort:DesktopSolverEffort='BALANCED'):DesktopComputePlan{const cpus=Math.max(1,Math.floor(c.logicalCpuCount||1));const reserve=cpus>=8?2:1;const cap=effort==='FAST'?Math.min(2,cpus):effort==='BALANCED'?Math.min(6,Math.max(1,cpus-reserve)):Math.max(1,cpus-reserve);return{backend:c.gpuAvailable?'CPU_GPU_HYBRID':'CPU_ONLY',cpuWorkers:cap,gpuCandidateBatching:c.gpuAvailable,gpuObjectiveAuthority:false,compiledConstraintDispatch:true,portfolioSearch:true,effort}}
+export const ASC_INSPIRED_DESKTOP_ENGINE={cpuBranching:true,backtrackingAndRepair:true,failFirst:true,ejectionChains:true,lns:true,tabu:true,simulatedAnnealing:true,vnd:true,parallelPortfolio:true,compiledConstraintDispatch:true,gpuRole:'candidate-batch-evaluation-only',canonicalObjectiveAuthority:'CPU_CANONICAL_SCORER'}as const;
