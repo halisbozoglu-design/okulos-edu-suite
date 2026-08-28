@@ -1,0 +1,48 @@
+name: UniTime fresh-JVM determinism probe
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/world/**'
+      - 'benchmarks/unitime-adapter/**'
+      - 'tools/schedule_world_export_cases.ts'
+      - 'tools/schedule_unitime_world_benchmark.ts'
+      - 'tools/schedule_unitime_process_replay_benchmark.ts'
+      - '.github/workflows/schedule-unitime-determinism-probe.yml'
+permissions:
+  contents: read
+jobs:
+  determinism:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: bun install --frozen-lockfile
+      - name: Build pinned UniTime CPSolver
+        run: |
+          git clone -q https://github.com/UniTime/cpsolver.git /tmp/cpsolver
+          git -C /tmp/cpsolver checkout -q 3abbcaaf26d739d25e45c8e191b7ef94bc15cc26
+          mvn -q -f /tmp/cpsolver/pom.xml -DskipTests -Dmaven.javadoc.skip=true install
+      - name: Build adapter
+        working-directory: benchmarks/unitime-adapter
+        run: mvn -q -DskipTests package
+      - name: Export six deterministic cases
+        run: |
+          bun tools/schedule_world_export_cases.ts --out /tmp/all.ndjson
+          grep '"seed":101' /tmp/all.ndjson > /tmp/replay-cases.ndjson
+          test "$(wc -l < /tmp/replay-cases.ndjson)" -eq 6
+      - name: Fresh JVM run A
+        run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/replay-cases.ndjson /tmp/a.ndjson
+      - name: Fresh JVM run B
+        run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/replay-cases.ndjson /tmp/b.ndjson
+      - name: Exact placement and objective gate
+        shell: bash
+        run: |
+          bun -e 'import{readFile}from"node:fs/promises";const p=async f=>(await readFile(f,"utf8")).trim().split(/\n+/).map(JSON.parse),a=await p("/tmp/a.ndjson"),b=await p("/tmp/b.ndjson"),sig=r=>JSON.stringify([...(r.rows??[])].map(x=>`${x.assignment_id}@${x.weekday}:${x.period}`).sort());if(a.length!==6||b.length!==6)throw Error("UNITIME_REPLAY_CASE_COUNT");for(let i=0;i<6;i++){const x=a[i],y=b[i];if(x.profile_id!==y.profile_id||x.seed!==y.seed||x.hard!==y.hard||x.unplaced!==y.unplaced||x.medium!==y.medium||x.soft!==y.soft||sig(x)!==sig(y))throw Error(`UNITIME_FRESH_JVM_NONDETERMINISTIC:${x.profile_id}`)}console.log("UNITIME_FRESH_JVM_DETERMINISTIC",a.map(x=>x.profile_id).join(","))'
