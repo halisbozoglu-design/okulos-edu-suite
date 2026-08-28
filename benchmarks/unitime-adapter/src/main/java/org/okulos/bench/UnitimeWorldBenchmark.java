@@ -14,6 +14,7 @@ import org.cpsolver.ifs.solution.Solution;
 import org.cpsolver.ifs.solution.SolutionComparator;
 import org.cpsolver.ifs.solver.Solver;
 import org.cpsolver.ifs.util.DataProperties;
+import org.cpsolver.ifs.util.ToolBox;
 
 import java.io.BufferedWriter;
 import java.nio.file.Files;
@@ -23,6 +24,7 @@ import java.util.*;
 public final class UnitimeWorldBenchmark {
   private static final ObjectMapper M = new ObjectMapper();
   private static final String VERSION = "UniTime/CPSolver@3abbcaaf26d739d25e45c8e191b7ef94bc15cc26";
+  private static final int DETERMINISTIC_MAX_ITERS = 100_000;
 
   static final class TeacherLoadConstraint extends Constraint<Activity, Location> {
     final int periods, maxDaily, maxConsecutive;
@@ -141,12 +143,14 @@ public final class UnitimeWorldBenchmark {
 
   static ObjectNode run(JsonNode c, boolean replay) throws Exception {
     long seed=c.get("seed").asLong(),budget=c.get("wall_clock_budget_ms").asLong();
+    ToolBox.setSeed(seed);
     long mem0=used(),t0=System.nanoTime();Built b=build(c);
     DataProperties cfg=new DataProperties();
     cfg.setProperty("General.Seed",Long.toString(seed));
     cfg.setProperty("Termination.Class","org.cpsolver.ifs.termination.GeneralTerminationCondition");
     cfg.setProperty("Termination.StopWhenComplete","false");
-    cfg.setProperty("Termination.TimeOut",Double.toString(budget/1000.0));
+    cfg.setProperty("Termination.MaxIters",Integer.toString(DETERMINISTIC_MAX_ITERS));
+    cfg.setProperty("Termination.TimeOut","-1");
     cfg.setProperty("Comparator.Class","org.okulos.bench.UnitimeWorldBenchmark$LexComparator");
     cfg.setProperty("Value.Class","org.cpsolver.ifs.heuristics.GeneralValueSelection");
     cfg.setProperty("Value.WeightConflicts","1");
@@ -157,7 +161,7 @@ public final class UnitimeWorldBenchmark {
     long ms=Math.round((System.nanoTime()-t0)/1_000_000.0);long[] objective=b.model.objective(asg,false);int unplaced=(int)objective[0];ArrayNode rows=M.createArrayNode();
     var signature=new ArrayList<String>();for(var e:b.activities.entrySet()){Location x=asg.getValue(e.getValue());if(x!=null){int day=x.getSlot()/c.get("problem").get("periods").asInt()+1,period=x.getSlot()%c.get("problem").get("periods").asInt()+1;ObjectNode q=M.createObjectNode();q.put("assignment_id",e.getKey());q.put("weekday",day);q.put("period",period);rows.add(q);signature.add(e.getKey()+"@"+day+":"+period);}}
     Collections.sort(signature);boolean deterministic=true;if(replay){ObjectNode second=run(c,false);var s2=new ArrayList<String>();for(JsonNode q:second.withArray("rows"))s2.add(q.get("assignment_id").asText()+"@"+q.get("weekday").asInt()+":"+q.get("period").asInt());Collections.sort(s2);deterministic=signature.equals(s2)&&second.path("medium").asLong()==objective[1]&&second.path("soft").asLong()==objective[2];}
-    ObjectNode z=M.createObjectNode();z.put("solver_id","unitime-cpsolver");z.put("solver_version",VERSION);z.put("mapping","WORLD_CANONICAL_LEX_HARD_UNPLACED_MEDIUM_SOFT");z.put("comparable_objective",true);z.put("input_hash",c.get("input_hash").asText());z.put("profile_id",c.get("profile_id").asText());z.put("seed",seed);z.put("status",ms>budget+1500?"TIMEOUT":"COMPLETED");z.put("feasible",unplaced==0);z.put("hard",0);z.put("unplaced",unplaced);z.put("medium",objective[1]);z.put("soft",objective[2]);z.put("runtime_ms",ms);z.put("time_to_first_feasible_ms",unplaced==0?ms:-1);z.put("time_to_best_ms",ms);z.put("peak_memory_mb",Math.max(0,(used()-mem0)/1048576));z.put("deterministic_replay",deterministic);z.set("rows",rows);return z;
+    ObjectNode z=M.createObjectNode();z.put("solver_id","unitime-cpsolver");z.put("solver_version",VERSION);z.put("mapping","WORLD_CANONICAL_LEX_HARD_UNPLACED_MEDIUM_SOFT_DETERMINISTIC_ITERS");z.put("comparable_objective",true);z.put("input_hash",c.get("input_hash").asText());z.put("profile_id",c.get("profile_id").asText());z.put("seed",seed);z.put("status",ms>budget+1500?"TIMEOUT":"COMPLETED");z.put("feasible",unplaced==0);z.put("hard",0);z.put("unplaced",unplaced);z.put("medium",objective[1]);z.put("soft",objective[2]);z.put("runtime_ms",ms);z.put("time_to_first_feasible_ms",unplaced==0?ms:-1);z.put("time_to_best_ms",ms);z.put("peak_memory_mb",Math.max(0,(used()-mem0)/1048576));z.put("deterministic_replay",deterministic);z.put("max_iterations",DETERMINISTIC_MAX_ITERS);z.set("rows",rows);return z;
   }
   static long used(){Runtime r=Runtime.getRuntime();return r.totalMemory()-r.freeMemory();}
   public static void main(String[] args)throws Exception{if(args.length<2)throw new IllegalArgumentException("usage: <cases.ndjson> <out.ndjson>");Set<String> first=new HashSet<>();try(var in=Files.lines(Path.of(args[0]));BufferedWriter out=Files.newBufferedWriter(Path.of(args[1]))){for(var it=in.iterator();it.hasNext();){JsonNode c=M.readTree(it.next());ObjectNode r;try{r=run(c,first.add(c.get("profile_id").asText()));}catch(Exception e){r=M.createObjectNode();r.put("solver_id","unitime-cpsolver");r.put("input_hash",c.get("input_hash").asText());r.put("profile_id",c.get("profile_id").asText());r.put("seed",c.get("seed").asLong());r.put("status","ERROR");r.put("feasible",false);r.put("comparable_objective",false);r.set("diagnostics",M.createObjectNode().put("error",e.toString()));}out.write(M.writeValueAsString(r));out.newLine();out.flush();}}
