@@ -1,0 +1,44 @@
+{
+  "schema": "OKULOS_IMPOSSIBLE_NEAR_IMPOSSIBLE_EVIDENCE_V1",
+  "generated_at": "2026-08-28T21:39:41.651Z",
+  "source": {
+    "workflow_run_id": 33213504020,
+    "job_id": 98991906525,
+    "artifact_id": 9702486381,
+    "artifact_sha256": "57c06bae1f87d817a9a3d2265e6c8445642e3269931b81ea005bf2137b29826a",
+    "head_sha": "f220de7c8480413fef15a7cc9f0a5f76fd401774",
+    "retention_days": 90
+  },
+  "native": {
+    "cases": 9,
+    "expected_infeasible": 5,
+    "expected_feasible": 4,
+    "passed": 9,
+    "failed": 0,
+    "hard_leakage": 0,
+    "deterministic": true,
+    "runtime_max_ms": 20.087
+  },
+  "cp_sat_oracle": {
+    "version": "9.14.6206",
+    "cases": 9,
+    "passed": 9,
+    "classification_parity": true
+  },
+  "cases": [
+    {"id":"TEACHER_UNAVAILABLE_DOMAIN","expected":"INFEASIBLE","native":"INFEASIBLE","cp_sat":"INFEASIBLE","pass":true},
+    {"id":"CLASS_CAPACITY_OVERLOAD","expected":"INFEASIBLE","native":"INFEASIBLE","cp_sat":"INFEASIBLE","pass":true},
+    {"id":"TEACHER_CAPACITY_OVERLOAD","expected":"INFEASIBLE","native":"INFEASIBLE","cp_sat":"INFEASIBLE","pass":true},
+    {"id":"COURSE_DAILY_LIMIT","expected":"INFEASIBLE","native":"INFEASIBLE","cp_sat":"INFEASIBLE","pass":true},
+    {"id":"MAX_CONSECUTIVE_NO_BREAK","expected":"INFEASIBLE","native":"INFEASIBLE","cp_sat":"INFEASIBLE","pass":true},
+    {"id":"EXACT_CLASS_CAPACITY","expected":"FEASIBLE","native":"FEASIBLE","cp_sat":"FEASIBLE","pass":true},
+    {"id":"EXACT_TEACHER_DAILY_CAPACITY","expected":"FEASIBLE","native":"FEASIBLE","cp_sat":"FEASIBLE","pass":true},
+    {"id":"TEACHER_BREAK_BOUNDARY","expected":"FEASIBLE","native":"FEASIBLE","cp_sat":"FEASIBLE","pass":true},
+    {"id":"LOCKED_BREAK_BOUNDARY","expected":"FEASIBLE","native":"FEASIBLE","cp_sat":"FEASIBLE","pass":true}
+  ],
+  "claims": {
+    "fail_closed": true,
+    "boundary_false_infeasible": false,
+    "external_solver_superiority": false
+  }
+}
