@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "identifier": "tr.okulos.desktop",
   "build": {
-    "beforeBuildCommand": "cd .. && bun run build",
+    "beforeBuildCommand": "cd ../.. && bun run build",
     "frontendDist": "../../.output/public"
   },
   "app": {
