@@ -1,0 +1,17 @@
+{
+  "batch": "V46",
+  "date": "2026-08-28",
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_added": 0,
+  "article_verified_after": 467,
+  "article_verified_ratio_pct": 20.9511,
+  "remaining_exact": 1762,
+  "support_atoms_added": 420,
+  "atom_pool_before": 5775,
+  "atom_pool_after": 6195,
+  "migration": 0,
+  "primary_change": "Recovered and adopted current 2026 Counseling Measure Teblig authority; reconciled RAM monthly compound/duplicate records without forced whole-row promotion.",
+  "withheld": ["HB-0137","HB-0513","HB-0762","HB-0943","HB-0944","HB-0206","HB-0600","HB-0763","HB-1040","HB-0514"],
+  "guards": ["TEDBIR_SCOPE_REVIEW","SPLIT_REQUIRED","DUPLICATE_EXTRACTION_REVIEW","CALENDAR_INSTANCE_NOT_LEGAL_PARENT","LOCAL_TIME_PARAMETER"]
+}
