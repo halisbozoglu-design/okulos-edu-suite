@@ -1,0 +1,224 @@
+{
+  "schema": "OKULOS_EXTERNAL_EVIDENCE_MANIFEST_V1",
+  "generated_at": "2026-08-28T11:55:15.482Z",
+  "canonical_head_sha": "633353652c9130cab1bc11226d5929fab5378d2c",
+  "authority": {
+    "production_solver": "OKULOS_NATIVE",
+    "objective_order": [
+      "HARD",
+      "UNPLACED",
+      "MEDIUM",
+      "SOFT"
+    ],
+    "publication_authority": "SERVER_CANONICAL_VALIDATOR",
+    "external_solvers_role": "BENCHMARK_AND_VERIFICATION_ONLY"
+  },
+  "unitime_full_gate": {
+    "workflow_run_id": 33166069959,
+    "workflow_url": "https://github.com/halisbozoglu-design/okulos-edu-suite/actions/runs/33166069959",
+    "artifact_id": 9684084314,
+    "artifact_name": "schedule-unitime-world-benchmark-633353652c9130cab1bc11226d5929fab5378d2c",
+    "artifact_sha256": "cec4b9eb53d96bb89d835c4bee10580e197f389f87fa814a57ea98160ba57889",
+    "solver_version": "cpsolver@3abbcaaf26d739d25e45c8e191b7ef94bc15cc26",
+    "status": "RUN_COMPARABLE",
+    "objective_parity": true,
+    "deterministic_replay": true,
+    "total_runs": 180,
+    "profiles": [
+      {
+        "profile_id": "synthetic-small",
+        "runs": 30,
+        "feasible_rate": 1,
+        "hard_max": 0,
+        "unplaced_max": 0,
+        "medium_p50": 0,
+        "soft_p50": 0,
+        "runtime_p50_ms": 2586,
+        "runtime_p95_ms": 2609,
+        "budget_pass": true
+      },
+      {
+        "profile_id": "synthetic-medium",
+        "runs": 30,
+        "feasible_rate": 1,
+        "hard_max": 0,
+        "unplaced_max": 0,
+        "medium_p50": 0,
+        "soft_p50": 38,
+        "runtime_p50_ms": 3998,
+        "runtime_p95_ms": 4016,
+        "budget_pass": true
+      },
+      {
+        "profile_id": "synthetic-large",
+        "runs": 30,
+        "feasible_rate": 1,
+        "hard_max": 0,
+        "unplaced_max": 0,
+        "medium_p50": 0,
+        "soft_p50": 282,
+        "runtime_p50_ms": 6464,
+        "runtime_p95_ms": 6598,
+        "budget_pass": true
+      },
+      {
+        "profile_id": "synthetic-dense",
+        "runs": 30,
+        "feasible_rate": 1,
+        "hard_max": 0,
+        "unplaced_max": 0,
+        "medium_p50": 0,
+        "soft_p50": 302,
+        "runtime_p50_ms": 6981,
+        "runtime_p95_ms": 7044,
+        "budget_pass": true
+      },
+      {
+        "profile_id": "mtal",
+        "runs": 30,
+        "feasible_rate": 1,
+        "hard_max": 0,
+        "unplaced_max": 0,
+        "medium_p50": 0,
+        "soft_p50": 348,
+        "runtime_p50_ms": 6866,
+        "runtime_p95_ms": 6896,
+        "budget_pass": true
+      },
+      {
+        "profile_id": "mesem",
+        "runs": 30,
+        "feasible_rate": 1,
+        "hard_max": 0,
+        "unplaced_max": 0,
+        "medium_p50": 0,
+        "soft_p50": 78,
+        "runtime_p50_ms": 4916,
+        "runtime_p95_ms": 4944,
+        "budget_pass": true
+      }
+    ]
+  },
+  "same_runner_gate": {
+    "workflow_run_id": 33166069957,
+    "workflow_url": "https://github.com/halisbozoglu-design/okulos-edu-suite/actions/runs/33166069957",
+    "artifact_id": 9684775122,
+    "artifact_name": "schedule-external-same-runner-633353652c9130cab1bc11226d5929fab5378d2c",
+    "artifact_sha256": "3b04206b422d673b0e5a99e4a6762b268e7ebb2763f412a03658d1dc02db1f40",
+    "same_runner": true,
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "logical_cpus": 4,
+    "statuses": {
+      "okulos": "RUN",
+      "fet": "RUN_COMMON_HARD",
+      "timefold": "RUN_COMPARABLE",
+      "unitime": "RUN_COMPARABLE"
+    },
+    "comparable": {
+      "fet": false,
+      "timefold": true,
+      "unitime": true
+    },
+    "objective_comparable": false,
+    "superiority_claim_allowed": false,
+    "all_profiles_common_hard_parity": true,
+    "profiles": [
+      {
+        "profile_id": "synthetic-small",
+        "p95_ms": {
+          "okulos": 44,
+          "fet": 23,
+          "timefold": 8026,
+          "unitime": 2797
+        },
+        "soft_p50": {
+          "okulos": 0,
+          "fet": 52,
+          "timefold": 0,
+          "unitime": 0
+        }
+      },
+      {
+        "profile_id": "synthetic-medium",
+        "p95_ms": {
+          "okulos": 103,
+          "fet": 41,
+          "timefold": 8010,
+          "unitime": 4267
+        },
+        "soft_p50": {
+          "okulos": 0,
+          "fet": 234,
+          "timefold": 0,
+          "unitime": 38
+        }
+      },
+      {
+        "profile_id": "synthetic-large",
+        "p95_ms": {
+          "okulos": 539,
+          "fet": 97,
+          "timefold": 8011,
+          "unitime": 7081
+        },
+        "soft_p50": {
+          "okulos": 8,
+          "fet": 680,
+          "timefold": 0,
+          "unitime": 282
+        }
+      },
+      {
+        "profile_id": "synthetic-dense",
+        "p95_ms": {
+          "okulos": 361,
+          "fet": 63,
+          "timefold": 8008,
+          "unitime": 7303
+        },
+        "soft_p50": {
+          "okulos": 32,
+          "fet": 608,
+          "timefold": 0,
+          "unitime": 302
+        }
+      },
+      {
+        "profile_id": "mtal",
+        "p95_ms": {
+          "okulos": 331,
+          "fet": 68,
+          "timefold": 8008,
+          "unitime": 7085
+        },
+        "soft_p50": {
+          "okulos": 16,
+          "fet": 828,
+          "timefold": 0,
+          "unitime": 348
+        }
+      },
+      {
+        "profile_id": "mesem",
+        "p95_ms": {
+          "okulos": 127,
+          "fet": 52,
+          "timefold": 8006,
+          "unitime": 5004
+        },
+        "soft_p50": {
+          "okulos": 0,
+          "fet": 308,
+          "timefold": 0,
+          "unitime": 78
+        }
+      }
+    ]
+  },
+  "claim_boundary": [
+    "Timefold and UniTime independently match the canonical HARD→unplaced→MEDIUM→SOFT objective on this corpus.",
+    "FET remains a common-HARD mapping, so full cross-solver objective comparison is incomplete.",
+    "aSc has no reproducible real GUI run in this evidence set.",
+    "No superiority claim is allowed from this manifest."
+  ]
+}
