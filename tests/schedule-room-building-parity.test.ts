@@ -45,4 +45,9 @@ describe("room/building parity contract",()=>{
     expect(assignmentUi).toContain("get_schedule_scenario_room_summary_v2");
     expect(assignmentUi).toContain("optimize_classrooms_to_scenario_v2");
   });
+  test("room issues are translated for operators without replacing server HARD authority",()=>{
+    expect(assignmentUi).toContain("explainScheduleRoomIssue");
+    expect(assignmentUi).toContain("Canonical neden:");
+    expect(assignmentUi).toContain("Derslik uygunluğu ve HARD kararını server room authority verir");
+  });
 });
