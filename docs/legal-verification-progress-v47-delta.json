@@ -1,0 +1,24 @@
+{
+  "batch": "V47",
+  "date": "2026-08-28",
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_added": 0,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "atom_pool_before": 6195,
+  "support_atoms_added": 480,
+  "atom_pool_after": 6675,
+  "migration_count": 0,
+  "major_findings": [
+    "Official Gazette metadata corrected: 24.04.2026 issue 33233, not 33223",
+    "2026 Counseling Measure Communique extracted into durable parameter/process model",
+    "General RAM client interviews split from court-ordered counseling measure",
+    "HB-0943/HB-0944 duplicate extraction risk retained without promotion",
+    "HB-1040 and analogous counseling+violence rows remain SPLIT_REQUIRED",
+    "HB-0602 scope error candidate",
+    "HB-0603 legal-family error candidate"
+  ],
+  "next_batch": "V48"
+}
