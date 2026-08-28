@@ -8,6 +8,7 @@ on:
       - 'tools/schedule_world_benchmark.ts'
       - 'tools/schedule_world_export_cases.ts'
       - 'tools/schedule_unitime_world_benchmark.ts'
+      - 'tools/schedule_unitime_process_replay_benchmark.ts'
       - '.github/workflows/schedule-unitime-cpsolver-world-benchmark.yml'
   workflow_dispatch:
 permissions:
@@ -32,18 +33,24 @@ jobs:
           git -C /tmp/cpsolver checkout -q 3abbcaaf26d739d25e45c8e191b7ef94bc15cc26
           mvn -q -f /tmp/cpsolver/pom.xml -DskipTests -Dmaven.javadoc.skip=true install
       - name: Export canonical cases
-        run: bun tools/schedule_world_export_cases.ts --out /tmp/okulos-world-cases.ndjson
+        run: |
+          bun tools/schedule_world_export_cases.ts --out /tmp/okulos-world-cases.ndjson
+          grep '"seed":101' /tmp/okulos-world-cases.ndjson > /tmp/okulos-world-replay-cases.ndjson
+          test "$(wc -l < /tmp/okulos-world-replay-cases.ndjson)" -eq 6
       - name: Build UniTime CPSolver adapter
         working-directory: benchmarks/unitime-adapter
         run: mvn -q -DskipTests package
       - name: Run real UniTime CPSolver world benchmark
         run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/unitime-raw.ndjson
-      - name: Canonical post-score and gate
-        run: bun tools/schedule_unitime_world_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/unitime-raw.ndjson --out /tmp/schedule-unitime-world-benchmark.json --ci
+      - name: Fresh JVM deterministic replay
+        run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-replay-cases.ndjson /tmp/unitime-replay-raw.ndjson
+      - name: Canonical post-score and fresh-process gate
+        run: bun tools/schedule_unitime_process_replay_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/unitime-raw.ndjson --replay /tmp/unitime-replay-raw.ndjson --out /tmp/schedule-unitime-world-benchmark.json --ci
       - name: Failure diagnostics
         if: failure()
         run: |
           tail -20 /tmp/unitime-raw.ndjson 2>/dev/null || true
+          cat /tmp/unitime-replay-raw.ndjson 2>/dev/null || true
           cat /tmp/schedule-unitime-world-benchmark.json 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         if: always()
@@ -52,5 +59,6 @@ jobs:
           path: |
             /tmp/schedule-unitime-world-benchmark.json
             /tmp/unitime-raw.ndjson
+            /tmp/unitime-replay-raw.ndjson
           if-no-files-found: ignore
           retention-days: 30
