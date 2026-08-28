@@ -1,0 +1,36 @@
+{
+  "updated_on":"2026-08-28",
+  "base_large_batch_atom_total":4515,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_MASTER_ID_RESOLUTION_HEM_RAM_BILSEM_100PLUS_V40",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v40.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1924.pdf",
+      "https://orgm.meb.gov.tr/meb_iys_dosyalar/2021_09/13145613_Ozel_EYitim_Hizmetleri_YonetmeliYi_son.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2193.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":4635,
+  "article_verified":{
+    "base":457,
+    "increment":2,
+    "result":459,
+    "master_total":2229,
+    "percent":20.5922,
+    "batch_doc":"docs/legal-article-verified-batch-v40.md",
+    "workflow_ids":["HB-2221","HB-2228"]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2222","reason":"legacy HEM organ title does not one-to-one match current HBOKY Md38-41 named organs"},
+    {"workflow_id":"HB-2227","reason":"claimed RAM directive exact current provision not re-established in this batch"},
+    {"workflow_id":"HB-2229","reason":"school-health current source/scope/composition conflict remains unresolved"},
+    {"candidate_organs":["BILSEM Merkez Tanilama Sinav Komisyonu","BILSEM Il Tanilama Sinav Komisyonu","BILSEM Proje Jurisi"],"reason":"durable current organs confirmed but exact retained master workflow IDs not yet recovered"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Recover exact master IDs for BILSEM Md26/Md28/Md40 organs, resolve remaining HB-2223..2227 rows against current OAB/RAM sources, and continue current HEM/special-education bindings without inferred normalization."
+  }
+}
