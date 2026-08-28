@@ -1,0 +1,44 @@
+{
+  "schema": "OKULOS_WORLD_STRESS_EVIDENCE_V1",
+  "generated_at": "2026-08-28T15:10:14.567Z",
+  "source": {
+    "pull_request": 17,
+    "head_sha": "0995b1ba64b5e6c7a9ece2e685e2bd233599d12e",
+    "merge_test_sha": "1e25a06d32cde8df4d93a2b829d5e524db2f283a",
+    "ci_workflow_run_id": 33183644629,
+    "stress_workflow_run_id": 33183644783,
+    "stress_job_id": 98890923394,
+    "artifact_id": 9690812668,
+    "artifact_name": "schedule-world-stress-1e25a06d32cde8df4d93a2b829d5e524db2f283a",
+    "artifact_digest": "sha256:127b3a3b9d3ec87afd8489f54a0fae9396ad61d6e6a5292fad3e089bf9d58156",
+    "artifact_expires_at": "2026-11-26T15:08:06Z"
+  },
+  "seed_count": 101,
+  "profile_count": 6,
+  "total_runs": 606,
+  "wall_clock_budget_ms": 8000,
+  "hardware": {
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "logical_cpus": 4,
+    "bun": "1.4.0"
+  },
+  "gates": {
+    "feasible_rate_all_one": true,
+    "hard_max_all_zero": true,
+    "unplaced_max_all_zero": true,
+    "deterministic_replay_all": true,
+    "budget_pass_all": true,
+    "over_budget_count_total": 0
+  },
+  "results": [
+    {"profile_id":"synthetic-small","runs":101,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":0,"runtime_p50_ms":24,"runtime_p95_ms":31,"runtime_max_ms":47,"slowest_seed":101,"over_budget_count":0,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"synthetic-medium","runs":101,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":0,"runtime_p50_ms":72,"runtime_p95_ms":94,"runtime_max_ms":164,"slowest_seed":213914,"over_budget_count":0,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"synthetic-large","runs":101,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":8,"runtime_p50_ms":386,"runtime_p95_ms":429,"runtime_max_ms":474,"slowest_seed":118886,"over_budget_count":0,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"synthetic-dense","runs":101,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":24,"runtime_p50_ms":276,"runtime_p95_ms":300,"runtime_max_ms":330,"slowest_seed":522755,"over_budget_count":0,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"mtal","runs":101,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":16,"runtime_p50_ms":249,"runtime_p95_ms":280,"runtime_max_ms":313,"slowest_seed":23858,"over_budget_count":0,"deterministic_replay":true,"budget_pass":true},
+    {"profile_id":"mesem","runs":101,"feasible_rate":1,"hard_max":0,"unplaced_max":0,"medium_p50":0,"soft_p50":0,"runtime_p50_ms":93,"runtime_p95_ms":98,"runtime_max_ms":100,"slowest_seed":190157,"over_budget_count":0,"deterministic_replay":true,"budget_pass":true}
+  ],
+  "claim_boundary": "This is an OkulOS-native stress gate. It does not compare external solver objectives and does not authorize a superiority claim."
+}
