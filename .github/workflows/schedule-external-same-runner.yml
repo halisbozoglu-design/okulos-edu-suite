@@ -12,6 +12,7 @@ on:
       - 'tools/schedule_fet_world_benchmark.ts'
       - 'tools/schedule_timefold_world_benchmark.ts'
       - 'tools/schedule_unitime_world_benchmark.ts'
+      - 'tools/schedule_unitime_process_replay_benchmark.ts'
       - 'tools/schedule_external_same_runner_report.ts'
       - '.github/workflows/schedule-external-same-runner.yml'
 permissions:
@@ -55,7 +56,10 @@ jobs:
         working-directory: benchmarks/unitime-adapter
         run: mvn -q -DskipTests package
       - name: Export canonical cases
-        run: bun tools/schedule_world_export_cases.ts --out /tmp/okulos-world-cases.ndjson
+        run: |
+          bun tools/schedule_world_export_cases.ts --out /tmp/okulos-world-cases.ndjson
+          grep '"seed":101' /tmp/okulos-world-cases.ndjson > /tmp/okulos-world-replay-cases.ndjson
+          test "$(wc -l < /tmp/okulos-world-replay-cases.ndjson)" -eq 6
       - name: Run OkulOS
         run: bun tools/schedule_world_benchmark.ts --out /tmp/okulos-world.json
       - name: Run FET
@@ -68,8 +72,10 @@ jobs:
         run: bun tools/schedule_timefold_world_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/timefold-raw.ndjson --out /tmp/timefold-world.json --ci
       - name: Run UniTime CPSolver
         run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-cases.ndjson /tmp/unitime-raw.ndjson
+      - name: Fresh JVM UniTime replay
+        run: java -jar benchmarks/unitime-adapter/target/unitime-world-benchmark-1.0.jar /tmp/okulos-world-replay-cases.ndjson /tmp/unitime-replay-raw.ndjson
       - name: Canonical post-score UniTime
-        run: bun tools/schedule_unitime_world_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/unitime-raw.ndjson --out /tmp/unitime-world.json --ci
+        run: bun tools/schedule_unitime_process_replay_benchmark.ts --cases /tmp/okulos-world-cases.ndjson --raw /tmp/unitime-raw.ndjson --replay /tmp/unitime-replay-raw.ndjson --out /tmp/unitime-world.json --ci
       - name: Same-runner parity gate
         run: bun tools/schedule_external_same_runner_report.ts --okulos /tmp/okulos-world.json --fet /tmp/fet-world.json --timefold /tmp/timefold-world.json --unitime /tmp/unitime-world.json --out /tmp/external-same-runner.json
       - uses: actions/upload-artifact@v4
@@ -83,6 +89,7 @@ jobs:
             /tmp/timefold-raw.ndjson
             /tmp/unitime-world.json
             /tmp/unitime-raw.ndjson
+            /tmp/unitime-replay-raw.ndjson
             /tmp/external-same-runner.json
           if-no-files-found: ignore
           retention-days: 30
