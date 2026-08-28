@@ -254,7 +254,7 @@ OKULOS_DERS_PROGRAMI_FINAL
 │   ├── ✅ 16.09 100+ seed stress benchmark
 │   ├── ✅ 16.10 Impossible/near-impossible instance suite
 │   ├── ✅ 16.11 Large MTAL stress corpus
-│   ├── ⬜ 16.12 Large MESEM stress corpus
+│   ├── 🟡 16.12 Large MESEM stress corpus
 │   ├── ⬜ 16.13 Room/building extreme corpus
 │   ├── ⬜ 16.14 Sectioning extreme corpus
 │   ├── ⬜ 16.15 Determinism across repeated runs
