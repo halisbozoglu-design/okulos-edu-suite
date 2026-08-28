@@ -1,0 +1,2 @@
+import{describe,expect,it}from'bun:test';import{isOkulosDesktop,okulosDesktop}from'../src/lib/desktop-tauri-runtime';
+describe('desktop tauri runtime bridge',()=>{it('stays unavailable in normal web/test runtime',()=>{expect(isOkulosDesktop()).toBe(false)});it('does not silently fake desktop calls',async()=>{await expect(okulosDesktop.capabilities()).rejects.toThrow('OKULOS_DESKTOP_RUNTIME_UNAVAILABLE')})});
