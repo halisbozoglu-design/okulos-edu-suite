@@ -1,0 +1,23 @@
+{
+  "batch": "V48",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "support_atoms_before": 6675,
+  "support_atoms_added": 540,
+  "support_atoms_after": 7215,
+  "migration_count": 0,
+  "new_exact_promotions": [],
+  "key_results": [
+    "Counseling-measure legacy monthly family normalized into durable legal state machine",
+    "2026 counseling-measure deadline/evidence parameters versioned",
+    "HB-0602 staged for RAM scope correction before ARTICLE_VERIFIED",
+    "HB-0603 staged for action/scope rewrite; no invented RAM risk-map duty",
+    "HB-0943/HB-0944 duplicate-extraction review retained",
+    "HB-0206/HB-0600/HB-0763/HB-1040 kept SPLIT_REQUIRED"
+  ],
+  "next_batch": "V49"
+}
