@@ -1,0 +1,42 @@
+{
+  "updated_on":"2026-08-28",
+  "base_large_batch_atom_total":4755,
+  "completed_focus":{
+    "legal_family":"ARTICLE_VERIFIED_CANONICAL_MASTER_RECOVERY_HEM_OAB_ESER_V42",
+    "staging_doc":"docs/legal-article-verified-focused-deepening-batch-100plus-v42.md",
+    "atomized_rule_count":120,
+    "migration_count":0,
+    "canonical_recovery":{
+      "historical_reported_master":"Mimaros_Master_Legal_Verification_Progress_v27.csv",
+      "recovered_durable_artifact":"Mimaros_Master_Is_Akisi_FINAL.jsonl",
+      "resolved_workflow_ids":["HB-2223","HB-2224","HB-2225","HB-2226","HB-2227"]
+    },
+    "source_urls":[
+      "https://mevzuat.meb.gov.tr/dosyalar/1532.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/1850.pdf",
+      "https://orgm.meb.gov.tr/meb_iys_dosyalar/2021_09/13145613_Ozel_EYitim_Hizmetleri_YonetmeliYi_son.pdf",
+      "https://mevzuat.meb.gov.tr/dosyalar/2193.pdf"
+    ]
+  },
+  "large_batch_atom_total_after_delta":4875,
+  "article_verified":{
+    "base":459,
+    "increment":4,
+    "result":463,
+    "master_total":2229,
+    "percent":20.7716,
+    "remaining":1766,
+    "batch_doc":"docs/legal-article-verified-batch-v42.md",
+    "workflow_ids":["HB-2223","HB-2224","HB-2225","HB-2226"]
+  },
+  "withheld_from_article_verified":[
+    {"workflow_id":"HB-2227","reason":"retained RAM title is Merkez Komisyon Kurulu; no current exact named organ established"},
+    {"workflow_ids":["HB-2214","HB-2215","HB-2216"],"reason":"OAB/BILSEM applicability and duplicate reconciliation still required"},
+    {"workflow_ids":["HB-2218","HB-2229"],"reason":"school-health source/scope/composition conflict unresolved"}
+  ],
+  "migration_count":0,
+  "next_focus":{
+    "mode":"ARTICLE_VERIFIED_PRIORITY",
+    "goal":"Exploit recovered durable master artifacts to find exact retained IDs for BILSEM Md26/Md28/Md30/Md31/Md32/Md34/Md35/Md40 organs and Special Education Services Board Md39-42; reconcile HB-2214..2216 duplicates/applicability; keep HB-2227 and school-health conflicts withheld unless exact current authority is established."
+  }
+}
