@@ -1,0 +1,50 @@
+{
+  "schema": "OKULOS_EXTERNAL_SAME_RUNNER_EVIDENCE_V2",
+  "date": "2026-08-28",
+  "workflow_run_id": 33128382948,
+  "head_sha": "7cc174325e6c4f1427dd414ace64cacbe7c6fd23",
+  "artifact_id": 9669826383,
+  "artifact_name": "schedule-external-same-runner-7cc174325e6c4f1427dd414ace64cacbe7c6fd23",
+  "artifact_zip_sha256": "d44b5d46ff2848bc6a2792c21cfd7e8776fd24fddde93c409031d1eb88ffd1e3",
+  "same_runner": true,
+  "profiles": ["synthetic-small", "synthetic-medium", "synthetic-large", "synthetic-dense", "mtal", "mesem"],
+  "seeds_per_profile": 30,
+  "objective_comparable": false,
+  "superiority_claim_allowed": false,
+  "solvers": {
+    "Okulos": {"status": "RUN"},
+    "Timefold": {
+      "version": "2.5.0",
+      "status": "RUN_COMPARABLE",
+      "runs": 180,
+      "objective_mapping": "WORLD_CANONICAL_LEX_HARD_UNPLACED_MEDIUM_SOFT_INDEPENDENT_POSTSCORE_PARITY",
+      "comparable_objective": true,
+      "objective_parity": true,
+      "feasible_rate": 1,
+      "hard_max": 0,
+      "unplaced_max": 0,
+      "deterministic_replay": true,
+      "budget_pass": true
+    },
+    "FET": {
+      "version": "6.8.5",
+      "status": "RUN_COMMON_HARD",
+      "comparable_objective": false
+    },
+    "UniTime": {
+      "version": "cpsolver@3abbcaaf26d739d25e45c8e191b7ef94bc15cc26",
+      "status": "RUN_COMMON_HARD",
+      "comparable_objective": false
+    },
+    "aSc": {
+      "status": "NOT_RUN",
+      "reason": "No documented repeatable headless/CLI timetable-generation entrypoint has been verified."
+    }
+  },
+  "truth_boundary": [
+    "Timefold independently matched the canonical HARD -> unplaced -> MEDIUM -> SOFT objective on all 180 benchmark runs.",
+    "FET and UniTime remain common-HARD only and are not objective-comparable search runs.",
+    "aSc remains NOT_RUN.",
+    "Cross-solver objective comparison is incomplete; no superiority claim is allowed."
+  ]
+}
