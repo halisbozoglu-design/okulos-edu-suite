@@ -1,5 +1,5 @@
 import {describe,expect,test} from "bun:test";
-import {makeWorldProblem,runWorldBenchmark} from "../tools/schedule_world_benchmark";
+import {assertWorldBenchmarkGate,makeWorldProblem,readPositiveIntegerFlag,runWorldBenchmark} from "../tools/schedule_world_benchmark";
 const manifest=await Bun.file("benchmarks/world/manifest.json").json();
 const readme=await Bun.file("benchmarks/world/README.md").text();
 
@@ -8,5 +8,7 @@ describe("world benchmark package",()=>{
  test("competitors are never fabricated",async()=>{for(const id of["timefold","unitime","fet","asc"]){const s=manifest.solvers.find((x:any)=>x.id===id);expect(["NOT_RUN","RUN_COMMON_HARD","RUN_COMPARABLE"]).toContain(s?.status);if(s?.status==="NOT_RUN"){expect(s?.adapter_contract).toBeTruthy();continue}expect(s?.adapter).toBeTruthy();expect(s?.evidence).toBeTruthy();expect(await Bun.file(s.evidence).exists()).toBe(true);if(s.status==="RUN_COMPARABLE"){expect(s.comparable_objective).toBe(true);expect(s.objective_parity).toBe(true);expect(s.objective_mapping).toBeTruthy()}else expect(s.comparable_objective).toBe(false)}expect(readme).toContain("never replaced by estimates")});
  test("fairness contract fixes hash/budget/result semantics",()=>{expect(readme).toContain("Same input SHA-256");expect(readme).toContain("Same wall-clock budget");expect(readme).toContain("At least 30 deterministic seeds");expect(readme).toContain("No superiority claim")});
  test("profile generator is deterministic and preserves Section 8 scopes",()=>{const p=manifest.profiles[0],a=makeWorldProblem(p,123),b=makeWorldProblem(p,123);expect(a).toEqual(b);expect(a.assignments.some((x:any)=>x.week_pattern==="ODD"||x.week_pattern==="EVEN")).toBe(true)});
+ test("stress CLI accepts an explicit seed count and rejects invalid values",()=>{expect(readPositiveIntegerFlag(["--seeds","101"],"--seeds",30)).toBe(101);expect(readPositiveIntegerFlag([],"--seeds",30)).toBe(30);expect(()=>readPositiveIntegerFlag(["--seeds","0"],"--seeds",30)).toThrow("positive integer")});
+ test("stress gate enforces its declared minimum",()=>{const ok:any={schema:manifest.schema,seed_count:101,results:[{profile_id:"small",runs:101,feasible_rate:1,hard_max:0,unplaced_max:0,deterministic_replay:true,budget_pass:true}]};expect(()=>assertWorldBenchmarkGate(ok,100)).not.toThrow();expect(()=>assertWorldBenchmarkGate({...ok,seed_count:99},100)).toThrow("seed_count");expect(()=>assertWorldBenchmarkGate({...ok,results:[{...ok.results[0],runs:99}]},100)).toThrow("small")});
  test("smoke runner emits complete comparable metrics",async()=>{const old=manifest.profiles;manifest.profiles=[manifest.profiles[0]];const r=await runWorldBenchmark({seedCount:2,ci:true});manifest.profiles=old;expect(r.results[0]?.feasible_rate).toBe(1);expect(r.results[0]?.hard_max).toBe(0);expect(r.results[0]?.deterministic_replay).toBe(true);expect(r.results[0]?.input_hash).toHaveLength(64)},30000);
 });
