@@ -1,0 +1,55 @@
+name: Schedule large MTAL structural corpus
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/lib/schedule-local-solver-incremental-core.ts'
+      - 'src/lib/schedule-local-solver-time-core.ts'
+      - 'src/lib/schedule-local-incremental-score.ts'
+      - 'tools/schedule_mtal_large_corpus.ts'
+      - 'tests/schedule-mtal-large-corpus.test.ts'
+      - 'benchmarks/mtal-large/**'
+      - '.github/workflows/schedule-mtal-large-corpus.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/lib/schedule-local-solver-incremental-core.ts'
+      - 'src/lib/schedule-local-solver-time-core.ts'
+      - 'src/lib/schedule-local-incremental-score.ts'
+      - 'tools/schedule_mtal_large_corpus.ts'
+      - 'tests/schedule-mtal-large-corpus.test.ts'
+      - 'benchmarks/mtal-large/**'
+      - '.github/workflows/schedule-mtal-large-corpus.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: schedule-mtal-large-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  corpus:
+    name: 3 MTAL profiles x 7 deterministic seeds
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Run targeted structural tests
+        run: bun test tests/schedule-mtal-large-corpus.test.ts
+      - name: Run 21-case large MTAL gate
+        run: bun tools/schedule_mtal_large_corpus.ts --seeds 7 --out /tmp/schedule-mtal-large.json
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: schedule-mtal-large-${{ github.sha }}
+          path: /tmp/schedule-mtal-large.json
+          if-no-files-found: error
+          retention-days: 90
