@@ -1,0 +1,33 @@
+name: aSc 2027 executable probe
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/asc_windows_executable_probe.ps1'
+      - '.github/workflows/schedule-asc-executable-probe.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe official aSc 2027 executable
+        shell: pwsh
+        run: ./tools/asc_windows_executable_probe.ps1 -InstallerUrl 'https://www.asctimetables.com/download/aScTimeTables_2027_7_1.exe' -OutFile "$env:RUNNER_TEMP\asc-executable-probe.json"
+      - name: Guard probe truth
+        shell: pwsh
+        run: |
+          $r=Get-Content "$env:RUNNER_TEMP\asc-executable-probe.json"|ConvertFrom-Json
+          if($r.status -ne 'PROBED_NOT_GENERATED'){throw 'ASC_PROBE_STATUS_INVALID'}
+          if($r.generation_status -ne 'NOT_RUN'){throw 'ASC_GENERATION_MUST_REMAIN_NOT_RUN'}
+          if(-not $r.sha256 -or $r.size_bytes -lt 1000000){throw 'ASC_BINARY_EVIDENCE_INVALID'}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: schedule-asc-executable-probe-${{ github.sha }}
+          path: ${{ runner.temp }}\asc-executable-probe.json
+          if-no-files-found: error
+          retention-days: 30
