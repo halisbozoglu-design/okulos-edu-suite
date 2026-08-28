@@ -251,7 +251,7 @@ OKULOS_DERS_PROGRAMI_FINAL
 │   ├── ✅ 16.06 Tenant/auth/route guards
 │   ├── ✅ 16.07 Production Web build
 │   ├── ✅ 16.08 TypeScript exact checks
-│   ├── ⬜ 16.09 100+ seed stress benchmark
+│   ├── ✅ 16.09 100+ seed stress benchmark
 │   ├── ⬜ 16.10 Impossible/near-impossible instance suite
 │   ├── ⬜ 16.11 Large MTAL stress corpus
 │   ├── ⬜ 16.12 Large MESEM stress corpus
@@ -289,6 +289,14 @@ OKULOS_DERS_PROGRAMI_FINAL
 - UniTime 180-run gate: workflow `33166069959`, PASS.
 - Same-runner Okulos/FET/Timefold/UniTime gate: workflow `33166069957`, PASS.
 - Timefold ve UniTime canonical objective karşılaştırılabilir; FET common-HARD kapsamındadır. Bu nedenle blanket superiority claim hâlâ yasaktır.
+
+## Güncel 100+ seed stres kanıtı
+
+- Makine-okunur kanıt: `benchmarks/world/stress-20260828.json`.
+- Workflow `33183644783`, job `98890923394`, artifact `9690812668`, PASS.
+- Altı profil × 101 deterministik seed = 606 koşu; feasible rate `1`, HARD `0`, unplaced `0`, deterministic replay ve 8 saniye bütçesi tüm profillerde PASS.
+- Artifact SHA-256: `127b3a3b9d3ec87afd8489f54a0fae9396ad61d6e6a5292fad3e089bf9d58156`.
+- Bu OkulOS-native stres kapısıdır; dış solver üstünlük iddiası üretmez.
 
 ## İlerleme raporlama kuralı
 
