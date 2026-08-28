@@ -1,0 +1,123 @@
+{
+  "schema": "OKULOS_IMPOSSIBLE_NEAR_IMPOSSIBLE_V1",
+  "cases": [
+    {
+      "id": "TEACHER_UNAVAILABLE_DOMAIN",
+      "expected": "INFEASIBLE",
+      "problem": {
+        "days": [1], "periods": 2, "seed": 11, "enableLns": false,
+        "assignments": [{"assignment_id":"a","teacher_id":"t","class_id":"c","course_id":"q","assigned_hours":1}],
+        "locked": [],
+        "unavailable": [{"teacher_id":"t","weekday":1,"period":1},{"teacher_id":"t","weekday":1,"period":2}],
+        "teacherConstraints": [],
+        "courseRules": [{"course_id":"q","block_pattern":[1],"max_per_day":1,"prohibited_days":null,"prohibited_periods":null}]
+      }
+    },
+    {
+      "id": "CLASS_CAPACITY_OVERLOAD",
+      "expected": "INFEASIBLE",
+      "problem": {
+        "days": [1], "periods": 2, "seed": 13, "enableLns": false,
+        "assignments": [
+          {"assignment_id":"a1","teacher_id":"t1","class_id":"c","course_id":"q1","assigned_hours":1},
+          {"assignment_id":"a2","teacher_id":"t2","class_id":"c","course_id":"q2","assigned_hours":1},
+          {"assignment_id":"a3","teacher_id":"t3","class_id":"c","course_id":"q3","assigned_hours":1}
+        ],
+        "locked": [], "unavailable": [], "teacherConstraints": [], "courseRules": []
+      }
+    },
+    {
+      "id": "TEACHER_CAPACITY_OVERLOAD",
+      "expected": "INFEASIBLE",
+      "problem": {
+        "days": [1], "periods": 2, "seed": 17, "enableLns": false,
+        "assignments": [
+          {"assignment_id":"a1","teacher_id":"t","class_id":"c1","course_id":"q1","assigned_hours":1},
+          {"assignment_id":"a2","teacher_id":"t","class_id":"c2","course_id":"q2","assigned_hours":1},
+          {"assignment_id":"a3","teacher_id":"t","class_id":"c3","course_id":"q3","assigned_hours":1}
+        ],
+        "locked": [], "unavailable": [], "teacherConstraints": [], "courseRules": []
+      }
+    },
+    {
+      "id": "COURSE_DAILY_LIMIT",
+      "expected": "INFEASIBLE",
+      "problem": {
+        "days": [1], "periods": 2, "seed": 19, "enableLns": false,
+        "assignments": [{"assignment_id":"a","teacher_id":"t","class_id":"c","course_id":"q","assigned_hours":2}],
+        "locked": [], "unavailable": [], "teacherConstraints": [],
+        "courseRules": [{"course_id":"q","block_pattern":[1,1],"max_per_day":1,"prohibited_days":null,"prohibited_periods":null}]
+      }
+    },
+    {
+      "id": "MAX_CONSECUTIVE_NO_BREAK",
+      "expected": "INFEASIBLE",
+      "problem": {
+        "days": [1], "periods": 2, "seed": 23, "enableLns": false,
+        "assignments": [
+          {"assignment_id":"a1","teacher_id":"t","class_id":"c1","course_id":"q1","assigned_hours":1},
+          {"assignment_id":"a2","teacher_id":"t","class_id":"c2","course_id":"q2","assigned_hours":1}
+        ],
+        "locked": [], "unavailable": [],
+        "teacherConstraints": [{"teacher_id":"t","max_daily_hours":2,"max_consecutive_hours":1}],
+        "courseRules": []
+      }
+    },
+    {
+      "id": "EXACT_CLASS_CAPACITY",
+      "expected": "FEASIBLE",
+      "problem": {
+        "days": [1], "periods": 2, "seed": 29, "enableLns": false,
+        "assignments": [
+          {"assignment_id":"a1","teacher_id":"t1","class_id":"c","course_id":"q1","assigned_hours":1},
+          {"assignment_id":"a2","teacher_id":"t2","class_id":"c","course_id":"q2","assigned_hours":1}
+        ],
+        "locked": [], "unavailable": [], "teacherConstraints": [], "courseRules": []
+      }
+    },
+    {
+      "id": "EXACT_TEACHER_DAILY_CAPACITY",
+      "expected": "FEASIBLE",
+      "problem": {
+        "days": [1], "periods": 2, "seed": 31, "enableLns": false,
+        "assignments": [
+          {"assignment_id":"a1","teacher_id":"t","class_id":"c1","course_id":"q1","assigned_hours":1},
+          {"assignment_id":"a2","teacher_id":"t","class_id":"c2","course_id":"q2","assigned_hours":1}
+        ],
+        "locked": [], "unavailable": [],
+        "teacherConstraints": [{"teacher_id":"t","max_daily_hours":2,"max_consecutive_hours":2}],
+        "courseRules": []
+      }
+    },
+    {
+      "id": "TEACHER_BREAK_BOUNDARY",
+      "expected": "FEASIBLE",
+      "problem": {
+        "days": [1], "periods": 4, "seed": 10, "enableLns": false,
+        "assignments": [
+          {"assignment_id":"a1","teacher_id":"t","class_id":"c1","course_id":"q1","assigned_hours":1},
+          {"assignment_id":"a2","teacher_id":"t","class_id":"c2","course_id":"q2","assigned_hours":1},
+          {"assignment_id":"a3","teacher_id":"t","class_id":"c3","course_id":"q3","assigned_hours":1}
+        ],
+        "locked": [], "unavailable": [],
+        "teacherConstraints": [{"teacher_id":"t","max_daily_hours":3,"max_consecutive_hours":2}],
+        "courseRules": []
+      }
+    },
+    {
+      "id": "LOCKED_BREAK_BOUNDARY",
+      "expected": "FEASIBLE",
+      "problem": {
+        "days": [1], "periods": 3, "seed": 41, "enableLns": false,
+        "assignments": [
+          {"assignment_id":"locked","teacher_id":"t","class_id":"c1","course_id":"q1","assigned_hours":1},
+          {"assignment_id":"free","teacher_id":"t","class_id":"c2","course_id":"q2","assigned_hours":1}
+        ],
+        "locked": [{"assignment_id":"locked","teacher_id":"t","class_id":"c1","weekday":1,"period":1,"locked":true}],
+        "unavailable": [],
+        "teacherConstraints": [{"teacher_id":"t","max_daily_hours":2,"max_consecutive_hours":1}],
+        "courseRules": []
+      }
+    }
+  ]
+}
