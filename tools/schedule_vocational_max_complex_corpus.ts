@@ -525,8 +525,11 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
   }));
   const periodBreaks = Array.from({ length: profile.periods - 1 }, (_, i) => ({
       after_period: i + 1,
-      minutes: i % 3 === 1 ? 15 : 7,
-      transfer_allowed: i % 4 !== 2,
+      // This corpus combines program, group, workshop and coordinator pressure.
+      // The separate room/building corpus owns forbidden or too-short transfers;
+      // here all multi-building transitions have an explicitly sufficient break.
+      minutes: profile.buildings > 1 ? 15 : i % 3 === 1 ? 15 : 7,
+      transfer_allowed: profile.buildings > 1 || i % 4 !== 2,
     })),
     buildingTravel = [] as NonNullable<JointLocalProblem["buildingTravel"]>;
   for (let i = 0; i < buildings.length; i++)
