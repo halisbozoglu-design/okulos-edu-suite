@@ -69,13 +69,13 @@ export const SANCTION_OPTIONS: BentOption[] = [
   },
   {
     bent: "E",
-    name: "Devlet memurluğundundan çıkarma",
+    name: "Devlet memurluğundan çıkarma",
     definition: "Bir daha Devlet memurluğuna atanmamak üzere memurluktan çıkarmaktır.",
-    decision: "Yüksek disiplin kurulu. Muhakkik bu cezası veremez; yalnız teklif edebilir.",
+    decision: "Yüksek disiplin kurulu. Muhakkik bu cezayı veremez; yalnız teklif edebilir.",
     alts: [
       { code: "E-d", text: "Özürsüz olarak bir yılda toplam 20 gün göreve gelmemek", keywords: ["20 gün"] },
       { code: "E-f", text: "Amirlerine, maiyetindekilere ve iş sahiplerine fiili tecavüz", keywords: ["fiili tecavüz", "darp"] },
-      { code: "E-g", text: "Memurluk sıfatı ile bağdaşmayacak yüz kızartıcı ve utandırıcı hareket", keywords: ["yüz kızartıcı"] },
+      { code: "E-g", text: "Memurluk sıfatı ile bağdaşmayacak yüz kızartıcı ve utanç verici hareket", keywords: ["yüz kızartıcı"] },
     ],
   },
 ];
