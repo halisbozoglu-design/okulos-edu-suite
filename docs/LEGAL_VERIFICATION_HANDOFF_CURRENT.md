@@ -9,11 +9,11 @@ Lovable usage: **0**
 
 ## Güncel kesin durum
 - Master workflow: **2.229**
-- ARTICLE_VERIFIED: **468 / 2.229 = %20,9960**
-- Kalan exact doğrulama: **1.761**
-- Büyük atomik mevzuat havuzu: **12.235**
-- Son tamamlanan batch: **V59**
-- Sonraki batch: **V60**
+- ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
+- Kalan exact doğrulama: **1.762**
+- Büyük atomik mevzuat havuzu: **12.655**
+- Son tamamlanan batch: **V60**
+- Sonraki batch: **V61**
 
 ## Integrity history
 - V49 HB-0395/HB-0138 temporary promotion via annulled RAM Directive; V50 rollback.
@@ -22,42 +22,38 @@ Lovable usage: **0**
 - V55 HB-2047 privacy promotion.
 - V56 HB-0310 compound rollback + HB-2051 promotion.
 - V57 HB-2139 compound rollback.
-- V58 HB-2137 promotion; exact connector semantics guard added.
-- V59 HB-2140 promotion; OAB/transport/discipline wrong-family source corrections expanded.
+- V58 HB-2137 promotion; connector semantics guard.
+- V59 HB-2140 promotion; OAB/transport/discipline wrong-family corrections.
+- V60 HB-1360 current Taşınır authority recovered; HB-1645 rolled back for school-type/action scope mismatch.
 
-## V59 — 420 atom
-- Integrity: `docs/legal-discipline-oab-transport-integrity-v59.md` — `256222fbae511bdcd1b591d324d3a8cd40f90fb9`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v59.md` — `536f632581af589ae1c992a99381f2b98be40777`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v59.md` — `e3c7da3ac3bd6f21349e01c29eb5e18014db1cef`
-- Progress: `docs/legal-verification-progress-v59-delta.json` — `f2f491551b889de75439cddd9d8ce9218fd16ab2`
-- Support atoms: **420**; pool **11.815 -> 12.235**.
-- ARTICLE_VERIFIED: **467 -> 468**.
+## V60 — 420 atom
+- Integrity: `docs/legal-asset-schedule-integrity-reconciliation-v60.md` — `5386ed0fb85dffbd156e2a6915f075a51c111778`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v60.md` — `04e95808198a83845bcc48141cbd4fe181a7ad46`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v60.md` — `d811971215040da75ebdc50f09e197e16928e848`
+- Progress: `docs/legal-verification-progress-v60-delta.json` — `2a8207a2ccdfa357fc3b5b64c383b43115f5c452`
+- Support atoms: **420**; pool **12.235 -> 12.655**.
+- ARTICLE_VERIFIED: **468 -> 467**.
 
-### V59 new exact
-`HB-2140` -> current OÖKY Md189/1-ğ.
-Okul Öğrenci Ödül ve Disiplin Kurulu; ders yılı/dönem içindeki disiplin olaylarının nedenleriyle alınan tedbirleri ve sonuçlarını tespit eder, ders yılı ve dönem sonunda rapor hâlinde okul yönetimine bildirir.
-Delta +1.
+### V60 retained/source-corrected
+`HB-1360` — `Alınan malzemenin taşınır mal kayıt işlemleri yapılmıştır.`
+Legacy Batch02 OÖİKY Md11 is wrong. Current exact legal family is the 2024 Taşınır Mal Yönetmeliği:
+- Md10/1-a: accepted/delivered movable entries use Varlık İşlem Fişi subject to listed exceptions;
+- Md11/1: entry/exit records and prescribed documents primarily electronic;
+- Md12/1: all movable property and related transactions recorded, document-based.
+Applicability must reflect public-administration/public-institution scope rather than pretending this is an OÖİKY registration/nakil rule.
+Delta 0.
 
-### V59 source corrections retained, delta 0
-- `HB-2111` -> OÖKY Md157/3.
-- `HB-1569` -> Taşıma Yoluyla Eğitime Erişim Yönetmeliği Md13/1-c; execution complement Md13/2-c.
-- `HB-1480` -> Okul Aile Birliği Yönetmeliği Md23/2 (karar defterinin noterce tasdiki zorunlu).
-- `HB-1482` -> OAB Yönetmeliği Md18/1 + Md23/1-b (harcama yönetim kurulu kararı + karar defteri chain).
+### V60 rollback
+`HB-1645` — whole master text combines balanced/successive course distribution with PE/music first/last-day preference. Batch02 had wrongly attached OÖİKY Md90/2.
+Current OÖİKY Md5/3 only provides the first/last-day PE/game/sport/music preference. Current OÖKY Md12/2-b provides the full secondary-school sentence including balanced course distribution. Durable master metadata is broad `ALL`; whole-row actor/scope/applicability therefore fails strict exactness.
+Status: `ROLLBACK_ARTICLE_VERIFIED + SCHOOL_TYPE_SCOPE_REWRITE_REQUIRED`.
+Delta -1.
 
-### V59 unresolved wrong-source row
-`HB-1360` — pansiyonda alınan malzemenin taşınır kayıt işlemi. Batch02 OÖİKY Md11 parentı açıkça yanlış legal family/action. Exact current taşınır/pansiyon provision lock tamamlanmadan current count kararı verilmeyecek.
-Status: `SOURCE_INVALIDATED + CURRENT_PARENT_RESEARCH`.
-
-## OÖKY discipline authority chain
-- Md189/1-ğ -> term/year-end school discipline report.
-- Md197 -> principal objection + district board referral.
-- Md198 -> school board cannot form/decide; first investigation file goes district board.
-- Md199 -> district discipline board composition.
-- Md200 -> district board duties/10-workday decisions/appeals.
-- Md201 -> provincial discipline board composition.
-- Md202 -> provincial duties + every-term province discipline evaluation.
-- Md203 -> upper discipline board composition.
-These cannot be merged into school-level workflows without actor/institution scope match.
+### V60 withheld exact-text candidates
+- HB-1646 -> OÖKY Md12/2-c, but durable broad school-type scope must be corrected/published before count.
+- HB-1647 -> OÖKY Md12/2-ç, same scope issue.
+- HB-1483 -> OAB Regulation Md11/1-c exact action candidate; institution/applicability review first.
+- HB-1484 -> OAB Regulation Md16/1 exact action candidate; institution/applicability review first.
 
 ## ARTICLE_VERIFIED immutable gate
 `workflow_id + current binding/current-valid source + exact provision + actor/action/object/recipient/timing/system/applicability + legal connector semantics`
@@ -67,16 +63,18 @@ Mandatory gate:
 
 Guards:
 - official hosting != current legal effect.
-- wrong-family source correction has delta 0 only when same master action has a current exact parent.
-- source invalidated rows do not stay verified merely because an old handbook repeats them.
-- compound = WITHHELD/SPLIT; if counted, rollback.
-- `ve`, `veya`, `gerektiğinde`, timing and recipient semantics are exactness fields.
-- duplicate/calendar-instance second count forbidden.
+- wrong-family source correction delta 0 only when same durable action has a current exact parent and applicability remains valid.
+- a partially matching school-type provision cannot validate a broader whole sentence.
+- broad `ALL` metadata cannot silently inherit a secondary-school-only provision.
+- compound = WITHHELD/SPLIT; if already counted, rollback.
+- named repealed source cannot be silently replaced without rewrite where source identity is part of master semantics.
 - historical completed instances immutable.
-- personal/contextual data requires exact authority and privacy/access/retention controls.
+- duplicate/calendar-instance second count forbidden.
 
 ## Açık kritik kayıtlar
-- HB-1360 -> current taşınır/pansiyon exact parent.
+- HB-1645 -> school-type rewrite/split after V60 rollback.
+- HB-1646/HB-1647 -> exact OÖKY text but school-type applicability correction pending.
+- HB-1483/HB-1484 -> OAB exact-action candidates, applicability review pending.
 - HB-2138 -> master rewrite required (`written + where necessary oral`).
 - HB-2139 -> split children staged; SA publication pending.
 - HB-2045 -> school-type/current-parent split.
@@ -93,14 +91,14 @@ Guards:
 - HB-2204/2205/2206 -> title/scope reconciliation.
 - HB-0502 -> obsolete guide + compound monthly report.
 
-## V60 önceliği — 300+ atom
-1. Resolve `HB-1360` using current Taşınır Mal Yönetmeliği + current pansiyon authority; source-correct if exact, rollback if actor/action/scope cannot be locked.
-2. Audit neighboring Batch02 wrong OÖİKY-family rows, especially `HB-1483+`, `HB-1569+`, `HB-1645+` and remaining Md36/85/90 mappings.
-3. Search current exact master matches for OÖKY Md197-204 workflows; promote only pre-existing uncounted durable IDs.
-4. Continue HB-2138 rewrite staging and HB-2139 children search.
-5. Continue HB-2053/HB-2045/HB-0602 unresolved chains.
+## V61 önceliği — 300+ atom
+1. Audit HB-1483 onward against current OAB Regulation Md11, Md15-18, Md23 and identify which broad ALL rows need applicability correction vs source-correct/promotion.
+2. Audit HB-1570/HB-1571/HB-1572 against current Taşıma Yoluyla Eğitime Erişim Yönetmeliği; distinguish school management duties, meal duties, route/service actors and year parameters.
+3. Continue HB-1646/HB-1647/HB-1648 school-type split; never promote OÖKY-only text under ALL scope.
+4. Audit HB-1667 and neighboring duty-roster rows currently tied to OÖİKY Md90/2.
+5. Continue HB-2138/HB-2139 and unresolved HB-2053/HB-2045/HB-0602 chains.
 6. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V60** başlat; minimum **300 atom** hedefle.
+Kullanıcı `Devam` dediğinde soru sormadan **V61** başlat; minimum **300 atom** hedefle.
