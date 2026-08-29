@@ -1,0 +1,45 @@
+{
+  "schema": "OKULOS_MESEM_LARGE_EVIDENCE_V1",
+  "workflow_run_id": 33240914332,
+  "artifact_id": 9711329682,
+  "artifact_sha256": "fd45be13f606cf9f4528a6ddd8bbbf82ccde0a0debd83c63315f27b130e46a89",
+  "retention_days": 90,
+  "seed_count": 7,
+  "wall_clock_budget_ms": 8000,
+  "profiles": [
+    {
+      "id": "mesem-large-mixed-units",
+      "assignments": 192,
+      "scheduled_rows": 192,
+      "runtime_p50_ms": 993,
+      "runtime_p95_ms": 1090
+    },
+    {
+      "id": "mesem-large-workshop-units",
+      "assignments": 120,
+      "scheduled_rows": 150,
+      "runtime_p50_ms": 1230,
+      "runtime_p95_ms": 1245
+    },
+    {
+      "id": "mesem-large-shifted-enterprise",
+      "assignments": 120,
+      "scheduled_rows": 120,
+      "runtime_p50_ms": 263,
+      "runtime_p95_ms": 293
+    }
+  ],
+  "gates": {
+    "runs": 21,
+    "feasible_rate": 1,
+    "hard_max": 0,
+    "unplaced_max": 0,
+    "atomic_blocks": true,
+    "room_eligibility": true,
+    "enterprise_day_exclusion": true,
+    "unit_identity": true,
+    "deterministic_replay": true,
+    "budget_pass": true
+  },
+  "provenance": "Synthetic MEB/MESEM structural stress data; contains no real institution, unit, teacher, apprentice or employer records."
+}
