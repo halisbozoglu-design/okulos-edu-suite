@@ -255,7 +255,7 @@ OKULOS_DERS_PROGRAMI_FINAL
 │   ├── ✅ 16.10 Impossible/near-impossible instance suite
 │   ├── ✅ 16.11 Large MTAL stress corpus
 │   ├── ✅ 16.12 Large MESEM stress corpus
-│   ├── ⬜ 16.13 Room/building extreme corpus
+│   ├── ✅ 16.13 Room/building extreme corpus
 │   ├── ⬜ 16.14 Sectioning extreme corpus
 │   ├── ⬜ 16.15 Determinism across repeated runs
 │   ├── ⬜ 16.16 Web vs Windows score equivalence
@@ -324,6 +324,15 @@ OKULOS_DERS_PROGRAMI_FINAL
 - 21/21 feasible; HARD `0`, unplaced `0`, atomik blok, oda uygunluğu, Birim ID, işletme-günü dışlama, deterministik replay ve 8 saniye bütçesi PASS.
 - GitHub p95 süreleri `1090 / 1245 / 293 ms`; artifact SHA-256: `fd45be13f606cf9f4528a6ddd8bbbf82ccde0a0debd83c63315f27b130e46a89`.
 - Corpus açıkça sentetiktir; gerçek kurum, öğretmen, öğrenci, çırak veya işyeri kaydı içerdiği iddia edilmez.
+
+## Güncel oda/bina extreme corpus kanıtı
+
+- Manifest: `benchmarks/room-building-extreme/manifest.json`; makine-okunur CI kanıtı: `benchmarks/room-building-extreme/evidence-20260829.json`.
+- Workflow `33242660589`, job `99074530371`, artifact `9711828259`, PASS; saklama süresi 90 gün.
+- Üç yapısal profil × yedi deterministik seed = 21 gerçek çözüm; sıkı kapasite/donanım alanları, yasak ve yetersiz bina geçişleri, çok-bina oda alanları ve atomik uzmanlık blokları kapsandı.
+- 21/21 feasible; HARD `0`, unplaced `0`, oda çakışması `0`; oda uygunluğu, bina geçişi, çok-bina alanı, atomik blok ve deterministik replay PASS.
+- GitHub p95 süreleri `1540 / 1617 / 2694 ms`; 8 saniye bütçesi PASS; artifact SHA-256 `c7f56b5345d8866e6cf0677210cabbf3f6817de971f3ffdaee5aedddf01292e2`.
+- Corpus açıkça sentetiktir; gerçek kurum, öğretmen veya öğrenci kaydı içerdiği iddia edilmez.
 
 ## İlerleme raporlama kuralı
 
