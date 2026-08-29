@@ -7,7 +7,7 @@ Mode: `ARTICLE_VERIFIED_PRIORITY`
 Migration: **0**
 Lovable usage: **0**
 
-## Kaynak politikası — V61 sonrası zorunlu
+## Kaynak politikası — zorunlu
 ARTICLE_VERIFIED için yalnız projece kabul edilen resmî kaynaklar kullanılacaktır:
 - `mevzuat.gov.tr`
 - `mevzuat.meb.gov.tr`
@@ -19,36 +19,30 @@ ARTICLE_VERIFIED için yalnız projece kabul edilen resmî kaynaklar kullanılac
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
 - Kalan exact doğrulama: **1.762**
-- Büyük atomik mevzuat havuzu: **13.075**
-- Son tamamlanan batch: **V61**
-- Sonraki batch: **V62**
+- Büyük atomik mevzuat havuzu: **13.485**
+- Son tamamlanan batch: **V62**
+- Sonraki batch: **V63**
 
-## V61 — 420 atom
-- Official-source integrity: `docs/legal-official-source-integrity-v61.md` — `41b67f9eb0a1baf43d6abba27a773e5dedbaf292`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v61.md` — `a354bdaaf265293f34b6d9b643861ead80c87eb8`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v61.md` — `f9d6a17ac4e00feab948e0e420115619b10db034`
-- Progress: `docs/legal-verification-progress-v61-delta.json` — `200e12d25c1b2e9b884743c13347809cc740f6d7`
-- Support atoms: **420**; pool **12.655 -> 13.075**.
-- ARTICLE_VERIFIED: **467 -> 467** (+1 / -1).
+## V62 — 410 atom
+- Integrity: `docs/legal-official-source-oab-transport-duty-integrity-v62.md` — `8bf687672188b3dce7da2bfd5c95e31bdcec048d`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v62.md` — `6f6afb3fa24d7688e7ee3ce2ecc7a29e4c86cc98`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v62.md` — `1c5dd1b17c52fc6fcec325cc31a2e8265cc023e4`
+- Progress: `docs/legal-verification-progress-v62-delta.json` — `6bbeea261874dbf3d2bc346aec01ff75663e8492`
+- Support atoms: **410**; pool **13.075 -> 13.485**.
+- ARTICLE_VERIFIED: **467 -> 467**, delta 0.
 
-### V61 new exact
-`HB-1570` — taşımalı gelen öğrencilerin geliş ve gidiş saatine göre ders programının düzenlenmesi.
-Official current source: Resmî Gazete 01.08.2024 / 32619, Taşıma Yoluyla Eğitime Erişim Yönetmeliği Md13/1-ç.
-Delta +1.
+### V62 key finding — HB-1659
+Master says pregnancy duty exemption is 12 weeks before birth and **two years after birth**. Current official OÖKY Md91/2-ç says **one year after birth**; current official OÖİKY Md44/7 also says **one year**. Status: `LEGACY_PARAMETER_MISMATCH + MASTER_REWRITE_REQUIRED`. No silent source substitution.
 
-### V61 rollback
-`HB-1667` — öğle nöbetinin nöbetçi müdür yardımcısı ve öğretmenlerin temel ihtiyaçları gözetilerek dönüşümlü/dengeli düzenlenmesi.
-Batch02 source OÖİKY Md90/2 was unrelated. Secondary-school exact semantics live in OÖKY Md91/2-i (RG 08.09.2023 amendment); primary/lower-secondary has a separate OÖİKY Md44 duty regime. Durable ALL scope cannot be treated as one universal exact provision.
-Status: `ROLLBACK_ARTICLE_VERIFIED + SCHOOL_TYPE_SPLIT_REQUIRED`.
-Delta -1.
+### V62 school-type duty profile
+HB-1655, HB-1656, HB-1657, HB-1658, HB-1661, HB-1662 and HB-1664 have strong current OÖKY Md91 counterparts. However their durable metadata is broad `ALL`; OÖİKY Md44 has different timing and condition parameters. Status: `SCHOOL_TYPE_SCOPE_SPLIT_REQUIRED`, no promotion under ALL scope.
 
-### V61 retained
-- HB-1571 -> current transport Md13/1-e.
-- HB-1572 -> current transport Md13/1-h.
-- HB-1577 -> current transport Md13/1-ğ.
-
-### V61 official-source holds
-- HB-1483 / HB-1484: MEB 2024/35 confirms current OAB regulatory framework and 2023 amendment, but official regulation PDF endpoint was unavailable in this pass. Exact article promotion is withheld; no fallback to secondary domains.
+### V62 withheld
+- HB-1660 -> request/need semantics and school-type split required.
+- HB-1665 -> special-education/anaokulu applicability needs atomic resolution.
+- HB-1666 -> `Nöbet defteri tutulmaktadır`; exact current parent not established from Md91/Md44.
+- HB-1573 -> punctual school-bus arrival is operationally plausible but exact current school-side parent not locked; no inference from generic service compliance.
+- HB-1483/HB-1484 -> official MEB OAB regulation PDF endpoint still failed in this pass; no secondary fallback, remain withheld.
 
 ## Existing critical guards
 `workflow_id + current official/current-valid binding source + exact provision + actor/action/object/recipient/timing/system/applicability + legal connector semantics`
@@ -60,13 +54,18 @@ Additional guards:
 - newer Resmî Gazete amendment controls over stale consolidated text;
 - official hosting alone does not prove current effect;
 - broad ALL scope cannot silently inherit a school-type-specific provision;
-- handbook/manual cannot replace an exact regulation provision;
+- similar duties across school types are not interchangeable when timing/conditions differ;
+- handbook/manual cannot replace exact regulation provision;
 - compound workflows split before count;
 - historical completed instances immutable;
 - duplicate count forbidden.
 
 ## Açık kritik kayıtlar
-- HB-1483/HB-1484 -> retry current official OAB exact provisions only.
+- HB-1659 -> rewrite two years to current one-year rule with school-type publication.
+- HB-1655..HB-1665 -> school-type duty-profile split/reconciliation.
+- HB-1666 -> current exact duty-book authority unresolved.
+- HB-1573 -> current exact punctual-arrival parent unresolved.
+- HB-1483/HB-1484 -> official OAB exact retry only.
 - HB-1645 -> V60 rollback/school-type split.
 - HB-1646/HB-1647 -> OÖKY exact text but applicability publication pending.
 - HB-1667 -> V61 rollback/school-type split.
@@ -79,18 +78,15 @@ Additional guards:
 - HB-0603 -> atomic children staged.
 - HB-0138/HB-0395 -> L2 only.
 - HB-2218/HB-2229 -> School Health scope.
-- HB-2227 -> RAM named authority unresolved.
-- HB-2222 -> HEM title mismatch.
-- HB-2212 -> BİLSEM current directive organ mismatch.
 
-## V62 önceliği — 300+ atom
-1. Retry HB-1483 onward using only official OAB Regulation/Resmî Gazete/MEB sources; if exact current article remains inaccessible, keep WITHHELD.
-2. Continue HB-1573 onward against current transport Md13 actor/action chain; search uncounted durable exact matches before NEW IDs.
-3. Split HB-1667 by OÖKY vs OÖİKY current duty regime; preserve historical instances.
-4. Audit HB-1655-HB-1666 neighboring duty rows solely against official current OÖKY/OÖİKY and later amendment chains.
-5. Continue HB-1646/HB-1647 school-type correction.
+## V63 önceliği — 300+ atom
+1. Resolve HB-1655..HB-1665 into explicit OÖKY/OÖİKY profiles; identify any existing durable school-type-specific counterparts before NEW IDs.
+2. Search current official source for HB-1666 duty-book requirement; do not infer.
+3. Retry HB-1483/HB-1484 from official OAB source/Resmî Gazete only.
+4. Continue HB-1573+ transport exact-parent audit using only official sources.
+5. Continue HB-1646/HB-1647 and HB-1667 school-type correction staging.
 6. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V62** başlat; minimum **300 atom** hedefle.
+Kullanıcı `Devam` dediğinde soru sormadan **V63** başlat; minimum **300 atom** hedefle.
