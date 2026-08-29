@@ -10,74 +10,68 @@ Migration: **0**
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
 - Kalan exact doğrulama: **1.762**
-- Büyük atomik mevzuat havuzu: **8.235**
-- Son tamamlanan batch: **V50**
-- Sonraki batch: **V51**
+- Büyük atomik mevzuat havuzu: **8.755**
+- Son tamamlanan batch: **V51**
+- Sonraki batch: **V52**
 
-## V49 düzeltmesi
-V49'da `HB-0395` ve `HB-0138`, 31.08.2020 tarihli RAM Yönergesi Md5/4-a/7 current authority kabul edilerek ARTICLE_VERIFIED yapılmıştı. V50'de judicial-status kontrolü sonucunda bu dayanak current-authority şartını karşılamadığı için iki terfi geri alınmıştır.
+## V50 integrity düzeltmesi
+V49'da `HB-0395` ve `HB-0138`, 31.08.2020 tarihli RAM Yönergesi current authority kabul edilerek terfi ettirilmişti. V50'de yargısal durum kontrolü ile RAM Yönergesinin current authority olamayacağı kesinleşti ve sayaç **469 -> 467** olarak geri alındı.
 
-Historical V49 artifacts korunur; canonical current counter V50 ile düzeltilmiştir.
+## V51 — 520 atom / current-authority layer reconciliation
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-500plus-v51.md` — `10263204d31fc3223374f3856833cc627ed69ba3`
+- RAM authority layers: `docs/legal-ram-current-authority-layer-reconciliation-v51.md` — `0e9438baf67d893a3897bf41289a7ab22c54e29a`
+- Source validity audit: `docs/legal-source-validity-audit-v51.md` — `6a58cadc836c2b25c8321c2fb1b0c8b35c0f4dec`
+- ARTICLE_VERIFIED result: `docs/legal-article-verified-batch-v51.md` — `b931dc51dd54780c0b91713c02bb1280a146e99e`
+- Progress: `docs/legal-verification-progress-v51-delta.json` — `8643bf1d9dbd4b4c92a8cfdf5c170c6ff563335b`
+- Support atoms: **520**; atom pool **8.235 -> 8.755**.
+- ARTICLE_VERIFIED increment: **0**; final **467/2229 = %20,9511**.
 
-## V50 — 420 atom / integrity reconciliation
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-300plus-v50.md` — `0fd731785b70ccde4c3a5212a37190b7c0455ac7`
-- Judicial-status guard: `docs/legal-current-authority-judicial-status-guard-v50.md` — `14cb2f53b896bcc4b4d9a6e0a49f75fd53378404`
-- Verification rollback: `docs/legal-article-verified-batch-v50.md` — `2286976863b30f6348470fb5f754fa83ce7dc8c9`
-- Progress: `docs/legal-verification-progress-v50-delta.json` — `2fd378d01a564279e49770eef62b0bf5a1f08f75`
-- Support atoms: **420**; atom pool **7.815 -> 8.235**.
-- ARTICLE_VERIFIED: **469 -> 467**.
+### V51 kritik hukuk sonucu
+2020 RPD Yönetmeliğinin tamamı iptal edilmiş sayılmaz. Judicial effect provision-level tutulur.
+- RPD Regulation document: current inventoryde var.
+- Md14: judicially affected.
+- 31.08.2020 RAM Yönergesi: current authority değildir; historical/provenance only.
+- MEB 2026 RAM inspection guidance surviving Regulation provisions such as **Md16/4, Md18/1-m, Md13/1-a** still uses them as active criteria.
 
-### RAM Yönergesi judicial status
-Danıştay 8. Dairesi E.2020/6422 K.2024/2231, 24.04.2024 tarihli kararıyla 2020 Rehberlik ve Psikolojik Danışma Hizmetleri Yönetmeliği Md14 ile 31.08.2020 tarihli Rehberlik ve Araştırma Merkezi Yönergesinin bütününün iptaline karar vermiştir. Daha eski yargısal materyallerde Yönergenin tamamı yönünden yürütmenin durdurulduğu da görülmektedir.
-
-Bu nedenle MEB'in eski mevzuat/archive sayfasında PDF linkinin bulunması `current_effect=true` anlamına gelmez.
-
-### New current-authority gate
-`OFFICIAL_SOURCE_FOUND -> EFFECTIVE_DATE_CHECK -> REPEAL/REPLACEMENT_CHECK -> JUDICIAL_STATUS_CHECK -> CURRENT_EFFECT_CONFIRMED -> EXACT_ARTICLE_SCOPE_MATCH -> ARTICLE_VERIFIED`
-
-Fail states:
-- REPEALED
-- REPLACED
-- STAYED/SUSPENDED
-- ANNULLED
-- EXPIRED
-
-### Rollback
-- `HB-0395` -> `WITHHELD_CURRENT_AUTHORITY`
-- `HB-0138` -> `WITHHELD_CURRENT_AUTHORITY`
-
-Bunların legacy metinleri workflow/process evidence olarak korunur; bağımsız current Regulation/Law/CBK exact parent bulunmadan ARTICLE_VERIFIED olmaz.
-
-### RAM Md5-derived families
-Aşağıdaki aileler yalnız iptal edilmiş/stayed RAM Yönergesi Md5 ile exact bağlanıyorsa current verification alamaz:
-- school-program preparation consultancy
-- school-program review/feedback
-- institutions-without-counsellor work
-- school visit consultancy
-- stakeholder training activities
-- needs-analysis/local-target evaluation
-- year-start/year-end counsellor meetings
-- year-start planning/team creation
-
-Status: `CURRENT_PARENT_RESEARCH_REQUIRED`.
+New source model:
+- `L1 CURRENT_STATUTORY_OR_REGULATORY` -> ARTICLE_VERIFIED eligible when exact.
+- `L2 CURRENT_MINISTRY_OPERATIONAL` -> current guide/inspection/e-Rehberlik/official form evidence; not enough alone for ARTICLE_VERIFIED.
+- `L3 HISTORICAL_OPERATIONAL` -> annulled directive / stale handbook; current counter ineligible.
 
 ### HB-0602
-Master scope `PANSİYONLU OKULLAR` hatası hâlâ geçerlidir; ancak RAM Yönergesi Md5/4-a/2 artık current authority olarak kullanılmayacaktır.
-Status:
-- `SCOPE_ERROR_CANDIDATE`
-- `CURRENT_PARENT_RESEARCH_REQUIRED`
-Super Admin correction ancak current exact parent belirlendikten sonra publish edilir.
+Canonical: school RPD programs received from schools are examined and review forms returned.
+- stored scope is incorrectly `PANSİYONLU OKULLAR`.
+- 2026 inspection guidance still expects program examination/evaluation/feedback.
+- current exact surviving binding article for RAM-side review action not established.
+Status: `SCOPE_ERROR_CANDIDATE + CURRENT_OPERATIONAL_EVIDENCE + ARTICLE_PARENT_NOT_FOUND`.
 
 ### HB-0603
-`Okul risk haritalarının uygulanması` belirsizdir. Current RPD Regulationdaki school-side create/send duties ayrı atomlardır; RAM'e source-exact olmayan uygulama görevi üretilmez.
-Status: `ACTION_SCOPE_REWRITE_REQUIRED`.
+Canonical: `Okul risk haritalarının uygulanması`.
+Current exact chain is split:
+1. class counsellor November risk-data delivery -> RPD Regulation Md23/1-d
+2. school RPD service November risk-map creation -> Md21/4-b/3
+3. principal November send to RAM -> Md18/1-m
+4. RAM receive/collect responsibility-area data -> current 2026 inspection operational evidence until exact durable RAM article is found
+
+Legacy `uygulanması` does not identify actor/action. Status: `ACTION_SCOPE_REWRITE_REQUIRED`; no whole-row promotion.
+
+### HB-0138 / HB-0395
+2026 inspection guide still expects counsellor meetings at year start/mid-year/year-end, but exact retained parent is RAM Guide-level rather than surviving binding article.
+Status: `CURRENT_OPERATIONAL_EVIDENCE / ARTICLE_PARENT_NOT_FOUND`.
+V50 rollback remains correct.
 
 ## ARTICLE_VERIFIED değişmez kuralı
-Sayaç yalnız `workflow_id + current official source + exact article/paragraph + matching operational/applicability scope` birebir olduğunda artar.
+Sayaç yalnız:
+`workflow_id + current binding source + current exact provision + actor/action match + applicability/scope match`
+birebir olduğunda artar.
 
-Ek guard:
+Mandatory source gate:
+`SOURCE_FOUND -> DOCUMENT_EFFECT -> PROVISION_EFFECT -> JUDICIAL_STATUS -> REPEAL/AMENDMENT_CHAIN -> ACTOR/ACTION/SCOPE -> ARTICLE_VERIFIED`
+
+Guardlar:
 - official hosting != current legal effect.
-- directive/circular/guide için repeal/replacement/judicial-status kontrolü zorunlu.
+- document current olsa bile provision annulled olabilir.
+- directive/guide current operational evidence olabilir ama binding article yerine geçirilmez.
 - ID-title tahmin edilmez.
 - duplicate/calendar-instance ikinci kez sayılmaz.
 - yanlış scope/legal-family düzeltilip yayımlanmadan ARTICLE_VERIFIED olmaz.
@@ -86,27 +80,27 @@ Ek guard:
 - completed historical instances immutable.
 
 ## Açık kritik kayıtlar
-- RAM legacy Md5 families -> current Regulation/Law parent research.
-- `HB-2227` — RAM Merkez Komisyon Kurulu current exact named authority yok.
-- `HB-2222` — legacy HEM organ adı current organlarla birebir değil.
-- `HB-2229` / `HB-2218` — Okul Sağlığı source/scope/composition conflict.
-- `HB-2212` — current BİLSEM Yönergesinde Sınıf/Şube Öğretmenler Kurulu yok.
-- `HB-2210` — GSL/Spor Liseleri yetenek sınavı annual-guide dependent.
-- `HB-2204/2205/2206` — exact title/scope reconciliation.
-- `HB-0502` — obsolete annual guide + monthly report compound.
-- `HB-0602` — scope error + current-parent research.
-- `HB-0603` — actor/action rewrite pending.
+- RAM legacy Md5 families -> current binding parent research.
+- `HB-0602` -> scope error + article parent research.
+- `HB-0603` -> actor/action split/rewrite.
+- `HB-0138/HB-0395` -> current operational but no binding article parent.
+- `HB-2227` -> RAM Merkez Komisyon Kurulu current exact named authority yok.
+- `HB-2222` -> legacy HEM organ adı current organlarla birebir değil.
+- `HB-2229/HB-2218` -> Okul Sağlığı source/scope/composition conflict.
+- `HB-2212` -> current BİLSEM Yönergesinde Sınıf/Şube Öğretmenler Kurulu yok.
+- `HB-2210` -> GSL/Spor Liseleri yetenek sınavı annual-guide dependent.
+- `HB-2204/2205/2206` -> exact title/scope reconciliation.
+- `HB-0502` -> obsolete annual guide + monthly report compound.
 
-## V51 önceliği — 300+ atom
-1. RAM operational tasks için iptal edilmiş 2020 Yönerge yerine current upper-level authority ara: 573/ilgili KHK-Kanun hükümleri, current Özel Eğitim Hizmetleri Yönetmeliği, current RPD Regulation surviving provisions ve yeni MEB düzenlemeleri.
-2. `HB-0395/HB-0138` için bağımsız current exact parent bulunursa yeniden terfi; bulunmazsa withheld.
-3. `HB-0602` için current source exact program-review duty araştır; scope correction only after authority is safe.
-4. RAM visit/consultancy family için current legal parent araştır.
-5. Source-validity auditini daha önce ARTICLE_VERIFIED yapılan directive/guide-based kayıtlar üzerinde genişlet.
-6. School Health `HB-2218/HB-2229` conflict split.
-7. BİLSEM current directive judicial/repeal status guard + Md29 operational duties.
-8. Migration **0**.
+## V52 önceliği — 300+ atom
+1. Current RPD Regulation surviving provisions Md8-10, Md16-18, Md21, Md23 ile masterdaki school-side standalone workflows için exact ID crosswalk çıkar; safe ARTICLE_VERIFIED artışlarını yakala.
+2. `HB-0603` için Super Admin atomic rewrite staging payloadını finalize et; master denominator değişmeden child publication planı hazırla.
+3. `HB-0602` source-page boundary/scope correction paketini finalize et; operational-only publication policy ile article verificationı ayır.
+4. 2026 RAM inspection guide criterion setini legal parent / guide-only parent diye tümden sınıflandır.
+5. Earlier ARTICLE_VERIFIED directive-based rows için judicial/repeal auditini genişlet: BİLSEM, İYEP, Social Activities supporting directives.
+6. School Health `HB-2218/HB-2229` source-level split.
+7. Migration **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V51** başlat; minimum **300 atom** hedefle.
+Kullanıcı `Devam` dediğinde soru sormadan **V52** başlat; minimum **300 atom** hedefle.
