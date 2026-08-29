@@ -7,98 +7,90 @@ Mode: `ARTICLE_VERIFIED_PRIORITY`
 Migration: **0**
 Lovable usage: **0**
 
+## Kaynak politikası — V61 sonrası zorunlu
+ARTICLE_VERIFIED için yalnız projece kabul edilen resmî kaynaklar kullanılacaktır:
+- `mevzuat.gov.tr`
+- `mevzuat.meb.gov.tr`
+- `meb.gov.tr` ve Bakanlığın resmî genel müdürlük/başkanlık alt alanları
+- `resmigazete.gov.tr`
+İkincil mevzuat siteleri, okul sitesi kopyaları ve hukuk agregatörleri exact doğrulama kaynağı değildir. Resmî el kitabı/denetim rehberi ancak L2 operasyonel destek olabilir; yönetmelik maddesinin yerine geçmez.
+
 ## Güncel kesin durum
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
 - Kalan exact doğrulama: **1.762**
-- Büyük atomik mevzuat havuzu: **12.655**
-- Son tamamlanan batch: **V60**
-- Sonraki batch: **V61**
+- Büyük atomik mevzuat havuzu: **13.075**
+- Son tamamlanan batch: **V61**
+- Sonraki batch: **V62**
 
-## Integrity history
-- V49 HB-0395/HB-0138 temporary promotion via annulled RAM Directive; V50 rollback.
-- V53 HB-2038 rollback.
-- V54 HB-2046/HB-2049 rollback; HB-2048/HB-2050 promotion.
-- V55 HB-2047 privacy promotion.
-- V56 HB-0310 compound rollback + HB-2051 promotion.
-- V57 HB-2139 compound rollback.
-- V58 HB-2137 promotion; connector semantics guard.
-- V59 HB-2140 promotion; OAB/transport/discipline wrong-family corrections.
-- V60 HB-1360 current Taşınır authority recovered; HB-1645 rolled back for school-type/action scope mismatch.
+## V61 — 420 atom
+- Official-source integrity: `docs/legal-official-source-integrity-v61.md` — `41b67f9eb0a1baf43d6abba27a773e5dedbaf292`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v61.md` — `a354bdaaf265293f34b6d9b643861ead80c87eb8`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v61.md` — `f9d6a17ac4e00feab948e0e420115619b10db034`
+- Progress: `docs/legal-verification-progress-v61-delta.json` — `200e12d25c1b2e9b884743c13347809cc740f6d7`
+- Support atoms: **420**; pool **12.655 -> 13.075**.
+- ARTICLE_VERIFIED: **467 -> 467** (+1 / -1).
 
-## V60 — 420 atom
-- Integrity: `docs/legal-asset-schedule-integrity-reconciliation-v60.md` — `5386ed0fb85dffbd156e2a6915f075a51c111778`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v60.md` — `04e95808198a83845bcc48141cbd4fe181a7ad46`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v60.md` — `d811971215040da75ebdc50f09e197e16928e848`
-- Progress: `docs/legal-verification-progress-v60-delta.json` — `2a8207a2ccdfa357fc3b5b64c383b43115f5c452`
-- Support atoms: **420**; pool **12.235 -> 12.655**.
-- ARTICLE_VERIFIED: **468 -> 467**.
+### V61 new exact
+`HB-1570` — taşımalı gelen öğrencilerin geliş ve gidiş saatine göre ders programının düzenlenmesi.
+Official current source: Resmî Gazete 01.08.2024 / 32619, Taşıma Yoluyla Eğitime Erişim Yönetmeliği Md13/1-ç.
+Delta +1.
 
-### V60 retained/source-corrected
-`HB-1360` — `Alınan malzemenin taşınır mal kayıt işlemleri yapılmıştır.`
-Legacy Batch02 OÖİKY Md11 is wrong. Current exact legal family is the 2024 Taşınır Mal Yönetmeliği:
-- Md10/1-a: accepted/delivered movable entries use Varlık İşlem Fişi subject to listed exceptions;
-- Md11/1: entry/exit records and prescribed documents primarily electronic;
-- Md12/1: all movable property and related transactions recorded, document-based.
-Applicability must reflect public-administration/public-institution scope rather than pretending this is an OÖİKY registration/nakil rule.
-Delta 0.
-
-### V60 rollback
-`HB-1645` — whole master text combines balanced/successive course distribution with PE/music first/last-day preference. Batch02 had wrongly attached OÖİKY Md90/2.
-Current OÖİKY Md5/3 only provides the first/last-day PE/game/sport/music preference. Current OÖKY Md12/2-b provides the full secondary-school sentence including balanced course distribution. Durable master metadata is broad `ALL`; whole-row actor/scope/applicability therefore fails strict exactness.
-Status: `ROLLBACK_ARTICLE_VERIFIED + SCHOOL_TYPE_SCOPE_REWRITE_REQUIRED`.
+### V61 rollback
+`HB-1667` — öğle nöbetinin nöbetçi müdür yardımcısı ve öğretmenlerin temel ihtiyaçları gözetilerek dönüşümlü/dengeli düzenlenmesi.
+Batch02 source OÖİKY Md90/2 was unrelated. Secondary-school exact semantics live in OÖKY Md91/2-i (RG 08.09.2023 amendment); primary/lower-secondary has a separate OÖİKY Md44 duty regime. Durable ALL scope cannot be treated as one universal exact provision.
+Status: `ROLLBACK_ARTICLE_VERIFIED + SCHOOL_TYPE_SPLIT_REQUIRED`.
 Delta -1.
 
-### V60 withheld exact-text candidates
-- HB-1646 -> OÖKY Md12/2-c, but durable broad school-type scope must be corrected/published before count.
-- HB-1647 -> OÖKY Md12/2-ç, same scope issue.
-- HB-1483 -> OAB Regulation Md11/1-c exact action candidate; institution/applicability review first.
-- HB-1484 -> OAB Regulation Md16/1 exact action candidate; institution/applicability review first.
+### V61 retained
+- HB-1571 -> current transport Md13/1-e.
+- HB-1572 -> current transport Md13/1-h.
+- HB-1577 -> current transport Md13/1-ğ.
 
-## ARTICLE_VERIFIED immutable gate
-`workflow_id + current binding/current-valid source + exact provision + actor/action/object/recipient/timing/system/applicability + legal connector semantics`
+### V61 official-source holds
+- HB-1483 / HB-1484: MEB 2024/35 confirms current OAB regulatory framework and 2023 amendment, but official regulation PDF endpoint was unavailable in this pass. Exact article promotion is withheld; no fallback to secondary domains.
+
+## Existing critical guards
+`workflow_id + current official/current-valid binding source + exact provision + actor/action/object/recipient/timing/system/applicability + legal connector semantics`
 
 Mandatory gate:
-`SOURCE_FOUND -> DOCUMENT_EFFECT -> PROVISION_EFFECT -> JUDICIAL_STATUS -> REPEAL/AMENDMENT_CHAIN -> ACTOR/ACTION/OBJECT/RECIPIENT/TIMING/SYSTEM/SCOPE/SEMANTICS -> ARTICLE_VERIFIED`
+`OFFICIAL_DOMAIN -> SOURCE_FOUND -> DOCUMENT_EFFECT -> PROVISION_EFFECT -> JUDICIAL_STATUS -> REPEAL/AMENDMENT_CHAIN -> ACTOR/ACTION/OBJECT/RECIPIENT/TIMING/SYSTEM/SCOPE/SEMANTICS -> ARTICLE_VERIFIED`
 
-Guards:
-- official hosting != current legal effect.
-- wrong-family source correction delta 0 only when same durable action has a current exact parent and applicability remains valid.
-- a partially matching school-type provision cannot validate a broader whole sentence.
-- broad `ALL` metadata cannot silently inherit a secondary-school-only provision.
-- compound = WITHHELD/SPLIT; if already counted, rollback.
-- named repealed source cannot be silently replaced without rewrite where source identity is part of master semantics.
-- historical completed instances immutable.
-- duplicate/calendar-instance second count forbidden.
+Additional guards:
+- newer Resmî Gazete amendment controls over stale consolidated text;
+- official hosting alone does not prove current effect;
+- broad ALL scope cannot silently inherit a school-type-specific provision;
+- handbook/manual cannot replace an exact regulation provision;
+- compound workflows split before count;
+- historical completed instances immutable;
+- duplicate count forbidden.
 
 ## Açık kritik kayıtlar
-- HB-1645 -> school-type rewrite/split after V60 rollback.
-- HB-1646/HB-1647 -> exact OÖKY text but school-type applicability correction pending.
-- HB-1483/HB-1484 -> OAB exact-action candidates, applicability review pending.
-- HB-2138 -> master rewrite required (`written + where necessary oral`).
-- HB-2139 -> split children staged; SA publication pending.
-- HB-2045 -> school-type/current-parent split.
-- HB-2052 -> 2006/26 repealed; rewrite required.
-- HB-2053 -> multi-provision support-room candidate.
-- HB-0602 -> PANSİYONLU scope error + RAM-side binding parent unresolved.
-- HB-0603 -> atomic staging; SA publication pending.
-- HB-0138/HB-0395 -> L2 operational only.
-- HB-2218/HB-2229 -> School Health scope issues.
-- HB-2227 -> RAM Merkez Komisyon Kurulu current authority unresolved.
-- HB-2222 -> HEM legacy title mismatch.
-- HB-2212 -> current BİLSEM Directive has no Sınıf/Şube Öğretmenler Kurulu.
-- HB-2210 -> talent exam annual-guide dependent.
-- HB-2204/2205/2206 -> title/scope reconciliation.
-- HB-0502 -> obsolete guide + compound monthly report.
+- HB-1483/HB-1484 -> retry current official OAB exact provisions only.
+- HB-1645 -> V60 rollback/school-type split.
+- HB-1646/HB-1647 -> OÖKY exact text but applicability publication pending.
+- HB-1667 -> V61 rollback/school-type split.
+- HB-2138 -> exact semantics rewrite.
+- HB-2139 -> split children staged.
+- HB-2045 -> school-type reporting split.
+- HB-2052 -> repealed 2006/26 rewrite.
+- HB-2053 -> support-room multi-provision candidate.
+- HB-0602 -> RAM-side current binding parent unresolved; annulled RAM Directive forbidden.
+- HB-0603 -> atomic children staged.
+- HB-0138/HB-0395 -> L2 only.
+- HB-2218/HB-2229 -> School Health scope.
+- HB-2227 -> RAM named authority unresolved.
+- HB-2222 -> HEM title mismatch.
+- HB-2212 -> BİLSEM current directive organ mismatch.
 
-## V61 önceliği — 300+ atom
-1. Audit HB-1483 onward against current OAB Regulation Md11, Md15-18, Md23 and identify which broad ALL rows need applicability correction vs source-correct/promotion.
-2. Audit HB-1570/HB-1571/HB-1572 against current Taşıma Yoluyla Eğitime Erişim Yönetmeliği; distinguish school management duties, meal duties, route/service actors and year parameters.
-3. Continue HB-1646/HB-1647/HB-1648 school-type split; never promote OÖKY-only text under ALL scope.
-4. Audit HB-1667 and neighboring duty-roster rows currently tied to OÖİKY Md90/2.
-5. Continue HB-2138/HB-2139 and unresolved HB-2053/HB-2045/HB-0602 chains.
+## V62 önceliği — 300+ atom
+1. Retry HB-1483 onward using only official OAB Regulation/Resmî Gazete/MEB sources; if exact current article remains inaccessible, keep WITHHELD.
+2. Continue HB-1573 onward against current transport Md13 actor/action chain; search uncounted durable exact matches before NEW IDs.
+3. Split HB-1667 by OÖKY vs OÖİKY current duty regime; preserve historical instances.
+4. Audit HB-1655-HB-1666 neighboring duty rows solely against official current OÖKY/OÖİKY and later amendment chains.
+5. Continue HB-1646/HB-1647 school-type correction.
 6. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V61** başlat; minimum **300 atom** hedefle.
+Kullanıcı `Devam` dediğinde soru sormadan **V62** başlat; minimum **300 atom** hedefle.
