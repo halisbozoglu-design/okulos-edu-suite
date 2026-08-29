@@ -1,0 +1,19 @@
+{
+  "batch": "V58",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "support_atoms": 420,
+  "atom_pool_before": 11395,
+  "atom_pool_after": 11815,
+  "article_verified_before": 466,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "new_exact": [
+    {"workflow_id": "HB-2137", "source": "MEB Ortaöğretim Kurumları Yönetmeliği", "article": "193/1"}
+  ],
+  "source_corrections_zero_delta": ["HB-2135", "HB-2079", "HB-2081", "HB-2093"],
+  "withheld": ["HB-2138", "HB-2139"],
+  "migration_count": 0,
+  "lovable_usage": 0
+}
