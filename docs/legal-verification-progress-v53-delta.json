@@ -1,0 +1,17 @@
+{
+  "batch": "V53",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_after": 466,
+  "article_verified_ratio_percent": 20.9062,
+  "remaining_exact": 1763,
+  "support_atoms_added": 460,
+  "atom_pool_before": 9235,
+  "atom_pool_after": 9695,
+  "migration_count": 0,
+  "retained_source_corrections": ["HB-2037"],
+  "rollbacks": ["HB-2038"],
+  "atomic_publication_staging": ["HB-0603"],
+  "next_batch": "V54"
+}
