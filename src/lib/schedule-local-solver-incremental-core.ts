@@ -392,6 +392,20 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
   const toTask = (g: Placement): Task => ({ a: g.a, duration: g.rows.length, activityKey: g.key });
   const constructionPortfolio = constructionPortfolioForSeed(p.seed);
   let constructionStep = 0;
+  const hardSameTimePeer = (task: Task, queue: Task[]) => {
+    const index = queue.findIndex(
+      (peer) =>
+        peer.duration === task.duration &&
+        relations.some(
+          (relation) =>
+            relation.mode === "HARD" &&
+            relation.relation_type === "SAME_TIME" &&
+            ((selector(task, relation.left_selector) && selector(peer, relation.right_selector)) ||
+              (selector(task, relation.right_selector) && selector(peer, relation.left_selector))),
+        ),
+    );
+    return index >= 0 ? { index, task: queue[index]! } : null;
+  };
   const construct = (q0: Task[]) => {
     const q = [...q0];
     let f = 0;
@@ -413,6 +427,23 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
       const t = q.splice(decision.taskIndex, 1)[0]!,
         cs = options[decision.taskIndex]!.cells as Cell[],
         c = cs[decision.cellIndex]!;
+      const peer = hardSameTimePeer(t, q);
+      if (peer) {
+        let paired = false;
+        for (const candidate of cs) {
+          place(t, candidate.d, candidate.s, candidate.classroom_id);
+          const peerCell = cells(peer.task).find((x) => x.d === candidate.d && x.s === candidate.s);
+          if (peerCell) {
+            q.splice(peer.index, 1);
+            place(peer.task, peerCell.d, peerCell.s, peerCell.classroom_id);
+            paired = true;
+            break;
+          }
+          const placed = groups().find((g) => g.key === t.activityKey);
+          if (placed) removeRows(placed.rows);
+        }
+        if (paired) continue;
+      }
       place(t, c.d, c.s, c.classroom_id);
     }
     return f;

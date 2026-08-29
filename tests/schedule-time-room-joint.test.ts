@@ -1,15 +1,273 @@
-import{describe,expect,it}from"bun:test";import{solveIncrementalSchedule,type JointLocalProblem}from"../src/lib/schedule-local-solver-incremental-core";
-const base=(patch:Partial<JointLocalProblem>={}):JointLocalProblem=>({days:[1],periods:4,assignments:[],locked:[],unavailable:[],teacherConstraints:[],courseRules:[],seed:11,enableLns:false,...patch});
-const a=(id:string,teacher:string,klass:string,hours=1)=>({assignment_id:id,teacher_id:teacher,class_id:klass,course_id:`q-${id}`,assigned_hours:hours,allowed_periods:[1,2,3,4]});
-describe("joint time room solver",()=>{
- it("treats classroom as part of the placement tuple and prevents room collisions",()=>{const p=base({periods:1,assignments:[a("a","t1","c1"),a("b","t2","c2")],rooms:[{classroom_id:"R1"},{classroom_id:"R2"}]});const r=solveIncrementalSchedule(p);expect(r.complete).toBe(true);expect(r.rows).toHaveLength(2);expect(new Set(r.rows.map(x=>x.classroom_id)).size).toBe(2);expect(r.rows.every(x=>x.weekday===1&&x.period===1)).toBe(true)});
- it("enforces room type, feature and capacity requirements while selecting time",()=>{const p=base({assignments:[a("lab","t1","c1")],rooms:[{classroom_id:"SMALL",capacity:15,room_type:"LAB",features:["SINK"]},{classroom_id:"THEORY",capacity:40,room_type:"THEORY",features:["PROJECTOR"]},{classroom_id:"LAB40",capacity:40,room_type:"LAB",features:["SINK","PROJECTOR"]}],roomRequirements:{lab:{required_room_type:"LAB",required_features:["PROJECTOR"],minimum_capacity:30}}});const r=solveIncrementalSchedule(p);expect(r.complete).toBe(true);expect(new Set(r.rows.map(x=>x.classroom_id))).toEqual(new Set(["LAB40"]))});
- it("keeps one room for every period of an atomic multi-period block",()=>{const x=a("block","t1","c1",2);const p=base({assignments:[x],courseRules:[{course_id:x.course_id,block_pattern:[2],max_per_day:2,prohibited_days:null,prohibited_periods:null}],rooms:[{classroom_id:"R1"},{classroom_id:"R2"}]});const r=solveIncrementalSchedule(p);expect(r.complete).toBe(true);expect(r.rows).toHaveLength(2);expect(new Set(r.rows.map(y=>y.classroom_id)).size).toBe(1);expect(Math.abs(r.rows[0]!.period-r.rows[1]!.period)).toBe(1)});
- it("preserves locked room assignments",()=>{const x=a("locked","t1","c1");const p=base({assignments:[x],locked:[{assignment_id:x.assignment_id,teacher_id:x.teacher_id,class_id:x.class_id,weekday:1,period:2,classroom_id:"R2",locked:true}],rooms:[{classroom_id:"R1"},{classroom_id:"R2"}]});const r=solveIncrementalSchedule(p);expect(r.complete).toBe(true);expect(r.rows[0]!.classroom_id).toBe("R2");expect(r.rows[0]!.locked).toBe(true)});
- it("honors preferred rooms as a soft placement cost",()=>{const x=a("pref","t1","c1");const p=base({assignments:[x],rooms:[{classroom_id:"R1"},{classroom_id:"R2"}],roomRequirements:{pref:{preferred_classroom_ids:["R2"]}}});const r=solveIncrementalSchedule(p);expect(r.complete).toBe(true);expect(r.rows[0]!.classroom_id).toBe("R2")});
- it("rejects an adjacent cross-building placement when transfer is forbidden",()=>{const first=a("first","t1","c1"),next=a("next","t1","c2");const p=base({periods:2,assignments:[first,next],locked:[{assignment_id:first.assignment_id,teacher_id:first.teacher_id,class_id:first.class_id,weekday:1,period:1,classroom_id:"A1",locked:true}],rooms:[{classroom_id:"A1",building_id:"A"},{classroom_id:"B1",building_id:"B"}],roomRequirements:{next:{required_classroom_ids:["B1"]}},periodBreaks:[{after_period:1,minutes:20,transfer_allowed:false}],buildingTravel:[{from_building_id:"A",to_building_id:"B",minutes:5}]});const r=solveIncrementalSchedule(p);expect(r.complete).toBe(false);expect(r.failed).toBe(1)});
- it("allows a cross-building placement only when the break covers travel",()=>{const first=a("first","t1","c1"),next=a("next","t1","c2");const p=base({periods:2,assignments:[first,next],locked:[{assignment_id:first.assignment_id,teacher_id:first.teacher_id,class_id:first.class_id,weekday:1,period:1,classroom_id:"A1",locked:true}],rooms:[{classroom_id:"A1",building_id:"A"},{classroom_id:"B1",building_id:"B"}],roomRequirements:{next:{required_classroom_ids:["B1"]}},periodBreaks:[{after_period:1,minutes:10,transfer_allowed:true}],buildingTravel:[{from_building_id:"A",to_building_id:"B",minutes:7}]});const r=solveIncrementalSchedule(p);expect(r.complete).toBe(true);expect(r.rows.find(x=>x.assignment_id===next.assignment_id)).toMatchObject({period:2,classroom_id:"B1"})});
- it("allows disjoint subgroups of one class to run together but keeps whole-class lessons exclusive",()=>{const g1={...a("g1","t1","c1"),subgroup_id:"sg1"},g2={...a("g2","t2","c1"),subgroup_id:"sg2"},whole=a("whole","t3","c1");const split=solveIncrementalSchedule(base({periods:1,assignments:[g1,g2]}));expect(split.complete).toBe(true);expect(split.rows.map(x=>x.subgroup_id).sort()).toEqual(["sg1","sg2"]);const blocked=solveIncrementalSchedule(base({periods:1,assignments:[g1,whole]}));expect(blocked.complete).toBe(false)});
- it("shares a workshop pool only within simultaneous and aggregate learner capacity",()=>{const x={...a("x","t1","c1"),student_count:16},y={...a("y","t2","c2"),student_count:16},room={classroom_id:"WP",capacity:20,room_type:"WORKSHOP",room_pool_id:"POOL",pool_capacity:32,max_simultaneous_activities:2};const ok=solveIncrementalSchedule(base({periods:1,assignments:[x,y],rooms:[room],roomRequirements:{x:{required_room_type:"WORKSHOP"},y:{required_room_type:"WORKSHOP"}}}));expect(ok.complete).toBe(true);expect(new Set(ok.rows.map(r=>r.classroom_id))).toEqual(new Set(["WP"]));const over=solveIncrementalSchedule(base({periods:1,assignments:[x,{...y,student_count:17}],rooms:[room],roomRequirements:{x:{required_room_type:"WORKSHOP"},y:{required_room_type:"WORKSHOP"}}}));expect(over.complete).toBe(false)});
- it("treats maintenance windows as HARD room unavailability",()=>{const x=a("maint","t1","c1");const r=solveIncrementalSchedule(base({periods:2,assignments:[x],rooms:[{classroom_id:"W1"}],roomRequirements:{maint:{required_classroom_ids:["W1"]}},roomUnavailable:[{classroom_id:"W1",weekday:1,period:1}]}));expect(r.complete).toBe(true);expect(r.rows[0]!.period).toBe(2)});
+import { describe, expect, it } from "bun:test";
+import {
+  solveIncrementalSchedule,
+  type JointLocalProblem,
+} from "../src/lib/schedule-local-solver-incremental-core";
+const base = (patch: Partial<JointLocalProblem> = {}): JointLocalProblem => ({
+  days: [1],
+  periods: 4,
+  assignments: [],
+  locked: [],
+  unavailable: [],
+  teacherConstraints: [],
+  courseRules: [],
+  seed: 11,
+  enableLns: false,
+  ...patch,
+});
+const a = (id: string, teacher: string, klass: string, hours = 1) => ({
+  assignment_id: id,
+  teacher_id: teacher,
+  class_id: klass,
+  course_id: `q-${id}`,
+  assigned_hours: hours,
+  allowed_periods: [1, 2, 3, 4],
+});
+describe("joint time room solver", () => {
+  it("treats classroom as part of the placement tuple and prevents room collisions", () => {
+    const p = base({
+      periods: 1,
+      assignments: [a("a", "t1", "c1"), a("b", "t2", "c2")],
+      rooms: [{ classroom_id: "R1" }, { classroom_id: "R2" }],
+    });
+    const r = solveIncrementalSchedule(p);
+    expect(r.complete).toBe(true);
+    expect(r.rows).toHaveLength(2);
+    expect(new Set(r.rows.map((x) => x.classroom_id)).size).toBe(2);
+    expect(r.rows.every((x) => x.weekday === 1 && x.period === 1)).toBe(true);
+  });
+  it("enforces room type, feature and capacity requirements while selecting time", () => {
+    const p = base({
+      assignments: [a("lab", "t1", "c1")],
+      rooms: [
+        { classroom_id: "SMALL", capacity: 15, room_type: "LAB", features: ["SINK"] },
+        { classroom_id: "THEORY", capacity: 40, room_type: "THEORY", features: ["PROJECTOR"] },
+        { classroom_id: "LAB40", capacity: 40, room_type: "LAB", features: ["SINK", "PROJECTOR"] },
+      ],
+      roomRequirements: {
+        lab: { required_room_type: "LAB", required_features: ["PROJECTOR"], minimum_capacity: 30 },
+      },
+    });
+    const r = solveIncrementalSchedule(p);
+    expect(r.complete).toBe(true);
+    expect(new Set(r.rows.map((x) => x.classroom_id))).toEqual(new Set(["LAB40"]));
+  });
+  it("keeps one room for every period of an atomic multi-period block", () => {
+    const x = a("block", "t1", "c1", 2);
+    const p = base({
+      assignments: [x],
+      courseRules: [
+        {
+          course_id: x.course_id,
+          block_pattern: [2],
+          max_per_day: 2,
+          prohibited_days: null,
+          prohibited_periods: null,
+        },
+      ],
+      rooms: [{ classroom_id: "R1" }, { classroom_id: "R2" }],
+    });
+    const r = solveIncrementalSchedule(p);
+    expect(r.complete).toBe(true);
+    expect(r.rows).toHaveLength(2);
+    expect(new Set(r.rows.map((y) => y.classroom_id)).size).toBe(1);
+    expect(Math.abs(r.rows[0]!.period - r.rows[1]!.period)).toBe(1);
+  });
+  it("preserves locked room assignments", () => {
+    const x = a("locked", "t1", "c1");
+    const p = base({
+      assignments: [x],
+      locked: [
+        {
+          assignment_id: x.assignment_id,
+          teacher_id: x.teacher_id,
+          class_id: x.class_id,
+          weekday: 1,
+          period: 2,
+          classroom_id: "R2",
+          locked: true,
+        },
+      ],
+      rooms: [{ classroom_id: "R1" }, { classroom_id: "R2" }],
+    });
+    const r = solveIncrementalSchedule(p);
+    expect(r.complete).toBe(true);
+    expect(r.rows[0]!.classroom_id).toBe("R2");
+    expect(r.rows[0]!.locked).toBe(true);
+  });
+  it("honors preferred rooms as a soft placement cost", () => {
+    const x = a("pref", "t1", "c1");
+    const p = base({
+      assignments: [x],
+      rooms: [{ classroom_id: "R1" }, { classroom_id: "R2" }],
+      roomRequirements: { pref: { preferred_classroom_ids: ["R2"] } },
+    });
+    const r = solveIncrementalSchedule(p);
+    expect(r.complete).toBe(true);
+    expect(r.rows[0]!.classroom_id).toBe("R2");
+  });
+  it("rejects an adjacent cross-building placement when transfer is forbidden", () => {
+    const first = a("first", "t1", "c1"),
+      next = a("next", "t1", "c2");
+    const p = base({
+      periods: 2,
+      assignments: [first, next],
+      locked: [
+        {
+          assignment_id: first.assignment_id,
+          teacher_id: first.teacher_id,
+          class_id: first.class_id,
+          weekday: 1,
+          period: 1,
+          classroom_id: "A1",
+          locked: true,
+        },
+      ],
+      rooms: [
+        { classroom_id: "A1", building_id: "A" },
+        { classroom_id: "B1", building_id: "B" },
+      ],
+      roomRequirements: { next: { required_classroom_ids: ["B1"] } },
+      periodBreaks: [{ after_period: 1, minutes: 20, transfer_allowed: false }],
+      buildingTravel: [{ from_building_id: "A", to_building_id: "B", minutes: 5 }],
+    });
+    const r = solveIncrementalSchedule(p);
+    expect(r.complete).toBe(false);
+    expect(r.failed).toBe(1);
+  });
+  it("allows a cross-building placement only when the break covers travel", () => {
+    const first = a("first", "t1", "c1"),
+      next = a("next", "t1", "c2");
+    const p = base({
+      periods: 2,
+      assignments: [first, next],
+      locked: [
+        {
+          assignment_id: first.assignment_id,
+          teacher_id: first.teacher_id,
+          class_id: first.class_id,
+          weekday: 1,
+          period: 1,
+          classroom_id: "A1",
+          locked: true,
+        },
+      ],
+      rooms: [
+        { classroom_id: "A1", building_id: "A" },
+        { classroom_id: "B1", building_id: "B" },
+      ],
+      roomRequirements: { next: { required_classroom_ids: ["B1"] } },
+      periodBreaks: [{ after_period: 1, minutes: 10, transfer_allowed: true }],
+      buildingTravel: [{ from_building_id: "A", to_building_id: "B", minutes: 7 }],
+    });
+    const r = solveIncrementalSchedule(p);
+    expect(r.complete).toBe(true);
+    expect(r.rows.find((x) => x.assignment_id === next.assignment_id)).toMatchObject({
+      period: 2,
+      classroom_id: "B1",
+    });
+  });
+  it("allows disjoint subgroups of one class to run together but keeps whole-class lessons exclusive", () => {
+    const g1 = { ...a("g1", "t1", "c1"), subgroup_id: "sg1" },
+      g2 = { ...a("g2", "t2", "c1"), subgroup_id: "sg2" },
+      whole = a("whole", "t3", "c1");
+    const split = solveIncrementalSchedule(base({ periods: 1, assignments: [g1, g2] }));
+    expect(split.complete).toBe(true);
+    expect(split.rows.map((x) => x.subgroup_id).sort()).toEqual(["sg1", "sg2"]);
+    const blocked = solveIncrementalSchedule(base({ periods: 1, assignments: [g1, whole] }));
+    expect(blocked.complete).toBe(false);
+  });
+  it("constructs a HARD SAME_TIME subgroup pair as one placement decision", () => {
+    const left = { ...a("left", "t1", "c1", 2), subgroup_id: "sg1" },
+      right = { ...a("right", "t2", "c1", 2), subgroup_id: "sg2" };
+    const p = base({
+      periods: 2,
+      assignments: [left, right],
+      courseRules: [
+        {
+          course_id: left.course_id,
+          block_pattern: [2],
+          max_per_day: 2,
+          prohibited_days: null,
+          prohibited_periods: null,
+        },
+        {
+          course_id: right.course_id,
+          block_pattern: [2],
+          max_per_day: 2,
+          prohibited_days: null,
+          prohibited_periods: null,
+        },
+      ],
+      rooms: [{ classroom_id: "W1" }, { classroom_id: "W2" }],
+      planningRelations: [
+        {
+          id: "pair",
+          relation_type: "SAME_TIME",
+          mode: "HARD",
+          weight: 1,
+          left_selector: { assignment_id: left.assignment_id },
+          right_selector: { assignment_id: right.assignment_id },
+          parameters: {},
+        },
+      ],
+    });
+    const r = solveIncrementalSchedule(p);
+    expect(r.complete).toBe(true);
+    expect(r.rows.filter((x) => x.assignment_id === "left").map((x) => x.period)).toEqual(
+      r.rows.filter((x) => x.assignment_id === "right").map((x) => x.period),
+    );
+    expect(new Set(r.rows.map((x) => x.classroom_id)).size).toBe(2);
+  });
+  it("shares a workshop pool only within simultaneous and aggregate learner capacity", () => {
+    const x = { ...a("x", "t1", "c1"), student_count: 16 },
+      y = { ...a("y", "t2", "c2"), student_count: 16 },
+      room = {
+        classroom_id: "WP",
+        capacity: 20,
+        room_type: "WORKSHOP",
+        room_pool_id: "POOL",
+        pool_capacity: 32,
+        max_simultaneous_activities: 2,
+      };
+    const ok = solveIncrementalSchedule(
+      base({
+        periods: 1,
+        assignments: [x, y],
+        rooms: [room],
+        roomRequirements: {
+          x: { required_room_type: "WORKSHOP" },
+          y: { required_room_type: "WORKSHOP" },
+        },
+      }),
+    );
+    expect(ok.complete).toBe(true);
+    expect(new Set(ok.rows.map((r) => r.classroom_id))).toEqual(new Set(["WP"]));
+    const over = solveIncrementalSchedule(
+      base({
+        periods: 1,
+        assignments: [x, { ...y, student_count: 17 }],
+        rooms: [room],
+        roomRequirements: {
+          x: { required_room_type: "WORKSHOP" },
+          y: { required_room_type: "WORKSHOP" },
+        },
+      }),
+    );
+    expect(over.complete).toBe(false);
+  });
+  it("treats maintenance windows as HARD room unavailability", () => {
+    const x = a("maint", "t1", "c1");
+    const r = solveIncrementalSchedule(
+      base({
+        periods: 2,
+        assignments: [x],
+        rooms: [{ classroom_id: "W1" }],
+        roomRequirements: { maint: { required_classroom_ids: ["W1"] } },
+        roomUnavailable: [{ classroom_id: "W1", weekday: 1, period: 1 }],
+      }),
+    );
+    expect(r.complete).toBe(true);
+    expect(r.rows[0]!.period).toBe(2);
+  });
 });
