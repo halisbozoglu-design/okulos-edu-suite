@@ -1,0 +1,23 @@
+{
+  "batch": "V62",
+  "date": "2026-08-29",
+  "support_atoms_added": 410,
+  "atom_pool_before": 13075,
+  "atom_pool_after": 13485,
+  "article_verified_before": 467,
+  "article_verified_after": 467,
+  "master_total": 2229,
+  "ratio_percent": 20.9511,
+  "remaining": 1762,
+  "delta": 0,
+  "migration": 0,
+  "lovable_usage": 0,
+  "source_policy": "OFFICIAL_ONLY",
+  "key_findings": [
+    "HB-1659 master two-year post-birth duty exemption conflicts with current official one-year rule",
+    "HB-1655..1664 need school-type split rather than ALL-scope promotion",
+    "HB-1666 exact current duty-book parent unresolved",
+    "HB-1573 punctual-arrival current exact parent not locked",
+    "HB-1483/HB-1484 held because official OAB regulation endpoint failed; no secondary fallback"
+  ]
+}
