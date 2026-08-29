@@ -306,7 +306,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
       vocTeacherB = c < 3 ? "VOC-30" : `VOC-${(c * 2 + 1) % 36}`,
       vocAllowed = profile.shifted
         ? program === "ATP"
-          ? [4, 5, 6, 7, 8, 9, 10]
+          ? [6, 7, 8, 9, 10]
           : program === "MESEM"
             ? [1, 2, 3, 4, 5]
             : [6, 7, 8, 9, 10]
