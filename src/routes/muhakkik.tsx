@@ -10,7 +10,7 @@ export const Route = createFileRoute("/muhakkik")({
 
 function MuhakkikPage() {
   return (
-    <AppShell title="Muhakkik Soruşturma" subtitle="Dosya yükle · ifade sırası · ekler · TKB muhakkik raporu" action={<Scale className="size-5" />}>
+    <AppShell title="Muhakkik Soruşturma" subtitle="İncele · belgeler · ifadeler · sorular · teklif · rapor (okul müdürü sade yol)" action={<Scale className="size-5" />}>
       <MuhakkikWizard />
     </AppShell>
   );

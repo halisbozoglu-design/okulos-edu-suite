@@ -1,4 +1,4 @@
-import { STORAGE_KEY, type MuhakkikCase } from "./types";
+import { STORAGE_KEY, clampStep, type MuhakkikCase } from "./types";
 
 export function loadCases(): MuhakkikCase[] {
   if (typeof window === "undefined") return [];
@@ -6,7 +6,8 @@ export function loadCases(): MuhakkikCase[] {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as MuhakkikCase[];
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((c) => ({ ...c, currentStep: clampStep(c.currentStep), actorRole: c.actorRole || "muhakkik" }));
   } catch {
     return [];
   }
@@ -19,7 +20,7 @@ export function saveCases(cases: MuhakkikCase[]): void {
 
 export function upsertCase(cases: MuhakkikCase[], next: MuhakkikCase): MuhakkikCase[] {
   const i = cases.findIndex((c) => c.id === next.id);
-  const stamped = { ...next, updatedAt: new Date().toISOString() };
+  const stamped = { ...next, updatedAt: new Date().toISOString(), currentStep: clampStep(next.currentStep) };
   if (i < 0) return [stamped, ...cases];
   const copy = cases.slice();
   copy[i] = stamped;
