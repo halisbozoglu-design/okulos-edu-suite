@@ -219,7 +219,16 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     const program = programs[c % programs.length]!,
       grade = 9 + (c % 4),
       klass = `${manifest.institution_code}:${program}:ALAN-${c % 5}:DAL-${c % 7}:${grade}:${Math.floor(c / 4) + 1}`,
-      workplaceDays = program === "MESEM" ? [4] : grade === 12 ? [5] : [],
+      workplaceDays =
+        program === "MESEM"
+          ? [2, 3, 4, 5]
+          : program === "AMP" && grade === 12
+            ? [
+                1 + (Math.floor(c / 4) % 3),
+                2 + (Math.floor(c / 4) % 3),
+                3 + (Math.floor(c / 4) % 3),
+              ]
+            : [],
       generalAllowed = profile.shifted && program === "MESEM" ? [1, 2, 3, 4, 5] : null;
     for (const [suffix, subject] of [
       ["CORE", generalSubjects[c % 5]!],

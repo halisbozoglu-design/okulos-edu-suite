@@ -21,6 +21,15 @@ describe("maximum-complexity vocational-school corpus", () => {
       expect(new Set(meta.map((x) => x.kind))).toEqual(new Set(["GENERAL", "VOCATIONAL"]));
       expect(p.assignments.some((a) => a.subgroup_id)).toBe(true);
       expect(p.assignments.some((a) => !a.subgroup_id)).toBe(true);
+      const byProgram = new Map<"AMP" | "ATP" | "MESEM", Set<string>>();
+      for (const [id, m] of Object.entries(p.vocationalMeta.assignment)) {
+        const days = byProgram.get(m.program) ?? new Set<string>();
+        days.add(m.workplace_days.join(","));
+        byProgram.set(m.program, days);
+      }
+      expect([...(byProgram.get("MESEM") ?? [])].every((x) => x === "2,3,4,5")).toBe(true);
+      expect([...(byProgram.get("ATP") ?? [])]).toEqual([""]);
+      expect([...(byProgram.get("AMP") ?? [])]).toContain("1,2,3");
     }
   });
   test("compiles AMP ATP MESEM coordination, workplace, maintenance, pooled workshops, locks and general-culture SOFT wishes", () => {
