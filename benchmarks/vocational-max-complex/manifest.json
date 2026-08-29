@@ -23,7 +23,7 @@
       "periods": 10,
       "buildings": 3,
       "general_rooms": 12,
-      "workshop_rooms": 5,
+      "workshop_rooms": 6,
       "split_every": 5,
       "shifted": false,
       "pooled_workshop": true,
