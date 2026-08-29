@@ -1,0 +1,17 @@
+{
+  "batch": "V57",
+  "date": "2026-08-29",
+  "support_atoms": 430,
+  "atom_pool_before": 10965,
+  "atom_pool_after": 11395,
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_after": 466,
+  "article_verified_ratio_percent": 20.9062,
+  "remaining_exact": 1763,
+  "new_exact_promotions": [],
+  "rollbacks": ["HB-2139"],
+  "source_corrections_retained": ["HB-2082","HB-2083","HB-2088","HB-2089","HB-2095","HB-2132","HB-2136"],
+  "migration": 0,
+  "lovable_usage": 0
+}
