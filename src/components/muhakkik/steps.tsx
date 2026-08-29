@@ -148,7 +148,7 @@ export function Step3({ cse, patch, ordered }: { cse: MuhakkikCase; patch: (fn: 
   return (
     <div className="space-y-4">
       <h2 className="font-semibold">3. Hedefli sorular · çağrı · tutanak</h2>
-      <p className="text-xs text-muted-foreground">Kişi başı 6–12 soru. Yazdirma A4 T.C. antetli HTML + window.print. İfade tutanağı savunma talep yazısı değildir.</p>
+      <p className="text-xs text-muted-foreground">Kişi başı 6–12 soru. Yazdırma A4 T.C. antetli HTML + window.print. İfade tutanağı savunma talep yazısı değildir.</p>
       {ordered.map((p) => {
         const st = cse.statements.find((s) => s.personId === p.id);
         return (
