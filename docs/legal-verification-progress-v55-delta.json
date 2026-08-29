@@ -1,0 +1,17 @@
+{
+  "batch": "V55",
+  "date": "2026-08-29",
+  "support_atoms": 420,
+  "atom_pool_before": 10135,
+  "atom_pool_after": 10555,
+  "master_workflows": 2229,
+  "article_verified_before": 466,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "added": ["HB-2047"],
+  "withheld": ["HB-2045", "HB-2218", "HB-2229"],
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "next_batch": "V56"
+}
