@@ -309,7 +309,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
           ? [4, 5, 6, 7, 8, 9, 10]
           : program === "MESEM"
             ? [1, 2, 3, 4, 5]
-            : null
+            : [6, 7, 8, 9, 10]
         : null,
       reqBase: LocalRoomRequirement = {
         required_room_type: "WORKSHOP",
