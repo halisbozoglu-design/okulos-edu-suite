@@ -1,0 +1,68 @@
+{
+  "schema": "OKULOS_VOCATIONAL_MAX_COMPLEX_V1",
+  "seed_count": 7,
+  "wall_clock_budget_ms": 8000,
+  "provenance": "Synthetic MEB vocational-school structural stress data; contains no real institution, teacher, student, apprentice or employer records.",
+  "institution_code": "SYNTHETIC-MTAL-MAX-01",
+  "profiles": [
+    {
+      "id": "vocational-single-building-max-mix",
+      "classes": 40,
+      "periods": 10,
+      "buildings": 1,
+      "general_rooms": 10,
+      "workshop_rooms": 4,
+      "split_every": 4,
+      "shifted": false,
+      "pooled_workshop": true,
+      "maintenance": true
+    },
+    {
+      "id": "vocational-multi-building-coordination",
+      "classes": 40,
+      "periods": 10,
+      "buildings": 3,
+      "general_rooms": 12,
+      "workshop_rooms": 5,
+      "split_every": 5,
+      "shifted": false,
+      "pooled_workshop": true,
+      "maintenance": true
+    },
+    {
+      "id": "vocational-shift-workshop-boundary",
+      "classes": 40,
+      "periods": 10,
+      "buildings": 2,
+      "general_rooms": 10,
+      "workshop_rooms": 5,
+      "split_every": 4,
+      "shifted": true,
+      "pooled_workshop": true,
+      "maintenance": true
+    }
+  ],
+  "impossible_cases": [
+    "workshop-pool-simultaneous-capacity-exceeded",
+    "coordination-teacher-single-slot-collision"
+  ],
+  "required_gates": [
+    "feasible_rate_1",
+    "hard_0",
+    "unplaced_0",
+    "amp_atp_mesem_identity",
+    "general_and_vocational_mix",
+    "split_and_unsplit",
+    "split_synchronization",
+    "workshop_pool_capacity",
+    "maintenance_exclusion",
+    "coordination_exclusion",
+    "workplace_day_exclusion",
+    "locked_edge_slots",
+    "general_culture_soft_preferences",
+    "atomic_blocks",
+    "deterministic_replay",
+    "impossible_fail_closed",
+    "runtime_budget"
+  ]
+}
