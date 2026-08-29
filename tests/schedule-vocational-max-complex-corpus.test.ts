@@ -44,6 +44,22 @@ describe("maximum-complexity vocational-school corpus", () => {
           weekday: d.weekday,
           period: d.period,
         });
+      for (const d of p.vocationalMeta.coordinatorDuties)
+        expect(
+          p.vocationalMeta.enterpriseWindows.some(
+            (window) =>
+              window.enterprise_unit_id === d.enterprise_unit_id &&
+              window.program === d.program &&
+              window.student_class_id === d.student_class_id &&
+              window.weekday === d.weekday &&
+              window.periods.includes(d.period),
+          ),
+        ).toBe(true);
+      expect(
+        p.vocationalMeta.enterpriseWindows.some(
+          (window) => window.program === "ATP" && window.source === "EXPLICIT_ASSIGNMENT",
+        ),
+      ).toBe(true);
       expect(p.courseRules.some((x) => x.prohibited_days?.length)).toBe(true);
       expect(p.roomUnavailable?.length).toBeGreaterThan(0);
       expect(p.rooms?.some((x) => x.room_pool_id && x.max_simultaneous_activities === 2)).toBe(
@@ -83,6 +99,7 @@ describe("maximum-complexity vocational-school corpus", () => {
           pool: a.workshop_pool_capacity,
           parallel: a.pooled_parallel_use,
           maintenance: a.maintenance_exclusion,
+          coordination_alignment: a.coordination_enterprise_alignment,
           coordination: a.coordination_exclusion,
           workplace: a.workplace_day_exclusion,
           pinned: a.locked_edge_slots,
@@ -102,6 +119,7 @@ describe("maximum-complexity vocational-school corpus", () => {
         pool: true,
         parallel: true,
         maintenance: true,
+        coordination_alignment: true,
         coordination: true,
         workplace: true,
         pinned: true,

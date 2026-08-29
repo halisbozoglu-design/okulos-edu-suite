@@ -46,9 +46,19 @@ type AssignmentMeta = {
 type CoordinatorDuty = {
   teacher_id: string;
   program: Program;
+  enterprise_unit_id: string;
+  student_class_id: string | null;
   weekday: number;
   period: number;
   kind: "WORKPLACE_VISIT" | "COORDINATION";
+};
+type EnterpriseWindow = {
+  enterprise_unit_id: string;
+  program: Program;
+  student_class_id: string | null;
+  weekday: number;
+  periods: number[];
+  source: "CLASS_AUTO" | "EXPLICIT_ASSIGNMENT";
 };
 export type VocationalProblem = JointLocalProblem & {
   vocationalMeta: {
@@ -57,6 +67,7 @@ export type VocationalProblem = JointLocalProblem & {
     pinned: Record<string, { weekday: number; period: number }>;
     maintenanceRooms: string[];
     coordinatorDuties: CoordinatorDuty[];
+    enterpriseWindows: EnterpriseWindow[];
   };
 };
 type Audit = {
@@ -71,6 +82,7 @@ type Audit = {
   workshop_pool_capacity: boolean;
   pooled_parallel_use: boolean;
   maintenance_exclusion: boolean;
+  coordination_enterprise_alignment: boolean;
   coordination_exclusion: boolean;
   workplace_day_exclusion: boolean;
   locked_edge_slots: boolean;
@@ -94,6 +106,7 @@ type Result = {
   workshop_pool_capacity: boolean;
   pooled_parallel_use: boolean;
   maintenance_exclusion: boolean;
+  coordination_enterprise_alignment: boolean;
   coordination_exclusion: boolean;
   workplace_day_exclusion: boolean;
   locked_edge_slots: boolean;
@@ -197,7 +210,8 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     splitPairs: [string, string][] = [],
     pinned: Record<string, { weekday: number; period: number }> = {},
     locked: LocalLockedRow[] = [],
-    coordinatorDuties: CoordinatorDuty[] = [];
+    coordinatorDuties: CoordinatorDuty[] = [],
+    enterpriseWindows: EnterpriseWindow[] = [];
   const add = (
     a: LocalAssignment,
     m: AssignmentMeta,
@@ -376,17 +390,49 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     }
   }
 
-  for (const [index, program, weekday, period] of [
-    [3, "AMP", 2, 3],
-    [4, "ATP", 3, 4],
-    [5, "MESEM", 4, 3],
+  for (const program of ["AMP", "MESEM"] as const) {
+    const assignment = assignments.find(
+      (a) =>
+        meta[a.assignment_id]?.program === program && meta[a.assignment_id]?.workplace_days.length,
+    )!;
+    const weekday = meta[assignment.assignment_id]!.workplace_days[0]!,
+      enterprise_unit_id = `${program}-AUTO-${assignment.class_id}`;
+    enterpriseWindows.push({
+      enterprise_unit_id,
+      program,
+      student_class_id: assignment.class_id,
+      weekday,
+      periods: [3, 4],
+      source: "CLASS_AUTO",
+    });
+  }
+  enterpriseWindows.push({
+    enterprise_unit_id: "ATP-DECLARED-IME-COHORT",
+    program: "ATP",
+    student_class_id: null,
+    weekday: 3,
+    periods: [4, 5],
+    source: "EXPLICIT_ASSIGNMENT",
+  });
+  for (const [index, program] of [
+    [3, "AMP"],
+    [4, "ATP"],
+    [5, "MESEM"],
   ] as const) {
+    const window = enterpriseWindows.find((x) => x.program === program)!;
     const teacher_id = `VOC-${index}`;
-    coordinatorDuties.push(
-      { teacher_id, program, weekday, period, kind: "WORKPLACE_VISIT" },
-      { teacher_id, program, weekday, period: period + 1, kind: "COORDINATION" },
-    );
-    unavailable.push({ teacher_id, weekday, period }, { teacher_id, weekday, period: period + 1 });
+    for (const [position, period] of window.periods.entries()) {
+      coordinatorDuties.push({
+        teacher_id,
+        program,
+        enterprise_unit_id: window.enterprise_unit_id,
+        student_class_id: window.student_class_id,
+        weekday: window.weekday,
+        period,
+        kind: position === 0 ? "WORKPLACE_VISIT" : "COORDINATION",
+      });
+      unavailable.push({ teacher_id, weekday: window.weekday, period });
+    }
   }
   for (let i = 0; i < 8; i++)
     unavailable.push({ teacher_id: `GEN-${i}`, weekday: 5, period: 8 + (i % 3) });
@@ -452,6 +498,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
       pinned,
       maintenanceRooms: ["W1"],
       coordinatorDuties,
+      enterpriseWindows,
     },
   };
 }
@@ -588,12 +635,25 @@ export function auditVocationalMax(p: VocationalProblem, rows: LocalLockedRow[])
       ),
     ),
     maintenanceOk = !violations.some((v) => v.startsWith("MAINTENANCE")),
-    coordinationOk = p.vocationalMeta.coordinatorDuties.every(
-      (d) =>
-        !rows.some(
-          (r) => r.teacher_id === d.teacher_id && r.weekday === d.weekday && r.period === d.period,
-        ),
+    coordinatorEnterpriseAligned = p.vocationalMeta.coordinatorDuties.every((d) =>
+      p.vocationalMeta.enterpriseWindows.some(
+        (window) =>
+          window.enterprise_unit_id === d.enterprise_unit_id &&
+          window.program === d.program &&
+          window.student_class_id === d.student_class_id &&
+          window.weekday === d.weekday &&
+          window.periods.includes(d.period),
+      ),
     ),
+    coordinationOk =
+      coordinatorEnterpriseAligned &&
+      p.vocationalMeta.coordinatorDuties.every(
+        (d) =>
+          !rows.some(
+            (r) =>
+              r.teacher_id === d.teacher_id && r.weekday === d.weekday && r.period === d.period,
+          ),
+      ),
     workplaceOk = !violations.some((v) => v.startsWith("WORKPLACE_OR_DOMAIN")),
     poolOk = !violations.some((v) => v.startsWith("ROOM_POOL_CAPACITY")),
     softCount = p.assignments.filter(
@@ -623,6 +683,7 @@ export function auditVocationalMax(p: VocationalProblem, rows: LocalLockedRow[])
     workshop_pool_capacity: poolOk,
     pooled_parallel_use: pooledParallel,
     maintenance_exclusion: maintenanceOk,
+    coordination_enterprise_alignment: coordinatorEnterpriseAligned,
     coordination_exclusion: coordinationOk,
     workplace_day_exclusion: workplaceOk,
     locked_edge_slots: lockedEdge,
@@ -736,6 +797,7 @@ export async function runVocationalMaxCorpus(seedCount = manifest.seed_count): P
       workshop_pool_capacity: audits.every((a) => a.workshop_pool_capacity),
       pooled_parallel_use: audits.every((a) => a.pooled_parallel_use),
       maintenance_exclusion: audits.every((a) => a.maintenance_exclusion),
+      coordination_enterprise_alignment: audits.every((a) => a.coordination_enterprise_alignment),
       coordination_exclusion: audits.every((a) => a.coordination_exclusion),
       workplace_day_exclusion: audits.every((a) => a.workplace_day_exclusion),
       locked_edge_slots: audits.every((a) => a.locked_edge_slots),
@@ -803,6 +865,7 @@ export function assertVocationalMaxGate(r: Report, minSeeds = manifest.seed_coun
       !x.workshop_pool_capacity ||
       !x.pooled_parallel_use ||
       !x.maintenance_exclusion ||
+      !x.coordination_enterprise_alignment ||
       !x.coordination_exclusion ||
       !x.workplace_day_exclusion ||
       !x.locked_edge_slots ||
