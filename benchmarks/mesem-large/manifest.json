@@ -7,7 +7,7 @@
   "profiles": [
     {"id":"mesem-large-mixed-units","classes":64,"assignments_per_class":3,"teachers":56,"courses":28,"periods":10,"workshop_course_mod":0,"shifted":false,"general_rooms":0,"workshop_rooms":0,"unit_count":8,"enterprise_weekdays":[3,4]},
     {"id":"mesem-large-workshop-units","classes":40,"assignments_per_class":3,"teachers":40,"courses":20,"periods":10,"workshop_course_mod":4,"shifted":false,"general_rooms":7,"workshop_rooms":4,"unit_count":5,"enterprise_weekdays":[3,4]},
-    {"id":"mesem-large-shifted-enterprise","classes":52,"assignments_per_class":3,"teachers":48,"courses":24,"periods":10,"workshop_course_mod":6,"shifted":true,"general_rooms":7,"workshop_rooms":4,"unit_count":7,"enterprise_weekdays":[2,5]}
+    {"id":"mesem-large-shifted-enterprise","classes":40,"assignments_per_class":3,"teachers":40,"courses":20,"periods":10,"workshop_course_mod":6,"shifted":true,"general_rooms":6,"workshop_rooms":3,"unit_count":5,"enterprise_weekdays":[2,5]}
   ],
   "required_gates": ["feasible_rate_1","hard_0","unplaced_0","atomic_blocks","room_eligibility","enterprise_day_exclusion","unit_identity","deterministic_replay","runtime_budget"]
 }
