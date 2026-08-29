@@ -6,7 +6,7 @@
   "profiles": [
     {"id":"room-tight-capacity-features","classes":40,"assignments_per_class":3,"teachers":42,"courses":24,"periods":10,"buildings":3,"general_rooms":9,"specialist_rooms":0,"workshop_course_mod":0,"forbidden_break_mod":0},
     {"id":"building-transfer-forbidden","classes":40,"assignments_per_class":3,"teachers":30,"courses":24,"periods":10,"buildings":4,"general_rooms":12,"specialist_rooms":0,"workshop_course_mod":0,"forbidden_break_mod":2},
-    {"id":"room-building-atomic-specialists","classes":40,"assignments_per_class":3,"teachers":36,"courses":20,"periods":10,"buildings":4,"general_rooms":8,"specialist_rooms":4,"workshop_course_mod":4,"forbidden_break_mod":3}
+    {"id":"room-building-atomic-specialists","classes":40,"assignments_per_class":3,"teachers":36,"courses":20,"periods":10,"buildings":4,"general_rooms":8,"specialist_rooms":4,"workshop_course_mod":4,"forbidden_break_mod":0}
   ],
   "required_gates": ["feasible_rate_1","hard_0","unplaced_0","room_collision_0","room_eligibility","building_transfer_eligibility","multi_building_domain","atomic_blocks","deterministic_replay","runtime_budget"]
 }
