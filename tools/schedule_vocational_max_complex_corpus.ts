@@ -40,14 +40,18 @@ type Manifest = {
 type AssignmentMeta = {
   program: Program;
   kind: Kind;
+  field_id: string;
   workplace_days: number[];
   split_pair_id: string | null;
 };
+type CoordinatorQualification = "SAME_FIELD" | "NEAR_FIELD" | "FALLBACK";
 type CoordinatorDuty = {
   teacher_id: string;
   program: Program;
   enterprise_unit_id: string;
   student_class_id: string | null;
+  field_id: string;
+  qualification: CoordinatorQualification;
   weekday: number;
   period: number;
   kind: "WORKPLACE_VISIT" | "COORDINATION";
@@ -56,6 +60,7 @@ type EnterpriseWindow = {
   enterprise_unit_id: string;
   program: Program;
   student_class_id: string | null;
+  field_id: string;
   weekday: number;
   periods: number[];
   source: "CLASS_AUTO" | "EXPLICIT_ASSIGNMENT";
@@ -67,6 +72,7 @@ export type VocationalProblem = JointLocalProblem & {
     pinned: Record<string, { weekday: number; period: number }>;
     maintenanceRooms: string[];
     coordinatorDuties: CoordinatorDuty[];
+    coordinatorFields: Record<string, string[]>;
     enterpriseWindows: EnterpriseWindow[];
   };
 };
@@ -82,6 +88,7 @@ type Audit = {
   workshop_pool_capacity: boolean;
   pooled_parallel_use: boolean;
   maintenance_exclusion: boolean;
+  coordination_area_eligibility: boolean;
   coordination_enterprise_alignment: boolean;
   coordination_exclusion: boolean;
   workplace_day_exclusion: boolean;
@@ -106,6 +113,7 @@ type Result = {
   workshop_pool_capacity: boolean;
   pooled_parallel_use: boolean;
   maintenance_exclusion: boolean;
+  coordination_area_eligibility: boolean;
   coordination_enterprise_alignment: boolean;
   coordination_exclusion: boolean;
   workplace_day_exclusion: boolean;
@@ -211,6 +219,11 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     pinned: Record<string, { weekday: number; period: number }> = {},
     locked: LocalLockedRow[] = [],
     coordinatorDuties: CoordinatorDuty[] = [],
+    coordinatorFields: Record<string, string[]> = {
+      "VOC-3": ["ALAN-0"],
+      "VOC-4": ["ALAN-1"],
+      "VOC-5": ["ALAN-0"],
+    },
     enterpriseWindows: EnterpriseWindow[] = [];
   const add = (
     a: LocalAssignment,
@@ -232,7 +245,8 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
   for (let c = 0; c < profile.classes; c++) {
     const program = programs[c % programs.length]!,
       grade = 9 + (c % 4),
-      klass = `${manifest.institution_code}:${program}:ALAN-${c % 5}:DAL-${c % 7}:${grade}:${Math.floor(c / 4) + 1}`,
+      fieldId = `ALAN-${c % 5}`,
+      klass = `${manifest.institution_code}:${program}:${fieldId}:DAL-${c % 7}:${grade}:${Math.floor(c / 4) + 1}`,
       workplaceDays =
         program === "MESEM"
           ? [2, 3, 4, 5]
@@ -263,7 +277,13 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
           preferred_period_weight: 2,
           schedule_session_id: program,
         },
-        { program, kind: "GENERAL", workplace_days: workplaceDays, split_pair_id: null },
+        {
+          program,
+          kind: "GENERAL",
+          field_id: fieldId,
+          workplace_days: workplaceDays,
+          split_pair_id: null,
+        },
         {
           block_pattern: [1],
           max_per_day: 1,
@@ -306,7 +326,13 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
           allowed_periods: vocAllowed,
           schedule_session_id: program,
         },
-        { program, kind: "VOCATIONAL", workplace_days: workplaceDays, split_pair_id: pair },
+        {
+          program,
+          kind: "VOCATIONAL",
+          field_id: fieldId,
+          workplace_days: workplaceDays,
+          split_pair_id: pair,
+        },
         {
           block_pattern: [2],
           max_per_day: 2,
@@ -327,7 +353,13 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
           allowed_periods: vocAllowed,
           schedule_session_id: program,
         },
-        { program, kind: "VOCATIONAL", workplace_days: workplaceDays, split_pair_id: pair },
+        {
+          program,
+          kind: "VOCATIONAL",
+          field_id: fieldId,
+          workplace_days: workplaceDays,
+          split_pair_id: pair,
+        },
         {
           block_pattern: [2],
           max_per_day: 2,
@@ -358,7 +390,13 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
           allowed_periods: vocAllowed,
           schedule_session_id: program,
         },
-        { program, kind: "VOCATIONAL", workplace_days: workplaceDays, split_pair_id: null },
+        {
+          program,
+          kind: "VOCATIONAL",
+          field_id: fieldId,
+          workplace_days: workplaceDays,
+          split_pair_id: null,
+        },
         {
           block_pattern: [2],
           max_per_day: 2,
@@ -378,7 +416,13 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
           allowed_periods: vocAllowed,
           schedule_session_id: program,
         },
-        { program, kind: "VOCATIONAL", workplace_days: workplaceDays, split_pair_id: null },
+        {
+          program,
+          kind: "VOCATIONAL",
+          field_id: fieldId,
+          workplace_days: workplaceDays,
+          split_pair_id: null,
+        },
         {
           block_pattern: [1],
           max_per_day: 1,
@@ -390,10 +434,16 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     }
   }
 
-  for (const program of ["AMP", "MESEM"] as const) {
+  for (const [program, teacher_id, field_id] of [
+    ["AMP", "VOC-3", "ALAN-0"],
+    ["MESEM", "VOC-5", "ALAN-0"],
+  ] as const) {
     const assignment = assignments.find(
       (a) =>
-        meta[a.assignment_id]?.program === program && meta[a.assignment_id]?.workplace_days.length,
+        meta[a.assignment_id]?.program === program &&
+        meta[a.assignment_id]?.field_id === field_id &&
+        meta[a.assignment_id]?.workplace_days.length &&
+        a.teacher_id !== teacher_id,
     )!;
     const weekday = meta[assignment.assignment_id]!.workplace_days[0]!,
       enterprise_unit_id = `${program}-AUTO-${assignment.class_id}`;
@@ -401,32 +451,41 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
       enterprise_unit_id,
       program,
       student_class_id: assignment.class_id,
+      field_id,
       weekday,
       periods: [3, 4],
       source: "CLASS_AUTO",
     });
   }
+  const atpAssignment = assignments.find(
+    (a) =>
+      meta[a.assignment_id]?.program === "ATP" &&
+      meta[a.assignment_id]?.field_id === "ALAN-1" &&
+      a.teacher_id !== "VOC-4",
+  )!;
   enterpriseWindows.push({
     enterprise_unit_id: "ATP-DECLARED-IME-COHORT",
     program: "ATP",
-    student_class_id: null,
+    student_class_id: atpAssignment.class_id,
+    field_id: "ALAN-1",
     weekday: 3,
     periods: [4, 5],
     source: "EXPLICIT_ASSIGNMENT",
   });
-  for (const [index, program] of [
-    [3, "AMP"],
-    [4, "ATP"],
-    [5, "MESEM"],
+  for (const [teacher_id, program] of [
+    ["VOC-3", "AMP"],
+    ["VOC-4", "ATP"],
+    ["VOC-5", "MESEM"],
   ] as const) {
     const window = enterpriseWindows.find((x) => x.program === program)!;
-    const teacher_id = `VOC-${index}`;
     for (const [position, period] of window.periods.entries()) {
       coordinatorDuties.push({
         teacher_id,
         program,
         enterprise_unit_id: window.enterprise_unit_id,
         student_class_id: window.student_class_id,
+        field_id: window.field_id,
+        qualification: "SAME_FIELD",
         weekday: window.weekday,
         period,
         kind: position === 0 ? "WORKPLACE_VISIT" : "COORDINATION",
@@ -498,6 +557,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
       pinned,
       maintenanceRooms: ["W1"],
       coordinatorDuties,
+      coordinatorFields,
       enterpriseWindows,
     },
   };
@@ -635,6 +695,17 @@ export function auditVocationalMax(p: VocationalProblem, rows: LocalLockedRow[])
       ),
     ),
     maintenanceOk = !violations.some((v) => v.startsWith("MAINTENANCE")),
+    coordinatorAreaEligible = p.vocationalMeta.coordinatorDuties.every((d) => {
+      const fields = p.vocationalMeta.coordinatorFields[d.teacher_id] ?? [];
+      if (d.qualification === "SAME_FIELD") return fields.includes(d.field_id);
+      return fields.length > 0;
+    }),
+    coordinatorDoesNotNeedCourseAssignment = p.vocationalMeta.coordinatorDuties.every(
+      (d) =>
+        !p.assignments.some(
+          (a) => a.class_id === d.student_class_id && a.teacher_id === d.teacher_id,
+        ),
+    ),
     coordinatorEnterpriseAligned = p.vocationalMeta.coordinatorDuties.every((d) =>
       p.vocationalMeta.enterpriseWindows.some(
         (window) =>
@@ -683,6 +754,8 @@ export function auditVocationalMax(p: VocationalProblem, rows: LocalLockedRow[])
     workshop_pool_capacity: poolOk,
     pooled_parallel_use: pooledParallel,
     maintenance_exclusion: maintenanceOk,
+    coordination_area_eligibility:
+      coordinatorAreaEligible && coordinatorDoesNotNeedCourseAssignment,
     coordination_enterprise_alignment: coordinatorEnterpriseAligned,
     coordination_exclusion: coordinationOk,
     workplace_day_exclusion: workplaceOk,
@@ -797,6 +870,7 @@ export async function runVocationalMaxCorpus(seedCount = manifest.seed_count): P
       workshop_pool_capacity: audits.every((a) => a.workshop_pool_capacity),
       pooled_parallel_use: audits.every((a) => a.pooled_parallel_use),
       maintenance_exclusion: audits.every((a) => a.maintenance_exclusion),
+      coordination_area_eligibility: audits.every((a) => a.coordination_area_eligibility),
       coordination_enterprise_alignment: audits.every((a) => a.coordination_enterprise_alignment),
       coordination_exclusion: audits.every((a) => a.coordination_exclusion),
       workplace_day_exclusion: audits.every((a) => a.workplace_day_exclusion),
@@ -865,6 +939,7 @@ export function assertVocationalMaxGate(r: Report, minSeeds = manifest.seed_coun
       !x.workshop_pool_capacity ||
       !x.pooled_parallel_use ||
       !x.maintenance_exclusion ||
+      !x.coordination_area_eligibility ||
       !x.coordination_enterprise_alignment ||
       !x.coordination_exclusion ||
       !x.workplace_day_exclusion ||
