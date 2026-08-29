@@ -97,7 +97,7 @@ describe("maximum-complexity vocational-school corpus", () => {
       const p = makeVocationalMaxProblem(profile, 4211),
         r = solveIncrementalSchedule(p),
         a = auditVocationalMax(p, r.rows);
-      expect(r.complete, profile.id).toBe(true);
+      expect(r.complete, `${profile.id}: failed=${r.failed}, hard=${r.score.hard}`).toBe(true);
       expect(
         {
           hard: a.hard,
