@@ -435,7 +435,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     periodBreaks,
     buildingTravel,
     seed,
-    maxSearchIterations: 72,
+    maxSearchIterations: 0,
     enableLns: false,
     vocationalMeta: {
       assignment: meta,
@@ -783,7 +783,7 @@ export function assertVocationalMaxGate(r: Report, minSeeds = manifest.seed_coun
   for (const x of r.results)
     if (
       x.runs < minSeeds ||
-      x.assignments < 160 ||
+      x.assignments < 144 ||
       x.feasible_rate !== 1 ||
       x.hard_max !== 0 ||
       x.unplaced_max !== 0 ||

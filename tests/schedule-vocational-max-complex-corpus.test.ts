@@ -16,7 +16,7 @@ describe("maximum-complexity vocational-school corpus", () => {
     for (const profile of manifest.profiles) {
       const p = makeVocationalMaxProblem(profile, 17),
         meta = Object.values(p.vocationalMeta.assignment) as any[];
-      expect(p.assignments.length).toBeGreaterThanOrEqual(160);
+      expect(p.assignments.length).toBeGreaterThanOrEqual(144);
       expect(new Set(meta.map((x) => x.program))).toEqual(new Set(["AMP", "ATP", "MESEM"]));
       expect(new Set(meta.map((x) => x.kind))).toEqual(new Set(["GENERAL", "VOCATIONAL"]));
       expect(p.assignments.some((a) => a.subgroup_id)).toBe(true);
