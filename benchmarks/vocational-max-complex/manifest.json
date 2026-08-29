@@ -24,7 +24,7 @@
       "buildings": 3,
       "general_rooms": 12,
       "workshop_rooms": 6,
-      "split_every": 5,
+      "split_every": 4,
       "shifted": false,
       "pooled_workshop": true,
       "maintenance": true
