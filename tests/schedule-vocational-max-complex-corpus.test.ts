@@ -55,16 +55,16 @@ describe("maximum-complexity vocational-school corpus", () => {
               window.periods.includes(d.period),
           ),
         ).toBe(true);
-      for (const d of p.vocationalMeta.coordinatorDuties) {
+      const coordinatorAlsoTeaches = p.vocationalMeta.coordinatorDuties.map((d) => {
         expect(d.qualification).toBe("SAME_FIELD");
         expect(p.vocationalMeta.coordinatorFields[d.teacher_id]).toContain(d.field_id);
-        expect(
-          p.assignments.some(
-            (assignment) =>
-              assignment.class_id === d.student_class_id && assignment.teacher_id === d.teacher_id,
-          ),
-        ).toBe(false);
-      }
+        return p.assignments.some(
+          (assignment) =>
+            assignment.class_id === d.student_class_id && assignment.teacher_id === d.teacher_id,
+        );
+      });
+      expect(coordinatorAlsoTeaches).toContain(true);
+      expect(coordinatorAlsoTeaches).toContain(false);
       expect(
         p.vocationalMeta.enterpriseWindows.some(
           (window) => window.program === "ATP" && window.source === "EXPLICIT_ASSIGNMENT",
@@ -123,6 +123,7 @@ describe("maximum-complexity vocational-school corpus", () => {
           parallel: a.pooled_parallel_use,
           maintenance: a.maintenance_exclusion,
           coordination_area: a.coordination_area_eligibility,
+          coordination_assignment_optional: a.coordination_course_assignment_optional,
           coordination_alignment: a.coordination_enterprise_alignment,
           coordination: a.coordination_exclusion,
           workplace: a.workplace_day_exclusion,
@@ -144,6 +145,7 @@ describe("maximum-complexity vocational-school corpus", () => {
         parallel: true,
         maintenance: true,
         coordination_area: true,
+        coordination_assignment_optional: true,
         coordination_alignment: true,
         coordination: true,
         workplace: true,

@@ -89,6 +89,7 @@ type Audit = {
   pooled_parallel_use: boolean;
   maintenance_exclusion: boolean;
   coordination_area_eligibility: boolean;
+  coordination_course_assignment_optional: boolean;
   coordination_enterprise_alignment: boolean;
   coordination_exclusion: boolean;
   workplace_day_exclusion: boolean;
@@ -114,6 +115,7 @@ type Result = {
   pooled_parallel_use: boolean;
   maintenance_exclusion: boolean;
   coordination_area_eligibility: boolean;
+  coordination_course_assignment_optional: boolean;
   coordination_enterprise_alignment: boolean;
   coordination_exclusion: boolean;
   workplace_day_exclusion: boolean;
@@ -221,8 +223,8 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     coordinatorDuties: CoordinatorDuty[] = [],
     coordinatorFields: Record<string, string[]> = {
       "VOC-3": ["ALAN-0"],
-      "VOC-4": ["ALAN-1"],
       "VOC-5": ["ALAN-0"],
+      "VOC-30": ["ALAN-0", "ALAN-1", "ALAN-2"],
     },
     enterpriseWindows: EnterpriseWindow[] = [];
   const add = (
@@ -464,7 +466,8 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     (a) =>
       meta[a.assignment_id]?.program === "ATP" &&
       meta[a.assignment_id]?.field_id === "ALAN-1" &&
-      a.teacher_id !== "VOC-4",
+      meta[a.assignment_id]?.kind === "VOCATIONAL" &&
+      a.teacher_id === "VOC-30",
   )!;
   enterpriseWindows.push({
     enterprise_unit_id: "ATP-DECLARED-IME-COHORT",
@@ -477,7 +480,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
   });
   for (const [teacher_id, program] of [
     ["VOC-3", "AMP"],
-    ["VOC-4", "ATP"],
+    ["VOC-30", "ATP"],
     ["VOC-5", "MESEM"],
   ] as const) {
     const window = enterpriseWindows.find((x) => x.program === program)!;
@@ -706,12 +709,11 @@ export function auditVocationalMax(p: VocationalProblem, rows: LocalLockedRow[])
       if (d.qualification === "SAME_FIELD") return fields.includes(d.field_id);
       return fields.length > 0;
     }),
-    coordinatorDoesNotNeedCourseAssignment = p.vocationalMeta.coordinatorDuties.every(
-      (d) =>
-        !p.assignments.some(
-          (a) => a.class_id === d.student_class_id && a.teacher_id === d.teacher_id,
-        ),
+    coordinatorCourseAssignment = p.vocationalMeta.coordinatorDuties.map((d) =>
+      p.assignments.some((a) => a.class_id === d.student_class_id && a.teacher_id === d.teacher_id),
     ),
+    coordinatorAssignmentOptional =
+      coordinatorCourseAssignment.some(Boolean) && coordinatorCourseAssignment.some((x) => !x),
     coordinatorEnterpriseAligned = p.vocationalMeta.coordinatorDuties.every((d) =>
       p.vocationalMeta.enterpriseWindows.some(
         (window) =>
@@ -760,8 +762,8 @@ export function auditVocationalMax(p: VocationalProblem, rows: LocalLockedRow[])
     workshop_pool_capacity: poolOk,
     pooled_parallel_use: pooledParallel,
     maintenance_exclusion: maintenanceOk,
-    coordination_area_eligibility:
-      coordinatorAreaEligible && coordinatorDoesNotNeedCourseAssignment,
+    coordination_area_eligibility: coordinatorAreaEligible,
+    coordination_course_assignment_optional: coordinatorAssignmentOptional,
     coordination_enterprise_alignment: coordinatorEnterpriseAligned,
     coordination_exclusion: coordinationOk,
     workplace_day_exclusion: workplaceOk,
@@ -877,6 +879,9 @@ export async function runVocationalMaxCorpus(seedCount = manifest.seed_count): P
       pooled_parallel_use: audits.every((a) => a.pooled_parallel_use),
       maintenance_exclusion: audits.every((a) => a.maintenance_exclusion),
       coordination_area_eligibility: audits.every((a) => a.coordination_area_eligibility),
+      coordination_course_assignment_optional: audits.every(
+        (a) => a.coordination_course_assignment_optional,
+      ),
       coordination_enterprise_alignment: audits.every((a) => a.coordination_enterprise_alignment),
       coordination_exclusion: audits.every((a) => a.coordination_exclusion),
       workplace_day_exclusion: audits.every((a) => a.workplace_day_exclusion),
@@ -946,6 +951,7 @@ export function assertVocationalMaxGate(r: Report, minSeeds = manifest.seed_coun
       !x.pooled_parallel_use ||
       !x.maintenance_exclusion ||
       !x.coordination_area_eligibility ||
+      !x.coordination_course_assignment_optional ||
       !x.coordination_enterprise_alignment ||
       !x.coordination_exclusion ||
       !x.workplace_day_exclusion ||

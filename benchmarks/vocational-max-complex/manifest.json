@@ -57,6 +57,7 @@
     "workshop_pool_capacity",
     "maintenance_exclusion",
     "coordination_area_eligibility",
+    "coordination_course_assignment_optional",
     "coordination_enterprise_alignment",
     "coordination_exclusion",
     "workplace_day_exclusion",
