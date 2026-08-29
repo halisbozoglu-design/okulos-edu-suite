@@ -1,0 +1,19 @@
+{
+  "batch": "V60",
+  "date": "2026-08-29",
+  "support_atoms": 420,
+  "atom_pool_before": 12235,
+  "atom_pool_after": 12655,
+  "master_workflows": 2229,
+  "article_verified_before": 468,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "new_exact": [],
+  "retained_source_corrections": ["HB-1360"],
+  "rollbacks": ["HB-1645"],
+  "withheld_scope_candidates": ["HB-1646", "HB-1647", "HB-1483", "HB-1484"],
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "next_batch": "V61"
+}
