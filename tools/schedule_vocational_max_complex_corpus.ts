@@ -297,8 +297,11 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
     const split = c % profile.split_every === 0,
       v1 = `C${c}-VOC-A`,
       v2 = `C${c}-VOC-B`,
-      vocTeacherA = `VOC-${(c * 2) % 24}`,
-      vocTeacherB = `VOC-${(c * 2 + 1) % 24}`,
+      vocTeacherA = `VOC-${(c * 2) % 36}`,
+      // One qualified teacher deliberately spans AMP, ATP and MESEM; the rest of the
+      // pool remains wide enough that MESEM's single school day is not artificially
+      // infeasible under the seven-hour daily teacher ceiling.
+      vocTeacherB = c < 3 ? "VOC-30" : `VOC-${(c * 2 + 1) % 36}`,
       vocAllowed = profile.shifted
         ? program === "ATP"
           ? [4, 5, 6, 7, 8, 9, 10]
@@ -408,7 +411,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
       add(
         {
           assignment_id: v2,
-          teacher_id: `VOC-${(c + 7) % 24}`,
+          teacher_id: vocTeacherB,
           class_id: klass,
           course_id: `${v2}:${program}:MESLEK`,
           assigned_hours: 1,
@@ -515,7 +518,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
   const roomUnavailable = profile.maintenance
     ? [1, 2, 3, 4, 5].map((period) => ({ classroom_id: "W1", weekday: 2, period }))
     : [];
-  const teacherConstraints = Array.from({ length: 40 }, (_, i) => ({
+  const teacherConstraints = Array.from({ length: 52 }, (_, i) => ({
     teacher_id: i < 16 ? `GEN-${i}` : `VOC-${i - 16}`,
     max_daily_hours: 7,
     max_consecutive_hours: i % 5 === 0 ? 4 : 5,
