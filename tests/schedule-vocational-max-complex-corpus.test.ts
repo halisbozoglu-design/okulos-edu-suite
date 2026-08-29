@@ -96,8 +96,21 @@ describe("maximum-complexity vocational-school corpus", () => {
     for (const profile of manifest.profiles) {
       const p = makeVocationalMaxProblem(profile, 4211),
         r = solveIncrementalSchedule(p),
-        a = auditVocationalMax(p, r.rows);
-      expect(r.complete, `${profile.id}: failed=${r.failed}, hard=${r.score.hard}`).toBe(true);
+        a = auditVocationalMax(p, r.rows),
+        placedHours = new Map<string, number>();
+      for (const row of r.rows)
+        placedHours.set(row.assignment_id, (placedHours.get(row.assignment_id) ?? 0) + 1);
+      const missing = p.assignments
+        .filter(
+          (assignment) =>
+            (placedHours.get(assignment.assignment_id) ?? 0) < assignment.assigned_hours,
+        )
+        .map((assignment) => assignment.assignment_id)
+        .join(",");
+      expect(
+        r.complete,
+        `${profile.id}: failed=${r.failed}, hard=${r.score.hard}, missing=${missing}`,
+      ).toBe(true);
       expect(
         {
           hard: a.hard,
