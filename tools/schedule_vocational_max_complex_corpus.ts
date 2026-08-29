@@ -265,7 +265,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
       ["ART", generalSubjects[5 + (c % 2)]!] as const,
     ]) {
       const generalId = `C${c}-GEN-${suffix}`,
-        generalTeacher = `GEN-${(c + (suffix === "ART" ? 7 : 0)) % 16}`;
+        generalTeacher = `GEN-${(c + (suffix === "ART" ? 7 : 0)) % 24}`;
       add(
         {
           assignment_id: generalId,
@@ -521,8 +521,8 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
   const roomUnavailable = profile.maintenance
     ? [1, 2, 3, 4, 5].map((period) => ({ classroom_id: "W1", weekday: 2, period }))
     : [];
-  const teacherConstraints = Array.from({ length: 52 }, (_, i) => ({
-    teacher_id: i < 16 ? `GEN-${i}` : `VOC-${i - 16}`,
+  const teacherConstraints = Array.from({ length: 60 }, (_, i) => ({
+    teacher_id: i < 24 ? `GEN-${i}` : `VOC-${i - 24}`,
     max_daily_hours: 7,
     max_consecutive_hours: i % 5 === 0 ? 4 : 5,
   }));
