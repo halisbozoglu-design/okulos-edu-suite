@@ -254,7 +254,7 @@ OKULOS_DERS_PROGRAMI_FINAL
 │   ├── ✅ 16.09 100+ seed stress benchmark
 │   ├── ✅ 16.10 Impossible/near-impossible instance suite
 │   ├── ✅ 16.11 Large MTAL stress corpus
-│   ├── 🟡 16.12 Large MESEM stress corpus
+│   ├── ✅ 16.12 Large MESEM stress corpus
 │   ├── ⬜ 16.13 Room/building extreme corpus
 │   ├── ⬜ 16.14 Sectioning extreme corpus
 │   ├── ⬜ 16.15 Determinism across repeated runs
@@ -315,6 +315,15 @@ OKULOS_DERS_PROGRAMI_FINAL
 - 21/21 feasible; HARD `0`, unplaced `0`, atomik blok, oda türü/özellik, deterministik replay ve 8 saniye bütçesi PASS.
 - GitHub p95 süreleri `1819 / 1781 / 1415 ms`; artifact SHA-256 `165cf10bb917d5472150301b95510a70d5f54ca3c0743f0a8eca76c33605c0d5`.
 - Corpus açıkça sentetik MEB/MTAL yapısal veridir; gerçek kurum, öğretmen veya öğrenci kaydı içerdiği iddia edilmez.
+
+## Güncel büyük MESEM corpus kanıtı
+
+- Manifest: `benchmarks/mesem-large/manifest.json`; makine-okunur CI kanıtı: `benchmarks/mesem-large/evidence-20260829.json`.
+- Workflow `33240914332`, artifact `9711329682`, PASS; saklama süresi 90 gün.
+- Üç yapısal profil × yedi deterministik seed = 21 gerçek çözüm; çok-birimli kurum kimliği, işletmede eğitim günlerinin okul-içi ders domaininden dışlanması, atölye/oda ve vardiya profilleri kapsandı.
+- 21/21 feasible; HARD `0`, unplaced `0`, atomik blok, oda uygunluğu, Birim ID, işletme-günü dışlama, deterministik replay ve 8 saniye bütçesi PASS.
+- GitHub p95 süreleri `1090 / 1245 / 293 ms`; artifact SHA-256: `fd45be13f606cf9f4528a6ddd8bbbf82ccde0a0debd83c63315f27b130e46a89`.
+- Corpus açıkça sentetiktir; gerçek kurum, öğretmen, öğrenci, çırak veya işyeri kaydı içerdiği iddia edilmez.
 
 ## İlerleme raporlama kuralı
 
