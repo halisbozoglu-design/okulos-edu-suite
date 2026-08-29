@@ -11,66 +11,56 @@ Lovable usage: **0**
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
 - Kalan exact doğrulama: **1.762**
-- Büyük atomik mevzuat havuzu: **10.555**
-- Son tamamlanan batch: **V55**
-- Sonraki batch: **V56**
+- Büyük atomik mevzuat havuzu: **10.965**
+- Son tamamlanan batch: **V56**
+- Sonraki batch: **V57**
 
 ## Integrity history
 - V49 HB-0395/HB-0138 temporary promotion via 2020 RAM Directive; V50 judicial-status audit rolled both back.
 - RPD Regulation current effect is provision-level; judicially affected Md14 does not invalidate unrelated surviving articles.
-- V53 HB-2038 rollback: generic family/education/economic parent-data tracking lacks exact current duty.
-- V54 HB-2046/HB-2049 rollback; HB-2048/HB-2050 new exact promotions; net counter unchanged.
-- V55 recovers HB-2047 from current RPD Ethical Directive and adds +1.
+- V53 HB-2038 rollback: generic parent-data tracking lacks exact current duty.
+- V54 HB-2046/HB-2049 rollback; HB-2048/HB-2050 promotion; net unchanged.
+- V55 HB-2047 exact privacy duty promotion.
+- V56 identifies compound Batch02 social-activity row HB-0310 and replaces legacy 2006/26 current-authority assumption for HB-2052.
 
-## V55 — 420 atom
-- Privacy + School Health reconciliation: `docs/legal-rpd-privacy-and-school-health-reconciliation-v55.md` — `d5541841e1afd66e195c0af14ffdcdfcc26ed290`
-- Batch02 integrity audit: `docs/legal-batch02-generic-source-integrity-v55.md` — `c3b990ad5217ecb7740328dba6222c4115fc1be1`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v55.md` — `66b92be4df043afbceb9be2b96dea4109d9b5bb4`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v55.md` — `dd07d2b94c4fa06ea1819567e7f53638ffaff475`
-- Progress: `docs/legal-verification-progress-v55-delta.json` — `61fa8eb73ea364e16ed761e9d759a947856aa27c`
-- Support atoms: **420**; pool **10.135 -> 10.555**.
-- ARTICLE_VERIFIED: **466 -> 467**.
+## V56 — 410 atom
+- Social/special-ed integrity: `docs/legal-batch02-social-specialed-integrity-v56.md` — `1296a7fd0b574c7f4b0f9ee897dda3ee5ef20964`
+- HB-2045 school-type split: `docs/legal-hb2045-school-type-split-v56.md` — `2d659980b7069dd43d72b91789d9fc3254b44354`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v56.md` — `d85c053d58652a2008a7a200131e1c1f1db132bf`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v56.md` — `0cf71de94696305c511c1178f765822a7c243ab5`
+- Progress: `docs/legal-verification-progress-v56-delta.json` — `6f8610e4bd6f70644de2cd35142911056c2d4fea`
+- Support atoms: **410**; pool **10.555 -> 10.965**.
+- ARTICLE_VERIFIED: **467 -> 467** (+1 new exact, -1 rollback).
 
-### V55 new exact
-`HB-2047` — `Öğrenci hakkındaki özel ve gizlilik içeren bilgiler korunmaktadır.`
-Current exact source: MEB Rehberlik ve Psikolojik Danışma Hizmetleri Etik Yönergesi.
-- Md4/1-c: gizlilik core ethical principle.
-- Md9/1-ç: education institution principal does not request service-required private/confidential student information/documents.
-- Md10/1-b,c: assistant principal protects RPD records' security/confidentiality and does not request such data.
-- Md11/1-c/1: counsellor/psychological counsellor does not share service-required private/confidential information/documents without individual/guardian consent except judicial/administrative investigation scope.
-Primary ARTICLE_VERIFIED anchor: **Md11/1-c/1**; managerial provisions support enforcement.
+### V56 new exact
+`HB-2051` — `Uyuşturucu kullanımı ve bağımlılıkla mücadele; 2014/20 sayılı genelge doğrultusunda yürütülmektedir.`
+Current source: MEB Circular 2014/20. TTKB 2026 document inventory independently lists the same circular as `Sürekli`.
+Counter delta: +1.
 
-### HB-2045
-Canonical: e-Okul student development files are filled.
-Old 2008 primary-education provision explicitly created this duty, but old provision is historical. Current secondary legislation still has electronic student development file, while current primary/lower-secondary regime uses newer school-type-specific reporting constructs. Universal master wording is therefore unsafe.
-Status: `SCHOOL_TYPE_SPLIT_REQUIRED + CURRENT_PARENT_RESEARCH`.
+### V56 rollback
+`HB-0310` combines Social Activities Board establishment + annual social-activity planning + teacher course distribution + duty/time roster. Current Social Activities Regulation Md6 supports the first two, but not the latter two. Whole-row verification is invalid.
+Status: `ROLLBACK_ARTICLE_VERIFIED + SPLIT_REQUIRED`.
+Counter delta: -1.
 
-### School Health scope correction
-Current 2022 `Okul Sağlığı Hemşirelerinin Çalışma Usul ve Esasları Hakkında Yönerge`:
-- Md1-2: scope = MEB official/private schools and school-health nursing services.
-- Md4/ç: exact School Health Management Team composition.
-- Md6/2: school management establishes and ensures functional operation.
+### V56 source corrections / retained
+- `HB-0323` -> Social Activities Regulation Md6/8: board work evaluated at teachers-board meetings.
+- `HB-2169` -> Social Activities Regulation Md6, school-type applicability filtered.
+- `HB-2190` -> current exact Md6 already established in earlier audit; no duplicate increment.
+- `HB-2054` -> Special Education Services Regulation Md23/1-ç retained.
+- `HB-2055` -> Special Education Services Regulation Md25/1-a retained.
 
-`HB-2218` master scope = BİLSEM. Do not assume BİLSEM is included merely from handbook list. Status `WITHHELD_SCOPE_APPLICABILITY_REVIEW`.
-`HB-2229` master scope = RAM. RAM is outside explicit school scope; status `WRONG_SCOPE_CANDIDATE + WITHHELD_CURRENT_PARENT_NOT_FOUND`.
-
-## RPD exact anchors retained
-- HB-2023 -> Md15/2-a
-- HB-2024 -> Md15/2-b
-- HB-2025 -> Md15/2-c
-- HB-2029 -> Md16/8
-- HB-2036 -> Md21/4-a
-- HB-2037 -> Md21/4-b/4
-- HB-2048 -> Md21/2-b
-- HB-2050 -> Md23/1-g
-- HB-2047 -> Ethical Directive Md11/1-c/1
+### V56 withheld/split
+- `HB-2045` -> universal e-School student-development-file wording is unsafe; school-type split staged.
+- `HB-2052` -> legacy text says 2006/26, but current 2024/56 explicitly repeals 2006/26 and 2009/09. Master rewrite required before current verification. It was not found in the current counted set, so no rollback delta.
+- `HB-2053` -> support-room number/opening + equipment/material provision spans current Md25 and Md62; `MULTI_PROVISION_EXACT_CANDIDATE`, withheld pending atomicity decision.
+- `HB-2220` -> HEM social activities are optional under Social Activities Regulation Md7/4; unconditional annual board duty not accepted without applicability condition.
 
 ## HB-0603 atomic publication staging
 Legacy `Okul risk haritalarının uygulanması` remains too broad. Source-locked children:
 1. `CLASS_RISK_DATA_TO_RPD_SERVICE` -> class guidance teacher -> November -> Md23/1-d.
 2. `SCHOOL_RISK_MAP_BUILD` -> counsellor/psychological counsellor -> Md21/4-b/3.
 3. `SCHOOL_RISK_MAP_SEND_TO_RAM` -> principal -> November -> Md18/1-m.
-Legacy superseded only after Super Admin publication; historical completed instances immutable; denominator unchanged before new durable IDs publish.
+Legacy superseded only after Super Admin publication; historical completed instances immutable; denominator unchanged before durable child IDs publish.
 
 ## ARTICLE_VERIFIED immutable gate
 `workflow_id + current binding/current-valid source + exact provision + actor/action/object/recipient/timing/system/applicability match`
@@ -81,17 +71,19 @@ Mandatory source gate:
 Guards:
 - official hosting != current legal effect.
 - source title match without institutional applicability is insufficient.
-- handbook/manual cannot widen a directive/regulation's scope.
-- replacement law may change actor/recipient/timing; legacy wording is not grandfathered.
+- a master row explicitly naming a repealed source cannot be cured silently by substituting a new source; current rewrite/publish is required.
+- handbook/manual cannot widen binding scope.
 - same workflow source correction = 0 new count.
 - duplicate/calendar-instance second count forbidden.
 - wrong scope/legal-family must be corrected/published before verification.
-- compound workflow = WITHHELD/SPLIT.
+- compound workflow = WITHHELD/SPLIT; if it was already counted, rollback.
 - historical completed instances immutable.
-- personal/contextual data workflows require exact purpose/actor/data authority and separate privacy/access/retention controls.
+- personal/contextual data workflows require exact purpose/actor/data authority and privacy/access/retention controls.
 
 ## Açık kritik kayıtlar
 - HB-2045 -> school-type/current-parent split.
+- HB-2052 -> 2006/26 repealed; current rewrite to 2024/56/current addiction authority required.
+- HB-2053 -> multi-provision support-room candidate.
 - HB-2046/HB-2049 -> V54 rollback.
 - HB-2038 -> V53 rollback/privacy review.
 - HB-0602 -> PANSİYONLU scope error + RAM-side binding parent unresolved.
@@ -107,15 +99,15 @@ Guards:
 - HB-2204/2205/2206 -> exact title/scope reconciliation.
 - HB-0502 -> obsolete annual guide + monthly report compound.
 
-## V56 önceliği — 300+ atom
-1. Continue Batch02 integrity audit on clearly suspicious non-RPD rows: social activities, boarding/open-education registration, archive/compound rows; row-level only, no mass rollback.
-2. Search master for uncounted exact matches to RPD Md21/4-b/1,/2,/3,/5 and principal Md18/1-g,ğ,h,ı,m.
-3. Resolve HB-2045 by school-type: current OÖKY student development file vs current OÖİKY development report/e-Rapor; split rather than universalize if necessary.
-4. Search HB-0602 RAM-side current binding parent; never use annulled RAM Directive.
-5. Continue BİLSEM current directive judicial/repeal audit and Md29 commission duties.
-6. School Health: identify valid school-scoped master IDs for team creation; do not reuse HB-2218/HB-2229 outside applicability.
+## V57 önceliği — 300+ atom
+1. Audit Batch02 social-event rows `HB-2082`, `HB-2083`, `HB-2088`, `HB-2089`, `HB-2095`; source-correct exact actions against current Social Activities Regulation, rollback compound/mismatch only.
+2. Audit archive/discipline rows `HB-2132`, `HB-2136`, `HB-2139`; current school-type regulation and exact board/notification provisions required.
+3. Continue HB-2053 atomic split decision and search an existing standalone master counterpart before creating NEW candidate IDs.
+4. Continue HB-2045 current OÖKY vs OÖİKY reporting model split.
+5. Continue HB-0602 RAM-side current binding-parent search without annulled RAM Directive.
+6. Continue School Health and BİLSEM current-effect/scope audits.
 7. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V56** başlat; minimum **300 atom** hedefle.
+Kullanıcı `Devam` dediğinde soru sormadan **V57** başlat; minimum **300 atom** hedefle.
