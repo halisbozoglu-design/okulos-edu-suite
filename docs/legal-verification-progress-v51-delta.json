@@ -1,0 +1,24 @@
+{
+  "batch": "V51",
+  "date": "2026-08-29",
+  "migration_count": 0,
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_delta": 0,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "atom_pool_before": 8235,
+  "support_atoms_added": 520,
+  "atom_pool_after": 8755,
+  "key_changes": [
+    "RPD Regulation current effect changed to provision-level status instead of whole-document binary status",
+    "2020 RAM Directive remains invalid for current authority",
+    "2026 TKB RAM inspection guide confirms surviving RPD Regulation anchors including Md16/4, Md18/1-m and Md13/1-a",
+    "HB-0602 classified operational-current but article-parent-not-found and scope-error",
+    "HB-0603 classified actor/action rewrite required; proposed school create/send and RAM receive/collect children",
+    "HB-0138 and HB-0395 remain withheld after V50 rollback",
+    "source authority layers L1 binding / L2 operational / L3 historical introduced without DB migration"
+  ],
+  "next_batch": "V52"
+}
