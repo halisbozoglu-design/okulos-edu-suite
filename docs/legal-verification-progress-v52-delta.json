@@ -1,0 +1,27 @@
+{
+  "batch": "V52",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "support_atoms_added": 480,
+  "atom_pool_before": 8755,
+  "atom_pool_after": 9235,
+  "article_verified_before": 467,
+  "article_verified_promotions": 0,
+  "article_verified_rollbacks": 0,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "migration_count": 0,
+  "source_corrections": [
+    {"workflow_id":"HB-2029","correct_parent":"RPD Yönetmeliği Md16/8","counter_delta":0},
+    {"workflow_id":"HB-2036","correct_parent":"RPD Yönetmeliği Md21/4-a","counter_delta":0}
+  ],
+  "integrity_review": ["HB-2037","HB-2038"],
+  "split_required": ["HB-2030","HB-0603"],
+  "withheld": ["HB-2031","HB-2035","HB-0602"],
+  "notes": [
+    "HB-0603 legacy risk-map action staged into actor-specific children.",
+    "HB-0602 wrong PANSİYONLU scope remains correction candidate; annulled RAM Directive is not used as current authority.",
+    "Already-counted workflows are never incremented again when source mapping is corrected."
+  ]
+}
