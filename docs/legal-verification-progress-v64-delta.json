@@ -1,0 +1,18 @@
+{
+  "batch": "V64",
+  "date": "2026-08-30",
+  "support_atoms": 410,
+  "atom_pool_before": 13895,
+  "atom_pool_after": 14305,
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_promotions": ["HB-1576"],
+  "article_verified_rollbacks": ["HB-1574"],
+  "article_verified_after": 467,
+  "ratio_percent": 20.9511,
+  "remaining": 1762,
+  "migration": 0,
+  "lovable_usage": 0,
+  "source_policy": "official-only",
+  "next_batch": "V65"
+}
