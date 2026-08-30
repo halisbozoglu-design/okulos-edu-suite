@@ -1,0 +1,23 @@
+{
+  "batch": "V67",
+  "date": "2026-08-30",
+  "master_workflows": 2229,
+  "support_atoms_added": 410,
+  "atom_pool_before": 15125,
+  "atom_pool_after": 15535,
+  "article_verified_before": 468,
+  "article_verified_after": 468,
+  "article_verified_delta": 0,
+  "article_verified_ratio_pct": 20.9960,
+  "remaining_exact": 1761,
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "focus": ["HB-1587", "HB-1588", "HB-1589", "HB-1590", "HB-1591", "HB-1592", "HB-1593", "HB-1594"],
+  "integrity": [
+    "L2_CURRENT_OPERATIONAL_NE_ARTICLE_VERIFIED",
+    "TAX_TYPE_PROVISION_SPLIT_REQUIRED",
+    "WORKFORCE_APPLICABILITY_REQUIRED",
+    "CURRENT_EFFECTIVE_NUMERIC_PARAMETER_OVERRIDES_LEGACY_MASTER",
+    "SAME_TOPIC_NE_SAME_SCOPE"
+  ]
+}
