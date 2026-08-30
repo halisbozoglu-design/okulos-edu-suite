@@ -1,6 +1,6 @@
 # Okulos Mevzuat Doğrulama — Kanonik Handoff
 
-Güncelleme: 2026-08-30
+Güncelleme: 2026-08-31
 Durum: AKTİF
 Repo: `halisbozoglu-design/okulos-edu-suite`
 Mode: `ARTICLE_VERIFIED_PRIORITY`
@@ -14,44 +14,39 @@ ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `m
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **475 / 2.229 = %21,3100**
 - Kalan exact: **1.754**
-- Atom havuzu: **18.815**
-- Son batch: **V75**
-- Sonraki batch: **V76**
+- Atom havuzu: **19.225**
+- Son batch: **V76**
+- Sonraki batch: **V77**
 
-## V75 — 410 atom
-- Integrity: `docs/legal-course-schedule-duty-schooltype-integrity-v75.md` — `1d946354eb71519d8a61939771ae86688c10546b`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v75.md` — `8575c8e1969d4604ceee3ccaeeb4e54de5974c30`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v75.md` — `dacb43620d7103a3547cc05b1707206b6219678c`
-- Progress: `docs/legal-verification-progress-v75-delta.json` — `7cc2baf93079d01964055d0222a50f83886e2ba0`
-- Support atoms: **410**, pool **18.405 -> 18.815**.
-- ARTICLE_VERIFIED: **475 -> 475**, delta **0**.
+## V76 — 410 atom
+- Integrity: `docs/legal-student-registration-transfer-integrity-v76.md` — `bc3dc5dcc1c8ade9916e2759a4f143548ebf66cb`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v76.md` — `656228bd77e715ba77387ae2deee2b59c59fdb3c`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v76.md` — `c1d73181beef087a815bed257a7f24d6d2986906`
+- Progress: `docs/legal-verification-progress-v76-delta.json` — `a826c4607fa15aad67ca31e8daef390683b0df7f`
+- Support atoms: **410**, pool **18.815 -> 19.225**.
+- ARTICLE_VERIFIED: **475 +2 -2 -> 475**, net **0**.
 
-### V75 Ders Programları / Nöbet findings
-- `HB-1642..1647`: broad ALL schedule rows require school-type exact parent or published split. `HB-1645` previous wrong Batch02 promotion was already rolled back in V60; do not subtract twice.
-- `HB-1655`: same generic duty exists in OÖKY, OÖİKY and Special Education, but different exact parents; no single-source ALL promotion.
-- `HB-1656`: OÖKY Md91/2-a exact for secondary schools; broad ALL still blocks whole-row promotion.
-- `HB-1657`: OÖKY Md91/2-b exact secondary wording; OÖİKY uses different employment terminology (`aylığını aldığı okul`); split needed.
-- `HB-1658`: master fixed 15 minutes is not current universal default. OÖKY current default is 30 minutes and may be shortened by teachers-board decision to not less than 15 minutes; special education current Md60/2 is 30 minutes. `FIXED_MINIMUM_CANNOT_BE_NORMALIZED_AS_DEFAULT_DURATION`.
-- `HB-1659`: master `12 weeks before birth + two years after birth` is not current OÖKY exact. RG 08.09.2023/32303 current secondary chain uses pregnancy week 24, end of two years following completion of post-birth maternity leave, and `istememesi halinde` conditionality. `TIMING_TRIGGER + DURATION_REFERENCE + OPTIONALITY_MISMATCH`.
-- `HB-1660`: service-year exemption needs optionality/need condition and school-type parent split.
-- `HB-1661/1662`: comparable current provisions exist in OÖİKY/Special Education, but broad ALL common parent not established.
-- `HB-1663`: OÖİKY exemption+requested-duty preference differs materially from Special Education preference rule; actor/scope/exemption semantics cannot be merged.
-- `HB-1664`: current OÖİKY class-order clause does not prove added `etüt çalışması yaptırma` object.
-- `HB-1665`: preschool and special-education classroom supervision models are distinct and must split.
-- `HB-1666`: universal current exact parent for `nöbet defteri` remains unresolved.
-- `HB-1667`: previous wrong Batch02 promotion already rolled back in V61. OÖİKY lunch-duty provision supports teacher rest/dönüşümlü-dengeli structure but master adds assistant-principal/basic-needs semantics and is broad ALL.
+### V76 Student Registration / Transfer findings
+- `HB-1668` ARTICLE_VERIFIED +1: current OÖKY Md25/1-a exactly supports Kontenjan Belirleme Komisyonu composition; scope = secondary education.
+- `HB-1669` ARTICLE_VERIFIED +1: 08.09.2023 RG/32303 amendment, OÖKY Md25/1-b, annual prep/9th-grade intake + branch count by commission minutes considering physical capacity/equipment.
+- `HB-1670`: age-condition row is school/program specific; broad ALL negative state withheld pending scope split.
+- `HB-1671`: e-Okul OR equivalency-document source requires admission-route/object split.
+- `HB-1672`: marriage registration/relationship-termination is secondary-school legal family; current parent recheck pending.
+- `HB-1673`: legacy timing is stale. Current OÖKY Md41/1-a after 08.09.2023 allows open-high-school -> formal transfer in first term through end of October and second term first workday through end of February, subject to conditions and commission decision. Master rewrite required.
+- `HB-1675`: legacy Batch02 used 28.07.2026 OÖİKY source for a secondary-school workflow. `WRONG_SOURCE_FAMILY + WITHHELD` pending exact current OÖKY parent.
+- `HB-1679` ROLLBACK -1: old Batch02 linked generic secondary transfer workflow to OÖİKY Md11 and broad ALL metadata; wrong source family/scope.
+- `HB-1680` ROLLBACK -1: old Batch02 used unrelated OÖİKY Md11 and master text conflicts with current OÖKY prep-class rule (`without prep` vs current `with prep` in grades 10-12 transfer clause).
 
 ## New integrity guards
-- `FIXED_MINIMUM_CANNOT_BE_NORMALIZED_AS_DEFAULT_DURATION`.
-- `PREGNANCY_WEEK_AND_WEEKS_BEFORE_BIRTH_ARE_NOT_INTERCHANGEABLE`.
-- `POSTPARTUM_DURATION_REFERENCE_POINT_IS_EXACTNESS_FIELD`.
-- `OPTIONAL_NO_DUTY != ABSOLUTE_NO_DUTY`.
-- `DISABLED_TEACHER_EXEMPTION != PREFERENCE_PRIORITY_ONLY`.
-- `SAME_DUTY_NAME_ACROSS_SCHOOL_TYPES_DOES_NOT_CREATE_COMMON_PARENT`.
-- `PRIOR_ROLLBACK_MUST_NOT_BE_COUNTED_TWICE`.
+- `PRIMARY_SCHOOL_REGISTRATION_ARTICLE_CANNOT_VALIDATE_SECONDARY_SCHOOL_TRANSFER`.
+- `TRANSFER_TIMING_IS_EXACTNESS_FIELD`.
+- `PREP_CLASS_PRESENCE_NEGATION_IS_EXACTNESS_FIELD`.
+- `WRONG_SOURCE_FAMILY_REQUIRES_ROLLBACK_UNLESS_CURRENT_EXACT_PARENT_ALREADY_LOCKED`.
 - `OLD_BATCH_ARTICLE_REFERENCE_MUST_MATCH_WORKFLOW_CONTENT`.
 
 ## Existing high-priority backlog
+- HB-1670..1678 and HB-1681+ student registration/transfer current exact school-type audit.
+- HB-1673 legacy timing rewrite; HB-1675 current OÖKY exact parent.
 - HB-1642..1667 school-type split/rewrite staging; HB-1666 duty-book parent unresolved.
 - HB-1634..1640 candidate-teacher rewrite/retire/historical snapshot; HB-1641 candidate civil servant source.
 - HB-1611/1612/1617-1622 strategic-plan/service-standard split/rewrite.
@@ -61,12 +56,12 @@ ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `m
 - HB-0138/HB-0395 L2 operational only.
 - HB-2218/HB-2229 School Health scope.
 
-## V76 priority — 300+ atoms
-1. Start `HB-1668+` Student Registration / Transfers from exact master boundary.
-2. Reconcile current OÖİKY/OÖKY registration, transfer, e-Okul, address, age and school-type rules using current official amendment chain; do not reuse the suspicious Batch02 28.07.2026 generic mappings without content match.
-3. Audit prior Article Verified Batch02 rows around HB-1569/HB-1645/HB-1667 for other content-mismatched article references and rollback only once when needed.
-4. Continue HB-1641 candidate civil-servant exact source only if room.
+## V77 priority — 300+ atoms
+1. Continue `HB-1681+` Student Registration / Transfers from exact master text.
+2. Reconcile current OÖKY Md38 onward open-contingent, prep-class, e-Okul and transfer conditions with 08.09.2023 amendment chain.
+3. Audit remaining old Batch02 rows in this block for OÖİKY/OÖKY source-family mismatches; rollback exactly once.
+4. Resolve HB-1675 and, if exact current parent exists, decide source-correction vs rollback without double counting.
 5. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
-Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış. Kullanıcı `Devam` dediğinde soru sormadan **V76** başlat; minimum **300 atom** hedefle.
+Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış. Kullanıcı `Devam` dediğinde soru sormadan **V77** başlat; minimum **300 atom** hedefle.
