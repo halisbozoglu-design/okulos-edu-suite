@@ -1,0 +1,19 @@
+{
+  "batch": "V75",
+  "date": "2026-08-30",
+  "master_workflows": 2229,
+  "article_verified_before": 475,
+  "article_verified_after": 475,
+  "article_verified_delta": 0,
+  "article_verified_ratio_percent": 21.3100,
+  "remaining_exact": 1754,
+  "support_atoms_added": 410,
+  "atom_pool_before": 18405,
+  "atom_pool_after": 18815,
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "focus": ["HB-1642..HB-1647 course schedules", "HB-1655..HB-1667 teacher duty", "school-type scope", "current amendment-chain semantics"],
+  "new_promotions": [],
+  "new_rollbacks": [],
+  "rollback_already_accounted": ["HB-1645", "HB-1667"]
+}
