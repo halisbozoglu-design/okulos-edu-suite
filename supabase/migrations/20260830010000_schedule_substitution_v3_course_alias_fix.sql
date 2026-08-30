@@ -1,0 +1,7 @@
+-- Historical ledger alignment.
+--
+-- The substitution V3 CTE once projected two columns named course_id
+-- (al.* and cc.id). The canonical 20260826154500 migration now uses
+-- resolved_course_id, so fresh databases are already correct. This forward
+-- migration intentionally has no additional DDL and keeps deployed history
+-- aligned without rewriting applied migration records.
