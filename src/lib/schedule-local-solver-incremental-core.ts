@@ -417,8 +417,21 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
           dependency: dep(t, placedActivities),
           cells: cells(t),
         })),
+        available = options.filter((option) => option.cells.length),
+        minimumViableDays = available.length
+          ? Math.min(...available.map((option) => new Set(option.cells.map((cell) => cell.d)).size))
+          : 0,
+        dayConstrained = available.filter(
+          (option) => new Set(option.cells.map((cell) => cell.d)).size === minimumViableDays,
+        ),
+        longestConstrainedDuration = dayConstrained.length
+          ? Math.max(...dayConstrained.map((option) => option.duration))
+          : 0,
+        constructionOptions = dayConstrained.filter(
+          (option) => option.duration === longestConstrainedDuration,
+        ),
         heuristic = constructionPortfolio[constructionStep++ % constructionPortfolio.length]!,
-        decision = chooseConstructionDecision(options, heuristic);
+        decision = chooseConstructionDecision(constructionOptions, heuristic);
       if (!decision) {
         const t = q.shift()!;
         f += t.duration;
