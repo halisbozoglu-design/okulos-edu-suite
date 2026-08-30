@@ -409,7 +409,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
   const hardConstrainedAtomic = (task: Task) => {
     const rule = rules.get(task.a.course_id),
       viableDays = p.days.filter((day) => !rule?.prohibited_days?.includes(day)).length;
-    return viableDays === 1 && task.duration > 1;
+    return viableDays === 1 && task.duration > 1 && !task.a.subgroup_id;
   };
   const construct = (q0: Task[]) => {
     const q = [...q0].sort(
