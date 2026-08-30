@@ -259,7 +259,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
                 3 + (Math.floor(c / 4) % 3),
               ]
             : [],
-      generalAllowed = profile.shifted && program === "MESEM" ? [1, 2, 3, 4, 5] : null;
+      generalAllowed = profile.shifted && program === "MESEM" ? [1, 2, 3, 4, 5, 6] : null;
     for (const [suffix, subject] of [
       ["CORE", generalSubjects[c % 5]!],
       ["ART", generalSubjects[5 + (c % 2)]!] as const,
@@ -308,7 +308,7 @@ export function makeVocationalMaxProblem(profile: Profile, seed: number): Vocati
         ? program === "ATP"
           ? [6, 7, 8, 9, 10]
           : program === "MESEM"
-            ? [1, 2, 3, 4, 5]
+            ? [1, 2, 3, 4, 5, 6]
             : [6, 7, 8, 9, 10]
         : null,
       reqBase: LocalRoomRequirement = {
