@@ -1,0 +1,19 @@
+{
+  "batch": "V65",
+  "date": "2026-08-30",
+  "support_atoms": 410,
+  "atom_pool_before": 14305,
+  "atom_pool_after": 14715,
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_after": 468,
+  "article_verified_ratio_percent": 20.9960,
+  "remaining_exact": 1761,
+  "promotions": ["HB-1578"],
+  "rollbacks": [],
+  "retained": ["HB-1576", "HB-1577"],
+  "withheld_or_year_parameter": ["HB-1575"],
+  "official_source_only": true,
+  "migration_count": 0,
+  "lovable_usage": 0
+}
