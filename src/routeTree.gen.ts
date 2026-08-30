@@ -30,21 +30,30 @@ import { Route as PersonnelImportRouteImport } from './routes/personnel-import'
 import { Route as QuranGroupsRouteImport } from './routes/quran-groups'
 import { Route as RoomAssignmentRouteImport } from './routes/room-assignment'
 import { Route as ScheduleRouteImport } from './routes/schedule'
+import { Route as ScheduleAdaptiveHealthRouteImport } from './routes/schedule-adaptive-health'
+import { Route as ScheduleAnalysisRouteImport } from './routes/schedule-analysis'
 import { Route as ScheduleArchiveRouteImport } from './routes/schedule-archive'
 import { Route as ScheduleEjectionChainRouteImport } from './routes/schedule-ejection-chain'
+import { Route as ScheduleExactOracleRouteImport } from './routes/schedule-exact-oracle'
 import { Route as ScheduleHistoryRouteImport } from './routes/schedule-history'
+import { Route as ScheduleHybridHealthRouteImport } from './routes/schedule-hybrid-health'
 import { Route as ScheduleOptimizationRouteImport } from './routes/schedule-optimization'
 import { Route as SchedulePreparationRouteImport } from './routes/schedule-preparation'
 import { Route as ScheduleReportsRouteImport } from './routes/schedule-reports'
 import { Route as ScheduleRulesRouteImport } from './routes/schedule-rules'
+import { Route as ScheduleRulesRelationsRouteImport } from './routes/schedule-rules-relations'
 import { Route as ScheduleScenarioComparisonRouteImport } from './routes/schedule-scenario-comparison'
 import { Route as ScheduleScopedRulesRouteImport } from './routes/schedule-scoped-rules'
 import { Route as ScheduleSolverRouteImport } from './routes/schedule-solver'
+import { Route as ScheduleTimeMapRouteImport } from './routes/schedule-time-map'
+import { Route as ScheduleTimeModelRouteImport } from './routes/schedule-time-model'
+import { Route as ScheduleTimeOverridesRouteImport } from './routes/schedule-time-overrides'
 import { Route as ScheduleValidationRouteImport } from './routes/schedule-validation'
 import { Route as SchoolRegistrationRouteImport } from './routes/school-registration'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SettingsPermissionsRouteImport } from './routes/settings-permissions'
 import { Route as SettingsTaskRolesRouteImport } from './routes/settings-task-roles'
+import { Route as StudentSectioningRouteImport } from './routes/student-sectioning'
 import { Route as SubstitutesRouteImport } from './routes/substitutes'
 import { Route as SuperAdminRouteImport } from './routes/super-admin'
 import { Route as SuperAdminCoursePoolRouteImport } from './routes/super-admin-course-pool'
@@ -157,6 +166,16 @@ const ScheduleRoute = ScheduleRouteImport.update({
   path: '/schedule',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleAdaptiveHealthRoute = ScheduleAdaptiveHealthRouteImport.update({
+  id: '/schedule-adaptive-health',
+  path: '/schedule-adaptive-health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleAnalysisRoute = ScheduleAnalysisRouteImport.update({
+  id: '/schedule-analysis',
+  path: '/schedule-analysis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScheduleArchiveRoute = ScheduleArchiveRouteImport.update({
   id: '/schedule-archive',
   path: '/schedule-archive',
@@ -167,9 +186,19 @@ const ScheduleEjectionChainRoute = ScheduleEjectionChainRouteImport.update({
   path: '/schedule-ejection-chain',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleExactOracleRoute = ScheduleExactOracleRouteImport.update({
+  id: '/schedule-exact-oracle',
+  path: '/schedule-exact-oracle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScheduleHistoryRoute = ScheduleHistoryRouteImport.update({
   id: '/schedule-history',
   path: '/schedule-history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleHybridHealthRoute = ScheduleHybridHealthRouteImport.update({
+  id: '/schedule-hybrid-health',
+  path: '/schedule-hybrid-health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScheduleOptimizationRoute = ScheduleOptimizationRouteImport.update({
@@ -192,6 +221,11 @@ const ScheduleRulesRoute = ScheduleRulesRouteImport.update({
   path: '/schedule-rules',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleRulesRelationsRoute = ScheduleRulesRelationsRouteImport.update({
+  id: '/schedule-rules-relations',
+  path: '/schedule-rules-relations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScheduleScenarioComparisonRoute =
   ScheduleScenarioComparisonRouteImport.update({
     id: '/schedule-scenario-comparison',
@@ -206,6 +240,21 @@ const ScheduleScopedRulesRoute = ScheduleScopedRulesRouteImport.update({
 const ScheduleSolverRoute = ScheduleSolverRouteImport.update({
   id: '/schedule-solver',
   path: '/schedule-solver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleTimeMapRoute = ScheduleTimeMapRouteImport.update({
+  id: '/schedule-time-map',
+  path: '/schedule-time-map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleTimeModelRoute = ScheduleTimeModelRouteImport.update({
+  id: '/schedule-time-model',
+  path: '/schedule-time-model',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScheduleTimeOverridesRoute = ScheduleTimeOverridesRouteImport.update({
+  id: '/schedule-time-overrides',
+  path: '/schedule-time-overrides',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScheduleValidationRoute = ScheduleValidationRouteImport.update({
@@ -231,6 +280,11 @@ const SettingsPermissionsRoute = SettingsPermissionsRouteImport.update({
 const SettingsTaskRolesRoute = SettingsTaskRolesRouteImport.update({
   id: '/settings-task-roles',
   path: '/settings-task-roles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentSectioningRoute = StudentSectioningRouteImport.update({
+  id: '/student-sectioning',
+  path: '/student-sectioning',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SubstitutesRoute = SubstitutesRouteImport.update({
@@ -286,21 +340,30 @@ export interface FileRoutesByFullPath {
   '/quran-groups': typeof QuranGroupsRoute
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
+  '/schedule-adaptive-health': typeof ScheduleAdaptiveHealthRoute
+  '/schedule-analysis': typeof ScheduleAnalysisRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
   '/schedule-ejection-chain': typeof ScheduleEjectionChainRoute
+  '/schedule-exact-oracle': typeof ScheduleExactOracleRoute
   '/schedule-history': typeof ScheduleHistoryRoute
+  '/schedule-hybrid-health': typeof ScheduleHybridHealthRoute
   '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
   '/schedule-reports': typeof ScheduleReportsRoute
   '/schedule-rules': typeof ScheduleRulesRoute
+  '/schedule-rules-relations': typeof ScheduleRulesRelationsRoute
   '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
   '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
+  '/schedule-time-map': typeof ScheduleTimeMapRoute
+  '/schedule-time-model': typeof ScheduleTimeModelRoute
+  '/schedule-time-overrides': typeof ScheduleTimeOverridesRoute
   '/schedule-validation': typeof ScheduleValidationRoute
   '/school-registration': typeof SchoolRegistrationRoute
   '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
+  '/student-sectioning': typeof StudentSectioningRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
   '/super-admin-course-pool': typeof SuperAdminCoursePoolRoute
@@ -330,21 +393,30 @@ export interface FileRoutesByTo {
   '/quran-groups': typeof QuranGroupsRoute
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
+  '/schedule-adaptive-health': typeof ScheduleAdaptiveHealthRoute
+  '/schedule-analysis': typeof ScheduleAnalysisRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
   '/schedule-ejection-chain': typeof ScheduleEjectionChainRoute
+  '/schedule-exact-oracle': typeof ScheduleExactOracleRoute
   '/schedule-history': typeof ScheduleHistoryRoute
+  '/schedule-hybrid-health': typeof ScheduleHybridHealthRoute
   '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
   '/schedule-reports': typeof ScheduleReportsRoute
   '/schedule-rules': typeof ScheduleRulesRoute
+  '/schedule-rules-relations': typeof ScheduleRulesRelationsRoute
   '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
   '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
+  '/schedule-time-map': typeof ScheduleTimeMapRoute
+  '/schedule-time-model': typeof ScheduleTimeModelRoute
+  '/schedule-time-overrides': typeof ScheduleTimeOverridesRoute
   '/schedule-validation': typeof ScheduleValidationRoute
   '/school-registration': typeof SchoolRegistrationRoute
   '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
+  '/student-sectioning': typeof StudentSectioningRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
   '/super-admin-course-pool': typeof SuperAdminCoursePoolRoute
@@ -375,21 +447,30 @@ export interface FileRoutesById {
   '/quran-groups': typeof QuranGroupsRoute
   '/room-assignment': typeof RoomAssignmentRoute
   '/schedule': typeof ScheduleRoute
+  '/schedule-adaptive-health': typeof ScheduleAdaptiveHealthRoute
+  '/schedule-analysis': typeof ScheduleAnalysisRoute
   '/schedule-archive': typeof ScheduleArchiveRoute
   '/schedule-ejection-chain': typeof ScheduleEjectionChainRoute
+  '/schedule-exact-oracle': typeof ScheduleExactOracleRoute
   '/schedule-history': typeof ScheduleHistoryRoute
+  '/schedule-hybrid-health': typeof ScheduleHybridHealthRoute
   '/schedule-optimization': typeof ScheduleOptimizationRoute
   '/schedule-preparation': typeof SchedulePreparationRoute
   '/schedule-reports': typeof ScheduleReportsRoute
   '/schedule-rules': typeof ScheduleRulesRoute
+  '/schedule-rules-relations': typeof ScheduleRulesRelationsRoute
   '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
   '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
+  '/schedule-time-map': typeof ScheduleTimeMapRoute
+  '/schedule-time-model': typeof ScheduleTimeModelRoute
+  '/schedule-time-overrides': typeof ScheduleTimeOverridesRoute
   '/schedule-validation': typeof ScheduleValidationRoute
   '/school-registration': typeof SchoolRegistrationRoute
   '/settings': typeof SettingsRoute
   '/settings-permissions': typeof SettingsPermissionsRoute
   '/settings-task-roles': typeof SettingsTaskRolesRoute
+  '/student-sectioning': typeof StudentSectioningRoute
   '/substitutes': typeof SubstitutesRoute
   '/super-admin': typeof SuperAdminRoute
   '/super-admin-course-pool': typeof SuperAdminCoursePoolRoute
@@ -421,21 +502,30 @@ export interface FileRouteTypes {
     | '/quran-groups'
     | '/room-assignment'
     | '/schedule'
+    | '/schedule-adaptive-health'
+    | '/schedule-analysis'
     | '/schedule-archive'
     | '/schedule-ejection-chain'
+    | '/schedule-exact-oracle'
     | '/schedule-history'
+    | '/schedule-hybrid-health'
     | '/schedule-optimization'
     | '/schedule-preparation'
     | '/schedule-reports'
     | '/schedule-rules'
+    | '/schedule-rules-relations'
     | '/schedule-scenario-comparison'
     | '/schedule-scoped-rules'
     | '/schedule-solver'
+    | '/schedule-time-map'
+    | '/schedule-time-model'
+    | '/schedule-time-overrides'
     | '/schedule-validation'
     | '/school-registration'
     | '/settings'
     | '/settings-permissions'
     | '/settings-task-roles'
+    | '/student-sectioning'
     | '/substitutes'
     | '/super-admin'
     | '/super-admin-course-pool'
@@ -465,21 +555,30 @@ export interface FileRouteTypes {
     | '/quran-groups'
     | '/room-assignment'
     | '/schedule'
+    | '/schedule-adaptive-health'
+    | '/schedule-analysis'
     | '/schedule-archive'
     | '/schedule-ejection-chain'
+    | '/schedule-exact-oracle'
     | '/schedule-history'
+    | '/schedule-hybrid-health'
     | '/schedule-optimization'
     | '/schedule-preparation'
     | '/schedule-reports'
     | '/schedule-rules'
+    | '/schedule-rules-relations'
     | '/schedule-scenario-comparison'
     | '/schedule-scoped-rules'
     | '/schedule-solver'
+    | '/schedule-time-map'
+    | '/schedule-time-model'
+    | '/schedule-time-overrides'
     | '/schedule-validation'
     | '/school-registration'
     | '/settings'
     | '/settings-permissions'
     | '/settings-task-roles'
+    | '/student-sectioning'
     | '/substitutes'
     | '/super-admin'
     | '/super-admin-course-pool'
@@ -509,21 +608,30 @@ export interface FileRouteTypes {
     | '/quran-groups'
     | '/room-assignment'
     | '/schedule'
+    | '/schedule-adaptive-health'
+    | '/schedule-analysis'
     | '/schedule-archive'
     | '/schedule-ejection-chain'
+    | '/schedule-exact-oracle'
     | '/schedule-history'
+    | '/schedule-hybrid-health'
     | '/schedule-optimization'
     | '/schedule-preparation'
     | '/schedule-reports'
     | '/schedule-rules'
+    | '/schedule-rules-relations'
     | '/schedule-scenario-comparison'
     | '/schedule-scoped-rules'
     | '/schedule-solver'
+    | '/schedule-time-map'
+    | '/schedule-time-model'
+    | '/schedule-time-overrides'
     | '/schedule-validation'
     | '/school-registration'
     | '/settings'
     | '/settings-permissions'
     | '/settings-task-roles'
+    | '/student-sectioning'
     | '/substitutes'
     | '/super-admin'
     | '/super-admin-course-pool'
@@ -554,21 +662,30 @@ export interface RootRouteChildren {
   QuranGroupsRoute: typeof QuranGroupsRoute
   RoomAssignmentRoute: typeof RoomAssignmentRoute
   ScheduleRoute: typeof ScheduleRoute
+  ScheduleAdaptiveHealthRoute: typeof ScheduleAdaptiveHealthRoute
+  ScheduleAnalysisRoute: typeof ScheduleAnalysisRoute
   ScheduleArchiveRoute: typeof ScheduleArchiveRoute
   ScheduleEjectionChainRoute: typeof ScheduleEjectionChainRoute
+  ScheduleExactOracleRoute: typeof ScheduleExactOracleRoute
   ScheduleHistoryRoute: typeof ScheduleHistoryRoute
+  ScheduleHybridHealthRoute: typeof ScheduleHybridHealthRoute
   ScheduleOptimizationRoute: typeof ScheduleOptimizationRoute
   SchedulePreparationRoute: typeof SchedulePreparationRoute
   ScheduleReportsRoute: typeof ScheduleReportsRoute
   ScheduleRulesRoute: typeof ScheduleRulesRoute
+  ScheduleRulesRelationsRoute: typeof ScheduleRulesRelationsRoute
   ScheduleScenarioComparisonRoute: typeof ScheduleScenarioComparisonRoute
   ScheduleScopedRulesRoute: typeof ScheduleScopedRulesRoute
   ScheduleSolverRoute: typeof ScheduleSolverRoute
+  ScheduleTimeMapRoute: typeof ScheduleTimeMapRoute
+  ScheduleTimeModelRoute: typeof ScheduleTimeModelRoute
+  ScheduleTimeOverridesRoute: typeof ScheduleTimeOverridesRoute
   ScheduleValidationRoute: typeof ScheduleValidationRoute
   SchoolRegistrationRoute: typeof SchoolRegistrationRoute
   SettingsRoute: typeof SettingsRoute
   SettingsPermissionsRoute: typeof SettingsPermissionsRoute
   SettingsTaskRolesRoute: typeof SettingsTaskRolesRoute
+  StudentSectioningRoute: typeof StudentSectioningRoute
   SubstitutesRoute: typeof SubstitutesRoute
   SuperAdminRoute: typeof SuperAdminRoute
   SuperAdminCoursePoolRoute: typeof SuperAdminCoursePoolRoute
@@ -726,6 +843,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScheduleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule-adaptive-health': {
+      id: '/schedule-adaptive-health'
+      path: '/schedule-adaptive-health'
+      fullPath: '/schedule-adaptive-health'
+      preLoaderRoute: typeof ScheduleAdaptiveHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule-analysis': {
+      id: '/schedule-analysis'
+      path: '/schedule-analysis'
+      fullPath: '/schedule-analysis'
+      preLoaderRoute: typeof ScheduleAnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedule-archive': {
       id: '/schedule-archive'
       path: '/schedule-archive'
@@ -740,11 +871,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScheduleEjectionChainRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule-exact-oracle': {
+      id: '/schedule-exact-oracle'
+      path: '/schedule-exact-oracle'
+      fullPath: '/schedule-exact-oracle'
+      preLoaderRoute: typeof ScheduleExactOracleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedule-history': {
       id: '/schedule-history'
       path: '/schedule-history'
       fullPath: '/schedule-history'
       preLoaderRoute: typeof ScheduleHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule-hybrid-health': {
+      id: '/schedule-hybrid-health'
+      path: '/schedule-hybrid-health'
+      fullPath: '/schedule-hybrid-health'
+      preLoaderRoute: typeof ScheduleHybridHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/schedule-optimization': {
@@ -775,6 +920,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScheduleRulesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule-rules-relations': {
+      id: '/schedule-rules-relations'
+      path: '/schedule-rules-relations'
+      fullPath: '/schedule-rules-relations'
+      preLoaderRoute: typeof ScheduleRulesRelationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedule-scenario-comparison': {
       id: '/schedule-scenario-comparison'
       path: '/schedule-scenario-comparison'
@@ -794,6 +946,27 @@ declare module '@tanstack/react-router' {
       path: '/schedule-solver'
       fullPath: '/schedule-solver'
       preLoaderRoute: typeof ScheduleSolverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule-time-map': {
+      id: '/schedule-time-map'
+      path: '/schedule-time-map'
+      fullPath: '/schedule-time-map'
+      preLoaderRoute: typeof ScheduleTimeMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule-time-model': {
+      id: '/schedule-time-model'
+      path: '/schedule-time-model'
+      fullPath: '/schedule-time-model'
+      preLoaderRoute: typeof ScheduleTimeModelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule-time-overrides': {
+      id: '/schedule-time-overrides'
+      path: '/schedule-time-overrides'
+      fullPath: '/schedule-time-overrides'
+      preLoaderRoute: typeof ScheduleTimeOverridesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/schedule-validation': {
@@ -829,6 +1002,13 @@ declare module '@tanstack/react-router' {
       path: '/settings-task-roles'
       fullPath: '/settings-task-roles'
       preLoaderRoute: typeof SettingsTaskRolesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student-sectioning': {
+      id: '/student-sectioning'
+      path: '/student-sectioning'
+      fullPath: '/student-sectioning'
+      preLoaderRoute: typeof StudentSectioningRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/substitutes': {
@@ -898,21 +1078,30 @@ const rootRouteChildren: RootRouteChildren = {
   QuranGroupsRoute: QuranGroupsRoute,
   RoomAssignmentRoute: RoomAssignmentRoute,
   ScheduleRoute: ScheduleRoute,
+  ScheduleAdaptiveHealthRoute: ScheduleAdaptiveHealthRoute,
+  ScheduleAnalysisRoute: ScheduleAnalysisRoute,
   ScheduleArchiveRoute: ScheduleArchiveRoute,
   ScheduleEjectionChainRoute: ScheduleEjectionChainRoute,
+  ScheduleExactOracleRoute: ScheduleExactOracleRoute,
   ScheduleHistoryRoute: ScheduleHistoryRoute,
+  ScheduleHybridHealthRoute: ScheduleHybridHealthRoute,
   ScheduleOptimizationRoute: ScheduleOptimizationRoute,
   SchedulePreparationRoute: SchedulePreparationRoute,
   ScheduleReportsRoute: ScheduleReportsRoute,
   ScheduleRulesRoute: ScheduleRulesRoute,
+  ScheduleRulesRelationsRoute: ScheduleRulesRelationsRoute,
   ScheduleScenarioComparisonRoute: ScheduleScenarioComparisonRoute,
   ScheduleScopedRulesRoute: ScheduleScopedRulesRoute,
   ScheduleSolverRoute: ScheduleSolverRoute,
+  ScheduleTimeMapRoute: ScheduleTimeMapRoute,
+  ScheduleTimeModelRoute: ScheduleTimeModelRoute,
+  ScheduleTimeOverridesRoute: ScheduleTimeOverridesRoute,
   ScheduleValidationRoute: ScheduleValidationRoute,
   SchoolRegistrationRoute: SchoolRegistrationRoute,
   SettingsRoute: SettingsRoute,
   SettingsPermissionsRoute: SettingsPermissionsRoute,
   SettingsTaskRolesRoute: SettingsTaskRolesRoute,
+  StudentSectioningRoute: StudentSectioningRoute,
   SubstitutesRoute: SubstitutesRoute,
   SuperAdminRoute: SuperAdminRoute,
   SuperAdminCoursePoolRoute: SuperAdminCoursePoolRoute,
