@@ -4,6 +4,9 @@
 alter table public.institutions
   add column if not exists country_code text not null default 'TR'
     check (country_code ~ '^[A-Z]{2}$'),
+  add column if not exists country_detection_source text not null default 'LEGACY_DEFAULT'
+    check (country_detection_source in ('IP_CDN','LOCALE_FALLBACK','LEGACY_DEFAULT','VERIFIED_CORRECTION')),
+  add column if not exists country_detected_at timestamptz not null default now(),
   add column if not exists curriculum_source_mode text not null default 'OFFICIAL_CATALOG'
     check (curriculum_source_mode in ('OFFICIAL_CATALOG','IMPORT','MANUAL'));
 
@@ -13,10 +16,10 @@ where country_code is null or curriculum_source_mode is null;
 
 drop function if exists public.super_admin_list_tenants();
 create function public.super_admin_list_tenants()
-returns table(institution_code text,school_name text,approval_status text,approval_note text,reviewed_at timestamptz,principal_name text,principal_email text,principal_phone text,country_code text,curriculum_source_mode text)
+returns table(institution_code text,school_name text,approval_status text,approval_note text,reviewed_at timestamptz,principal_name text,principal_email text,principal_phone text,country_code text,country_detection_source text,curriculum_source_mode text)
 language sql stable security definer set search_path=public as $$
  select i.institution_code,i.school_name,i.approval_status,i.approval_note,i.reviewed_at,
-        p.full_name,p.email,p.phone,i.country_code,i.curriculum_source_mode
+        p.full_name,p.email,p.phone,i.country_code,i.country_detection_source,i.curriculum_source_mode
  from public.institutions i
  left join public.institution_memberships m on m.institution_code=i.institution_code and m.active and m.membership_role='principal' and m.is_owner
  left join public.profiles p on p.user_id=m.user_id
@@ -49,5 +52,4 @@ begin
   if not found then raise exception 'INSTITUTION_NOT_FOUND'; end if;
 end;
 $$;
-revoke all on function public.super_admin_set_institution_curriculum_profile(text,text,text) from public, anon;
-grant execute on function public.super_admin_set_institution_curriculum_profile(text,text,text) to authenticated, service_role;
+drop function if exists public.super_admin_set_institution_curriculum_profile(text,text,text);

@@ -194,8 +194,6 @@ export type Database = {
           code: string
           created_at: string
           created_by: string | null
-          country_code: string
-          curriculum_source_mode: string
           ends_on: string
           first_term_ends_on: string | null
           id: string
@@ -214,8 +212,6 @@ export type Database = {
           code: string
           created_at?: string
           created_by?: string | null
-          country_code?: string
-          curriculum_source_mode?: string
           ends_on: string
           first_term_ends_on?: string | null
           id?: string
@@ -234,8 +230,6 @@ export type Database = {
           code?: string
           created_at?: string
           created_by?: string | null
-          country_code?: string
-          curriculum_source_mode?: string
           ends_on?: string
           first_term_ends_on?: string | null
           id?: string
@@ -2308,6 +2302,10 @@ export type Database = {
           approval_status: string
           created_at: string
           created_by: string | null
+          country_code: string
+          country_detection_source: string
+          country_detected_at: string
+          curriculum_source_mode: string
           institution_code: string
           is_metropolitan_district: boolean | null
           province_name: string | null
@@ -2322,6 +2320,10 @@ export type Database = {
           approval_status?: string
           created_at?: string
           created_by?: string | null
+          country_code?: string
+          country_detection_source?: string
+          country_detected_at?: string
+          curriculum_source_mode?: string
           institution_code: string
           is_metropolitan_district?: boolean | null
           province_name?: string | null
@@ -2336,6 +2338,10 @@ export type Database = {
           approval_status?: string
           created_at?: string
           created_by?: string | null
+          country_code?: string
+          country_detection_source?: string
+          country_detected_at?: string
+          curriculum_source_mode?: string
           institution_code?: string
           is_metropolitan_district?: boolean | null
           province_name?: string | null
