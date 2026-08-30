@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, CalendarDays, ClipboardList, FileLock2, FileText, Phone, Shield, Wallet } from "lucide-react";
+import { AlertTriangle, CalendarDays, ClipboardList, Clock3, FileLock2, FileText, Phone, Shield, Sparkles, Wallet } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { StatWidget } from "@/components/okulos/StatWidget";
 import { Badge } from "@/components/ui/badge";
@@ -151,11 +151,24 @@ function TeacherDashboard() {
           }
         }}
       >
-        <DialogTrigger asChild>
-          <Button variant="destructive" size="lg" className="h-14 w-full gap-2 text-base font-semibold">
-            <AlertTriangle className="size-5" /> KRİZ / DEVAMSIZLIK BİLDİR
-          </Button>
-        </DialogTrigger>
+        <div className="overflow-hidden rounded-3xl bg-[linear-gradient(135deg,var(--color-primary-strong),var(--color-primary))] p-5 text-primary-foreground shadow-lg shadow-primary/20 sm:p-7">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-2 text-sm font-medium text-primary-foreground/80"><Sparkles className="size-4" /> Günlük görünüm</div>
+              <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Bugünün okul akışı hazır.</h1>
+              <p className="mt-2 max-w-lg text-sm leading-relaxed text-primary-foreground/80">Yayınlanmış programınızı, bildirimlerinizi ve hızlı işlemleri tek yerden takip edin.</p>
+            </div>
+            <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+              <p className="text-xs font-medium text-primary-foreground/75">Bugün</p>
+              <p className="mt-1 flex items-center gap-2 text-xl font-semibold"><Clock3 className="size-4" /> {scheduleLoading ? "…" : `${todayLessons} ders`}</p>
+            </div>
+          </div>
+          <DialogTrigger asChild>
+            <Button variant="secondary" size="lg" className="mt-6 h-12 w-full gap-2 border border-white/15 bg-white/15 font-semibold text-primary-foreground shadow-none hover:bg-white/25 sm:w-auto">
+              <AlertTriangle className="size-5" /> KRİZ / DEVAMSIZLIK BİLDİR
+            </Button>
+          </DialogTrigger>
+        </div>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Devamsızlık Bildirimi</DialogTitle>
@@ -197,8 +210,8 @@ function TeacherDashboard() {
         <StatWidget icon={Shield} label="Program Kaynağı" value={publication ? "Yayınlanmış" : "Bekliyor"} hint={publication ? `Başlangıç: ${new Date(`${publication.effective_from}T00:00:00`).toLocaleDateString("tr-TR")}` : "İdare henüz program yayınlamadı"} />
       </div>
 
-      <Tabs defaultValue="schedule" className="mt-5">
-        <TabsList className="w-full">
+      <Tabs defaultValue="schedule" className="mt-6">
+        <TabsList className="h-11 w-full rounded-2xl bg-muted/75 p-1">
           <TabsTrigger value="schedule" className="flex-1">Program</TabsTrigger>
           <TabsTrigger value="payroll" className="flex-1">Ek Ders</TabsTrigger>
           <TabsTrigger value="docs" className="flex-1">Belgeler</TabsTrigger>
@@ -217,7 +230,12 @@ function TeacherDashboard() {
             </div>
           ) : null}
           {schedule.length ? (
-            <div className="overflow-x-auto rounded-xl border border-border bg-card">
+            <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm shadow-slate-950/[0.02]">
+              <div className="flex items-center justify-between gap-3 border-b border-border/70 px-4 py-3">
+                <div><p className="text-sm font-semibold">Haftalık program</p><p className="text-xs text-muted-foreground">Yayınlanmış dersler</p></div>
+                <CalendarDays className="size-4 text-primary" />
+              </div>
+              <div className="overflow-x-auto">
               <table className="w-full min-w-[760px] text-sm">
                 <thead className="bg-muted/60 text-xs text-muted-foreground">
                   <tr><th className="px-3 py-2 text-left font-medium">Saat</th>{dayColumns.map((day) => <th key={day.id} className="px-3 py-2 text-left font-medium">{day.short}</th>)}</tr>
@@ -240,6 +258,7 @@ function TeacherDashboard() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           ) : null}
         </TabsContent>

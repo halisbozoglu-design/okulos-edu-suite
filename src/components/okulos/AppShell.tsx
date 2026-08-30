@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Bell, CalendarClock, Check, Copy, LayoutGrid, Send, Settings, Table2, UserRound, Users, X } from "lucide-react";
+import { Bell, CalendarClock, Check, Copy, GraduationCap, LayoutGrid, Send, Settings, Table2, UserRound, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { usePermissions } from "@/lib/permissions";
@@ -271,12 +271,17 @@ export function AppShell({
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <header className="sticky top-0 z-20 border-b border-border bg-card/90 backdrop-blur">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_var(--color-primary-soft),_transparent_34rem)] bg-background pb-24">
+      <header className="sticky top-0 z-20 border-b border-border/80 bg-card/85 backdrop-blur-xl">
         <div className="mx-auto grid max-w-5xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3">
-          <div className="min-w-0">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/30" aria-hidden="true">
+              <GraduationCap className="size-5" />
+            </div>
+            <div className="min-w-0">
             <p className="truncate text-base font-semibold tracking-tight">{title}</p>
             {subtitle ? <p className="truncate text-xs text-muted-foreground">{subtitle}</p> : null}
+            </div>
           </div>
           <div className="relative flex shrink-0 items-center gap-2">
             {action}
@@ -375,17 +380,17 @@ export function AppShell({
         </div>
       ) : null}
 
-      <main className="mx-auto w-full max-w-5xl px-4 py-5">{children}</main>
+      <main className="mx-auto w-full max-w-5xl px-4 py-5 sm:py-7">{children}</main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 backdrop-blur">
-        <ul className="mx-auto grid max-w-5xl" style={{ gridTemplateColumns: `repeat(${Math.max(nav.length, 1)}, minmax(0, 1fr))` }}>
+      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border/80 bg-card/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl">
+        <ul className="mx-auto grid max-w-5xl gap-1 px-2" style={{ gridTemplateColumns: `repeat(${Math.max(nav.length, 1)}, minmax(0, 1fr))` }}>
           {nav.map((item) => {
             const active = pathname.startsWith(item.to);
             const Icon = item.icon;
             return (
               <li key={item.to}>
-                <Link to={item.to as never} className={cn("flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors", active ? "text-primary" : "text-muted-foreground")}>
-                  <Icon className="size-5" />
+                <Link to={item.to as never} className={cn("my-1 flex flex-col items-center gap-1 rounded-xl py-2 text-[11px] font-medium transition-all", active ? "bg-primary-soft text-primary shadow-sm" : "text-muted-foreground hover:bg-muted/70 hover:text-foreground")}>
+                  <Icon className={cn("size-5", active && "stroke-[2.5]")} />
                   {item.label}
                 </Link>
               </li>
