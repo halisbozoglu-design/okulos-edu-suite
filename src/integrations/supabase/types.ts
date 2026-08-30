@@ -194,6 +194,8 @@ export type Database = {
           code: string
           created_at: string
           created_by: string | null
+          country_code: string
+          curriculum_source_mode: string
           ends_on: string
           first_term_ends_on: string | null
           id: string
@@ -212,6 +214,8 @@ export type Database = {
           code: string
           created_at?: string
           created_by?: string | null
+          country_code?: string
+          curriculum_source_mode?: string
           ends_on: string
           first_term_ends_on?: string | null
           id?: string
@@ -230,6 +234,8 @@ export type Database = {
           code?: string
           created_at?: string
           created_by?: string | null
+          country_code?: string
+          curriculum_source_mode?: string
           ends_on?: string
           first_term_ends_on?: string | null
           id?: string
