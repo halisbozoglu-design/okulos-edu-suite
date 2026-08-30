@@ -1,0 +1,18 @@
+{
+  "batch": "V66",
+  "date": "2026-08-30",
+  "support_atoms": 410,
+  "atom_pool_before": 14715,
+  "atom_pool_after": 15125,
+  "master_workflows": 2229,
+  "article_verified_before": 468,
+  "promotions": 0,
+  "rollbacks": 0,
+  "article_verified_after": 468,
+  "ratio_percent": 20.9960,
+  "remaining": 1761,
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "key_withheld": ["HB-1579", "HB-1580", "HB-1581", "HB-1582", "HB-1583", "HB-1584", "HB-1585", "HB-1586"],
+  "integrity_guard_added": "A regulation whose scope expressly excludes the target institution/legal regime cannot be used as ARTICLE_VERIFIED parent merely because topic/role names are similar."
+}
