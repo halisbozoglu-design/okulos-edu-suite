@@ -406,8 +406,15 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
     );
     return index >= 0 ? { index, task: queue[index]! } : null;
   };
+  const hardConstrainedAtomic = (task: Task) => {
+    const rule = rules.get(task.a.course_id),
+      viableDays = p.days.filter((day) => !rule?.prohibited_days?.includes(day)).length;
+    return viableDays === 1 && task.duration > 1;
+  };
   const construct = (q0: Task[]) => {
-    const q = [...q0];
+    const q = [...q0].sort(
+      (left, right) => Number(hardConstrainedAtomic(right)) - Number(hardConstrainedAtomic(left)),
+    );
     let f = 0;
     while (q.length) {
       const placedActivities = state.activities();
@@ -417,21 +424,8 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
           dependency: dep(t, placedActivities),
           cells: cells(t),
         })),
-        available = options.filter((option) => option.cells.length),
-        minimumViableDays = available.length
-          ? Math.min(...available.map((option) => new Set(option.cells.map((cell) => cell.d)).size))
-          : 0,
-        dayConstrained = available.filter(
-          (option) => new Set(option.cells.map((cell) => cell.d)).size === minimumViableDays,
-        ),
-        longestConstrainedDuration = dayConstrained.length
-          ? Math.max(...dayConstrained.map((option) => option.duration))
-          : 0,
-        constructionOptions = dayConstrained.filter(
-          (option) => option.duration === longestConstrainedDuration,
-        ),
         heuristic = constructionPortfolio[constructionStep++ % constructionPortfolio.length]!,
-        decision = chooseConstructionDecision(constructionOptions, heuristic);
+        decision = chooseConstructionDecision(options, heuristic);
       if (!decision) {
         const t = q.shift()!;
         f += t.duration;
