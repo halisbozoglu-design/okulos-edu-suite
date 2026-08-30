@@ -1,91 +1,67 @@
 # Okulos Mevzuat Doğrulama — Kanonik Handoff
 
-Güncelleme: 2026-08-30
+Güncelleme: 2026-08-31
 Durum: AKTİF
 Repo: `halisbozoglu-design/okulos-edu-suite`
 Mode: `ARTICLE_VERIFIED_PRIORITY`
 Migration: **0**
 Lovable usage: **0**
 
-## Kaynak politikası — zorunlu
-ARTICLE_VERIFIED için yalnız:
-- `mevzuat.gov.tr`
-- `mevzuat.meb.gov.tr`
-- `meb.gov.tr` ve resmî MEB birimleri
-- `resmigazete.gov.tr`
-İkincil mevzuat/hukuk/okul siteleri exact doğrulama kaynağı değildir. Resmî rehber/el kitabı L2 destek olabilir; yönetmelik maddesinin yerine geçmez.
-Yüklenmiş/eski mevzuat kopyası güncel resmî konsolide metinle çatışırsa current legal effect için resmî güncel metin esas alınır.
+## Kaynak politikası
+ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `meb.gov.tr` birimleri ve `resmigazete.gov.tr`. MEB rehberi/el kitabı L2 veya aday kanıt olabilir; current exact Resmî Gazete hükmünün yerine geçmez.
 
 ## Güncel kesin durum
 - Master workflow: **2.229**
-- ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
-- Kalan exact: **1.762**
-- Atom havuzu: **14.305**
-- Son batch: **V64**
-- Sonraki batch: **V65**
+- ARTICLE_VERIFIED: **475 / 2.229 = %21,3100**
+- Kalan exact: **1.754**
+- Atom havuzu: **19.225**
+- Son batch: **V76**
+- Sonraki batch: **V77**
 
-## V64 — 410 atom
-- Integrity: `docs/legal-official-current-vs-stale-transport-duty-integrity-v64.md` — `07295d722da3f64c7a74812992bb8ca0d755a841`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v64.md` — `4e4f513bf9314d80ccc985772d4e1afef0c2b40a`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v64.md` — `7bb35cb523296838a65cfa3b545db182c172ec40`
-- Progress: `docs/legal-verification-progress-v64-delta.json` — `79431c6ebe7e3a6ae13b1b5fa24ede15499a1ed3`
-- Support atoms: **410**; pool **13.895 -> 14.305**.
-- ARTICLE_VERIFIED: **467 -> 467** (+1 / -1).
+## V76 — 410 atom
+- Integrity: `docs/legal-student-registration-transfer-integrity-v76.md` — `bc3dc5dcc1c8ade9916e2759a4f143548ebf66cb`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v76.md` — `656228bd77e715ba77387ae2deee2b59c59fdb3c`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v76.md` — `c1d73181beef087a815bed257a7f24d6d2986906`
+- Progress: `docs/legal-verification-progress-v76-delta.json` — `a826c4607fa15aad67ca31e8daef390683b0df7f`
+- Support atoms: **410**, pool **18.815 -> 19.225**.
+- ARTICLE_VERIFIED: **475 +2 -2 -> 475**, net **0**.
 
-### V64 current-vs-stale guard
-File Library contained older OÖKY copies with older Md91 wording. Current official MEB `1657.pdf` currently serves the applicable text and controls current effect. Current official OÖİKY `1703.pdf` is separately scoped. `CURRENT_OFFICIAL_CONSOLIDATED_OVERRIDES_STALE_UPLOADED_COPY` added as an integrity rule.
+### V76 Student Registration / Transfer findings
+- `HB-1668` ARTICLE_VERIFIED +1: current OÖKY Md25/1-a exactly supports Kontenjan Belirleme Komisyonu composition; scope = secondary education.
+- `HB-1669` ARTICLE_VERIFIED +1: 08.09.2023 RG/32303 amendment, OÖKY Md25/1-b, annual prep/9th-grade intake + branch count by commission minutes considering physical capacity/equipment.
+- `HB-1670`: age-condition row is school/program specific; broad ALL negative state withheld pending scope split.
+- `HB-1671`: e-Okul OR equivalency-document source requires admission-route/object split.
+- `HB-1672`: marriage registration/relationship-termination is secondary-school legal family; current parent recheck pending.
+- `HB-1673`: legacy timing is stale. Current OÖKY Md41/1-a after 08.09.2023 allows open-high-school -> formal transfer in first term through end of October and second term first workday through end of February, subject to conditions and commission decision. Master rewrite required.
+- `HB-1675`: legacy Batch02 used 28.07.2026 OÖİKY source for a secondary-school workflow. `WRONG_SOURCE_FAMILY + WITHHELD` pending exact current OÖKY parent.
+- `HB-1679` ROLLBACK -1: old Batch02 linked generic secondary transfer workflow to OÖİKY Md11 and broad ALL metadata; wrong source family/scope.
+- `HB-1680` ROLLBACK -1: old Batch02 used unrelated OÖİKY Md11 and master text conflicts with current OÖKY prep-class rule (`without prep` vs current `with prep` in grades 10-12 transfer clause).
 
-### V64 duplicate search
-No clean pre-existing school-type-specific durable sibling was established for HB-1655..HB-1665. The search returned the same broad ALL master rows/derivative copies. Therefore these require existing-master scope rewrite/split + SA approval/publish; no duplicate promotion/new ID shortcut.
+## New integrity guards
+- `PRIMARY_SCHOOL_REGISTRATION_ARTICLE_CANNOT_VALIDATE_SECONDARY_SCHOOL_TRANSFER`.
+- `TRANSFER_TIMING_IS_EXACTNESS_FIELD`.
+- `PREP_CLASS_PRESENCE_NEGATION_IS_EXACTNESS_FIELD`.
+- `WRONG_SOURCE_FAMILY_REQUIRES_ROLLBACK_UNLESS_CURRENT_EXACT_PARENT_ALREADY_LOCKED`.
+- `OLD_BATCH_ARTICLE_REFERENCE_MUST_MATCH_WORKFLOW_CONTENT`.
 
-### V64 promotion
-`HB-1576` -> current official MEB `Okul Servis Araçlarının Çalıştırılmasına İlişkin Usul ve Esaslar` (`1959.pdf`) Md5/1-d. Door may be automatic/driver-operated or manually/mechanically driver-controlled; automatic-door status signal condition preserved. Delta +1.
+## Existing high-priority backlog
+- HB-1670..1678 and HB-1681+ student registration/transfer current exact school-type audit.
+- HB-1673 legacy timing rewrite; HB-1675 current OÖKY exact parent.
+- HB-1642..1667 school-type split/rewrite staging; HB-1666 duty-book parent unresolved.
+- HB-1634..1640 candidate-teacher rewrite/retire/historical snapshot; HB-1641 candidate civil servant source.
+- HB-1611/1612/1617-1622 strategic-plan/service-standard split/rewrite.
+- HB-1604..1608 and HB-1597..1603 DÖSE current-system/recipient/provision backlog.
+- HB-1483/HB-1484 official OAB exact retry only.
+- HB-2138/HB-2139, HB-2045/HB-2052/HB-2053/HB-0602/HB-0603 semantics/split/exact-parent chains.
+- HB-0138/HB-0395 L2 operational only.
+- HB-2218/HB-2229 School Health scope.
 
-### V64 rollback
-`HB-1574` had been counted from the 2025-2026 annual İlk-Ortaöğretim Taşıma Teknik Şartname clause 2.3. DHGM's official current page now publishes a 2026-2027 technical specification. The current-year link is an official DOCX but could not be parsed by the web reader in this pass, so the 2025-2026 annual source alone cannot satisfy current exact effect. Status `ROLLBACK_ARTICLE_VERIFIED + YEAR_PARAMETER_CURRENT_CLAUSE_RECHECK`. Delta -1. Historical 2025-2026 instances immutable.
-
-### V64 withheld/retained
-- HB-1575 fire extinguisher: `1959.pdf` Md5/1-ç references required vehicle equipment, but exact named extinguisher child provision not locked. WITHHELD.
-- HB-1577: current 2024 Transport Regulation Md13/1-ğ retained, delta 0.
-- HB-1666: transport-specific duty-book/tutanak semantics do not create universal duty-book workflow; withheld.
-
-## ARTICLE_VERIFIED gate
-`OFFICIAL_DOMAIN -> SOURCE_FOUND -> DOCUMENT_EFFECT -> PROVISION_EFFECT -> JUDICIAL_STATUS -> REPEAL/AMENDMENT_CHAIN -> ACTOR/ACTION/OBJECT/RECIPIENT/TIMING/SYSTEM/SCOPE/SEMANTICS -> ARTICLE_VERIFIED`
-
-Guards:
-- newer RG/current official consolidated text controls over stale uploaded copies;
-- annual source must be current-year or durable-parent exact; expired annual child cannot prove current exact effect;
-- broad ALL scope school-type-specific hükmü miras alamaz;
-- similar duty is not exact where timing/condition/actor differs;
-- compound split edilir;
-- historical completed instances immutable;
-- duplicate count forbidden.
-
-## Açık kritik kayıtlar
-- HB-1574 -> 2026-2027 official technical-spec clause recheck; no secondary fallback.
-- HB-1575 -> exact fire-extinguisher authority chain.
-- HB-1655..1665 -> school-type durable profile publication pending; no sibling reuse found V64.
-- HB-1666 -> universal duty-book authority unresolved.
-- HB-1483/HB-1484 -> official OAB exact retry only.
-- HB-1645/HB-1646/HB-1647/HB-1667 -> school-type correction staging.
-- HB-2138 -> exact semantics rewrite.
-- HB-2139 -> split children staged.
-- HB-2045 -> school-type reporting split.
-- HB-2052 -> repealed 2006/26 rewrite.
-- HB-2053 -> support-room atomicity.
-- HB-0602 -> RAM-side binding parent unresolved; annulled RAM Directive forbidden.
-- HB-0603 -> atomic children staged.
-- HB-0138/HB-0395 -> L2 only.
-- HB-2218/HB-2229 -> School Health scope.
-
-## V65 önceliği — 300+ atom
-1. Resolve current 2026-2027 official transport technical DOCX contents through official MEB paths/search; re-promote HB-1574 only if exact clause confirmed.
-2. Audit HB-1575 and vehicle-equipment rows through current official Okul Servis Araçları/traffic regulatory chain.
-3. Continue HB-1578 onward transport-contract/document-retention rows against current 2024 Transport Regulation and official MEB procurement documents.
-4. Retry HB-1483/HB-1484 official OAB source only.
-5. Continue HB-1655..1665/HB-1645..1647/HB-1667 school-type staging.
-6. Migration **0**, Lovable **0**.
+## V77 priority — 300+ atoms
+1. Continue `HB-1681+` Student Registration / Transfers from exact master text.
+2. Reconcile current OÖKY Md38 onward open-contingent, prep-class, e-Okul and transfer conditions with 08.09.2023 amendment chain.
+3. Audit remaining old Batch02 rows in this block for OÖİKY/OÖKY source-family mismatches; rollback exactly once.
+4. Resolve HB-1675 and, if exact current parent exists, decide source-correction vs rollback without double counting.
+5. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
-Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V65** başlat; minimum **300 atom** hedefle.
+Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış. Kullanıcı `Devam` dediğinde soru sormadan **V77** başlat; minimum **300 atom** hedefle.

@@ -1,0 +1,17 @@
+{
+  "batch": "V74",
+  "date": "2026-08-30",
+  "support_atoms": 410,
+  "atom_pool_before": 17995,
+  "atom_pool_after": 18405,
+  "master_workflows": 2229,
+  "article_verified_before": 474,
+  "article_verified_after": 475,
+  "article_verified_delta": 1,
+  "remaining_exact": 1754,
+  "ratio_percent": 21.3100,
+  "promoted": ["HB-1633"],
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "next_batch": "V75"
+}
