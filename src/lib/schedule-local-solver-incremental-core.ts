@@ -302,12 +302,22 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
       }))
       .sort((x, y) => x.penalty - y.penalty || String(x.id).localeCompare(String(y.id)));
   };
+  const participatesInHardRelation = (t: Task) =>
+    relations.some(
+      (relation) =>
+        relation.mode === "HARD" &&
+        (selector(t, relation.left_selector) || selector(t, relation.right_selector)),
+    );
   const cells = (t: Task): Cell[] => {
     const a = t.a,
       r = rules.get(a.course_id),
       c = cons.get(a.teacher_id),
       out: Cell[] = [],
-      placed = relations.length ? state.activities() : [];
+      // Only tasks selected by a HARD relation can be affected by it.  Avoid
+      // rebuilding the activity list and evaluating every relation for the
+      // much larger set of unrelated general/vocational tasks.
+      relationRelevant = participatesInHardRelation(t),
+      placed = relationRelevant ? state.activities() : [];
     for (const d of p.days)
       for (let s = 1; s <= p.periods - t.duration + 1; s++) {
         if (r?.prohibited_days?.includes(d)) continue;
@@ -331,7 +341,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
         const rcs = roomChoices(a, d, s, t.duration);
         if (!rcs.length) continue;
         for (const rc of rcs) {
-          const rel = relations.length
+          const rel = relationRelevant
             ? evaluateCandidateRelations(taskAct(t, d, s, rc.id), placed, relations)
             : { hard: 0, medium: 0, soft: 0 };
           if (rel.hard) continue;
