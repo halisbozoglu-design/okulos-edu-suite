@@ -15,46 +15,53 @@ ARTICLE_VERIFIED için yalnız:
 - `resmigazete.gov.tr`
 İkincil mevzuat/hukuk/okul siteleri exact doğrulama kaynağı değildir. Resmî rehber/el kitabı L2 destek olabilir; yönetmelik maddesinin yerine geçmez.
 Yüklenmiş/eski mevzuat kopyası güncel resmî konsolide metinle çatışırsa current legal effect için resmî güncel metin esas alınır.
+Yıllık teknik şartname/sözleşme tasarısı durable ulusal master parentı değildir; current-year/tenant instance üzerinde `YEAR_PARAMETER` veya legal snapshot olarak tutulur. Durable ARTICLE_VERIFIED için current regulation/directive-level exact parent gerekir.
 
 ## Güncel kesin durum
 - Master workflow: **2.229**
-- ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
-- Kalan exact: **1.762**
-- Atom havuzu: **14.305**
-- Son batch: **V64**
-- Sonraki batch: **V65**
+- ARTICLE_VERIFIED: **468 / 2.229 = %20,9960**
+- Kalan exact: **1.761**
+- Atom havuzu: **14.715**
+- Son batch: **V65**
+- Sonraki batch: **V66**
 
-## V64 — 410 atom
-- Integrity: `docs/legal-official-current-vs-stale-transport-duty-integrity-v64.md` — `07295d722da3f64c7a74812992bb8ca0d755a841`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v64.md` — `4e4f513bf9314d80ccc985772d4e1afef0c2b40a`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v64.md` — `7bb35cb523296838a65cfa3b545db182c172ec40`
-- Progress: `docs/legal-verification-progress-v64-delta.json` — `79431c6ebe7e3a6ae13b1b5fa24ede15499a1ed3`
-- Support atoms: **410**; pool **13.895 -> 14.305**.
-- ARTICLE_VERIFIED: **467 -> 467** (+1 / -1).
+## V65 — 410 atom
+- Integrity: `docs/legal-transport-contract-integrity-v65.md` — `bd70d18f8d71308c9f44ce9448f62a3c9740984e`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v65.md` — `560b215bb6ee2e520361e4b4adb49e6d2733bd3a`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v65.md` — `c86d643dab375fddddd1a9d72db956013db7dbad`
+- Progress: `docs/legal-verification-progress-v65-delta.json` — `9ff1612b39444063cf7d628486b96f34d71f4448`
+- Support atoms: **410**; pool **14.305 -> 14.715**.
+- ARTICLE_VERIFIED: **467 -> 468** (+1).
 
-### V64 current-vs-stale guard
-File Library contained older OÖKY copies with older Md91 wording. Current official MEB `1657.pdf` currently serves the applicable text and controls current effect. Current official OÖİKY `1703.pdf` is separately scoped. `CURRENT_OFFICIAL_CONSOLIDATED_OVERRIDES_STALE_UPLOADED_COPY` added as an integrity rule.
+### V65 promotion
+`HB-1578` — `Taşıma uygulaması kapsamında yapılan taşıma ihale sözleşmelerinin bir örneği okulda bulunmaktadır.`
+Current exact official parent: MEB Taşıma Yoluyla Eğitime Erişim Yönetmeliği, RG 01.08.2024 / 32619.
+- Md16/2-ç: ihale sözleşmelerinin bir örneği ilgili taşıma merkezi okul/kurum müdürlüklerine gönderilir.
+- Md18/1-d: sözleşmelerin onaylı nüshası ilgili taşıma merkezi okul/kurum müdürlüklerine gönderilir.
+Master durable ID, actor/action/object/recipient exact. Önceki verified setlerde HB-1578 bulunmadı.
+Delta +1.
 
-### V64 duplicate search
-No clean pre-existing school-type-specific durable sibling was established for HB-1655..HB-1665. The search returned the same broad ALL master rows/derivative copies. Therefore these require existing-master scope rewrite/split + SA approval/publish; no duplicate promotion/new ID shortcut.
+### V65 fire-extinguisher result
+`HB-1575` master: servis aracında kullanılabilir durumda yangın söndürme tüpü.
+Current official DHGM evidence:
+- Okul müdürü araç denetim formu: bakımlı ve son kullanma tarihi geçmemiş yangın söndürme tüpü kontrolü; source field Teknik Şartname.
+- 2026-2027 İlk-Ortaöğretim Taşıma İhaleleri Örnek Sözleşme Tasarısı special violation row 22: minibüste 1x2 kg; <=26 kişilik otobüste 2x2 kg; >26 kişilik otobüste 2x6 kg yangın söndürme cihazı.
+Status: `CURRENT_YEAR_EXACT_OPERATIONAL + YEAR_PARAMETER`; durable ARTICLE_VERIFIED yok. Teknik şartname DOCX web parser tarafından doğrudan okunamadı.
 
-### V64 promotion
-`HB-1576` -> current official MEB `Okul Servis Araçlarının Çalıştırılmasına İlişkin Usul ve Esaslar` (`1959.pdf`) Md5/1-d. Door may be automatic/driver-operated or manually/mechanically driver-controlled; automatic-door status signal condition preserved. Delta +1.
+### V65 retained
+- HB-1576 V64 exact korunur.
+- HB-1577 current Transport Regulation Md13/1-ğ exact; Batch08'de zaten sayılmış, duplicate delta 0.
 
-### V64 rollback
-`HB-1574` had been counted from the 2025-2026 annual İlk-Ortaöğretim Taşıma Teknik Şartname clause 2.3. DHGM's official current page now publishes a 2026-2027 technical specification. The current-year link is an official DOCX but could not be parsed by the web reader in this pass, so the 2025-2026 annual source alone cannot satisfy current exact effect. Status `ROLLBACK_ARTICLE_VERIFIED + YEAR_PARAMETER_CURRENT_CLAUSE_RECHECK`. Delta -1. Historical 2025-2026 instances immutable.
-
-### V64 withheld/retained
-- HB-1575 fire extinguisher: `1959.pdf` Md5/1-ç references required vehicle equipment, but exact named extinguisher child provision not locked. WITHHELD.
-- HB-1577: current 2024 Transport Regulation Md13/1-ğ retained, delta 0.
-- HB-1666: transport-specific duty-book/tutanak semantics do not create universal duty-book workflow; withheld.
+### Document handling note
+Current DHGM page updated 30.07.2026 and publishes 2026-2027 technical specification, administrative specification and contract template. Contract PDF was readable. Technical specification DOCX returned unsupported content type in web reader. PDF screenshot attempts for the contract/inspection-form views returned internal errors; screenshot success is not claimed.
 
 ## ARTICLE_VERIFIED gate
 `OFFICIAL_DOMAIN -> SOURCE_FOUND -> DOCUMENT_EFFECT -> PROVISION_EFFECT -> JUDICIAL_STATUS -> REPEAL/AMENDMENT_CHAIN -> ACTOR/ACTION/OBJECT/RECIPIENT/TIMING/SYSTEM/SCOPE/SEMANTICS -> ARTICLE_VERIFIED`
 
 Guards:
 - newer RG/current official consolidated text controls over stale uploaded copies;
-- annual source must be current-year or durable-parent exact; expired annual child cannot prove current exact effect;
+- annual source must be current-year and stays year-specific unless durable current parent exists;
+- annual technical spec/contract template cannot universalize a durable master workflow;
 - broad ALL scope school-type-specific hükmü miras alamaz;
 - similar duty is not exact where timing/condition/actor differs;
 - compound split edilir;
@@ -62,8 +69,8 @@ Guards:
 - duplicate count forbidden.
 
 ## Açık kritik kayıtlar
-- HB-1574 -> 2026-2027 official technical-spec clause recheck; no secondary fallback.
-- HB-1575 -> exact fire-extinguisher authority chain.
+- HB-1574 -> current 2026-2027 technical-spec exact clause still unparsed; remains rolled back/current-year recheck.
+- HB-1575 -> current-year exact operational/YEAR_PARAMETER; durable statutory parent unresolved.
 - HB-1655..1665 -> school-type durable profile publication pending; no sibling reuse found V64.
 - HB-1666 -> universal duty-book authority unresolved.
 - HB-1483/HB-1484 -> official OAB exact retry only.
@@ -78,14 +85,15 @@ Guards:
 - HB-0138/HB-0395 -> L2 only.
 - HB-2218/HB-2229 -> School Health scope.
 
-## V65 önceliği — 300+ atom
-1. Resolve current 2026-2027 official transport technical DOCX contents through official MEB paths/search; re-promote HB-1574 only if exact clause confirmed.
-2. Audit HB-1575 and vehicle-equipment rows through current official Okul Servis Araçları/traffic regulatory chain.
-3. Continue HB-1578 onward transport-contract/document-retention rows against current 2024 Transport Regulation and official MEB procurement documents.
-4. Retry HB-1483/HB-1484 official OAB source only.
+## V66 önceliği — 300+ atom
+1. Continue after HB-1578 into project-resource rows, but first complete transport side-source corrections and search any remaining HB-157x service rows/duplicates.
+2. Retry HB-1574 via official 2026-2027 technical-spec text only; no prior-year substitution.
+3. Search durable official parent for HB-1575 fire-extinguisher equipment; if only annual contract layer remains, keep YEAR_PARAMETER.
+4. Retry HB-1483/HB-1484 using official OAB/RG source only.
 5. Continue HB-1655..1665/HB-1645..1647/HB-1667 school-type staging.
-6. Migration **0**, Lovable **0**.
+6. Continue HB-2053/HB-2045/HB-0602 exact-parent chains.
+7. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V65** başlat; minimum **300 atom** hedefle.
+Kullanıcı `Devam` dediğinde soru sormadan **V66** başlat; minimum **300 atom** hedefle.
