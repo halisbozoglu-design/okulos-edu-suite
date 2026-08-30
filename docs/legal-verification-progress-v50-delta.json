@@ -1,0 +1,17 @@
+{
+  "batch": "V50",
+  "date": "2026-08-29",
+  "support_atoms_added": 420,
+  "atom_pool_before": 7815,
+  "atom_pool_after": 8235,
+  "master_workflows": 2229,
+  "article_verified_before": 469,
+  "article_verified_added": 0,
+  "article_verified_rolled_back": 2,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "migration_count": 0,
+  "critical_change": "2020 RAM Directive judicial-status reconciliation; HB-0395 and HB-0138 rolled back because current-authority requirement is not met",
+  "next_batch": "V51"
+}

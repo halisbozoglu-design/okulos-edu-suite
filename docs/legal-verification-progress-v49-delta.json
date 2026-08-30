@@ -1,0 +1,25 @@
+{
+  "batch": "V49",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_added": 2,
+  "article_verified_after": 469,
+  "article_verified_ratio_percent": 21.0408,
+  "remaining_exact": 1760,
+  "support_atoms_added": 600,
+  "atom_pool_before": 7215,
+  "atom_pool_after": 7815,
+  "migration_count": 0,
+  "promoted": [
+    {"workflow_id":"HB-0395","source":"MEB Rehberlik ve Araştırma Merkezi Yönergesi","provision":"Md.5/4-a/7","phase":"YEAR_START"},
+    {"workflow_id":"HB-0138","source":"MEB Rehberlik ve Araştırma Merkezi Yönergesi","provision":"Md.5/4-a/7","phase":"YEAR_END"}
+  ],
+  "withheld_guards": [
+    "generic consultancy wording cannot choose Md.5/4-a/1 vs a/4",
+    "visit-only rows omit consultancy output required by a/4",
+    "HB-0602 requires scope correction publication before promotion",
+    "HB-0516 is duplicate/calendar representation of first annual meeting"
+  ],
+  "next_batch": "V50"
+}
