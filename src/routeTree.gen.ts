@@ -19,6 +19,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DutyBookRouteImport } from './routes/duty-book'
 import { Route as LegislationRouteImport } from './routes/legislation'
 import { Route as ManagementRouteImport } from './routes/management'
+import { Route as MuhakkikRouteImport } from './routes/muhakkik'
 import { Route as NormAnalysisRouteImport } from './routes/norm-analysis'
 import { Route as NormSettingsRouteImport } from './routes/norm-settings'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -52,217 +53,49 @@ import { Route as SuperAdminTenantsRouteImport } from './routes/super-admin-tena
 import { Route as TimetableRouteImport } from './routes/timetable'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AcademicYearsRoute = AcademicYearsRouteImport.update({
-  id: '/academic-years',
-  path: '/academic-years',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalendarRoute = CalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassesRoute = ClassesRouteImport.update({
-  id: '/classes',
-  path: '/classes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassroomsRoute = ClassroomsRouteImport.update({
-  id: '/classrooms',
-  path: '/classrooms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CurriculumRoute = CurriculumRouteImport.update({
-  id: '/curriculum',
-  path: '/curriculum',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DutyBookRoute = DutyBookRouteImport.update({
-  id: '/duty-book',
-  path: '/duty-book',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LegislationRoute = LegislationRouteImport.update({
-  id: '/legislation',
-  path: '/legislation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ManagementRoute = ManagementRouteImport.update({
-  id: '/management',
-  path: '/management',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NormAnalysisRoute = NormAnalysisRouteImport.update({
-  id: '/norm-analysis',
-  path: '/norm-analysis',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NormSettingsRoute = NormSettingsRouteImport.update({
-  id: '/norm-settings',
-  path: '/norm-settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NotificationsRoute = NotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PayrollRoute = PayrollRouteImport.update({
-  id: '/payroll',
-  path: '/payroll',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PayrollRulesRoute = PayrollRulesRouteImport.update({
-  id: '/payroll-rules',
-  path: '/payroll-rules',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PersonnelAdminRoute = PersonnelAdminRouteImport.update({
-  id: '/personnel-admin',
-  path: '/personnel-admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PersonnelFieldSettingsRoute = PersonnelFieldSettingsRouteImport.update({
-  id: '/personnel-field-settings',
-  path: '/personnel-field-settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PersonnelImportRoute = PersonnelImportRouteImport.update({
-  id: '/personnel-import',
-  path: '/personnel-import',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuranGroupsRoute = QuranGroupsRouteImport.update({
-  id: '/quran-groups',
-  path: '/quran-groups',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RoomAssignmentRoute = RoomAssignmentRouteImport.update({
-  id: '/room-assignment',
-  path: '/room-assignment',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleRoute = ScheduleRouteImport.update({
-  id: '/schedule',
-  path: '/schedule',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleArchiveRoute = ScheduleArchiveRouteImport.update({
-  id: '/schedule-archive',
-  path: '/schedule-archive',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleEjectionChainRoute = ScheduleEjectionChainRouteImport.update({
-  id: '/schedule-ejection-chain',
-  path: '/schedule-ejection-chain',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleHistoryRoute = ScheduleHistoryRouteImport.update({
-  id: '/schedule-history',
-  path: '/schedule-history',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleOptimizationRoute = ScheduleOptimizationRouteImport.update({
-  id: '/schedule-optimization',
-  path: '/schedule-optimization',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SchedulePreparationRoute = SchedulePreparationRouteImport.update({
-  id: '/schedule-preparation',
-  path: '/schedule-preparation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleReportsRoute = ScheduleReportsRouteImport.update({
-  id: '/schedule-reports',
-  path: '/schedule-reports',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleRulesRoute = ScheduleRulesRouteImport.update({
-  id: '/schedule-rules',
-  path: '/schedule-rules',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleScenarioComparisonRoute =
-  ScheduleScenarioComparisonRouteImport.update({
-    id: '/schedule-scenario-comparison',
-    path: '/schedule-scenario-comparison',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ScheduleScopedRulesRoute = ScheduleScopedRulesRouteImport.update({
-  id: '/schedule-scoped-rules',
-  path: '/schedule-scoped-rules',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleSolverRoute = ScheduleSolverRouteImport.update({
-  id: '/schedule-solver',
-  path: '/schedule-solver',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleValidationRoute = ScheduleValidationRouteImport.update({
-  id: '/schedule-validation',
-  path: '/schedule-validation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SchoolRegistrationRoute = SchoolRegistrationRouteImport.update({
-  id: '/school-registration',
-  path: '/school-registration',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsPermissionsRoute = SettingsPermissionsRouteImport.update({
-  id: '/settings-permissions',
-  path: '/settings-permissions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsTaskRolesRoute = SettingsTaskRolesRouteImport.update({
-  id: '/settings-task-roles',
-  path: '/settings-task-roles',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SubstitutesRoute = SubstitutesRouteImport.update({
-  id: '/substitutes',
-  path: '/substitutes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SuperAdminRoute = SuperAdminRouteImport.update({
-  id: '/super-admin',
-  path: '/super-admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SuperAdminCoursePoolRoute = SuperAdminCoursePoolRouteImport.update({
-  id: '/super-admin-course-pool',
-  path: '/super-admin-course-pool',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SuperAdminTenantsRoute = SuperAdminTenantsRouteImport.update({
-  id: '/super-admin-tenants',
-  path: '/super-admin-tenants',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TimetableRoute = TimetableRouteImport.update({
-  id: '/timetable',
-  path: '/timetable',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/auth/callback',
-  path: '/auth/callback',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const IndexRoute = IndexRouteImport.update({ id: '/', path: '/', getParentRoute: () => rootRouteImport } as any)
+const AcademicYearsRoute = AcademicYearsRouteImport.update({ id: '/academic-years', path: '/academic-years', getParentRoute: () => rootRouteImport } as any)
+const CalendarRoute = CalendarRouteImport.update({ id: '/calendar', path: '/calendar', getParentRoute: () => rootRouteImport } as any)
+const ClassesRoute = ClassesRouteImport.update({ id: '/classes', path: '/classes', getParentRoute: () => rootRouteImport } as any)
+const ClassroomsRoute = ClassroomsRouteImport.update({ id: '/classrooms', path: '/classrooms', getParentRoute: () => rootRouteImport } as any)
+const CurriculumRoute = CurriculumRouteImport.update({ id: '/curriculum', path: '/curriculum', getParentRoute: () => rootRouteImport } as any)
+const DashboardRoute = DashboardRouteImport.update({ id: '/dashboard', path: '/dashboard', getParentRoute: () => rootRouteImport } as any)
+const DutyBookRoute = DutyBookRouteImport.update({ id: '/duty-book', path: '/duty-book', getParentRoute: () => rootRouteImport } as any)
+const LegislationRoute = LegislationRouteImport.update({ id: '/legislation', path: '/legislation', getParentRoute: () => rootRouteImport } as any)
+const ManagementRoute = ManagementRouteImport.update({ id: '/management', path: '/management', getParentRoute: () => rootRouteImport } as any)
+const MuhakkikRoute = MuhakkikRouteImport.update({ id: '/muhakkik', path: '/muhakkik', getParentRoute: () => rootRouteImport } as any)
+const NormAnalysisRoute = NormAnalysisRouteImport.update({ id: '/norm-analysis', path: '/norm-analysis', getParentRoute: () => rootRouteImport } as any)
+const NormSettingsRoute = NormSettingsRouteImport.update({ id: '/norm-settings', path: '/norm-settings', getParentRoute: () => rootRouteImport } as any)
+const NotificationsRoute = NotificationsRouteImport.update({ id: '/notifications', path: '/notifications', getParentRoute: () => rootRouteImport } as any)
+const PayrollRoute = PayrollRouteImport.update({ id: '/payroll', path: '/payroll', getParentRoute: () => rootRouteImport } as any)
+const PayrollRulesRoute = PayrollRulesRouteImport.update({ id: '/payroll-rules', path: '/payroll-rules', getParentRoute: () => rootRouteImport } as any)
+const PersonnelAdminRoute = PersonnelAdminRouteImport.update({ id: '/personnel-admin', path: '/personnel-admin', getParentRoute: () => rootRouteImport } as any)
+const PersonnelFieldSettingsRoute = PersonnelFieldSettingsRouteImport.update({ id: '/personnel-field-settings', path: '/personnel-field-settings', getParentRoute: () => rootRouteImport } as any)
+const PersonnelImportRoute = PersonnelImportRouteImport.update({ id: '/personnel-import', path: '/personnel-import', getParentRoute: () => rootRouteImport } as any)
+const QuranGroupsRoute = QuranGroupsRouteImport.update({ id: '/quran-groups', path: '/quran-groups', getParentRoute: () => rootRouteImport } as any)
+const RoomAssignmentRoute = RoomAssignmentRouteImport.update({ id: '/room-assignment', path: '/room-assignment', getParentRoute: () => rootRouteImport } as any)
+const ScheduleRoute = ScheduleRouteImport.update({ id: '/schedule', path: '/schedule', getParentRoute: () => rootRouteImport } as any)
+const ScheduleArchiveRoute = ScheduleArchiveRouteImport.update({ id: '/schedule-archive', path: '/schedule-archive', getParentRoute: () => rootRouteImport } as any)
+const ScheduleEjectionChainRoute = ScheduleEjectionChainRouteImport.update({ id: '/schedule-ejection-chain', path: '/schedule-ejection-chain', getParentRoute: () => rootRouteImport } as any)
+const ScheduleHistoryRoute = ScheduleHistoryRouteImport.update({ id: '/schedule-history', path: '/schedule-history', getParentRoute: () => rootRouteImport } as any)
+const ScheduleOptimizationRoute = ScheduleOptimizationRouteImport.update({ id: '/schedule-optimization', path: '/schedule-optimization', getParentRoute: () => rootRouteImport } as any)
+const SchedulePreparationRoute = SchedulePreparationRouteImport.update({ id: '/schedule-preparation', path: '/schedule-preparation', getParentRoute: () => rootRouteImport } as any)
+const ScheduleReportsRoute = ScheduleReportsRouteImport.update({ id: '/schedule-reports', path: '/schedule-reports', getParentRoute: () => rootRouteImport } as any)
+const ScheduleRulesRoute = ScheduleRulesRouteImport.update({ id: '/schedule-rules', path: '/schedule-rules', getParentRoute: () => rootRouteImport } as any)
+const ScheduleScenarioComparisonRoute = ScheduleScenarioComparisonRouteImport.update({ id: '/schedule-scenario-comparison', path: '/schedule-scenario-comparison', getParentRoute: () => rootRouteImport } as any)
+const ScheduleScopedRulesRoute = ScheduleScopedRulesRouteImport.update({ id: '/schedule-scoped-rules', path: '/schedule-scoped-rules', getParentRoute: () => rootRouteImport } as any)
+const ScheduleSolverRoute = ScheduleSolverRouteImport.update({ id: '/schedule-solver', path: '/schedule-solver', getParentRoute: () => rootRouteImport } as any)
+const ScheduleValidationRoute = ScheduleValidationRouteImport.update({ id: '/schedule-validation', path: '/schedule-validation', getParentRoute: () => rootRouteImport } as any)
+const SchoolRegistrationRoute = SchoolRegistrationRouteImport.update({ id: '/school-registration', path: '/school-registration', getParentRoute: () => rootRouteImport } as any)
+const SettingsRoute = SettingsRouteImport.update({ id: '/settings', path: '/settings', getParentRoute: () => rootRouteImport } as any)
+const SettingsPermissionsRoute = SettingsPermissionsRouteImport.update({ id: '/settings-permissions', path: '/settings-permissions', getParentRoute: () => rootRouteImport } as any)
+const SettingsTaskRolesRoute = SettingsTaskRolesRouteImport.update({ id: '/settings-task-roles', path: '/settings-task-roles', getParentRoute: () => rootRouteImport } as any)
+const SubstitutesRoute = SubstitutesRouteImport.update({ id: '/substitutes', path: '/substitutes', getParentRoute: () => rootRouteImport } as any)
+const SuperAdminRoute = SuperAdminRouteImport.update({ id: '/super-admin', path: '/super-admin', getParentRoute: () => rootRouteImport } as any)
+const SuperAdminCoursePoolRoute = SuperAdminCoursePoolRouteImport.update({ id: '/super-admin-course-pool', path: '/super-admin-course-pool', getParentRoute: () => rootRouteImport } as any)
+const SuperAdminTenantsRoute = SuperAdminTenantsRouteImport.update({ id: '/super-admin-tenants', path: '/super-admin-tenants', getParentRoute: () => rootRouteImport } as any)
+const TimetableRoute = TimetableRouteImport.update({ id: '/timetable', path: '/timetable', getParentRoute: () => rootRouteImport } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({ id: '/auth/callback', path: '/auth/callback', getParentRoute: () => rootRouteImport } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -275,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/duty-book': typeof DutyBookRoute
   '/legislation': typeof LegislationRoute
   '/management': typeof ManagementRoute
+  '/muhakkik': typeof MuhakkikRoute
   '/norm-analysis': typeof NormAnalysisRoute
   '/norm-settings': typeof NormSettingsRoute
   '/notifications': typeof NotificationsRoute
@@ -319,6 +153,7 @@ export interface FileRoutesByTo {
   '/duty-book': typeof DutyBookRoute
   '/legislation': typeof LegislationRoute
   '/management': typeof ManagementRoute
+  '/muhakkik': typeof MuhakkikRoute
   '/norm-analysis': typeof NormAnalysisRoute
   '/norm-settings': typeof NormSettingsRoute
   '/notifications': typeof NotificationsRoute
@@ -364,6 +199,7 @@ export interface FileRoutesById {
   '/duty-book': typeof DutyBookRoute
   '/legislation': typeof LegislationRoute
   '/management': typeof ManagementRoute
+  '/muhakkik': typeof MuhakkikRoute
   '/norm-analysis': typeof NormAnalysisRoute
   '/norm-settings': typeof NormSettingsRoute
   '/notifications': typeof NotificationsRoute
@@ -399,137 +235,10 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/academic-years'
-    | '/calendar'
-    | '/classes'
-    | '/classrooms'
-    | '/curriculum'
-    | '/dashboard'
-    | '/duty-book'
-    | '/legislation'
-    | '/management'
-    | '/norm-analysis'
-    | '/norm-settings'
-    | '/notifications'
-    | '/payroll'
-    | '/payroll-rules'
-    | '/personnel-admin'
-    | '/personnel-field-settings'
-    | '/personnel-import'
-    | '/quran-groups'
-    | '/room-assignment'
-    | '/schedule'
-    | '/schedule-archive'
-    | '/schedule-ejection-chain'
-    | '/schedule-history'
-    | '/schedule-optimization'
-    | '/schedule-preparation'
-    | '/schedule-reports'
-    | '/schedule-rules'
-    | '/schedule-scenario-comparison'
-    | '/schedule-scoped-rules'
-    | '/schedule-solver'
-    | '/schedule-validation'
-    | '/school-registration'
-    | '/settings'
-    | '/settings-permissions'
-    | '/settings-task-roles'
-    | '/substitutes'
-    | '/super-admin'
-    | '/super-admin-course-pool'
-    | '/super-admin-tenants'
-    | '/timetable'
-    | '/auth/callback'
+  fullPaths: '/' | '/academic-years' | '/calendar' | '/classes' | '/classrooms' | '/curriculum' | '/dashboard' | '/duty-book' | '/legislation' | '/management' | '/muhakkik' | '/norm-analysis' | '/norm-settings' | '/notifications' | '/payroll' | '/payroll-rules' | '/personnel-admin' | '/personnel-field-settings' | '/personnel-import' | '/quran-groups' | '/room-assignment' | '/schedule' | '/schedule-archive' | '/schedule-ejection-chain' | '/schedule-history' | '/schedule-optimization' | '/schedule-preparation' | '/schedule-reports' | '/schedule-rules' | '/schedule-scenario-comparison' | '/schedule-scoped-rules' | '/schedule-solver' | '/schedule-validation' | '/school-registration' | '/settings' | '/settings-permissions' | '/settings-task-roles' | '/substitutes' | '/super-admin' | '/super-admin-course-pool' | '/super-admin-tenants' | '/timetable' | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/academic-years'
-    | '/calendar'
-    | '/classes'
-    | '/classrooms'
-    | '/curriculum'
-    | '/dashboard'
-    | '/duty-book'
-    | '/legislation'
-    | '/management'
-    | '/norm-analysis'
-    | '/norm-settings'
-    | '/notifications'
-    | '/payroll'
-    | '/payroll-rules'
-    | '/personnel-admin'
-    | '/personnel-field-settings'
-    | '/personnel-import'
-    | '/quran-groups'
-    | '/room-assignment'
-    | '/schedule'
-    | '/schedule-archive'
-    | '/schedule-ejection-chain'
-    | '/schedule-history'
-    | '/schedule-optimization'
-    | '/schedule-preparation'
-    | '/schedule-reports'
-    | '/schedule-rules'
-    | '/schedule-scenario-comparison'
-    | '/schedule-scoped-rules'
-    | '/schedule-solver'
-    | '/schedule-validation'
-    | '/school-registration'
-    | '/settings'
-    | '/settings-permissions'
-    | '/settings-task-roles'
-    | '/substitutes'
-    | '/super-admin'
-    | '/super-admin-course-pool'
-    | '/super-admin-tenants'
-    | '/timetable'
-    | '/auth/callback'
-  id:
-    | '__root__'
-    | '/'
-    | '/academic-years'
-    | '/calendar'
-    | '/classes'
-    | '/classrooms'
-    | '/curriculum'
-    | '/dashboard'
-    | '/duty-book'
-    | '/legislation'
-    | '/management'
-    | '/norm-analysis'
-    | '/norm-settings'
-    | '/notifications'
-    | '/payroll'
-    | '/payroll-rules'
-    | '/personnel-admin'
-    | '/personnel-field-settings'
-    | '/personnel-import'
-    | '/quran-groups'
-    | '/room-assignment'
-    | '/schedule'
-    | '/schedule-archive'
-    | '/schedule-ejection-chain'
-    | '/schedule-history'
-    | '/schedule-optimization'
-    | '/schedule-preparation'
-    | '/schedule-reports'
-    | '/schedule-rules'
-    | '/schedule-scenario-comparison'
-    | '/schedule-scoped-rules'
-    | '/schedule-solver'
-    | '/schedule-validation'
-    | '/school-registration'
-    | '/settings'
-    | '/settings-permissions'
-    | '/settings-task-roles'
-    | '/substitutes'
-    | '/super-admin'
-    | '/super-admin-course-pool'
-    | '/super-admin-tenants'
-    | '/timetable'
-    | '/auth/callback'
+  to: '/' | '/academic-years' | '/calendar' | '/classes' | '/classrooms' | '/curriculum' | '/dashboard' | '/duty-book' | '/legislation' | '/management' | '/muhakkik' | '/norm-analysis' | '/norm-settings' | '/notifications' | '/payroll' | '/payroll-rules' | '/personnel-admin' | '/personnel-field-settings' | '/personnel-import' | '/quran-groups' | '/room-assignment' | '/schedule' | '/schedule-archive' | '/schedule-ejection-chain' | '/schedule-history' | '/schedule-optimization' | '/schedule-preparation' | '/schedule-reports' | '/schedule-rules' | '/schedule-scenario-comparison' | '/schedule-scoped-rules' | '/schedule-solver' | '/schedule-validation' | '/school-registration' | '/settings' | '/settings-permissions' | '/settings-task-roles' | '/substitutes' | '/super-admin' | '/super-admin-course-pool' | '/super-admin-tenants' | '/timetable' | '/auth/callback'
+  id: '__root__' | '/' | '/academic-years' | '/calendar' | '/classes' | '/classrooms' | '/curriculum' | '/dashboard' | '/duty-book' | '/legislation' | '/management' | '/muhakkik' | '/norm-analysis' | '/norm-settings' | '/notifications' | '/payroll' | '/payroll-rules' | '/personnel-admin' | '/personnel-field-settings' | '/personnel-import' | '/quran-groups' | '/room-assignment' | '/schedule' | '/schedule-archive' | '/schedule-ejection-chain' | '/schedule-history' | '/schedule-optimization' | '/schedule-preparation' | '/schedule-reports' | '/schedule-rules' | '/schedule-scenario-comparison' | '/schedule-scoped-rules' | '/schedule-solver' | '/schedule-validation' | '/school-registration' | '/settings' | '/settings-permissions' | '/settings-task-roles' | '/substitutes' | '/super-admin' | '/super-admin-course-pool' | '/super-admin-tenants' | '/timetable' | '/auth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -543,6 +252,7 @@ export interface RootRouteChildren {
   DutyBookRoute: typeof DutyBookRoute
   LegislationRoute: typeof LegislationRoute
   ManagementRoute: typeof ManagementRoute
+  MuhakkikRoute: typeof MuhakkikRoute
   NormAnalysisRoute: typeof NormAnalysisRoute
   NormSettingsRoute: typeof NormSettingsRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -579,300 +289,49 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/academic-years': {
-      id: '/academic-years'
-      path: '/academic-years'
-      fullPath: '/academic-years'
-      preLoaderRoute: typeof AcademicYearsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calendar': {
-      id: '/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
-      preLoaderRoute: typeof CalendarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/classes': {
-      id: '/classes'
-      path: '/classes'
-      fullPath: '/classes'
-      preLoaderRoute: typeof ClassesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/classrooms': {
-      id: '/classrooms'
-      path: '/classrooms'
-      fullPath: '/classrooms'
-      preLoaderRoute: typeof ClassroomsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/curriculum': {
-      id: '/curriculum'
-      path: '/curriculum'
-      fullPath: '/curriculum'
-      preLoaderRoute: typeof CurriculumRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/duty-book': {
-      id: '/duty-book'
-      path: '/duty-book'
-      fullPath: '/duty-book'
-      preLoaderRoute: typeof DutyBookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/legislation': {
-      id: '/legislation'
-      path: '/legislation'
-      fullPath: '/legislation'
-      preLoaderRoute: typeof LegislationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/management': {
-      id: '/management'
-      path: '/management'
-      fullPath: '/management'
-      preLoaderRoute: typeof ManagementRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/norm-analysis': {
-      id: '/norm-analysis'
-      path: '/norm-analysis'
-      fullPath: '/norm-analysis'
-      preLoaderRoute: typeof NormAnalysisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/norm-settings': {
-      id: '/norm-settings'
-      path: '/norm-settings'
-      fullPath: '/norm-settings'
-      preLoaderRoute: typeof NormSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/notifications': {
-      id: '/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof NotificationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/payroll': {
-      id: '/payroll'
-      path: '/payroll'
-      fullPath: '/payroll'
-      preLoaderRoute: typeof PayrollRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/payroll-rules': {
-      id: '/payroll-rules'
-      path: '/payroll-rules'
-      fullPath: '/payroll-rules'
-      preLoaderRoute: typeof PayrollRulesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/personnel-admin': {
-      id: '/personnel-admin'
-      path: '/personnel-admin'
-      fullPath: '/personnel-admin'
-      preLoaderRoute: typeof PersonnelAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/personnel-field-settings': {
-      id: '/personnel-field-settings'
-      path: '/personnel-field-settings'
-      fullPath: '/personnel-field-settings'
-      preLoaderRoute: typeof PersonnelFieldSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/personnel-import': {
-      id: '/personnel-import'
-      path: '/personnel-import'
-      fullPath: '/personnel-import'
-      preLoaderRoute: typeof PersonnelImportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quran-groups': {
-      id: '/quran-groups'
-      path: '/quran-groups'
-      fullPath: '/quran-groups'
-      preLoaderRoute: typeof QuranGroupsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/room-assignment': {
-      id: '/room-assignment'
-      path: '/room-assignment'
-      fullPath: '/room-assignment'
-      preLoaderRoute: typeof RoomAssignmentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule': {
-      id: '/schedule'
-      path: '/schedule'
-      fullPath: '/schedule'
-      preLoaderRoute: typeof ScheduleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-archive': {
-      id: '/schedule-archive'
-      path: '/schedule-archive'
-      fullPath: '/schedule-archive'
-      preLoaderRoute: typeof ScheduleArchiveRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-ejection-chain': {
-      id: '/schedule-ejection-chain'
-      path: '/schedule-ejection-chain'
-      fullPath: '/schedule-ejection-chain'
-      preLoaderRoute: typeof ScheduleEjectionChainRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-history': {
-      id: '/schedule-history'
-      path: '/schedule-history'
-      fullPath: '/schedule-history'
-      preLoaderRoute: typeof ScheduleHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-optimization': {
-      id: '/schedule-optimization'
-      path: '/schedule-optimization'
-      fullPath: '/schedule-optimization'
-      preLoaderRoute: typeof ScheduleOptimizationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-preparation': {
-      id: '/schedule-preparation'
-      path: '/schedule-preparation'
-      fullPath: '/schedule-preparation'
-      preLoaderRoute: typeof SchedulePreparationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-reports': {
-      id: '/schedule-reports'
-      path: '/schedule-reports'
-      fullPath: '/schedule-reports'
-      preLoaderRoute: typeof ScheduleReportsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-rules': {
-      id: '/schedule-rules'
-      path: '/schedule-rules'
-      fullPath: '/schedule-rules'
-      preLoaderRoute: typeof ScheduleRulesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-scenario-comparison': {
-      id: '/schedule-scenario-comparison'
-      path: '/schedule-scenario-comparison'
-      fullPath: '/schedule-scenario-comparison'
-      preLoaderRoute: typeof ScheduleScenarioComparisonRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-scoped-rules': {
-      id: '/schedule-scoped-rules'
-      path: '/schedule-scoped-rules'
-      fullPath: '/schedule-scoped-rules'
-      preLoaderRoute: typeof ScheduleScopedRulesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-solver': {
-      id: '/schedule-solver'
-      path: '/schedule-solver'
-      fullPath: '/schedule-solver'
-      preLoaderRoute: typeof ScheduleSolverRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule-validation': {
-      id: '/schedule-validation'
-      path: '/schedule-validation'
-      fullPath: '/schedule-validation'
-      preLoaderRoute: typeof ScheduleValidationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/school-registration': {
-      id: '/school-registration'
-      path: '/school-registration'
-      fullPath: '/school-registration'
-      preLoaderRoute: typeof SchoolRegistrationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings-permissions': {
-      id: '/settings-permissions'
-      path: '/settings-permissions'
-      fullPath: '/settings-permissions'
-      preLoaderRoute: typeof SettingsPermissionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings-task-roles': {
-      id: '/settings-task-roles'
-      path: '/settings-task-roles'
-      fullPath: '/settings-task-roles'
-      preLoaderRoute: typeof SettingsTaskRolesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/substitutes': {
-      id: '/substitutes'
-      path: '/substitutes'
-      fullPath: '/substitutes'
-      preLoaderRoute: typeof SubstitutesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/super-admin': {
-      id: '/super-admin'
-      path: '/super-admin'
-      fullPath: '/super-admin'
-      preLoaderRoute: typeof SuperAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/super-admin-course-pool': {
-      id: '/super-admin-course-pool'
-      path: '/super-admin-course-pool'
-      fullPath: '/super-admin-course-pool'
-      preLoaderRoute: typeof SuperAdminCoursePoolRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/super-admin-tenants': {
-      id: '/super-admin-tenants'
-      path: '/super-admin-tenants'
-      fullPath: '/super-admin-tenants'
-      preLoaderRoute: typeof SuperAdminTenantsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/timetable': {
-      id: '/timetable'
-      path: '/timetable'
-      fullPath: '/timetable'
-      preLoaderRoute: typeof TimetableRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/auth/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    '/': { id: '/'; path: '/'; fullPath: '/'; preLoaderRoute: typeof IndexRouteImport; parentRoute: typeof rootRouteImport }
+    '/academic-years': { id: '/academic-years'; path: '/academic-years'; fullPath: '/academic-years'; preLoaderRoute: typeof AcademicYearsRouteImport; parentRoute: typeof rootRouteImport }
+    '/calendar': { id: '/calendar'; path: '/calendar'; fullPath: '/calendar'; preLoaderRoute: typeof CalendarRouteImport; parentRoute: typeof rootRouteImport }
+    '/classes': { id: '/classes'; path: '/classes'; fullPath: '/classes'; preLoaderRoute: typeof ClassesRouteImport; parentRoute: typeof rootRouteImport }
+    '/classrooms': { id: '/classrooms'; path: '/classrooms'; fullPath: '/classrooms'; preLoaderRoute: typeof ClassroomsRouteImport; parentRoute: typeof rootRouteImport }
+    '/curriculum': { id: '/curriculum'; path: '/curriculum'; fullPath: '/curriculum'; preLoaderRoute: typeof CurriculumRouteImport; parentRoute: typeof rootRouteImport }
+    '/dashboard': { id: '/dashboard'; path: '/dashboard'; fullPath: '/dashboard'; preLoaderRoute: typeof DashboardRouteImport; parentRoute: typeof rootRouteImport }
+    '/duty-book': { id: '/duty-book'; path: '/duty-book'; fullPath: '/duty-book'; preLoaderRoute: typeof DutyBookRouteImport; parentRoute: typeof rootRouteImport }
+    '/legislation': { id: '/legislation'; path: '/legislation'; fullPath: '/legislation'; preLoaderRoute: typeof LegislationRouteImport; parentRoute: typeof rootRouteImport }
+    '/management': { id: '/management'; path: '/management'; fullPath: '/management'; preLoaderRoute: typeof ManagementRouteImport; parentRoute: typeof rootRouteImport }
+    '/muhakkik': { id: '/muhakkik'; path: '/muhakkik'; fullPath: '/muhakkik'; preLoaderRoute: typeof MuhakkikRouteImport; parentRoute: typeof rootRouteImport }
+    '/norm-analysis': { id: '/norm-analysis'; path: '/norm-analysis'; fullPath: '/norm-analysis'; preLoaderRoute: typeof NormAnalysisRouteImport; parentRoute: typeof rootRouteImport }
+    '/norm-settings': { id: '/norm-settings'; path: '/norm-settings'; fullPath: '/norm-settings'; preLoaderRoute: typeof NormSettingsRouteImport; parentRoute: typeof rootRouteImport }
+    '/notifications': { id: '/notifications'; path: '/notifications'; fullPath: '/notifications'; preLoaderRoute: typeof NotificationsRouteImport; parentRoute: typeof rootRouteImport }
+    '/payroll': { id: '/payroll'; path: '/payroll'; fullPath: '/payroll'; preLoaderRoute: typeof PayrollRouteImport; parentRoute: typeof rootRouteImport }
+    '/payroll-rules': { id: '/payroll-rules'; path: '/payroll-rules'; fullPath: '/payroll-rules'; preLoaderRoute: typeof PayrollRulesRouteImport; parentRoute: typeof rootRouteImport }
+    '/personnel-admin': { id: '/personnel-admin'; path: '/personnel-admin'; fullPath: '/personnel-admin'; preLoaderRoute: typeof PersonnelAdminRouteImport; parentRoute: typeof rootRouteImport }
+    '/personnel-field-settings': { id: '/personnel-field-settings'; path: '/personnel-field-settings'; fullPath: '/personnel-field-settings'; preLoaderRoute: typeof PersonnelFieldSettingsRouteImport; parentRoute: typeof rootRouteImport }
+    '/personnel-import': { id: '/personnel-import'; path: '/personnel-import'; fullPath: '/personnel-import'; preLoaderRoute: typeof PersonnelImportRouteImport; parentRoute: typeof rootRouteImport }
+    '/quran-groups': { id: '/quran-groups'; path: '/quran-groups'; fullPath: '/quran-groups'; preLoaderRoute: typeof QuranGroupsRouteImport; parentRoute: typeof rootRouteImport }
+    '/room-assignment': { id: '/room-assignment'; path: '/room-assignment'; fullPath: '/room-assignment'; preLoaderRoute: typeof RoomAssignmentRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule': { id: '/schedule'; path: '/schedule'; fullPath: '/schedule'; preLoaderRoute: typeof ScheduleRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-archive': { id: '/schedule-archive'; path: '/schedule-archive'; fullPath: '/schedule-archive'; preLoaderRoute: typeof ScheduleArchiveRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-ejection-chain': { id: '/schedule-ejection-chain'; path: '/schedule-ejection-chain'; fullPath: '/schedule-ejection-chain'; preLoaderRoute: typeof ScheduleEjectionChainRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-history': { id: '/schedule-history'; path: '/schedule-history'; fullPath: '/schedule-history'; preLoaderRoute: typeof ScheduleHistoryRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-optimization': { id: '/schedule-optimization'; path: '/schedule-optimization'; fullPath: '/schedule-optimization'; preLoaderRoute: typeof ScheduleOptimizationRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-preparation': { id: '/schedule-preparation'; path: '/schedule-preparation'; fullPath: '/schedule-preparation'; preLoaderRoute: typeof SchedulePreparationRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-reports': { id: '/schedule-reports'; path: '/schedule-reports'; fullPath: '/schedule-reports'; preLoaderRoute: typeof ScheduleReportsRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-rules': { id: '/schedule-rules'; path: '/schedule-rules'; fullPath: '/schedule-rules'; preLoaderRoute: typeof ScheduleRulesRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-scenario-comparison': { id: '/schedule-scenario-comparison'; path: '/schedule-scenario-comparison'; fullPath: '/schedule-scenario-comparison'; preLoaderRoute: typeof ScheduleScenarioComparisonRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-scoped-rules': { id: '/schedule-scoped-rules'; path: '/schedule-scoped-rules'; fullPath: '/schedule-scoped-rules'; preLoaderRoute: typeof ScheduleScopedRulesRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-solver': { id: '/schedule-solver'; path: '/schedule-solver'; fullPath: '/schedule-solver'; preLoaderRoute: typeof ScheduleSolverRouteImport; parentRoute: typeof rootRouteImport }
+    '/schedule-validation': { id: '/schedule-validation'; path: '/schedule-validation'; fullPath: '/schedule-validation'; preLoaderRoute: typeof ScheduleValidationRouteImport; parentRoute: typeof rootRouteImport }
+    '/school-registration': { id: '/school-registration'; path: '/school-registration'; fullPath: '/school-registration'; preLoaderRoute: typeof SchoolRegistrationRouteImport; parentRoute: typeof rootRouteImport }
+    '/settings': { id: '/settings'; path: '/settings'; fullPath: '/settings'; preLoaderRoute: typeof SettingsRouteImport; parentRoute: typeof rootRouteImport }
+    '/settings-permissions': { id: '/settings-permissions'; path: '/settings-permissions'; fullPath: '/settings-permissions'; preLoaderRoute: typeof SettingsPermissionsRouteImport; parentRoute: typeof rootRouteImport }
+    '/settings-task-roles': { id: '/settings-task-roles'; path: '/settings-task-roles'; fullPath: '/settings-task-roles'; preLoaderRoute: typeof SettingsTaskRolesRouteImport; parentRoute: typeof rootRouteImport }
+    '/substitutes': { id: '/substitutes'; path: '/substitutes'; fullPath: '/substitutes'; preLoaderRoute: typeof SubstitutesRouteImport; parentRoute: typeof rootRouteImport }
+    '/super-admin': { id: '/super-admin'; path: '/super-admin'; fullPath: '/super-admin'; preLoaderRoute: typeof SuperAdminRouteImport; parentRoute: typeof rootRouteImport }
+    '/super-admin-course-pool': { id: '/super-admin-course-pool'; path: '/super-admin-course-pool'; fullPath: '/super-admin-course-pool'; preLoaderRoute: typeof SuperAdminCoursePoolRouteImport; parentRoute: typeof rootRouteImport }
+    '/super-admin-tenants': { id: '/super-admin-tenants'; path: '/super-admin-tenants'; fullPath: '/super-admin-tenants'; preLoaderRoute: typeof SuperAdminTenantsRouteImport; parentRoute: typeof rootRouteImport }
+    '/timetable': { id: '/timetable'; path: '/timetable'; fullPath: '/timetable'; preLoaderRoute: typeof TimetableRouteImport; parentRoute: typeof rootRouteImport }
+    '/auth/callback': { id: '/auth/callback'; path: '/auth/callback'; fullPath: '/auth/callback'; preLoaderRoute: typeof AuthCallbackRouteImport; parentRoute: typeof rootRouteImport }
   }
 }
 
@@ -887,6 +346,7 @@ const rootRouteChildren: RootRouteChildren = {
   DutyBookRoute: DutyBookRoute,
   LegislationRoute: LegislationRoute,
   ManagementRoute: ManagementRoute,
+  MuhakkikRoute: MuhakkikRoute,
   NormAnalysisRoute: NormAnalysisRoute,
   NormSettingsRoute: NormSettingsRoute,
   NotificationsRoute: NotificationsRoute,

@@ -35,6 +35,7 @@ const items:readonly ManagementItem[]=[
  {group:"operations",to:'/duty-book',title:'Nöbet Defteri',desc:'Günlük nöbet, boş ders, gecikme ve olay kayıtları',icon:FileClock,permissions:['duty.view','duty.manage']},
 
  {group:"system",to:'/legislation',title:'Mevzuat Kütüphanesi',desc:'Mevzuatı kaydet, ara, oku ve personele gönder',icon:BookOpen,permissions:['settings.manage']},
+ {group:"system",to:'/muhakkik',title:'Muhakkik Soruşturma',desc:'Dosya yükle, ifade sırası, ekler ve TKB muhakkik raporunu adım adım üret',icon:Scale,permissions:['settings.manage']},
  {group:"system",to:'/settings-permissions',title:'Görev ve Yetki Atama',desc:'Personel bazlı modül, işlem, süre ve delegasyon',icon:KeyRound,permissions:['permissions.manage']},
  {group:"system",to:'/settings-task-roles',title:'Görev Şablonları',desc:'Okula özel tekrar kullanılabilir görev/rol paketleri',icon:BriefcaseBusiness,permissions:['permissions.manage']},
  {group:"system",to:'/personnel-field-settings',title:'Personel Alan Kullanımı',desc:'Süper Admin varsayılanı; kurum müdürü kendi kurum alanlarını belirler',icon:Crown,permissions:[],principalOrSuper:true},
