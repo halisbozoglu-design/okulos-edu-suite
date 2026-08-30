@@ -1,0 +1,18 @@
+{
+  "version": "V59",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "support_atoms_added": 420,
+  "support_atom_pool_before": 11815,
+  "support_atom_pool_after": 12235,
+  "article_verified_before": 467,
+  "article_verified_after": 468,
+  "article_verified_ratio_percent": 20.9960,
+  "remaining_exact": 1761,
+  "new_exact": ["HB-2140"],
+  "source_corrections": ["HB-2111", "HB-1569", "HB-1480", "HB-1482"],
+  "withheld_research": ["HB-1360"],
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "next_batch": "V60"
+}

@@ -14,7 +14,7 @@ export class IncrementalScheduleScore {
  private groups=new Map<string,Map<number,number>>();
  private relationScores=new Map<string,RelationScore>();private dirty=new Set<string>();
  constructor(private assignments:LocalAssignment[],private rows:LocalLockedRow[],private relations:PlanningRelation[]=[],weights:LocalStudentConflictWeight[]=[]){this.index=new ScheduleHotspotIndex(assignments,[],weights);for(const r of rows)this.add(r);for(const rel of relations)this.dirty.add(rel.id)}
- private groupKeys(r:LocalLockedRow){const a=this.index.assignments.get(r.assignment_id),s=sig(a);return[k("t",r.teacher_id,r.weekday,s),k("c",r.class_id,r.weekday,s)]}
+ private groupKeys(r:LocalLockedRow){const a=this.index.assignments.get(r.assignment_id),s=sig(a);return[k("t",r.teacher_id,r.weekday,s),k("c",r.class_id,a?.subgroup_id??r.subgroup_id??"*",r.weekday,s)]}
  private mutateGroup(key:string,p:number,delta:number){const m=this.groups.get(key)??new Map<number,number>();this.gaps-=gap(m);const n=(m.get(p)??0)+delta;if(n<=0)m.delete(p);else m.set(p,n);if(m.size)this.groups.set(key,m);else this.groups.delete(key);this.gaps+=gap(m)}
  private activity(activityKey:string):PlanningActivity|null{const g=this.index.activityRows.get(activityKey);if(!g?.size)return null;const rs=[...g].sort((a,b)=>a.period-b.period),r=rs[0]!,a=this.index.assignments.get(r.assignment_id);if(!a)return null;return{activity_key:activityKey,assignment_id:a.assignment_id,course_id:a.course_id,teacher_id:a.teacher_id,class_id:a.class_id,weekday:r.weekday,start:r.period,end:rs[rs.length-1]!.period,classroom_id:r.classroom_id??null}}
  activities(){const out:PlanningActivity[]=[];for(const key of this.index.activityRows.keys()){const a=this.activity(key);if(a)out.push(a)}return out}

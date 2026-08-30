@@ -1,0 +1,29 @@
+{
+  "schema": "OKULOS_ROOM_BUILDING_EXTREME_EVIDENCE_V1",
+  "workflow_run_id": 33242660589,
+  "job_id": 99074530371,
+  "artifact_id": 9711828259,
+  "artifact_sha256": "c7f56b5345d8866e6cf0677210cabbf3f6817de971f3ffdaee5aedddf01292e2",
+  "retention_days": 90,
+  "seed_count": 7,
+  "wall_clock_budget_ms": 8000,
+  "profiles": [
+    {"id":"room-tight-capacity-features","assignments":120,"rooms":9,"buildings":3,"runtime_p50_ms":1422,"runtime_p95_ms":1540},
+    {"id":"building-transfer-forbidden","assignments":120,"rooms":12,"buildings":4,"runtime_p50_ms":1455,"runtime_p95_ms":1617},
+    {"id":"room-building-atomic-specialists","assignments":120,"rooms":12,"buildings":4,"runtime_p50_ms":2663,"runtime_p95_ms":2694}
+  ],
+  "gates": {
+    "runs": 21,
+    "feasible_rate": 1,
+    "hard_max": 0,
+    "unplaced_max": 0,
+    "room_collision_0": true,
+    "room_eligibility": true,
+    "building_transfer_eligibility": true,
+    "multi_building_domain": true,
+    "atomic_blocks": true,
+    "deterministic_replay": true,
+    "budget_pass": true
+  },
+  "provenance": "Synthetic room/building structural stress data; contains no real institution, teacher or student records."
+}

@@ -1,0 +1,19 @@
+{
+  "batch": "V61",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "support_atoms": 420,
+  "atom_pool_before": 12655,
+  "atom_pool_after": 13075,
+  "new_exact": ["HB-1570"],
+  "rollbacks": ["HB-1667"],
+  "source_corrections_retained": ["HB-1571", "HB-1572", "HB-1577"],
+  "withheld": ["HB-1483", "HB-1484"],
+  "source_policy": "OFFICIAL_ONLY: mevzuat.gov.tr | mevzuat.meb.gov.tr | meb.gov.tr official units | resmigazete.gov.tr",
+  "migration": 0,
+  "lovable_usage": 0
+}

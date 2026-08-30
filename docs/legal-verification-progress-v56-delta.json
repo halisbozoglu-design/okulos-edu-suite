@@ -1,0 +1,20 @@
+{
+  "version": "V56",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "article_verified_after": 467,
+  "article_verified_ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "support_atoms": 410,
+  "atom_pool_before": 10555,
+  "atom_pool_after": 10965,
+  "promotions": ["HB-2051"],
+  "rollbacks": ["HB-0310"],
+  "source_corrections": ["HB-0323", "HB-2169", "HB-2190"],
+  "withheld_or_split": ["HB-2045", "HB-2052", "HB-2053", "HB-2220"],
+  "retained_exact": ["HB-2054", "HB-2055"],
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "next_batch": "V57"
+}

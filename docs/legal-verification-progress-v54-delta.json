@@ -1,0 +1,23 @@
+{
+  "batch": "V54",
+  "date": "2026-08-29",
+  "master_workflows": 2229,
+  "article_verified_before": 466,
+  "rollbacks": ["HB-2046", "HB-2049"],
+  "new_promotions": ["HB-2048", "HB-2050"],
+  "source_corrections_zero_delta": ["HB-2023", "HB-2024", "HB-2025", "HB-2029", "HB-2036", "HB-2037"],
+  "article_verified_after": 466,
+  "article_verified_ratio_percent": 20.9062,
+  "remaining_exact": 1763,
+  "support_atoms_added": 440,
+  "atom_pool_before": 9695,
+  "atom_pool_after": 10135,
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "hb0603_child_c": {
+    "code": "CLASS_RISK_DATA_TO_RPD_SERVICE",
+    "current_parent": "RPD Regulation Md23/1-d",
+    "status": "SOURCE_LOCKED_STAGING"
+  },
+  "next_batch": "V55"
+}
