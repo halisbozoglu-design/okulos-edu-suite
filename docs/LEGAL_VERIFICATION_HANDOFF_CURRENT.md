@@ -18,39 +18,48 @@ ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, `meb.gov.
 - ACCOUNTING_REPORT_OBJECT_AND_SUBMISSION_CHANNEL_ARE_EXACTNESS_FIELDS.
 - PROCUREMENT_AND_SALES_MUST_NOT_BE_COLLAPSED_UNDER_ONE_GENERIC_IHALE_PARENT.
 - PROFIT_DISTRIBUTION_REQUIRES_BENEFICIARY_RATE_LIMIT_TIMING_EXACTNESS.
+- SYSTEM_NAME_MATCH_REQUIRES_FUNCTION_MATCH.
+- EMPLOYEE_SHARE_AND_EMPLOYER_SHARE_ARE_NOT_SAME_DEDUCTION.
+- LEGACY_SEND_RECIPIENT_CANNOT_SURVIVE_CURRENT_RETAIN_ON_REQUEST_RULE.
+- SECTION_BOUNDARY_STOPS_DOMAIN_DRIFT.
 - broad ALL school-type-specific hükmü miras alamaz; compound split edilir; historical completed instances immutable; duplicate count yasaktır.
 
 ## Güncel kesin durum
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **468 / 2.229 = %20,9960**
 - Kalan exact: **1.761**
-- Atom havuzu: **16.355**
-- Son batch: **V69**
-- Sonraki batch: **V70**
+- Atom havuzu: **16.765**
+- Son batch: **V70**
+- Sonraki batch: **V71**
 
-## V69 — 410 atom
-- Integrity: `docs/legal-dose-accounting-procurement-integrity-v69.md` — `24c6ccffee63361b3de297e5c865ff2a63ffd5e5`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v69.md` — `b2614fb41b6539ff058e80b161f91c2027df7010`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v69.md` — `c4a7e692bb435b671a8a32a52e7469ed956ac1dc`
-- Progress: `docs/legal-verification-progress-v69-delta.json` — `907aadb4e24cc5fe4ec5befd7dc92a9f22981483`
-- Support atoms: **410**; pool **15.945 -> 16.355**.
+## V70 — 410 atom
+- Integrity: `docs/legal-dose-ekap-bkmys-sgk-integrity-v70.md` — `90f3c4254f7c0a29a0961dae138b08b2be50c1af`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v70.md` — `d649fe12c71e7a26dcdeede183d2455579202a1e`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v70.md` — `5b8f468ea99f84607c39c3e75ca582c72cb5a0da`
+- Progress: `docs/legal-verification-progress-v70-delta.json` — `cee50f36a67e97d139e6cf9e2b437a11602ba65e`
+- Support atoms: **410**; pool **16.355 -> 16.765**.
 - ARTICLE_VERIFIED: **468 -> 468**, delta 0.
 
-### V69 DÖSE accounting/procurement findings
-- HB-1597: L2 current-operational exact; primary binding provision lock pending. No promotion.
-- HB-1598: monthly account closing + mizan requires current binding article and atomicity lock.
-- HB-1599: final trial balance/balance sheet + legacy `Maliye Bakanlığı` recipient is compound; current recipient/channel exactness required and master rewrite needed.
-- HB-1600: generic `profit distribution to personnel` is semantically broader than exact production-incentive beneficiary/rate/limit/timing rules.
-- HB-1601: legacy `Sosyal Hizmetler Çocuk Esirgeme payı %1`; current institution/rate/statutory chain must be proven, not inferred.
-- HB-1602: Sayıştay account-file submission needs current object/recipient/channel reconciliation.
-- HB-1603: procurement and sales are collapsed into one generic public-procurement sentence; split legal families before count.
+### V70 DÖSE closure findings
+- DÖSE source section ends at `HB-1608`; `HB-1609` starts Strategic Planning. Batch stops at the legal-family boundary.
+- `HB-1604`: current MEB operational evidence confirms EKAP routing for procurement/direct procurement/contract processes from 01.08.2025, but master `record numbers obtained` atom is not primary-locked. No promotion.
+- `HB-1605`: current DHGM still identifies DMİS for budget/additional-budget approval while current TKB records financial/accounting transaction migration to BKMYBS. Budget approval and accounting-entry functions must be routed separately.
+- `HB-1606`: master incorrectly says worker and employer SGK shares are both deducted from piece-rate pay. 5510 Md80/86 semantics require insured-share deduction plus employer-share addition/tahakkuk/payment. `CONNECTOR_SEMANTIC_MISMATCH + MASTER_REWRITE_REQUIRED`.
+- `HB-1607`: tax-base statement requires role, exemption and withholding decomposition before exact promotion.
+- `HB-1608`: broad `DÖSE records regularly entered into DMİS` is legacy/overbroad after 2024 BKMYBS migration of financial/accounting operations. `LEGACY_SYSTEM_OBJECT + MASTER_REWRITE_REQUIRED + FUNCTION_LEVEL_SYSTEM_ROUTING`.
+- Current TKB criteria also reinforce that monthly trial balance/year-end balance and year-end administration-account/Sayıştay documents are retained at institution and supplied on request rather than routinely sent to the legacy recipient. This strengthens HB-1599/HB-1602 rewrite status.
 
 ## ARTICLE_VERIFIED gate
 `OFFICIAL_DOMAIN -> SOURCE_FOUND -> DOCUMENT_EFFECT -> PROVISION_EFFECT -> JUDICIAL_STATUS -> REPEAL/AMENDMENT_CHAIN -> ACTOR/ACTION/OBJECT/RECIPIENT/TIMING/SYSTEM/SCOPE/SEMANTICS -> ARTICLE_VERIFIED`
 
 ## Açık kritik kayıtlar
+- HB-1604 -> primary electronic-procurement provision + record-number atom.
+- HB-1605 -> exact budget-approval primary provision and DMİS/BKMYBS function split.
+- HB-1606 -> SGK share semantics rewrite.
+- HB-1607 -> tax-base role/exemption split.
+- HB-1608 -> DMİS/BKMYBS current-system rewrite.
 - HB-1597 -> primary official Regulation provision lock.
-- HB-1598..HB-1602 -> current accounting/reporting/recipient exact provisions.
+- HB-1598..HB-1602 -> current accounting/reporting/recipient exact provisions; HB-1599/HB-1602 legacy send semantics require rewrite.
 - HB-1603 -> procurement-vs-sales split.
 - HB-1594 -> %11 current parameter chain/master rewrite.
 - HB-1595/HB-1596 -> atomic split/rewrite.
@@ -64,14 +73,14 @@ ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, `meb.gov.
 - HB-0138/HB-0395 -> L2 operational only.
 - HB-2218/HB-2229 -> School Health scope.
 
-## V70 önceliği — 300+ atom
-1. Continue HB-1604+ DÖSE purchasing/sales/stock/inventory chain and identify exact current legal-family boundaries.
-2. Keep searching primary official provisions for HB-1597..HB-1602; no L2-only promotion.
-3. Resolve current institution/recipient/rate for HB-1601 and current Sayıştay submission object/channel for HB-1602.
-4. Audit HB-1603 split against current procurement/sales authorities before any durable rewrite.
-5. Retry HB-1483/HB-1484 only through official OAB/RG source.
+## V71 önceliği — 300+ atom
+1. Start Strategic Planning at `HB-1609+` only after exact master extraction; do not inherit DÖSE legal family.
+2. Audit current MEB strategic planning organ names, school-level applicability, planning period and approval/reporting chain using only official sources.
+3. Distinguish Ministry/central-unit strategic-plan organs from school-level teams; similar names are not interchangeable.
+4. Continue primary-source backlog for HB-1604..1608 only when exact official provisions are reachable; no L2-only promotion.
+5. Retry HB-1483/HB-1484 only through official OAB/RG source if room.
 6. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
 Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış.
-Kullanıcı `Devam` dediğinde soru sormadan **V70** başlat; minimum **300 atom** hedefle.
+Kullanıcı `Devam` dediğinde soru sormadan **V71** başlat; minimum **300 atom** hedefle.
