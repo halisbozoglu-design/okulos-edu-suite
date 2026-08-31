@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AlertTriangle, BookOpenCheck, Copy, Plus, RefreshCw, UserRoundCheck } from "lucide-react";
+import { AlertTriangle, BookOpenCheck, Copy, Download, Plus, RefreshCw, UserRoundCheck } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -130,6 +130,21 @@ function CurriculumManager() {
     await load();
   }
 
+  async function applyOfficialCurriculum() {
+    if (!classId) return;
+    setBusy(true); setMessage(null);
+    const { data, error } = await supabase.rpc("apply_official_curriculum_to_class_v2", { p_class_id: classId, p_mode: "APPLY" });
+    setBusy(false);
+    if (error) { setMessage("Resmî ders çizelgesi uygulanamadı. Sınıf türü, yıl ve çizelge kaydını kontrol edin."); return; }
+    const result = data as Record<string, unknown> | null;
+    if (!result?.applied) { setMessage(String(result?.message ?? "Bu sınıf için etkin resmî ders çizelgesi bulunamadı.")); return; }
+    const automatic = Number(result.requirements_created_or_refreshed ?? 0);
+    const electives = Number(result.elective_offerings ?? 0);
+    const preserved = Number(result.manual_or_locked_preserved ?? 0);
+    setMessage(`Resmî çizelge uygulandı: ${automatic} zorunlu/uygulama dersi güncellendi. ${electives} seçmeli seçenek olarak bırakıldı${preserved ? `; ${preserved} manuel veya kilitli kayıt korundu` : ""}.`);
+    await load();
+  }
+
   async function addCourse() {
     if (!classId || !courseName.trim()) return;
     const hours = Number(courseHours);
@@ -211,8 +226,9 @@ function CurriculumManager() {
       <div className="grid gap-3 md:grid-cols-[1fr_180px_auto]">
         <div className="space-y-2"><Label>Sınıf / Program</Label><select value={classId} onChange={(e) => { setClassId(e.target.value); const c = classes.find((x) => x.id === e.target.value); setTargetHours(c?.expected_weekly_hours ? String(c.expected_weekly_hours) : ""); }} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Seçiniz</option>{classes.map((c) => <option key={c.id} value={c.id}>{c.composite_key ?? c.class_name}</option>)}</select></div>
         <div className="space-y-2"><Label>Hedef Haftalık Saat</Label><Input inputMode="numeric" value={targetHours} onChange={(e) => setTargetHours(e.target.value.replace(/\D/g, ""))} placeholder="35 / 40" /></div>
-        <div className="flex items-end"><Button onClick={() => void saveTargetHours()} disabled={busy || !classId}>Kaydet</Button></div>
+        <div className="flex items-end gap-2"><Button variant="outline" onClick={() => void applyOfficialCurriculum()} disabled={busy || !classId} className="gap-2"><Download className="size-4" /> Resmî Çizelgeden Yükle</Button><Button onClick={() => void saveTargetHours()} disabled={busy || !classId}>Kaydet</Button></div>
       </div>
+      <p className="mt-3 text-xs text-muted-foreground">Resmî yükleme kesin saatli zorunlu, uygulama ve rehberlik derslerini getirir. Seçmeli alternatifleri karar için bırakır; kilitli veya manuel satırları değiştirmez.</p>
 
       {classId ? <div className="mt-4 rounded-xl border border-border p-3">
         <div className="flex items-center justify-between gap-3"><div><p className="text-sm font-semibold">Ders Yükü</p><p className="text-xs text-muted-foreground">Planlanan {planned} saat · Öğretmene atanan {assigned} saat</p></div><Badge variant={status === "complete" ? "default" : status === "overflow" ? "destructive" : "secondary"}>{expected ? `${planned}/${expected}` : `${planned}/?`}</Badge></div>
