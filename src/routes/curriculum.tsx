@@ -154,7 +154,7 @@ function CurriculumManager() {
     if (error) { setMessage("Resmî çizelge önizlemesi alınamadı."); return; }
     const result = data as Record<string, unknown> | null;
     setOfficialPreview(result);
-    if (!result?.profile_found && !result?.applied) setMessage(String(result?.message ?? "Bu sınıf için etkin resmî çizelge bulunamadı."));
+    if (Number(result?.offering_rules ?? 0) === 0) setMessage(String(result?.message ?? "Bu sınıf için etkin resmî çizelge bulunamadı."));
   }
 
   async function addCourse() {
