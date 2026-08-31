@@ -1,0 +1,17 @@
+{
+  "batch": "V78",
+  "date": "2026-08-31",
+  "support_atoms": 410,
+  "atom_pool_before": 19635,
+  "atom_pool_after": 20045,
+  "article_verified_before": 466,
+  "promotions": 2,
+  "rollbacks": 0,
+  "article_verified_after": 468,
+  "master_total": 2229,
+  "ratio_percent": 20.9960,
+  "remaining_exact": 1761,
+  "migration": 0,
+  "lovable_usage": 0,
+  "promoted_workflows": ["HB-1699", "HB-1700"]
+}
