@@ -60,13 +60,6 @@ This project was built with [Lovable](https://lovable.dev).
 
 Continue developing this project in the [Lovable editor](https://lovable.dev/projects/8b874ff1-ec9d-429d-a434-78fc22c88300).
 
-## Kalıcı çalışma ilkesi
-
-- **Lovable Cloud**: OkulOS'un canlı çalışma ve PostgreSQL veritabanı ortamıdır.
-- **GitHub — `halisbozoglu-design/okulos-edu-suite`**: Kodun, ileriye dönük migration'ların ve sürüm geçmişinin tek kaynağıdır.
-- Kod ve migration işleri için **Lovable AI/sohbet tokenı kesinlikle kullanılmaz**. Veritabanı değişiklikleri yalnız doğrudan Lovable Cloud bağlantısı üzerinden, önce GitHub'a eklenmiş forward-only migration ile uygulanır.
-- Uygulanmış migration dosyaları değiştirilmez; yeni ihtiyaçlar yeni, idempotent bir migration ile çözülür.
-
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.
 - **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
