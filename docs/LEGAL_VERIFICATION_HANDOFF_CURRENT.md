@@ -8,35 +8,36 @@ Migration: **0**
 Lovable usage: **0**
 
 ## Kaynak politikası
-ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `meb.gov.tr` birimleri ve `resmigazete.gov.tr`. Current RG amendment chain stale consolidated/handbook kaynakların üstündedir. Exact text yetmez; program/institution metadata scope da exact olmalıdır.
+ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `meb.gov.tr` birimleri ve `resmigazete.gov.tr`. Current RG amendment chain stale consolidated/handbook kaynakların üstündedir. Annual talent-exam guide yalnız ilgili yıl/current-program child/snapshot için kullanılabilir.
 
 ## Güncel kesin durum
 - Master workflow: **2.229**
-- ARTICLE_VERIFIED: **468 / 2.229 = %20,9960**
-- Kalan exact: **1.761**
+- ARTICLE_VERIFIED: **466 / 2.229 = %20,9062**
+- Kalan exact: **1.763**
 - Atom havuzu: **20.455**
-- Son batch: **V79**
-- Sonraki batch: **V80**
+- Son batch: **V80**
+- Sonraki batch: **V81**
 
-## V79 — 410 atom
-- Integrity: `docs/legal-mtal-field-branch-transition-integrity-v79.md` — `9ce4fb22d2cd7b92b0d6d09b4fe321b5fdc6a866`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v79.md` — `48f0dd7a8e0e678143da66f3494a3501a376067f`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v79.md` — `ac201fba546bd9e0141f402e53df0f44e5b63421`
-- Progress: `docs/legal-verification-progress-v79-delta.json` — `3492df4d7051819d569f2fc6fc09c6a3d59cef8e`
+## V80 — 410 atom
+- Integrity: `docs/legal-me-sem-denklik-talent-transfer-integrity-v80.md` — `33403f2a918dd9bceb54835e7fe811b36556a20f`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v80.md` — `af7cbdb8c04f7913d657f685018b0e86570f1219`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v80.md` — `047801e8779c5934c25efab191df439a8e0ff923`
+- Progress: `docs/legal-verification-progress-v80-delta.json` — `be136236b620c9b8d5330611645860d8ff031f66`
 - Support atoms: **410**, pool **20.045 -> 20.455**.
-- ARTICLE_VERIFIED: **468 -> 468**, delta **0**.
+- ARTICLE_VERIFIED: **468 -> 466**, delta **-2**.
 
-### V79 MTAL/MESEM field-branch findings
-- `HB-1701`: legacy timing mismatch. Current OÖKY Md31/1 uses Anadolu meslek field selection at end of grade 9 and branch placement at end of grade 10; master says grade 9 / beginning of grade 10. Rewrite required.
-- `HB-1702`: OÖKY Md31/2-a supports preference + score superiority via e-Okul, but current stored metadata/program scope must be narrowed before count.
-- `HB-1703`: master sentence is truncated and timing-stale; current Md31/2-b uses end of grade 10 + ability/success + sector need + student/parent requests + group counts + school directorate. Rewrite.
-- `HB-1704`: strong text-level exact candidate under OÖKY Md31/3: minimum 10 students for field, 8 for branch, repeaters included. Do not count until Anadolu technical/meslek program scope is exactly published.
-- `HB-1705`: current Md31/4 uses ability, health/disability, BEP-unit proposal and placement/transfer commission decision; master is broader and loses exact criteria/actor chain.
-- `HB-1706`: current Md31/5 applies parent-owned workplace direct field/branch registration only in Anadolu meslek programs; master loses that qualifier. Scope correction required.
-- `HB-1707`: master treats 34 as absolute maximum. Current Md25/1-b says 34 is the norm for listed programs but can increase to 40 under density/mandatory conditions. Rewrite.
-- `HB-1708`: strong text-level exact candidate under Md25/1-ç for MESEM quota mechanism; requires MESEM-only metadata publication before count.
-- `HB-1709`: OÖKY Md26/2 routes group formation to Norm Kadro Regulation; downstream exact norm provision required.
-- `HB-1710`: Mesleki Açık Öğretim Lisesi legal family must be revalidated separately; OÖKY inheritance prohibited.
+### V80 findings
+- `HB-1711`: current OÖKY Md26/5 still supports low-count MESEM routing, but master threshold wording + current `AOL|HS` metadata are not exact MESEM scope. Withheld.
+- `HB-1712`: foreign-study equivalency -> appropriate programme/class family; exact current Denklik provision lock pending.
+- `HB-1713/HB-1714`: legacy Anadolu meslek -> Anadolu teknik transition workflows depended on OÖKY Md30. Current official MEB consolidated text marks Md30 repealed by RG 08.09.2023/32303. Retire/historical snapshot; no current promotion.
+- `HB-1715`: legacy `Anadolu sağlık meslek lisesi` naming/fixed-34 statement requires current health-services programme rule.
+- `HB-1716` ROLLBACK -1: old Batch02 used OÖİKY Md11/ALL. Current content maps to OÖKY Md31/4 but only vocational/mesleki field-branch scope; current workflow metadata still too broad.
+- `HB-1717`: OÖKY Md31/6 exact contract + e-Mesem field/branch entry, but current workflow metadata is ALL/special-ed and wrong; scope correction before promotion.
+- `HB-1718` ROLLBACK -1: old Batch02 used OÖİKY Md11/ALL; legacy monthly timing conflicts with current talent-school September/October model.
+- `HB-1719`: talent-score admissions are current but admission/register details are programme/year scoped.
+- `HB-1720`: current MEB talent guide supports open-contingent prep/9/10/11 transfers by talent exam in September/October last weeks and school-directorate applications; annual/current-program child.
+- `HB-1721`: 18+ MESEM registration is an eligibility-state paraphrase; current OÖKY Md21/1 actually sets 14 minimum and age exceptions. Rewrite to normative model.
+- `HB-1722`: master-specific employment-entry health report is not identical to OÖKY Md21/3 conditional health/health-board report; 6331/3308 source/object split required.
 
 ## Tenant requirement
 - **Sosyal Sorumluluk Kulübü** ayrıca kurulacak ve aktif tenant kulübü olarak tutulacak.
@@ -44,20 +45,20 @@ ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `m
 - Canonical tenant doc: `docs/tenant-required-social-responsibility-club.md`.
 
 ## New guards
-- FIELD_SELECTION_GRADE_AND_TERM_ARE_EXACTNESS_FIELDS.
-- DEFAULT_BRANCH_SIZE_IS_NOT_ABSOLUTE_MAXIMUM.
-- ANADOLU_MESLEK_PROGRAM_SCOPE_CANNOT_BE_DROPPED.
-- TEXT_EXACT_BUT_METADATA_BROAD_REQUIRES_SCOPE_PUBLISH_BEFORE_COUNT.
-- REFERENCED_REGULATION_REQUIRES_DOWNSTREAM_EXACT_PROVISION.
-- SOURCE_TRUNCATED_MASTER_REQUIRES_REWRITE.
+- REPEALED_ARTICLE_CANNOT_SUPPORT_CURRENT_WORKFLOW.
+- HISTORICAL_TRANSITION_FORMULA_MUST_NOT_BE_GRANDFATHERED.
+- TEXT_EXACT_BUT_SCOPE_METADATA_WRONG_REQUIRES_WITHHOLD_OR_ROLLBACK.
+- TALENT_TRANSFER_MONTH_WINDOW_IS_ANNUAL/CURRENT_MODEL_FIELD.
+- ELIGIBILITY_STATE_IS_NOT_IDENTICAL_TO_NORMATIVE_REGISTRATION_DUTY.
+- HEALTH_SUITABILITY_REPORT_AND_EMPLOYMENT_ENTRY_REPORT_ARE_DISTINCT_OBJECTS.
 
-## V80 priority — 300+ atoms
-1. Continue `HB-1711+` MESEM/MTAL registration and transition block from exact master text.
-2. Reconcile low-enrolment MESEM continuation/transfer, overseas equivalency, Anadolu technical program transition, and program-score/tie-break rules against current OÖKY/RG chain.
-3. Resolve current Mesleki Açık Öğretim Lisesi authority for HB-1710 using official source only; do not use legacy/repealed 443.pdf.
-4. Stage scope-correct children for HB-1704/HB-1708 but keep denominator unchanged until Super Admin approval/publish.
+## V81 priority — 300+ atoms
+1. Continue `HB-1723+` exact master extraction after MESEM health-registration boundary.
+2. Audit registration completion, contract/insurance, independent MESEM age/status, transfer and workplace agreement rules against current OÖKY/3308 chain.
+3. Resolve HB-1712 with current official Denklik Yönetmeliği exact provision.
+4. Stage correct MESEM/MTAL-specific metadata children for HB-1711/HB-1716/HB-1717; denominator unchanged until Super Admin publish.
 5. Keep Sosyal Sorumluluk Kulübü tenant requirement active.
 6. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
-Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış. Kullanıcı `Devam` dediğinde soru sormadan **V80** başlat; minimum **300 atom** hedefle.
+Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış. Kullanıcı `Devam` dediğinde soru sormadan **V81** başlat; minimum **300 atom** hedefle.
