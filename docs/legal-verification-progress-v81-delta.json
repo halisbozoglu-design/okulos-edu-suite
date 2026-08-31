@@ -1,0 +1,20 @@
+{
+  "batch": "V81",
+  "date": "2026-09-01",
+  "master_workflows": 2229,
+  "article_verified_before": 466,
+  "promotions": 1,
+  "rollbacks": 0,
+  "article_verified_after": 467,
+  "ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "support_atoms_added": 410,
+  "atom_pool_before": 20455,
+  "atom_pool_after": 20865,
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "promotion_ids": ["HB-1723"],
+  "rewrite_ids": ["HB-1724", "HB-1727"],
+  "withheld_ids": ["HB-1725", "HB-1726", "HB-1728", "HB-1729", "HB-1730", "HB-1731", "HB-1732", "HB-1733", "HB-1734"],
+  "next_batch": "V82"
+}
