@@ -51,7 +51,7 @@ type FlatRow = {
   Derslik: string;
   Kilitli: string;
 };
-type AssignmentException={course_name:string;class_name:string;reason:string;valid_from:string;valid_until:string|null;is_current:boolean};
+type ManualAssignmentOverride={course_name:string;class_name:string;teacher_name:string};
 
 const dayName: Record<number, string> = { 1: "Pazartesi", 2: "Salı", 3: "Çarşamba", 4: "Perşembe", 5: "Cuma", 6: "Cumartesi", 7: "Pazar" };
 const safeName = (value: string) => value.replace(/[\\/:*?"<>|]+/g, "-").replace(/\s+/g, " ").trim();
@@ -75,7 +75,7 @@ function ScheduleReports() {
   const { can, loading: permissionLoading } = usePermissions();
   const [assignments, setAssignments] = useState<AssignmentOption[]>([]);
   const [rows, setRows] = useState<ScheduleRow[]>([]);
-  const [exceptions, setExceptions] = useState<AssignmentException[]>([]);
+  const [manualOverrides, setManualOverrides] = useState<ManualAssignmentOverride[]>([]);
   const [profile, setProfile] = useState<TimeProfile>({ teaching_days: [1, 2, 3, 4, 5], periods_per_day: 8 });
   const [year, setYear] = useState<ActiveYear>(null);
   const [kind, setKind] = useState<ReportKind>("schedule");
@@ -102,7 +102,7 @@ function ScheduleReports() {
       supabase.from("teacher_schedule").select("id,teacher_id,class_id,weekday,period,class_name,subject,classroom_id,classroom,locked,teacher_assignment_id").eq("active", true).order("weekday").order("period"),
       supabase.rpc("get_active_schedule_time_profile"),
       supabase.from("academic_years").select("code,title").eq("active", true).maybeSingle(),
-      supabase.rpc("get_teacher_course_assignment_exceptions_v2" as never),
+      supabase.rpc("get_manual_teacher_assignment_overrides_v1" as never),
     ]);
     setBusy(false);
     if (a.error || s.error) {
@@ -113,7 +113,7 @@ function ScheduleReports() {
     setRows((s.data ?? []) as ScheduleRow[]);
     if (!p.error && p.data) setProfile(p.data as TimeProfile);
     if (!y.error) setYear((y.data ?? null) as ActiveYear);
-    setExceptions((e.data ?? []) as AssignmentException[]);
+    setManualOverrides((e.data ?? []) as ManualAssignmentOverride[]);
   }, []);
 
   useEffect(() => {
@@ -210,7 +210,7 @@ function ScheduleReports() {
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(classSummary.map((x) => ({ Sınıf: x.name, "Ders Saati": x.lessons, "Ders Çeşidi": x.subjects, Boşluk: x.gaps }))), "Sınıf");
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(roomSummary.map((x) => ({ Derslik: x.name, "Ders Saati": x.lessons, "Kullanım %": x.utilization ?? "—" }))), "Derslik");
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(subjectSummary.map((x) => ({ Ders: x.name, "Ders Saati": x.lessons, Öğretmen: x.teachers, Sınıf: x.classes }))), "Ders");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(exceptions.map((x) => ({ Ders: x.course_name, Sınıf: x.class_name, Gerekçe: x.reason, Başlangıç: x.valid_from, Bitiş: x.valid_until ?? "—", Durum: x.is_current ? "Geçerli" : "Geçersiz" }))), "İstisnai Atamalar");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(manualOverrides.map((x) => ({ Ders: x.course_name, Sınıf: x.class_name, Öğretmen: x.teacher_name, Durum: "Kullanıcı onayıyla atandı" }))), "Manuel Atamalar");
     XLSX.writeFile(wb, `${safeName(title)}.xlsx`);
   }
 
@@ -245,7 +245,7 @@ function ScheduleReports() {
 
     <section className="print:hidden mt-4 rounded-2xl border bg-card p-4">
       <div className="grid gap-2 md:grid-cols-5">
-        <select value={kind} onChange={(e) => setKind(e.target.value as ReportKind)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="schedule">Haftalık Program</option><option value="teacher">Öğretmen Yükü</option><option value="class">Sınıf Özeti</option><option value="room">Derslik Kullanımı</option><option value="subject">Ders / Branş Özeti</option><option value="exceptions">İstisnai Atamalar</option></select>
+        <select value={kind} onChange={(e) => setKind(e.target.value as ReportKind)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="schedule">Haftalık Program</option><option value="teacher">Öğretmen Yükü</option><option value="class">Sınıf Özeti</option><option value="room">Derslik Kullanımı</option><option value="subject">Ders / Branş Özeti</option><option value="exceptions">Manuel Atamalar</option></select>
         <select value={teacherFilter} onChange={(e) => setTeacherFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm öğretmenler</option>{teachers.map((x) => <option key={x}>{x}</option>)}</select>
         <select value={classFilter} onChange={(e) => setClassFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm sınıflar</option>{classes.map((x) => <option key={x}>{x}</option>)}</select>
         <select value={subjectFilter} onChange={(e) => setSubjectFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm dersler</option>{subjects.map((x) => <option key={x}>{x}</option>)}</select>
@@ -274,7 +274,7 @@ function ScheduleReports() {
       {kind === "class" ? <SummaryTable headers={["Sınıf", "Ders Saati", "Ders Çeşidi", "Boşluk"]} rows={classSummary.map((x) => [x.name, x.lessons, x.subjects, x.gaps])}/> : null}
       {kind === "room" ? <SummaryTable headers={["Derslik", "Ders Saati", "Kullanım"]} rows={roomSummary.map((x) => [x.name, x.lessons, x.utilization === null ? "—" : `%${x.utilization}`])}/> : null}
       {kind === "subject" ? <SummaryTable headers={["Ders / Branş", "Ders Saati", "Öğretmen", "Sınıf"]} rows={subjectSummary.map((x) => [x.name, x.lessons, x.teachers, x.classes])}/> : null}
-      {kind === "exceptions" ? <SummaryTable headers={["Ders", "Sınıf", "Gerekçe", "Başlangıç", "Bitiş", "Durum"]} rows={exceptions.map((x) => [x.course_name, x.class_name, x.reason, x.valid_from, x.valid_until ?? "—", x.is_current ? "Geçerli" : "Süresi geçmiş"])} /> : null}
+      {kind === "exceptions" ? <SummaryTable headers={["Ders", "Sınıf", "Öğretmen", "Durum"]} rows={manualOverrides.map((x) => [x.course_name, x.class_name, x.teacher_name, "Kullanıcı onayıyla atandı"])} /> : null}
       {!filtered.length ? <div className="p-8 text-center text-sm text-muted-foreground">Seçili filtrelerde program satırı bulunamadı.</div> : null}
       {(signatoryName.trim() || signatoryRole.trim()) ? <div className="mt-12 hidden justify-end print:flex"><div className="min-w-56 text-center text-sm"><div className="h-12"/>{signatoryName.trim() ? <p className="font-semibold">{signatoryName.trim()}</p> : null}{signatoryRole.trim() ? <p>{signatoryRole.trim()}</p> : null}</div></div> : null}
     </section>
