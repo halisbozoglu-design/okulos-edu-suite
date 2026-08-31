@@ -40,7 +40,7 @@ type ScheduleRow = {
 
 type TimeProfile = { teaching_days: number[]; periods_per_day: number };
 type ActiveYear = { code?: string; title?: string } | null;
-type ReportKind = "schedule" | "teacher" | "class" | "room" | "subject";
+type ReportKind = "schedule" | "teacher" | "class" | "room" | "subject" | "exceptions";
 
 type FlatRow = {
   Gün: string;
@@ -245,7 +245,7 @@ function ScheduleReports() {
 
     <section className="print:hidden mt-4 rounded-2xl border bg-card p-4">
       <div className="grid gap-2 md:grid-cols-5">
-        <select value={kind} onChange={(e) => setKind(e.target.value as ReportKind)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="schedule">Haftalık Program</option><option value="teacher">Öğretmen Yükü</option><option value="class">Sınıf Özeti</option><option value="room">Derslik Kullanımı</option><option value="subject">Ders / Branş Özeti</option></select>
+        <select value={kind} onChange={(e) => setKind(e.target.value as ReportKind)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="schedule">Haftalık Program</option><option value="teacher">Öğretmen Yükü</option><option value="class">Sınıf Özeti</option><option value="room">Derslik Kullanımı</option><option value="subject">Ders / Branş Özeti</option><option value="exceptions">İstisnai Atamalar</option></select>
         <select value={teacherFilter} onChange={(e) => setTeacherFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm öğretmenler</option>{teachers.map((x) => <option key={x}>{x}</option>)}</select>
         <select value={classFilter} onChange={(e) => setClassFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm sınıflar</option>{classes.map((x) => <option key={x}>{x}</option>)}</select>
         <select value={subjectFilter} onChange={(e) => setSubjectFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm dersler</option>{subjects.map((x) => <option key={x}>{x}</option>)}</select>
@@ -274,6 +274,7 @@ function ScheduleReports() {
       {kind === "class" ? <SummaryTable headers={["Sınıf", "Ders Saati", "Ders Çeşidi", "Boşluk"]} rows={classSummary.map((x) => [x.name, x.lessons, x.subjects, x.gaps])}/> : null}
       {kind === "room" ? <SummaryTable headers={["Derslik", "Ders Saati", "Kullanım"]} rows={roomSummary.map((x) => [x.name, x.lessons, x.utilization === null ? "—" : `%${x.utilization}`])}/> : null}
       {kind === "subject" ? <SummaryTable headers={["Ders / Branş", "Ders Saati", "Öğretmen", "Sınıf"]} rows={subjectSummary.map((x) => [x.name, x.lessons, x.teachers, x.classes])}/> : null}
+      {kind === "exceptions" ? <SummaryTable headers={["Ders", "Sınıf", "Gerekçe", "Başlangıç", "Bitiş", "Durum"]} rows={exceptions.map((x) => [x.course_name, x.class_name, x.reason, x.valid_from, x.valid_until ?? "—", x.is_current ? "Geçerli" : "Süresi geçmiş"])} /> : null}
       {!filtered.length ? <div className="p-8 text-center text-sm text-muted-foreground">Seçili filtrelerde program satırı bulunamadı.</div> : null}
       {(signatoryName.trim() || signatoryRole.trim()) ? <div className="mt-12 hidden justify-end print:flex"><div className="min-w-56 text-center text-sm"><div className="h-12"/>{signatoryName.trim() ? <p className="font-semibold">{signatoryName.trim()}</p> : null}{signatoryRole.trim() ? <p>{signatoryRole.trim()}</p> : null}</div></div> : null}
     </section>
