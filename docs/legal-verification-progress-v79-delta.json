@@ -1,0 +1,17 @@
+{
+  "batch": "V79",
+  "date": "2026-08-31",
+  "support_atoms_added": 410,
+  "atom_pool_before": 20045,
+  "atom_pool_after": 20455,
+  "article_verified_before": 468,
+  "promotions": 0,
+  "rollbacks": 0,
+  "article_verified_after": 468,
+  "master_workflows": 2229,
+  "remaining_exact": 1761,
+  "ratio_percent": 20.9960,
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "next_batch": "V80"
+}
