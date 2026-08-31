@@ -39,10 +39,7 @@ type Assignment = {
   teacher_id: string;
   assigned_hours: number;
   assignment_group: string;
-  is_justified_exception: boolean;
-  exception_reason: string | null;
-  exception_valid_from: string | null;
-  exception_valid_until: string | null;
+  is_manual_override: boolean;
 };
 type Summary = {
   class_id: string;
@@ -68,10 +65,7 @@ function CurriculumManager() {
   const [assignRequirement, setAssignRequirement] = useState("");
   const [assignTeacher, setAssignTeacher] = useState("");
   const [assignmentPermission, setAssignmentPermission] = useState<string | null>(null);
-  const [forceException, setForceException] = useState(false);
-  const [exceptionReason, setExceptionReason] = useState("");
-  const [exceptionValidFrom, setExceptionValidFrom] = useState(() => new Date().toISOString().slice(0, 10));
-  const [exceptionValidUntil, setExceptionValidUntil] = useState("");
+  const [confirmManualOverride, setConfirmManualOverride] = useState(false);
   const [officialPreview, setOfficialPreview] = useState<Record<string, unknown> | null>(null);
   const [electiveOfferings, setElectiveOfferings] = useState<ElectiveOffering[]>([]);
   const [cloneTarget, setCloneTarget] = useState("");
@@ -84,7 +78,7 @@ function CurriculumManager() {
       supabase.from("course_catalog").select("id,name,short_name,category").eq("active", true).order("name"),
       supabase.from("profiles").select("user_id,full_name").eq("role", "teacher").order("full_name"),
       supabase.from("class_course_requirements").select("id,class_id,course_id,weekly_hours,category,locked,note"),
-      supabase.from("teacher_course_assignments").select("id,class_course_requirement_id,teacher_id,assigned_hours,assignment_group,is_justified_exception,exception_reason,exception_valid_from,exception_valid_until"),
+      supabase.from("teacher_course_assignments").select("id,class_course_requirement_id,teacher_id,assigned_hours,assignment_group,is_manual_override"),
       supabase.from("class_curriculum_summary").select("class_id,expected_weekly_hours,planned_weekly_hours,assigned_teacher_hours,curriculum_status"),
     ]);
     if (c.error || co.error || t.error || r.error || a.error || s.error) {
@@ -114,12 +108,12 @@ function CurriculumManager() {
 
   useEffect(() => {
     const requirement = requirements.find((item) => item.id === assignRequirement);
-    if (!requirement || !assignTeacher) { setAssignmentPermission(null); setForceException(false); return; }
+    if (!requirement || !assignTeacher) { setAssignmentPermission(null); setConfirmManualOverride(false); return; }
     let alive = true;
     void supabase.rpc("teacher_course_permission_status", { p_teacher_id: assignTeacher, p_course_id: requirement.course_id }).then(({ data, error }) => {
       if (!alive) return;
       setAssignmentPermission(error ? null : data ?? null);
-      if (data !== "NOT_ALLOWED") setForceException(false);
+      if (data !== "NOT_ALLOWED") setConfirmManualOverride(false);
     });
     return () => { alive = false; };
   }, [assignRequirement, assignTeacher, requirements]);
@@ -220,27 +214,21 @@ function CurriculumManager() {
 
   async function submitTeacherAssignment() {
     if (!assignRequirement || !assignTeacher) return;
-    if (assignmentPermission === "NOT_ALLOWED" && !forceException) { setMessage("Bu öğretmenin ders için TTKB uygunluğu yok. Atama yalnız gerekçeli istisna olarak yapılabilir."); return; }
-    if (forceException && exceptionReason.trim().length < 10) { setMessage("İstisnai atama gerekçesi en az 10 karakter olmalıdır."); return; }
-    if (forceException && !exceptionValidFrom) { setMessage("İstisna için başlangıç tarihi zorunludur."); return; }
-    if (forceException && exceptionValidUntil && exceptionValidUntil < exceptionValidFrom) { setMessage("İstisna bitiş tarihi başlangıç tarihinden önce olamaz."); return; }
+    if (assignmentPermission === "NOT_ALLOWED" && !confirmManualOverride) { setMessage("Bu öğretmen bu dersi normalde okutamaz. Devam etmek için uyarıyı onaylayın."); return; }
     setBusy(true); setMessage(null);
-    const { error } = await supabase.rpc("assign_teacher_to_class_course_v3", {
+    const { error } = await supabase.rpc("assign_teacher_to_class_course_v4" as never, {
       p_requirement_id: assignRequirement,
       p_teacher_id: assignTeacher,
       p_group: "main",
-      p_force_exception: forceException,
-      p_exception_reason: forceException ? exceptionReason.trim() : null,
-      p_exception_valid_from: forceException ? exceptionValidFrom : null,
-      p_exception_valid_until: forceException && exceptionValidUntil ? exceptionValidUntil : null,
-    });
+      p_confirm_manual_override: confirmManualOverride,
+    } as never);
     setBusy(false);
     if (error) {
-      setMessage(error.message.includes("EXCEED") ? "Atanan öğretmen saatleri dersin haftalık saatini aşamaz." : error.message.includes("TTKB") ? "TTKB uygunluğu bulunmuyor; istisna için gerekçe zorunludur." : "Öğretmen derse atanamadı.");
+      setMessage(error.message.includes("EXCEED") ? "Atanan öğretmen saatleri dersin haftalık saatini aşamaz." : error.message.includes("CONFIRMATION") ? "Bu öğretmen bu dersi normalde okutamaz. Devam etmek için uyarıyı onaylayın." : "Öğretmen derse atanamadı.");
       return;
     }
-    setExceptionReason(""); setExceptionValidUntil(""); setForceException(false);
-    setMessage(forceException ? "Süreli gerekçeli istisnai atama kaydedildi; süresi dışında kalırsa yayın doğrulamasında hata üretir." : "Öğretmen ders yüküne atandı. Bu işlem henüz haftalık timetable hücresi oluşturmaz.");
+    setConfirmManualOverride(false);
+    setMessage(confirmManualOverride ? "Uyarı onaylandı ve öğretmen derse manuel olarak atandı." : "Öğretmen ders yüküne atandı. Bu işlem henüz haftalık timetable hücresi oluşturmaz.");
     await load();
   }
 
@@ -298,7 +286,7 @@ function CurriculumManager() {
 
         <div className="rounded-xl border border-border bg-card p-4">
           <h2 className="flex items-center gap-2 font-semibold"><UserRoundCheck className="size-4" /> Öğretmen Ata</h2>
-          <div className="mt-3 space-y-3"><select value={assignRequirement} onChange={(e) => setAssignRequirement(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Ders seçiniz</option>{classRequirements.map((r) => <option key={r.id} value={r.id}>{courseMap[r.course_id]?.name ?? "Ders"} · {r.weekly_hours} saat</option>)}</select><select value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçiniz</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select>{assignmentPermission ? <p className={`rounded-lg border p-2 text-xs ${assignmentPermission === "ALLOWED" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : assignmentPermission === "NOT_ALLOWED" ? "border-amber-300 bg-amber-50 text-amber-950" : "border-muted bg-muted/40 text-muted-foreground"}`}>{assignmentPermission === "ALLOWED" ? "TTKB alan–ders uygunluğu doğrulandı." : assignmentPermission === "NOT_ALLOWED" ? "TTKB alan–ders uygunluğu yok. Yalnız gerekçeli istisna kaydıyla atanabilir." : "Alan veya yetki kuralı henüz tanımlı değil; atama kayda alınır ve kontrol listesinde izlenir."}</p> : null}{assignmentPermission === "NOT_ALLOWED" ? <div className="rounded-lg border border-amber-300 bg-amber-50 p-3"><label className="flex items-start gap-2 text-sm font-medium text-amber-950"><input type="checkbox" checked={forceException} onChange={(e) => setForceException(e.target.checked)} className="mt-1" /> Gerekçeli istisnai atama yap</label>{forceException ? <div className="mt-2 space-y-2"><div className="space-y-1"><Label htmlFor="exception-reason">Gerekçe</Label><Input id="exception-reason" value={exceptionReason} onChange={(e) => setExceptionReason(e.target.value)} placeholder="Örn. norm açığı nedeniyle geçici görevlendirme" /></div><div className="grid grid-cols-2 gap-2"><div className="space-y-1"><Label htmlFor="exception-valid-from">Geçerlilik başlangıcı</Label><Input id="exception-valid-from" type="date" value={exceptionValidFrom} onChange={(e) => setExceptionValidFrom(e.target.value)} /></div><div className="space-y-1"><Label htmlFor="exception-valid-until">Bitiş (opsiyonel)</Label><Input id="exception-valid-until" type="date" min={exceptionValidFrom} value={exceptionValidUntil} onChange={(e) => setExceptionValidUntil(e.target.value)} /></div></div><p className="text-xs text-amber-900">Bu kayıt denetim iziyle saklanır; programdaki zaman, yük ve çakışma kurallarını gevşetmez. Süre bitince canonical doğrulama bunu hata sayar.</p></div> : null}</div> : null}<Button className="w-full" onClick={() => void submitTeacherAssignment()} disabled={busy || !assignRequirement || !assignTeacher}>Derse Ata</Button><p className="text-xs text-muted-foreground">Normal atamada TTKB alan–ders eşleşmesi zorunludur. İstisna, açık gerekçe, yetkili işlem kaydı ve geçerlilik aralığıyla açılır.</p></div>
+          <div className="mt-3 space-y-3"><select value={assignRequirement} onChange={(e) => setAssignRequirement(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Ders seçiniz</option>{classRequirements.map((r) => <option key={r.id} value={r.id}>{courseMap[r.course_id]?.name ?? "Ders"} · {r.weekly_hours} saat</option>)}</select><select value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçiniz</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select>{assignmentPermission ? <p className={`rounded-lg border p-2 text-xs ${assignmentPermission === "ALLOWED" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : assignmentPermission === "NOT_ALLOWED" ? "border-amber-300 bg-amber-50 text-amber-950" : "border-muted bg-muted/40 text-muted-foreground"}`}>{assignmentPermission === "ALLOWED" ? "TTKB alan–ders uygunluğu doğrulandı." : assignmentPermission === "NOT_ALLOWED" ? "Bu öğretmen bu dersi normalde okutamaz." : "Alan veya yetki kuralı henüz tanımlı değil; atama kayda alınır ve kontrol listesinde izlenir."}</p> : null}{assignmentPermission === "NOT_ALLOWED" ? <div className="rounded-lg border border-amber-300 bg-amber-50 p-3"><label className="flex items-start gap-2 text-sm font-medium text-amber-950"><input type="checkbox" checked={confirmManualOverride} onChange={(e) => setConfirmManualOverride(e.target.checked)} className="mt-1" /> Evet, yine de ata</label><p className="mt-2 text-xs text-amber-900">Bu yalnız alan–ders uyarısını onaylar; ders saati, çakışma, oda ve diğer program kuralları değişmez.</p></div> : null}<Button className="w-full" onClick={() => void submitTeacherAssignment()} disabled={busy || !assignRequirement || !assignTeacher}>Derse Ata</Button><p className="text-xs text-muted-foreground">Uygun olmayan branş eşleşmesinde kullanıcı onayı istenir. Onaydan sonra manuel atama yapılır.</p></div>
         </div>
       </section>
 
