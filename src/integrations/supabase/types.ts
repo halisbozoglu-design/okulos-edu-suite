@@ -111,7 +111,12 @@ export type Database = {
           has_medical_report: boolean
           id: string
           institution_code: string | null
+          is_justified_exception: boolean
           note: string | null
+          exception_approved_at: string | null
+          exception_approved_by: string | null
+          exception_permission_status: string | null
+          exception_reason: string | null
           status: string
           teacher_id: string
         }
@@ -125,7 +130,12 @@ export type Database = {
           has_medical_report?: boolean
           id?: string
           institution_code?: string | null
+          is_justified_exception?: boolean
           note?: string | null
+          exception_approved_at?: string | null
+          exception_approved_by?: string | null
+          exception_permission_status?: string | null
+          exception_reason?: string | null
           status?: string
           teacher_id: string
         }
@@ -139,7 +149,12 @@ export type Database = {
           has_medical_report?: boolean
           id?: string
           institution_code?: string | null
+          is_justified_exception?: boolean
           note?: string | null
+          exception_approved_at?: string | null
+          exception_approved_by?: string | null
+          exception_permission_status?: string | null
+          exception_reason?: string | null
           status?: string
           teacher_id?: string
         }
@@ -10097,6 +10112,17 @@ export type Database = {
         }
         Returns: string
       }
+      assign_teacher_to_class_course_v2: {
+        Args: {
+          p_exception_reason?: string | null
+          p_force_exception?: boolean
+          p_group?: string
+          p_hours?: number
+          p_requirement_id: string
+          p_teacher_id: string
+        }
+        Returns: string
+      }
       audit_mesem_catalog_completeness_v1: {
         Args: never
         Returns: {
@@ -11932,6 +11958,19 @@ export type Database = {
       teacher_course_permission_status: {
         Args: { p_course_id: string; p_on_date?: string; p_teacher_id: string }
         Returns: string
+      }
+      get_teacher_course_assignment_exceptions_v1: {
+        Args: never
+        Returns: {
+          approved_at: string
+          approved_by: string
+          class_course_requirement_id: string
+          class_name: string
+          course_name: string
+          reason: string
+          teacher_assignment_id: string
+          teacher_id: string
+        }[]
       }
       tenant_row_allowed: {
         Args: { p_institution_code: string }
