@@ -41,6 +41,8 @@ type Assignment = {
   assignment_group: string;
   is_justified_exception: boolean;
   exception_reason: string | null;
+  exception_valid_from: string | null;
+  exception_valid_until: string | null;
 };
 type Summary = {
   class_id: string;
@@ -49,6 +51,7 @@ type Summary = {
   assigned_teacher_hours: number;
   curriculum_status: string;
 };
+type ElectiveOffering = { offering_id: string; course_id: string; course_name: string; category: string; hour_options: number[]; elective_group_key: string | null; max_selections: number; source_note: string | null };
 
 function CurriculumManager() {
   const [classes, setClasses] = useState<SchoolClass[]>([]);
@@ -67,7 +70,10 @@ function CurriculumManager() {
   const [assignmentPermission, setAssignmentPermission] = useState<string | null>(null);
   const [forceException, setForceException] = useState(false);
   const [exceptionReason, setExceptionReason] = useState("");
+  const [exceptionValidFrom, setExceptionValidFrom] = useState(() => new Date().toISOString().slice(0, 10));
+  const [exceptionValidUntil, setExceptionValidUntil] = useState("");
   const [officialPreview, setOfficialPreview] = useState<Record<string, unknown> | null>(null);
+  const [electiveOfferings, setElectiveOfferings] = useState<ElectiveOffering[]>([]);
   const [cloneTarget, setCloneTarget] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -78,7 +84,7 @@ function CurriculumManager() {
       supabase.from("course_catalog").select("id,name,short_name,category").eq("active", true).order("name"),
       supabase.from("profiles").select("user_id,full_name").eq("role", "teacher").order("full_name"),
       supabase.from("class_course_requirements").select("id,class_id,course_id,weekly_hours,category,locked,note"),
-      supabase.from("teacher_course_assignments").select("id,class_course_requirement_id,teacher_id,assigned_hours,assignment_group,is_justified_exception,exception_reason"),
+      supabase.from("teacher_course_assignments").select("id,class_course_requirement_id,teacher_id,assigned_hours,assignment_group,is_justified_exception,exception_reason,exception_valid_from,exception_valid_until"),
       supabase.from("class_curriculum_summary").select("class_id,expected_weekly_hours,planned_weekly_hours,assigned_teacher_hours,curriculum_status"),
     ]);
     if (c.error || co.error || t.error || r.error || a.error || s.error) {
@@ -94,6 +100,17 @@ function CurriculumManager() {
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+
+  useEffect(() => {
+    if (!classId) { setElectiveOfferings([]); return; }
+    let alive = true;
+    void supabase.rpc("list_official_electives_for_class_v1" as never, { p_class_id: classId } as never).then(({ data, error }) => {
+      if (!alive) return;
+      if (error) { setElectiveOfferings([]); return; }
+      setElectiveOfferings((data ?? []) as ElectiveOffering[]);
+    });
+    return () => { alive = false; };
+  }, [classId]);
 
   useEffect(() => {
     const requirement = requirements.find((item) => item.id === assignRequirement);
@@ -177,6 +194,20 @@ function CurriculumManager() {
     await load();
   }
 
+  async function selectOfficialElective(offering: ElectiveOffering, weeklyHours: number) {
+    if (!classId) return;
+    setBusy(true); setMessage(null);
+    const { error } = await supabase.rpc("select_official_elective_for_class_v1" as never, { p_class_id: classId, p_offering_id: offering.offering_id, p_weekly_hours: weeklyHours } as never);
+    setBusy(false);
+    if (error) {
+      const known = error.message;
+      setMessage(known.includes("EXCEEDS") ? "Bu seçim resmî haftalık toplamı aşar." : known.includes("MANUAL_OR_LOCKED") ? "Bu ders için manuel veya kilitli kayıt korunuyor." : known.includes("TEACHER_ASSIGNMENT") ? "Bu seçmeli derste öğretmen ataması bulunduğu için saat değiştirilemez." : "Resmî seçmeli ders kaydedilemedi.");
+      return;
+    }
+    setMessage(`${offering.course_name} · ${weeklyHours} saat seçmeli ders yüküne eklendi.`);
+    await load();
+  }
+
   async function removeRequirement(id: string) {
     setBusy(true); setMessage(null);
     const { error } = await supabase.from("class_course_requirements").delete().eq("id", id);
@@ -191,21 +222,25 @@ function CurriculumManager() {
     if (!assignRequirement || !assignTeacher) return;
     if (assignmentPermission === "NOT_ALLOWED" && !forceException) { setMessage("Bu öğretmenin ders için TTKB uygunluğu yok. Atama yalnız gerekçeli istisna olarak yapılabilir."); return; }
     if (forceException && exceptionReason.trim().length < 10) { setMessage("İstisnai atama gerekçesi en az 10 karakter olmalıdır."); return; }
+    if (forceException && !exceptionValidFrom) { setMessage("İstisna için başlangıç tarihi zorunludur."); return; }
+    if (forceException && exceptionValidUntil && exceptionValidUntil < exceptionValidFrom) { setMessage("İstisna bitiş tarihi başlangıç tarihinden önce olamaz."); return; }
     setBusy(true); setMessage(null);
-    const { error } = await supabase.rpc("assign_teacher_to_class_course_v2", {
+    const { error } = await supabase.rpc("assign_teacher_to_class_course_v3", {
       p_requirement_id: assignRequirement,
       p_teacher_id: assignTeacher,
       p_group: "main",
       p_force_exception: forceException,
       p_exception_reason: forceException ? exceptionReason.trim() : null,
+      p_exception_valid_from: forceException ? exceptionValidFrom : null,
+      p_exception_valid_until: forceException && exceptionValidUntil ? exceptionValidUntil : null,
     });
     setBusy(false);
     if (error) {
       setMessage(error.message.includes("EXCEED") ? "Atanan öğretmen saatleri dersin haftalık saatini aşamaz." : error.message.includes("TTKB") ? "TTKB uygunluğu bulunmuyor; istisna için gerekçe zorunludur." : "Öğretmen derse atanamadı.");
       return;
     }
-    setExceptionReason(""); setForceException(false);
-    setMessage(forceException ? "Gerekçeli istisnai atama kaydedildi; yayın öncesi uyarı listesinde görünür." : "Öğretmen ders yüküne atandı. Bu işlem henüz haftalık timetable hücresi oluşturmaz.");
+    setExceptionReason(""); setExceptionValidUntil(""); setForceException(false);
+    setMessage(forceException ? "Süreli gerekçeli istisnai atama kaydedildi; süresi dışında kalırsa yayın doğrulamasında hata üretir." : "Öğretmen ders yüküne atandı. Bu işlem henüz haftalık timetable hücresi oluşturmaz.");
     await load();
   }
 
@@ -251,6 +286,10 @@ function CurriculumManager() {
     </section>
 
     {classId ? <>
+      <section className="mt-5 rounded-xl border border-border bg-card p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2"><div><h2 className="font-semibold">Resmî Seçmeli Ders Havuzu</h2><p className="mt-1 text-xs text-muted-foreground">Seçim, kaynakta tanımlı saat seçenekleriyle kaydedilir. Manuel/ kilitli kayıtlar ve atanmış dersler korunur.</p></div><Badge variant="secondary">{electiveOfferings.length} seçenek</Badge></div>
+        {electiveOfferings.length ? <div className="mt-3 grid gap-2 md:grid-cols-2">{electiveOfferings.map((o) => <div key={o.offering_id} className="rounded-lg border p-3"><div className="flex items-start justify-between gap-2"><div><p className="font-medium text-sm">{o.course_name}</p><p className="text-xs text-muted-foreground">{o.elective_group_key ? `Grup: ${o.elective_group_key}` : "Genel seçmeli"}{o.source_note ? ` · ${o.source_note}` : ""}</p></div><Badge variant="outline">en çok {o.max_selections}</Badge></div><div className="mt-2 flex flex-wrap gap-2">{o.hour_options.map((h) => <Button key={h} size="sm" variant="outline" disabled={busy} onClick={() => void selectOfficialElective(o, h)}>{h} saat seç</Button>)}</div></div>)}</div> : <p className="mt-3 text-sm text-muted-foreground">Seçmeli havuz henüz yok. Önce “Resmî Çizelgeden Yükle” ile sınıfın resmî çizelgesini eşitleyin.</p>}
+      </section>
       <section className="mt-5 grid gap-4 lg:grid-cols-2">
         <div className="rounded-xl border border-border bg-card p-4">
           <h2 className="flex items-center gap-2 font-semibold"><Plus className="size-4" /> Sınıfa Ders Ekle</h2>
@@ -259,7 +298,7 @@ function CurriculumManager() {
 
         <div className="rounded-xl border border-border bg-card p-4">
           <h2 className="flex items-center gap-2 font-semibold"><UserRoundCheck className="size-4" /> Öğretmen Ata</h2>
-          <div className="mt-3 space-y-3"><select value={assignRequirement} onChange={(e) => setAssignRequirement(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Ders seçiniz</option>{classRequirements.map((r) => <option key={r.id} value={r.id}>{courseMap[r.course_id]?.name ?? "Ders"} · {r.weekly_hours} saat</option>)}</select><select value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçiniz</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select>{assignmentPermission ? <p className={`rounded-lg border p-2 text-xs ${assignmentPermission === "ALLOWED" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : assignmentPermission === "NOT_ALLOWED" ? "border-amber-300 bg-amber-50 text-amber-950" : "border-muted bg-muted/40 text-muted-foreground"}`}>{assignmentPermission === "ALLOWED" ? "TTKB alan–ders uygunluğu doğrulandı." : assignmentPermission === "NOT_ALLOWED" ? "TTKB alan–ders uygunluğu yok. Yalnız gerekçeli istisna kaydıyla atanabilir." : "Alan veya yetki kuralı henüz tanımlı değil; atama kayda alınır ve kontrol listesinde izlenir."}</p> : null}{assignmentPermission === "NOT_ALLOWED" ? <div className="rounded-lg border border-amber-300 bg-amber-50 p-3"><label className="flex items-start gap-2 text-sm font-medium text-amber-950"><input type="checkbox" checked={forceException} onChange={(e) => setForceException(e.target.checked)} className="mt-1" /> Gerekçeli istisnai atama yap</label>{forceException ? <div className="mt-2 space-y-1"><Label htmlFor="exception-reason">Gerekçe</Label><Input id="exception-reason" value={exceptionReason} onChange={(e) => setExceptionReason(e.target.value)} placeholder="Örn. norm açığı nedeniyle geçici görevlendirme" /><p className="text-xs text-amber-900">Bu kayıt denetim iziyle saklanır; programdaki zaman, yük ve çakışma kurallarını gevşetmez.</p></div> : null}</div> : null}<Button className="w-full" onClick={() => void submitTeacherAssignment()} disabled={busy || !assignRequirement || !assignTeacher}>Derse Ata</Button><p className="text-xs text-muted-foreground">Normal atamada TTKB alan–ders eşleşmesi zorunludur. İstisna, yalnız açık gerekçe ve yetkili işlem kaydıyla açılır.</p></div>
+          <div className="mt-3 space-y-3"><select value={assignRequirement} onChange={(e) => setAssignRequirement(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Ders seçiniz</option>{classRequirements.map((r) => <option key={r.id} value={r.id}>{courseMap[r.course_id]?.name ?? "Ders"} · {r.weekly_hours} saat</option>)}</select><select value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçiniz</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select>{assignmentPermission ? <p className={`rounded-lg border p-2 text-xs ${assignmentPermission === "ALLOWED" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : assignmentPermission === "NOT_ALLOWED" ? "border-amber-300 bg-amber-50 text-amber-950" : "border-muted bg-muted/40 text-muted-foreground"}`}>{assignmentPermission === "ALLOWED" ? "TTKB alan–ders uygunluğu doğrulandı." : assignmentPermission === "NOT_ALLOWED" ? "TTKB alan–ders uygunluğu yok. Yalnız gerekçeli istisna kaydıyla atanabilir." : "Alan veya yetki kuralı henüz tanımlı değil; atama kayda alınır ve kontrol listesinde izlenir."}</p> : null}{assignmentPermission === "NOT_ALLOWED" ? <div className="rounded-lg border border-amber-300 bg-amber-50 p-3"><label className="flex items-start gap-2 text-sm font-medium text-amber-950"><input type="checkbox" checked={forceException} onChange={(e) => setForceException(e.target.checked)} className="mt-1" /> Gerekçeli istisnai atama yap</label>{forceException ? <div className="mt-2 space-y-2"><div className="space-y-1"><Label htmlFor="exception-reason">Gerekçe</Label><Input id="exception-reason" value={exceptionReason} onChange={(e) => setExceptionReason(e.target.value)} placeholder="Örn. norm açığı nedeniyle geçici görevlendirme" /></div><div className="grid grid-cols-2 gap-2"><div className="space-y-1"><Label htmlFor="exception-valid-from">Geçerlilik başlangıcı</Label><Input id="exception-valid-from" type="date" value={exceptionValidFrom} onChange={(e) => setExceptionValidFrom(e.target.value)} /></div><div className="space-y-1"><Label htmlFor="exception-valid-until">Bitiş (opsiyonel)</Label><Input id="exception-valid-until" type="date" min={exceptionValidFrom} value={exceptionValidUntil} onChange={(e) => setExceptionValidUntil(e.target.value)} /></div></div><p className="text-xs text-amber-900">Bu kayıt denetim iziyle saklanır; programdaki zaman, yük ve çakışma kurallarını gevşetmez. Süre bitince canonical doğrulama bunu hata sayar.</p></div> : null}</div> : null}<Button className="w-full" onClick={() => void submitTeacherAssignment()} disabled={busy || !assignRequirement || !assignTeacher}>Derse Ata</Button><p className="text-xs text-muted-foreground">Normal atamada TTKB alan–ders eşleşmesi zorunludur. İstisna, açık gerekçe, yetkili işlem kaydı ve geçerlilik aralığıyla açılır.</p></div>
         </div>
       </section>
 
@@ -270,7 +309,7 @@ function CurriculumManager() {
 
       <section className="mt-5">
         <div className="mb-2 flex items-center justify-between"><h2 className="flex items-center gap-2 font-semibold"><BookOpenCheck className="size-4" /> {selectedClass?.composite_key ?? selectedClass?.class_name} Dersleri</h2><Button variant="outline" size="sm" onClick={() => void load()} className="gap-2"><RefreshCw className="size-4" /> Yenile</Button></div>
-        <div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="min-w-[760px] w-full text-sm"><thead><tr className="border-b bg-muted/40"><th className="p-3 text-left">Ders</th><th className="p-3 text-left">Tür</th><th className="p-3 text-left">HDS</th><th className="p-3 text-left">Öğretmen</th><th className="p-3 text-left">Atanan Saat</th><th className="p-3 text-right">İşlem</th></tr></thead><tbody>{classRequirements.length ? classRequirements.map((r) => { const list = assignmentMap[r.id] ?? []; return <tr key={r.id} className="border-b last:border-0"><td className="p-3 font-medium">{courseMap[r.course_id]?.name ?? "Ders"}</td><td className="p-3">{r.category}</td><td className="p-3">{r.weekly_hours}</td><td className="p-3">{list.length ? <div className="space-y-1">{list.map((a) => <div key={a.id} className="flex items-center gap-1.5">{a.is_justified_exception ? <AlertTriangle className="size-3.5 text-amber-600" aria-label="Gerekçeli istisna" /> : null}<span>{teacherMap[a.teacher_id]}</span>{a.is_justified_exception ? <span className="text-xs text-amber-700" title={a.exception_reason ?? undefined}>İstisna</span> : null}</div>)}</div> : <span className="text-amber-600">Atanmadı</span>}</td><td className="p-3">{list.reduce((sum, a) => sum + a.assigned_hours, 0)}/{r.weekly_hours}</td><td className="p-3 text-right"><Button variant="ghost" size="sm" onClick={() => void removeRequirement(r.id)} disabled={r.locked || busy}>Kaldır</Button></td></tr>; }) : <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">Bu sınıfa henüz ders yükü tanımlanmadı.</td></tr>}</tbody></table></div>
+        <div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="min-w-[760px] w-full text-sm"><thead><tr className="border-b bg-muted/40"><th className="p-3 text-left">Ders</th><th className="p-3 text-left">Tür</th><th className="p-3 text-left">HDS</th><th className="p-3 text-left">Öğretmen</th><th className="p-3 text-left">Atanan Saat</th><th className="p-3 text-right">İşlem</th></tr></thead><tbody>{classRequirements.length ? classRequirements.map((r) => { const list = assignmentMap[r.id] ?? []; return <tr key={r.id} className="border-b last:border-0"><td className="p-3 font-medium">{courseMap[r.course_id]?.name ?? "Ders"}</td><td className="p-3">{r.category}</td><td className="p-3">{r.weekly_hours}</td><td className="p-3">{list.length ? <div className="space-y-1">{list.map((a) => <div key={a.id} className="flex items-center gap-1.5">{a.is_justified_exception ? <AlertTriangle className="size-3.5 text-amber-600" aria-label="Gerekçeli istisna" /> : null}<span>{teacherMap[a.teacher_id]}</span>{a.is_justified_exception ? <span className="text-xs text-amber-700" title={`${a.exception_reason ?? ""}${a.exception_valid_from ? ` · ${a.exception_valid_from}${a.exception_valid_until ? `–${a.exception_valid_until}` : ""}` : ""}`}>İstisna{a.exception_valid_from ? ` · ${a.exception_valid_from}${a.exception_valid_until ? `–${a.exception_valid_until}` : ""}` : ""}</span> : null}</div>)}</div> : <span className="text-amber-600">Atanmadı</span>}</td><td className="p-3">{list.reduce((sum, a) => sum + a.assigned_hours, 0)}/{r.weekly_hours}</td><td className="p-3 text-right"><Button variant="ghost" size="sm" onClick={() => void removeRequirement(r.id)} disabled={r.locked || busy}>Kaldır</Button></td></tr>; }) : <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">Bu sınıfa henüz ders yükü tanımlanmadı.</td></tr>}</tbody></table></div>
       </section>
     </> : null}
 
