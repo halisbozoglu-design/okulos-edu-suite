@@ -1,12 +1,35 @@
 export type ParsedConstraint={type:string;severity:"hard"|"soft"|"info";params:Record<string,unknown>;sourceText:string};
 export type ParsedCourseRow={courseName:string;courseCode?:string|undefined;shortName?:string|undefined;gradeLevel:number;category:string;hourOptions:number[];maxSelections:number;repeatAcrossYears:boolean;electiveGroupKey?:string|undefined;sourceNote?:string|undefined;sourcePage?:number|undefined;sourceSection?:string|undefined;parserConfidence:number;needsReview:boolean;parsedConstraints:ParsedConstraint[]};
 export type ParsedProfile={academicYear:string;schoolType:string;schoolSubtype?:string|undefined;programType?:string|undefined;fieldName?:string|undefined;branchName?:string|undefined;gradeLevel:number;requiredCourseCount:number;requiredHourTotal:number;electiveCourseMin:number;electiveCourseMax?:number|undefined;electiveHourMin:number;electiveHourMax:number;totalHourMin:number;totalHourMax:number;totalHourTarget?:number|undefined;groupRules:ParsedConstraint[];sourceDecisionNo?:string|undefined;sourceDecisionDate?:string|undefined;sourceNote?:string|undefined};
+export type OfficialPdfEvidence={parser_version:"okulos-official-pdf-evidence-v1";source_hash:string;source_file_name:string;page_count:number;extracted_text_characters:number;extracted_text_hash:string;decision_no?:string;decision_date?:string;academic_year?:string;extraction_status:"TEXT_EXTRACTED"};
 
 const tr=(s:string)=>s.replace(/\s+/g," ").trim();
 export function parseSelectionLimit(rawName:string){const name=tr(rawName);const m=name.match(/\s+\((\d+)\)\s*$/);return m?{name:name.slice(0,m.index).trim(),maxSelections:Number(m[1])}:{name,maxSelections:1};}
 export function parseHourOptions(cell:string){const s=tr(cell);if(!s||s==="-"||s==="—")return[];const par=[...s.matchAll(/\((\d+)\)/g)].map(x=>Number(x[1])).filter(x=>x>0&&x<=30);if(par.length)return[...new Set(par)].sort((a,b)=>a-b);const n=Number(s.replace(/[^0-9]/g,""));return Number.isFinite(n)&&n>0&&n<=30?[n]:[];}
 export function categoryFromSection(section:string){const s=section.toLocaleUpperCase("tr-TR");if(s.includes("SEÇMELİ"))return"secmeli";if(s.includes("MESLEK")||s.includes("ALAN")||s.includes("DAL"))return"meslek";if(s.includes("PROGRAM"))return"program";if(s.includes("REHBERLİK"))return"rehberlik";return"zorunlu";}
 export function extractDecisionMeta(text:string){const t=text.replace(/\r/g,"");const no=t.match(/(?:Sayı|SAYI)\s*[:\-]?\s*(\d{1,3})\b/);const date=t.match(/(?:Tarih|TARİH)\s*[:\-]?\s*(\d{1,2}[\/.]\d{1,2}[\/.]\d{4})/);const year=t.match(/(20\d{2})-(20\d{2})\s+eğitim\s+(?:ve\s+)?öğretim/i);return{decisionNo:no?.[1],decisionDate:date?.[1]?.replaceAll(".","-").replace(/^(\d{2})-(\d{2})-(\d{4})$/,"$3-$2-$1"),academicYear:year?`${year[1]}-${year[2]}`:undefined};}
+
+function hex(bytes:ArrayBuffer){return Array.from(new Uint8Array(bytes)).map(b=>b.toString(16).padStart(2,"0")).join("");}
+async function sha256(bytes:ArrayBuffer){if(!globalThis.crypto?.subtle)throw new Error("PDF_HASH_UNAVAILABLE");return hex(await globalThis.crypto.subtle.digest("SHA-256",bytes));}
+
+/** Extracts verifiable local PDF evidence without uploading the source file. */
+export async function parseOfficialPdfEvidence(file:File):Promise<OfficialPdfEvidence>{
+ if(file.type!=="application/pdf"&&!file.name.toLocaleLowerCase("tr-TR").endsWith(".pdf"))throw new Error("OFFICIAL_SOURCE_PDF_REQUIRED");
+ const bytes=await file.arrayBuffer();
+ const pdfjs=await import("pdfjs-dist/legacy/build/pdf.mjs");
+ const pdf=await pdfjs.getDocument({data:new Uint8Array(bytes)}).promise;
+ const pages:string[]=[];
+ for(let pageNo=1;pageNo<=pdf.numPages;pageNo++){
+  const page=await pdf.getPage(pageNo);
+  const content=await page.getTextContent();
+  const pageText=(content.items as Array<{str?:string}>).map(item=>item.str??"").join(" ");
+  if(pageText.trim())pages.push(pageText);
+ }
+ const text=tr(pages.join("\n"));
+ if(!text)throw new Error("OFFICIAL_PDF_TEXT_NOT_EXTRACTABLE");
+ const meta=extractDecisionMeta(text);
+ return{parser_version:"okulos-official-pdf-evidence-v1",source_hash:await sha256(bytes),source_file_name:file.name,page_count:pdf.numPages,extracted_text_characters:text.length,extracted_text_hash:await sha256(new TextEncoder().encode(text).buffer),decision_no:meta.decisionNo,decision_date:meta.decisionDate,academic_year:meta.academicYear,extraction_status:"TEXT_EXTRACTED"};
+}
 
 export function parseExplanationConstraints(text:string):ParsedConstraint[]{const out:ParsedConstraint[]=[];const sentences=text.split(/(?<=[.!?])\s+/).map(tr).filter(Boolean);for(const s of sentences){const low=s.toLocaleLowerCase("tr-TR");
  const group=low.match(/(?:gruplarından|grubundan).*?en az\s+(?:bir(?:er)?|1)\s+ders/);if(group){const groupNames=[...s.matchAll(/["“”]([^"“”]+)["“”]/g)].map(x=>tr(x[1]??""));out.push({type:"MIN_COURSE_FROM_GROUP",severity:"hard",params:{minCourses:1,eachGroup:groupNames.length>1,groupNames},sourceText:s});}
