@@ -67,6 +67,7 @@ function CurriculumManager() {
   const [assignmentPermission, setAssignmentPermission] = useState<string | null>(null);
   const [forceException, setForceException] = useState(false);
   const [exceptionReason, setExceptionReason] = useState("");
+  const [officialPreview, setOfficialPreview] = useState<Record<string, unknown> | null>(null);
   const [cloneTarget, setCloneTarget] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -143,6 +144,17 @@ function CurriculumManager() {
     const preserved = Number(result.manual_or_locked_preserved ?? 0);
     setMessage(`Resmî çizelge uygulandı: ${automatic} zorunlu/uygulama dersi güncellendi. ${electives} seçmeli seçenek olarak bırakıldı${preserved ? `; ${preserved} manuel veya kilitli kayıt korundu` : ""}.`);
     await load();
+  }
+
+  async function previewOfficialCurriculum() {
+    if (!classId) return;
+    setBusy(true); setMessage(null);
+    const { data, error } = await supabase.rpc("apply_official_curriculum_to_class_v2", { p_class_id: classId, p_mode: "PREVIEW" });
+    setBusy(false);
+    if (error) { setMessage("Resmî çizelge önizlemesi alınamadı."); return; }
+    const result = data as Record<string, unknown> | null;
+    setOfficialPreview(result);
+    if (!result?.profile_found && !result?.applied) setMessage(String(result?.message ?? "Bu sınıf için etkin resmî çizelge bulunamadı."));
   }
 
   async function addCourse() {
@@ -224,11 +236,12 @@ function CurriculumManager() {
 
     <section className="mt-5 rounded-xl border border-border bg-card p-4">
       <div className="grid gap-3 md:grid-cols-[1fr_180px_auto]">
-        <div className="space-y-2"><Label>Sınıf / Program</Label><select value={classId} onChange={(e) => { setClassId(e.target.value); const c = classes.find((x) => x.id === e.target.value); setTargetHours(c?.expected_weekly_hours ? String(c.expected_weekly_hours) : ""); }} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Seçiniz</option>{classes.map((c) => <option key={c.id} value={c.id}>{c.composite_key ?? c.class_name}</option>)}</select></div>
+        <div className="space-y-2"><Label>Sınıf / Program</Label><select value={classId} onChange={(e) => { setClassId(e.target.value); setOfficialPreview(null); const c = classes.find((x) => x.id === e.target.value); setTargetHours(c?.expected_weekly_hours ? String(c.expected_weekly_hours) : ""); }} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Seçiniz</option>{classes.map((c) => <option key={c.id} value={c.id}>{c.composite_key ?? c.class_name}</option>)}</select></div>
         <div className="space-y-2"><Label>Hedef Haftalık Saat</Label><Input inputMode="numeric" value={targetHours} onChange={(e) => setTargetHours(e.target.value.replace(/\D/g, ""))} placeholder="35 / 40" /></div>
-        <div className="flex items-end gap-2"><Button variant="outline" onClick={() => void applyOfficialCurriculum()} disabled={busy || !classId} className="gap-2"><Download className="size-4" /> Resmî Çizelgeden Yükle</Button><Button onClick={() => void saveTargetHours()} disabled={busy || !classId}>Kaydet</Button></div>
+        <div className="flex items-end gap-2"><Button variant="outline" onClick={() => void previewOfficialCurriculum()} disabled={busy || !classId}>Önizle</Button><Button variant="outline" onClick={() => void applyOfficialCurriculum()} disabled={busy || !classId} className="gap-2"><Download className="size-4" /> Resmî Çizelgeden Yükle</Button><Button onClick={() => void saveTargetHours()} disabled={busy || !classId}>Kaydet</Button></div>
       </div>
       <p className="mt-3 text-xs text-muted-foreground">Resmî yükleme kesin saatli zorunlu, uygulama ve rehberlik derslerini getirir. Seçmeli alternatifleri karar için bırakır; kilitli veya manuel satırları değiştirmez.</p>
+      {officialPreview ? <div className="mt-3 grid gap-2 rounded-xl border border-indigo-200 bg-indigo-50 p-3 text-sm text-indigo-950 sm:grid-cols-2 lg:grid-cols-5"><div><span className="text-xs text-indigo-700">Kesin saatli ders</span><p className="font-semibold">{String(officialPreview.automatic_requirements ?? 0)}</p></div><div><span className="text-xs text-indigo-700">Seçmeli seçenek</span><p className="font-semibold">{String(officialPreview.elective_offerings ?? 0)}</p></div><div><span className="text-xs text-indigo-700">Belirsiz saat</span><p className="font-semibold">{String(officialPreview.ambiguous_hour_offerings ?? 0)}</p></div><div><span className="text-xs text-indigo-700">Korunacak kayıt</span><p className="font-semibold">{String(officialPreview.manual_or_locked_preserved ?? 0)}</p></div><div><span className="text-xs text-indigo-700">Resmî hedef</span><p className="font-semibold">{String(officialPreview.expected_weekly_hours ?? "—")}</p></div><p className="sm:col-span-2 lg:col-span-5 text-xs">Önizleme yalnız etkiyi gösterir; uygulama için “Resmî Çizelgeden Yükle” düğmesini kullanın.</p></div> : null}
 
       {classId ? <div className="mt-4 rounded-xl border border-border p-3">
         <div className="flex items-center justify-between gap-3"><div><p className="text-sm font-semibold">Ders Yükü</p><p className="text-xs text-muted-foreground">Planlanan {planned} saat · Öğretmene atanan {assigned} saat</p></div><Badge variant={status === "complete" ? "default" : status === "overflow" ? "destructive" : "secondary"}>{expected ? `${planned}/${expected}` : `${planned}/?`}</Badge></div>
