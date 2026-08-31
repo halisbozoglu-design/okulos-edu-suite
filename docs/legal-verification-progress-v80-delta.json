@@ -1,0 +1,17 @@
+{
+  "batch": "V80",
+  "date": "2026-08-31",
+  "support_atoms": 410,
+  "atom_pool_before": 20045,
+  "atom_pool_after": 20455,
+  "article_verified_before": 468,
+  "promotions": 0,
+  "rollbacks": 2,
+  "article_verified_after": 466,
+  "master_workflows": 2229,
+  "remaining": 1763,
+  "ratio_percent": 20.9062,
+  "migration": 0,
+  "lovable": 0,
+  "next_batch": "V81"
+}
