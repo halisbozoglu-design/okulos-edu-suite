@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { createEokulScheduleExportPayload } from "@/lib/eokul-schedule-export";
 import { usePermissions } from "@/lib/permissions";
 import { supabase } from "@/lib/supabase";
 
@@ -204,6 +205,15 @@ function ScheduleReports() {
     XLSX.writeFile(wb, `${safeName(title)}.xlsx`);
   }
 
+  function exportEokulPackage() {
+    const payload = createEokulScheduleExportPayload({
+      title,
+      academicYear: year?.code ?? null,
+      rows: filtered.map((row) => ({ weekday: row.weekday, period: row.period, teacher: teacherName(row), className: row.class_name, subject: row.subject, classroom: row.classroom })),
+    });
+    downloadText(JSON.stringify(payload, null, 2), `${safeName(title)}-eokul-aktarim.json`, "application/json;charset=utf-8");
+  }
+
   if (!permissionLoading && !can("schedule.view")) {
     return <AppShell title="Ders Programı Raporları"><div className="rounded-2xl border bg-card p-6 text-center"><h2 className="font-semibold">Rapor görüntüleme yetkisi gerekli</h2><p className="mt-2 text-sm text-muted-foreground">Bu ekran için schedule.view görevi atanmalıdır.</p><Link to="/management" className="mt-4 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Yönetim Merkezi</Link></div></AppShell>;
   }
@@ -214,6 +224,7 @@ function ScheduleReports() {
       <Button variant="outline" onClick={() => void load()} disabled={busy}><RefreshCw className="mr-2 size-4"/>Yenile</Button>
       <Button variant="outline" onClick={exportExcel} disabled={!flatRows.length}><FileSpreadsheet className="mr-2 size-4"/>Excel</Button>
       <Button variant="outline" onClick={exportCsv} disabled={!flatRows.length}><Download className="mr-2 size-4"/>CSV</Button>
+      <Button variant="outline" onClick={exportEokulPackage} disabled={!flatRows.length}><Download className="mr-2 size-4"/>e‑Okul Aktarım Paketi</Button>
       <Button variant="outline" onClick={() => window.print()} disabled={!flatRows.length}><Printer className="mr-2 size-4"/>Yazdır / PDF</Button>
       <Link to="/timetable" className="inline-flex h-10 items-center rounded-md border bg-background px-4 text-sm font-medium"><Table2 className="mr-2 size-4"/>Program Çalışma Alanı</Link>
     </div>
@@ -238,6 +249,7 @@ function ScheduleReports() {
         <select value={orientation} onChange={(e) => setOrientation(e.target.value as "portrait" | "landscape")} className="h-10 rounded-md border bg-background px-3 text-sm" aria-label="Sayfa yönü"><option value="landscape">Yatay</option><option value="portrait">Dikey</option></select>
       </div>
       <p className="mt-2 text-xs text-muted-foreground">Yazdır / PDF ile tarayıcınızın yazdırma penceresi açılır; başlık, kâğıt ve yön ayarları çıktıya uygulanır.</p>
+      <p className="mt-1 text-xs text-muted-foreground">e‑Okul aktarım paketi yalnız ders programı verisini içerir; parola, oturum veya çerez içermez. Kullanıcının kendi e‑Okul ekranında çalışacak tarayıcı aktarım aracının girdisidir.</p>
     </section>
 
     <section className="mt-4 rounded-2xl border bg-card p-4 print:border-0 print:p-0">
