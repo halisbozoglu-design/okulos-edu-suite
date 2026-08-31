@@ -4,6 +4,7 @@ import { Download, FileSpreadsheet, Printer, RefreshCw, Table2 } from "lucide-re
 import * as XLSX from "xlsx";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { usePermissions } from "@/lib/permissions";
 import { supabase } from "@/lib/supabase";
 
@@ -79,6 +80,10 @@ function ScheduleReports() {
   const [classFilter, setClassFilter] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("");
   const [roomFilter, setRoomFilter] = useState("");
+  const [printTitle, setPrintTitle] = useState("");
+  const [printSubtitle, setPrintSubtitle] = useState("");
+  const [paperSize, setPaperSize] = useState("A4");
+  const [orientation, setOrientation] = useState<"portrait" | "landscape">("landscape");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -179,6 +184,9 @@ function ScheduleReports() {
   const totalGaps = teacherSummary.reduce((n, x) => n + x.gaps, 0);
   const unassignedRooms = filtered.filter((r) => !r.classroom_id).length;
   const title = `Ders Programı Raporu${year?.code ? ` · ${year.code}` : ""}`;
+  const outputTitle = printTitle.trim() || title;
+  const outputSubtitle = printSubtitle.trim() || year?.title || "";
+  const printCss = `@media print { @page { size: ${paperSize} ${orientation}; margin: 10mm; } .okulos-report-table { font-size: 9pt; } }`;
 
   function exportCsv() {
     const headers = Object.keys(flatRows[0] ?? { Gün: "", Saat: "", Öğretmen: "", Sınıf: "", Ders: "", Derslik: "", Kilitli: "" });
@@ -201,6 +209,7 @@ function ScheduleReports() {
   }
 
   return <AppShell title="Ders Programı Raporları" subtitle={`${year?.title ?? year?.code ?? "Aktif eğitim-öğretim yılı"} · tenant kapsamlı canlı program verisi`}>
+    <style>{printCss}</style>
     <div className="print:hidden flex flex-wrap gap-2">
       <Button variant="outline" onClick={() => void load()} disabled={busy}><RefreshCw className="mr-2 size-4"/>Yenile</Button>
       <Button variant="outline" onClick={exportExcel} disabled={!flatRows.length}><FileSpreadsheet className="mr-2 size-4"/>Excel</Button>
@@ -222,11 +231,18 @@ function ScheduleReports() {
         <select value={subjectFilter} onChange={(e) => setSubjectFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm dersler</option>{subjects.map((x) => <option key={x}>{x}</option>)}</select>
         <select value={roomFilter} onChange={(e) => setRoomFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm derslikler</option>{rooms.map((x) => <option key={x}>{x}</option>)}</select>
       </div>
+      <div className="mt-3 grid gap-2 border-t pt-3 md:grid-cols-[1fr_1fr_120px_150px]">
+        <Input value={printTitle} onChange={(e) => setPrintTitle(e.target.value)} placeholder={title} aria-label="Çıktı başlığı" />
+        <Input value={printSubtitle} onChange={(e) => setPrintSubtitle(e.target.value)} placeholder={year?.title ?? "Alt açıklama"} aria-label="Çıktı alt açıklaması" />
+        <select value={paperSize} onChange={(e) => setPaperSize(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm" aria-label="Kağıt boyutu"><option>A4</option><option>A3</option><option>Letter</option></select>
+        <select value={orientation} onChange={(e) => setOrientation(e.target.value as "portrait" | "landscape")} className="h-10 rounded-md border bg-background px-3 text-sm" aria-label="Sayfa yönü"><option value="landscape">Yatay</option><option value="portrait">Dikey</option></select>
+      </div>
+      <p className="mt-2 text-xs text-muted-foreground">Yazdır / PDF ile tarayıcınızın yazdırma penceresi açılır; başlık, kâğıt ve yön ayarları çıktıya uygulanır.</p>
     </section>
 
     <section className="mt-4 rounded-2xl border bg-card p-4 print:border-0 print:p-0">
-      <div className="mb-4 hidden print:block"><h1 className="text-xl font-bold">{title}</h1><p className="text-sm">{year?.title ?? ""}</p></div>
-      {kind === "schedule" ? <div className="overflow-x-auto"><table className="w-full min-w-[850px] text-sm"><thead><tr className="border-b bg-muted/40"><th className="p-2 text-left">Gün</th><th className="p-2 text-left">Saat</th><th className="p-2 text-left">Öğretmen</th><th className="p-2 text-left">Sınıf</th><th className="p-2 text-left">Ders</th><th className="p-2 text-left">Derslik</th></tr></thead><tbody>{flatRows.map((r, i) => <tr key={`${r.Gün}-${r.Saat}-${r.Öğretmen}-${i}`} className="border-b"><td className="p-2">{r.Gün}</td><td className="p-2">{r.Saat}</td><td className="p-2">{r.Öğretmen}</td><td className="p-2">{r.Sınıf}</td><td className="p-2">{r.Ders}</td><td className="p-2">{r.Derslik}</td></tr>)}</tbody></table></div> : null}
+      <div className="mb-4 hidden print:block"><h1 className="text-xl font-bold">{outputTitle}</h1><p className="text-sm">{outputSubtitle}</p></div>
+      {kind === "schedule" ? <div className="overflow-x-auto"><table className="okulos-report-table w-full min-w-[850px] text-sm"><thead><tr className="border-b bg-muted/40"><th className="p-2 text-left">Gün</th><th className="p-2 text-left">Saat</th><th className="p-2 text-left">Öğretmen</th><th className="p-2 text-left">Sınıf</th><th className="p-2 text-left">Ders</th><th className="p-2 text-left">Derslik</th></tr></thead><tbody>{flatRows.map((r, i) => <tr key={`${r.Gün}-${r.Saat}-${r.Öğretmen}-${i}`} className="border-b"><td className="p-2">{r.Gün}</td><td className="p-2">{r.Saat}</td><td className="p-2">{r.Öğretmen}</td><td className="p-2">{r.Sınıf}</td><td className="p-2">{r.Ders}</td><td className="p-2">{r.Derslik}</td></tr>)}</tbody></table></div> : null}
       {kind === "teacher" ? <SummaryTable headers={["Öğretmen", "Ders Saati", "Çalışma Günü", "Boşluk"]} rows={teacherSummary.map((x) => [x.teacher, x.lessons, x.days.size, x.gaps])}/> : null}
       {kind === "class" ? <SummaryTable headers={["Sınıf", "Ders Saati", "Ders Çeşidi", "Boşluk"]} rows={classSummary.map((x) => [x.name, x.lessons, x.subjects, x.gaps])}/> : null}
       {kind === "room" ? <SummaryTable headers={["Derslik", "Ders Saati", "Kullanım"]} rows={roomSummary.map((x) => [x.name, x.lessons, x.utilization === null ? "—" : `%${x.utilization}`])}/> : null}
