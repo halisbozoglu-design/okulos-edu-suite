@@ -1,7 +1,8 @@
 export type ParsedConstraint={type:string;severity:"hard"|"soft"|"info";params:Record<string,unknown>;sourceText:string};
 export type ParsedCourseRow={courseName:string;courseCode?:string|undefined;shortName?:string|undefined;gradeLevel:number;category:string;hourOptions:number[];maxSelections:number;repeatAcrossYears:boolean;electiveGroupKey?:string|undefined;sourceNote?:string|undefined;sourcePage?:number|undefined;sourceSection?:string|undefined;parserConfidence:number;needsReview:boolean;parsedConstraints:ParsedConstraint[]};
 export type ParsedProfile={academicYear:string;schoolType:string;schoolSubtype?:string|undefined;programType?:string|undefined;fieldName?:string|undefined;branchName?:string|undefined;gradeLevel:number;requiredCourseCount:number;requiredHourTotal:number;electiveCourseMin:number;electiveCourseMax?:number|undefined;electiveHourMin:number;electiveHourMax:number;totalHourMin:number;totalHourMax:number;totalHourTarget?:number|undefined;groupRules:ParsedConstraint[];sourceDecisionNo?:string|undefined;sourceDecisionDate?:string|undefined;sourceNote?:string|undefined};
-export type OfficialPdfEvidence={parser_version:"okulos-official-pdf-evidence-v1";source_hash:string;source_file_name:string;page_count:number;extracted_text_characters:number;extracted_text_hash:string;decision_no?:string;decision_date?:string;academic_year?:string;extraction_status:"TEXT_EXTRACTED"};
+export type ParsedCourseCandidate={course_name:string;hour_options:number[];source_text:string;confidence:number;needs_review:boolean};
+export type OfficialPdfEvidence={parser_version:"okulos-official-pdf-evidence-v1";source_hash:string;source_file_name:string;page_count:number;extracted_text_characters:number;extracted_text_hash:string;course_candidates:ParsedCourseCandidate[];decision_no?:string;decision_date?:string;academic_year?:string;extraction_status:"TEXT_EXTRACTED"};
 
 const tr=(s:string)=>s.replace(/\s+/g," ").trim();
 export function parseSelectionLimit(rawName:string){const name=tr(rawName);const m=name.match(/\s+\((\d+)\)\s*$/);return m?{name:name.slice(0,m.index).trim(),maxSelections:Number(m[1])}:{name,maxSelections:1};}
@@ -11,6 +12,9 @@ export function extractDecisionMeta(text:string){const t=text.replace(/\r/g,"");
 
 function hex(bytes:ArrayBuffer){return Array.from(new Uint8Array(bytes)).map(b=>b.toString(16).padStart(2,"0")).join("");}
 async function sha256(bytes:ArrayBuffer){if(!globalThis.crypto?.subtle)throw new Error("PDF_HASH_UNAVAILABLE");return hex(await globalThis.crypto.subtle.digest("SHA-256",bytes));}
+
+/** Conservative table-row candidate extraction. It never writes curriculum data. */
+export function extractCourseCandidatesFromText(text:string):ParsedCourseCandidate[]{const out:ParsedCourseCandidate[]=[];const seen=new Set<string>();for(const raw of text.split(/\r?\n/)){const line=tr(raw);const match=line.match(/^(?:\d+[.)-]\s*)?([\p{L}][\p{L}\s,.'’()\-]{2,}?)\s{2,}(\d{1,2}(?:\s*[/,]\s*\d{1,2})*)$/u);if(!match)continue;const name=tr(match[1]??"");const hours=parseHourOptions(match[2]??"");if(!hours.length||/^(ders|sınıf|toplam|saat|açıklama|çizelge)/i.test(name))continue;const key=`${name.toLocaleLowerCase("tr-TR")}:${hours.join(",")}`;if(seen.has(key))continue;seen.add(key);out.push({course_name:name,hour_options:hours,source_text:line,confidence:.72,needs_review:true});}return out;}
 
 /** Extracts verifiable local PDF evidence without uploading the source file. */
 export async function parseOfficialPdfEvidence(file:File):Promise<OfficialPdfEvidence>{
@@ -22,13 +26,13 @@ export async function parseOfficialPdfEvidence(file:File):Promise<OfficialPdfEvi
  for(let pageNo=1;pageNo<=pdf.numPages;pageNo++){
   const page=await pdf.getPage(pageNo);
   const content=await page.getTextContent();
-  const pageText=(content.items as Array<{str?:string}>).map(item=>item.str??"").join(" ");
+  const pageText=(content.items as Array<{str?:string;hasEOL?:boolean}>).map(item=>`${item.str??""}${item.hasEOL?"\n":" "}`).join("");
   if(pageText.trim())pages.push(pageText);
  }
  const text=tr(pages.join("\n"));
  if(!text)throw new Error("OFFICIAL_PDF_TEXT_NOT_EXTRACTABLE");
  const meta=extractDecisionMeta(text);
- return{parser_version:"okulos-official-pdf-evidence-v1",source_hash:await sha256(bytes),source_file_name:file.name,page_count:pdf.numPages,extracted_text_characters:text.length,extracted_text_hash:await sha256(new TextEncoder().encode(text).buffer),decision_no:meta.decisionNo,decision_date:meta.decisionDate,academic_year:meta.academicYear,extraction_status:"TEXT_EXTRACTED"};
+ return{parser_version:"okulos-official-pdf-evidence-v1",source_hash:await sha256(bytes),source_file_name:file.name,page_count:pdf.numPages,extracted_text_characters:text.length,extracted_text_hash:await sha256(new TextEncoder().encode(text).buffer),course_candidates:extractCourseCandidatesFromText(text),decision_no:meta.decisionNo,decision_date:meta.decisionDate,academic_year:meta.academicYear,extraction_status:"TEXT_EXTRACTED"};
 }
 
 export function parseExplanationConstraints(text:string):ParsedConstraint[]{const out:ParsedConstraint[]=[];const sentences=text.split(/(?<=[.!?])\s+/).map(tr).filter(Boolean);for(const s of sentences){const low=s.toLocaleLowerCase("tr-TR");
