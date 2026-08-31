@@ -51,6 +51,7 @@ type FlatRow = {
   Derslik: string;
   Kilitli: string;
 };
+type AssignmentException={course_name:string;class_name:string;reason:string;valid_from:string;valid_until:string|null;is_current:boolean};
 
 const dayName: Record<number, string> = { 1: "Pazartesi", 2: "Salı", 3: "Çarşamba", 4: "Perşembe", 5: "Cuma", 6: "Cumartesi", 7: "Pazar" };
 const safeName = (value: string) => value.replace(/[\\/:*?"<>|]+/g, "-").replace(/\s+/g, " ").trim();
@@ -74,6 +75,7 @@ function ScheduleReports() {
   const { can, loading: permissionLoading } = usePermissions();
   const [assignments, setAssignments] = useState<AssignmentOption[]>([]);
   const [rows, setRows] = useState<ScheduleRow[]>([]);
+  const [exceptions, setExceptions] = useState<AssignmentException[]>([]);
   const [profile, setProfile] = useState<TimeProfile>({ teaching_days: [1, 2, 3, 4, 5], periods_per_day: 8 });
   const [year, setYear] = useState<ActiveYear>(null);
   const [kind, setKind] = useState<ReportKind>("schedule");
@@ -91,11 +93,12 @@ function ScheduleReports() {
   const load = useCallback(async () => {
     setBusy(true);
     setError(null);
-    const [a, s, p, y] = await Promise.all([
+    const [a, s, p, y, e] = await Promise.all([
       supabase.from("schedule_assignment_options").select("teacher_assignment_id,teacher_id,teacher_name,class_id,class_name,composite_key,course_name").order("teacher_name"),
       supabase.from("teacher_schedule").select("id,teacher_id,class_id,weekday,period,class_name,subject,classroom_id,classroom,locked,teacher_assignment_id").eq("active", true).order("weekday").order("period"),
       supabase.rpc("get_active_schedule_time_profile"),
       supabase.from("academic_years").select("code,title").eq("active", true).maybeSingle(),
+      supabase.rpc("get_teacher_course_assignment_exceptions_v2" as never),
     ]);
     setBusy(false);
     if (a.error || s.error) {
@@ -106,6 +109,7 @@ function ScheduleReports() {
     setRows((s.data ?? []) as ScheduleRow[]);
     if (!p.error && p.data) setProfile(p.data as TimeProfile);
     if (!y.error) setYear((y.data ?? null) as ActiveYear);
+    setExceptions((e.data ?? []) as AssignmentException[]);
   }, []);
 
   useEffect(() => {
@@ -202,6 +206,7 @@ function ScheduleReports() {
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(classSummary.map((x) => ({ Sınıf: x.name, "Ders Saati": x.lessons, "Ders Çeşidi": x.subjects, Boşluk: x.gaps }))), "Sınıf");
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(roomSummary.map((x) => ({ Derslik: x.name, "Ders Saati": x.lessons, "Kullanım %": x.utilization ?? "—" }))), "Derslik");
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(subjectSummary.map((x) => ({ Ders: x.name, "Ders Saati": x.lessons, Öğretmen: x.teachers, Sınıf: x.classes }))), "Ders");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(exceptions.map((x) => ({ Ders: x.course_name, Sınıf: x.class_name, Gerekçe: x.reason, Başlangıç: x.valid_from, Bitiş: x.valid_until ?? "—", Durum: x.is_current ? "Geçerli" : "Geçersiz" }))), "İstisnai Atamalar");
     XLSX.writeFile(wb, `${safeName(title)}.xlsx`);
   }
 
