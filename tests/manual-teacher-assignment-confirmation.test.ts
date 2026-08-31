@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 
 const migration = await Bun.file("supabase/migrations/20260831010900_manual_teacher_assignment_confirmation.sql").text();
+const cloneMigration = await Bun.file("supabase/migrations/20260831011000_preserve_manual_teacher_assignment_on_curriculum_clone.sql").text();
 const curriculum = await Bun.file("src/routes/curriculum.tsx").text();
 
 test("manual teacher assignment needs confirmation but no reason or validity range", () => {
@@ -9,6 +10,12 @@ test("manual teacher assignment needs confirmation but no reason or validity ran
   expect(migration).toContain("MANUAL_ASSIGNMENT_CONFIRMATION_REQUIRED");
   expect(migration).not.toContain("p_exception_reason");
   expect(migration).not.toContain("p_exception_valid_from");
+});
+
+test("copying a curriculum preserves a previously confirmed manual assignment", () => {
+  expect(cloneMigration).toContain("is_manual_override");
+  expect(cloneMigration).not.toContain("exception_reason");
+  expect(cloneMigration).not.toContain("exception_valid_from");
 });
 
 test("curriculum UI only asks the user to confirm the warning", () => {
