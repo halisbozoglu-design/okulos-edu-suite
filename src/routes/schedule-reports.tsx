@@ -87,6 +87,10 @@ function ScheduleReports() {
   const [printSubtitle, setPrintSubtitle] = useState("");
   const [paperSize, setPaperSize] = useState("A4");
   const [orientation, setOrientation] = useState<"portrait" | "landscape">("landscape");
+  const [printMargin, setPrintMargin] = useState("10mm");
+  const [signatoryName, setSignatoryName] = useState("");
+  const [signatoryRole, setSignatoryRole] = useState("Okul Müdürü");
+  const [showGeneratedAt, setShowGeneratedAt] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -191,7 +195,7 @@ function ScheduleReports() {
   const title = `Ders Programı Raporu${year?.code ? ` · ${year.code}` : ""}`;
   const outputTitle = printTitle.trim() || title;
   const outputSubtitle = printSubtitle.trim() || year?.title || "";
-  const printCss = `@media print { @page { size: ${paperSize} ${orientation}; margin: 10mm; } .okulos-report-table { font-size: 9pt; } }`;
+  const printCss = `@media print { @page { size: ${paperSize} ${orientation}; margin: ${printMargin}; } .okulos-report-table { font-size: 9pt; } }`;
 
   function exportCsv() {
     const headers = Object.keys(flatRows[0] ?? { Gün: "", Saat: "", Öğretmen: "", Sınıf: "", Ders: "", Derslik: "", Kilitli: "" });
@@ -247,24 +251,31 @@ function ScheduleReports() {
         <select value={subjectFilter} onChange={(e) => setSubjectFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm dersler</option>{subjects.map((x) => <option key={x}>{x}</option>)}</select>
         <select value={roomFilter} onChange={(e) => setRoomFilter(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm"><option value="">Tüm derslikler</option>{rooms.map((x) => <option key={x}>{x}</option>)}</select>
       </div>
-      <div className="mt-3 grid gap-2 border-t pt-3 md:grid-cols-[1fr_1fr_120px_150px]">
+      <div className="mt-3 grid gap-2 border-t pt-3 md:grid-cols-[1fr_1fr_120px_150px_120px]">
         <Input value={printTitle} onChange={(e) => setPrintTitle(e.target.value)} placeholder={title} aria-label="Çıktı başlığı" />
         <Input value={printSubtitle} onChange={(e) => setPrintSubtitle(e.target.value)} placeholder={year?.title ?? "Alt açıklama"} aria-label="Çıktı alt açıklaması" />
         <select value={paperSize} onChange={(e) => setPaperSize(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm" aria-label="Kağıt boyutu"><option>A4</option><option>A3</option><option>Letter</option></select>
         <select value={orientation} onChange={(e) => setOrientation(e.target.value as "portrait" | "landscape")} className="h-10 rounded-md border bg-background px-3 text-sm" aria-label="Sayfa yönü"><option value="landscape">Yatay</option><option value="portrait">Dikey</option></select>
+        <select value={printMargin} onChange={(e) => setPrintMargin(e.target.value)} className="h-10 rounded-md border bg-background px-3 text-sm" aria-label="Kenar boşluğu"><option value="7mm">Dar boşluk</option><option value="10mm">Normal boşluk</option><option value="15mm">Geniş boşluk</option></select>
       </div>
-      <p className="mt-2 text-xs text-muted-foreground">Yazdır / PDF ile tarayıcınızın yazdırma penceresi açılır; başlık, kâğıt ve yön ayarları çıktıya uygulanır.</p>
+      <div className="mt-2 grid gap-2 md:grid-cols-[1fr_1fr_auto]">
+        <Input value={signatoryName} onChange={(e) => setSignatoryName(e.target.value)} placeholder="İmza sahibi adı (isteğe bağlı)" aria-label="İmza sahibi adı" />
+        <Input value={signatoryRole} onChange={(e) => setSignatoryRole(e.target.value)} placeholder="Görev / unvan" aria-label="İmza sahibi görevi" />
+        <label className="flex h-10 items-center gap-2 rounded-md border px-3 text-sm"><input type="checkbox" checked={showGeneratedAt} onChange={(e) => setShowGeneratedAt(e.target.checked)} />Üretim tarihi</label>
+      </div>
+      <p className="mt-2 text-xs text-muted-foreground">Yazdır / PDF ile tarayıcınızın yazdırma penceresi açılır; başlık, kâğıt, yön, boşluk ve imza ayarları çıktıya uygulanır.</p>
       <p className="mt-1 text-xs text-muted-foreground">e‑Okul aktarım paketi yalnız ders programı verisini içerir; parola, oturum veya çerez içermez. Kullanıcının kendi e‑Okul ekranında çalışacak tarayıcı aktarım aracının girdisidir.</p>
     </section>
 
     <section className="mt-4 rounded-2xl border bg-card p-4 print:border-0 print:p-0">
-      <div className="mb-4 hidden print:block"><h1 className="text-xl font-bold">{outputTitle}</h1><p className="text-sm">{outputSubtitle}</p></div>
+      <div className="mb-4 hidden print:block"><h1 className="text-xl font-bold">{outputTitle}</h1><p className="text-sm">{outputSubtitle}</p>{showGeneratedAt ? <p className="mt-1 text-xs">Oluşturulma: {new Date().toLocaleString("tr-TR")}</p> : null}</div>
       {kind === "schedule" ? <div className="overflow-x-auto"><table className="okulos-report-table w-full min-w-[850px] text-sm"><thead><tr className="border-b bg-muted/40"><th className="p-2 text-left">Gün</th><th className="p-2 text-left">Saat</th><th className="p-2 text-left">Öğretmen</th><th className="p-2 text-left">Sınıf</th><th className="p-2 text-left">Ders</th><th className="p-2 text-left">Derslik</th></tr></thead><tbody>{flatRows.map((r, i) => <tr key={`${r.Gün}-${r.Saat}-${r.Öğretmen}-${i}`} className="border-b"><td className="p-2">{r.Gün}</td><td className="p-2">{r.Saat}</td><td className="p-2">{r.Öğretmen}</td><td className="p-2">{r.Sınıf}</td><td className="p-2">{r.Ders}</td><td className="p-2">{r.Derslik}</td></tr>)}</tbody></table></div> : null}
       {kind === "teacher" ? <SummaryTable headers={["Öğretmen", "Ders Saati", "Çalışma Günü", "Boşluk"]} rows={teacherSummary.map((x) => [x.teacher, x.lessons, x.days.size, x.gaps])}/> : null}
       {kind === "class" ? <SummaryTable headers={["Sınıf", "Ders Saati", "Ders Çeşidi", "Boşluk"]} rows={classSummary.map((x) => [x.name, x.lessons, x.subjects, x.gaps])}/> : null}
       {kind === "room" ? <SummaryTable headers={["Derslik", "Ders Saati", "Kullanım"]} rows={roomSummary.map((x) => [x.name, x.lessons, x.utilization === null ? "—" : `%${x.utilization}`])}/> : null}
       {kind === "subject" ? <SummaryTable headers={["Ders / Branş", "Ders Saati", "Öğretmen", "Sınıf"]} rows={subjectSummary.map((x) => [x.name, x.lessons, x.teachers, x.classes])}/> : null}
       {!filtered.length ? <div className="p-8 text-center text-sm text-muted-foreground">Seçili filtrelerde program satırı bulunamadı.</div> : null}
+      {(signatoryName.trim() || signatoryRole.trim()) ? <div className="mt-12 hidden justify-end print:flex"><div className="min-w-56 text-center text-sm"><div className="h-12"/>{signatoryName.trim() ? <p className="font-semibold">{signatoryName.trim()}</p> : null}{signatoryRole.trim() ? <p>{signatoryRole.trim()}</p> : null}</div></div> : null}
     </section>
   </AppShell>;
 }
