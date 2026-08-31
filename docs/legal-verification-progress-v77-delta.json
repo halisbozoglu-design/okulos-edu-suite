@@ -1,0 +1,18 @@
+{
+  "batch": "V77",
+  "date": "2026-08-31",
+  "master_workflows": 2229,
+  "support_atoms": 410,
+  "atom_pool_before": 19225,
+  "atom_pool_after": 19635,
+  "article_verified_before": 475,
+  "promotions": 0,
+  "rollbacks": 9,
+  "article_verified_after": 466,
+  "ratio_percent": 20.9062,
+  "remaining_exact": 1763,
+  "migration": 0,
+  "lovable_usage": 0,
+  "rollback_ids": ["HB-1681","HB-1682","HB-1683","HB-1684","HB-1685","HB-1686","HB-1687","HB-1688","HB-1689"],
+  "tenant_requirements": ["Sosyal Sorumluluk Kulübü"]
+}
