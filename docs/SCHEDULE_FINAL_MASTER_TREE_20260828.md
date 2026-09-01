@@ -2,6 +2,8 @@
 
 Tarih: 2026-08-28
 
+> 2026-09-01 canlı durum ve öncelik sınıflandırması: `docs/SCHEDULE_SYSTEM_GAP_AUDIT_20260901.md`. Bu eski ağaçtaki işaretlenmemiş kutuların tamamı eşit öncelikli değildir; güncel GAP ve release blokajları canlı denetim belgesinden izlenir.
+
 Bu dosya ders programı geliştirmesinin tek takip ağacıdır. Bundan sonra yeni yan plan açılmaz; her işlem bu ağaçtaki bir düğümü `🟡 -> ✅` yaparak ilerler.
 
 Durumlar:
