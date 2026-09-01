@@ -33,7 +33,7 @@ export async function parseOfficialPdfEvidence(file:File):Promise<OfficialPdfEvi
  const text=tr(rawText);
  if(!text)throw new Error("OFFICIAL_PDF_TEXT_NOT_EXTRACTABLE");
  const meta=extractDecisionMeta(text);
- return{parser_version:"okulos-official-pdf-evidence-v1",source_hash:await sha256(bytes),source_file_name:file.name,page_count:pdf.numPages,extracted_text_characters:rawText.length,extracted_text_hash:await sha256(new TextEncoder().encode(rawText).buffer),course_candidates:extractCourseCandidatesFromText(rawText),decision_no:meta.decisionNo,decision_date:meta.decisionDate,academic_year:meta.academicYear,extraction_status:"TEXT_EXTRACTED"};
+ return{parser_version:"okulos-official-pdf-evidence-v1",source_hash:await sha256(bytes),source_file_name:file.name,page_count:pdf.numPages,extracted_text_characters:rawText.length,extracted_text_hash:await sha256(new TextEncoder().encode(rawText).buffer),course_candidates:extractCourseCandidatesFromText(rawText),...(meta.decisionNo?{decision_no:meta.decisionNo}:{}),...(meta.decisionDate?{decision_date:meta.decisionDate}:{}),...(meta.academicYear?{academic_year:meta.academicYear}:{}),extraction_status:"TEXT_EXTRACTED"};
 }
 
 export function parseExplanationConstraints(text:string):ParsedConstraint[]{const out:ParsedConstraint[]=[];const sentences=text.split(/(?<=[.!?])\s+/).map(tr).filter(Boolean);for(const s of sentences){const low=s.toLocaleLowerCase("tr-TR");
