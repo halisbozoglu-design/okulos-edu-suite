@@ -32,4 +32,12 @@ describe("substitution additional-teacher resources", () => {
       "revoke all on function public.get_schedule_daily_teacher_resources_v1(date) from public,anon,authenticated",
     );
   });
+
+  test("replaces assignment resources atomically through the manager RPC", () => {
+    expect(migration).toContain("set_schedule_assignment_additional_teachers_v1");
+    expect(migration).toContain("delete from public.schedule_assignment_additional_teachers");
+    expect(migration).toContain("insert into public.schedule_assignment_additional_teachers");
+    expect(migration).toContain("DUPLICATE_ADDITIONAL_TEACHER_RESOURCE");
+    expect(migration).toContain("if not public.is_manager_or_admin()");
+  });
 });

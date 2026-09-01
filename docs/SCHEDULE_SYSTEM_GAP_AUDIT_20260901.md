@@ -20,7 +20,7 @@ Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-c
 | Branş dışı manuel öğretmen ataması | DIRECT | Yalnız uyarı + açık onay; gerekçe/tarih/süre yok; diğer HARD kurallar korunuyor |
 | Özel eğitim çizelgeleme kaynakları | DIRECT | Nötr bireysel destek katılımı, gerekli oda yetenekleri, öğrenci zaman çakışması |
 | Çok haftalı zil çizelgesi | DIRECT | Tek/çift hafta, dönem ve tarih aralığına göre gerçek saat çözümü |
-| Yardımcı/eş öğretmen çekirdeği | DIRECT | DB ve iki local solver çekirdeğinde gerçek öğretmen kaynağı; çakışma/uygunsuzluk/yük HARD |
+| Yardımcı/eş öğretmen tüm yolları | DIRECT | Atomik yönetim UI'si, ana program, filtre, rapor/CSV/Excel/PDF/e-Okul ve substitution; DB ile iki local solver çekirdeğinde gerçek HARD öğretmen kaynağı |
 | MTAL / MESEM / İmam Hatip / ilkokul-ortaokul corpus | DIRECT | Ayrı test ve benchmark kanıtları |
 | Gözetim/nöbet solver çekirdeği | UYGULANMIŞ | HARD ders doluluğu, aynı-slot, uygunluk ve azami yük testleri mevcut; ürün entegrasyon auditi açık |
 
@@ -45,7 +45,6 @@ Coverage manifestinde şu anda yalnız iki satır açık GAP'tir:
 |---|---|---|---|
 | P0.1 | Joint timetable-sectioning optimization | Two-phase var; joint optimizer yok | Manifest DIRECT + extreme corpus |
 | P0.2 | Virtual/composite shared room | Pool var; atomik çoklu oda kaynağı yok | DB + solver + validator + UI + corpus |
-| P0.3 | Yardımcı/eş öğretmen tüm UI yolları | Kaynak/solver DIRECT; ana program, rapor, import/export ve substitution görünürlüğü bütünsel kanıtlanmadı | Tüm okuma/yazma yolları audit + test |
 | P0.4 | Gözetim/nöbet ürün entegrasyon auditi | Ayrı solver/test var | Canlı ders doluluğu girişi, persist/preview/report ve E2E |
 | P0.5 | Son canonical şema-diff auditi | Model geniş; kullanılmayan/duplicate alanların sıfır olduğu kanıtlanmadı | Otomatik schema/reference raporu |
 | P0.6 | Birleşik edge-case suite | Güçlü ayrı corpus'lar var | Sectioning + composite room + co-teacher + multi-week birlikte stress |
@@ -148,6 +147,6 @@ Eski master tree'de 99 adet işaretlenmemiş kutu vardır. Bu, 99 bağımsız ç
 Bugünkü en net özet:
 
 - Coverage manifestinde **2 gerçek GAP**.
-- Web/Cloud release yolunda **8 P0 kapanış işi**.
+- Web/Cloud release yolunda **7 açık P0 kapanış işi**; P0.3 yardımcı/eş öğretmen tüm yolları 2026-09-02'de kapandı.
 - Windows'ta **9**, macOS'ta **11** açık hedef.
 - Self-host geçişi mevcut Lovable Cloud kullanımı için **gelecek hedef**.

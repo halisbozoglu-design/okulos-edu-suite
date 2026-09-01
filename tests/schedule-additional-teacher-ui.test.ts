@@ -11,6 +11,10 @@ describe("assistant/co-teacher user-facing paths", () => {
     expect(schedule).toContain("assignmentTeacherIds(option).includes(teacherFilter)");
     expect(schedule).toContain("assignmentTeacherText(optionMap[r.teacher_assignment_id??\"\"])");
     expect(schedule).toContain("Yardımcı/eş:");
+    expect(schedule).toContain("get_schedule_assignment_additional_teachers_v1");
+    expect(schedule).toContain("set_schedule_assignment_additional_teachers_v1");
+    expect(schedule).toContain("Yardımcı/eş öğretmenleri yönet");
+    expect(schedule).toContain("resource_role:x.resourceRole");
   });
 
   test("reports, CSV, Excel, print and e-Okul retain additional teachers", () => {

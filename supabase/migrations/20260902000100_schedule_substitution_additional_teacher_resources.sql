@@ -206,9 +206,66 @@ begin
   end loop;
 end $$;
 
+create or replace function public.get_schedule_assignment_additional_teachers_v1()
+returns table(teacher_assignment_id uuid,teacher_id uuid,resource_role text)
+language sql stable security definer set search_path=public as $$
+  select x.teacher_assignment_id,x.teacher_id,x.resource_role
+  from public.schedule_assignment_additional_teachers x
+  where public.tenant_row_allowed(x.institution_code)
+  order by x.teacher_assignment_id,x.teacher_id
+$$;
+
+create or replace function public.set_schedule_assignment_additional_teachers_v1(
+  p_teacher_assignment_id uuid,p_teacher_resources jsonb default '[]'::jsonb
+)
+returns jsonb language plpgsql security definer set search_path=public as $$
+declare v_tenant text;v_primary uuid;v_count integer;
+begin
+  if not public.is_manager_or_admin() then raise exception 'NOT_AUTHORIZED';end if;
+  if jsonb_typeof(coalesce(p_teacher_resources,'[]'::jsonb))<>'array' then
+    raise exception 'TEACHER_RESOURCES_MUST_BE_ARRAY';
+  end if;
+  select a.institution_code,a.teacher_id into v_tenant,v_primary
+  from public.teacher_course_assignments a
+  where a.id=p_teacher_assignment_id and public.tenant_row_allowed(a.institution_code);
+  if v_tenant is null then raise exception 'TEACHER_ASSIGNMENT_NOT_FOUND';end if;
+  if exists(
+    select 1 from jsonb_array_elements(coalesce(p_teacher_resources,'[]'::jsonb)) r
+    where nullif(r->>'teacher_id','')::uuid=v_primary
+       or upper(coalesce(r->>'resource_role','')) not in('ASSISTANT','CO_TEACHER')
+       or not exists(
+         select 1 from public.profiles p
+         where p.user_id=nullif(r->>'teacher_id','')::uuid and p.role='teacher'
+           and p.institution_code=v_tenant
+       )
+  ) then raise exception 'INVALID_ADDITIONAL_TEACHER_RESOURCE';end if;
+  if (
+    select count(*) from jsonb_array_elements(coalesce(p_teacher_resources,'[]'::jsonb))
+  )<>(
+    select count(distinct nullif(r->>'teacher_id','')::uuid)
+    from jsonb_array_elements(coalesce(p_teacher_resources,'[]'::jsonb)) r
+  ) then raise exception 'DUPLICATE_ADDITIONAL_TEACHER_RESOURCE';end if;
+
+  delete from public.schedule_assignment_additional_teachers x
+  where x.institution_code=v_tenant and x.teacher_assignment_id=p_teacher_assignment_id;
+
+  insert into public.schedule_assignment_additional_teachers(
+    institution_code,teacher_assignment_id,teacher_id,resource_role,created_by
+  )
+  select v_tenant,p_teacher_assignment_id,(r->>'teacher_id')::uuid,
+    upper(r->>'resource_role'),auth.uid()
+  from jsonb_array_elements(coalesce(p_teacher_resources,'[]'::jsonb)) r;
+  get diagnostics v_count=row_count;
+  return jsonb_build_object('teacher_assignment_id',p_teacher_assignment_id,'resources',v_count);
+end $$;
+
 revoke all on function public.get_schedule_daily_teacher_resources_v1(date) from public,anon,authenticated;
+revoke all on function public.get_schedule_assignment_additional_teachers_v1() from public,anon;
+revoke all on function public.set_schedule_assignment_additional_teachers_v1(uuid,jsonb) from public,anon;
 revoke all on function public.get_substitution_transfer_issues_v1(uuid,date,smallint,uuid) from public,anon;
 revoke all on function public.get_substitute_candidates_v4(uuid) from public,anon;
 revoke all on function public.assert_schedule_daily_overlay_hard_v1(date) from public,anon,authenticated;
 grant execute on function public.get_substitution_transfer_issues_v1(uuid,date,smallint,uuid) to authenticated;
 grant execute on function public.get_substitute_candidates_v4(uuid) to authenticated;
+grant execute on function public.get_schedule_assignment_additional_teachers_v1() to authenticated;
+grant execute on function public.set_schedule_assignment_additional_teachers_v1(uuid,jsonb) to authenticated;
