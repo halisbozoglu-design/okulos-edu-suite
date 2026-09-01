@@ -23,7 +23,7 @@
     {"id":"ROOM_BUILDING","status":"DIRECT","evidence":["tests/schedule-room-building-extreme-corpus.test.ts"]},
     {"id":"VOCATIONAL_ENTERPRISE_COORDINATION","status":"DIRECT","evidence":["tests/schedule-vocational-max-complex-corpus.test.ts"]},
     {"id":"SECTIONING_JOINT_OPTIMIZATION","status":"GAP","evidence":["tests/schedule-student-sectioning-v2.test.ts"]},
-    {"id":"MULTI_WEEK_BELL_SCHEDULE","status":"GAP","evidence":[]},
+    {"id":"MULTI_WEEK_BELL_SCHEDULE","status":"DIRECT","evidence":["supabase/migrations/20260901000400_multi_week_bell_schedule.sql","tests/schedule-time-model.test.ts","tests/schedule-multi-week-bell-clock.test.ts"],"note":"Canonical period identity stays stable while real bell clocks resolve by odd/even week, term and bounded date; ambiguous equal-priority clock scopes are HARD rejected and date-aware physical overlap is exposed."},
     {"id":"ASSISTANT_CO_TEACHER","status":"GAP","evidence":[]},
     {"id":"VIRTUAL_COMPOSITE_SHARED_ROOM","status":"GAP","evidence":[]}
   ]
