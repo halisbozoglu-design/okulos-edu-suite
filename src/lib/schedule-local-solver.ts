@@ -11,7 +11,7 @@ type Candidate=LocalCandidate;
 
 async function problem() {
   const [a, l, u, t, c, p, rel, sw, tm] = await Promise.all([
-    supabase.from("schedule_assignment_options").select("teacher_assignment_id,teacher_id,class_id,course_id,assigned_hours"),
+    supabase.from("schedule_assignment_options").select("teacher_assignment_id,teacher_id,additional_teacher_ids,class_id,course_id,assigned_hours"),
     supabase.from("teacher_schedule").select("teacher_assignment_id,teacher_id,class_id,weekday,period,classroom_id,subgroup_id,schedule_session_id,locked").eq("active", true).eq("locked", true),
     supabase.from("teacher_unavailability").select("teacher_id,weekday,period,schedule_session_id").eq("active", true),
     supabase.from("teacher_schedule_constraints").select("teacher_id,max_daily_hours,max_consecutive_hours"),
@@ -26,7 +26,7 @@ async function problem() {
   const time = new Map((tm.data ?? []).map((x: any) => [String(x.assignment_id), x]));
   return {
     days: prof.teaching_days, periods: prof.periods_per_day,
-    assignments: (a.data ?? []).filter((x: any) => x.teacher_assignment_id).map((x: any) => { const m:any=time.get(String(x.teacher_assignment_id))??{}; return { assignment_id: String(x.teacher_assignment_id), teacher_id: String(x.teacher_id), class_id: String(x.class_id), course_id: String(x.course_id), assigned_hours: Number(x.assigned_hours), week_pattern:m.week_pattern??"ALL", valid_from:m.valid_from??null, valid_to:m.valid_to??null, term_no:m.term_no==null?null:Number(m.term_no), schedule_session_id:m.schedule_session_id?String(m.schedule_session_id):null, allowed_periods:Array.isArray(m.allowed_periods)?m.allowed_periods.map(Number):[] }; }),
+    assignments: (a.data ?? []).filter((x: any) => x.teacher_assignment_id).map((x: any) => { const m:any=time.get(String(x.teacher_assignment_id))??{}; return { assignment_id: String(x.teacher_assignment_id), teacher_id: String(x.teacher_id), additional_teacher_ids:Array.isArray(x.additional_teacher_ids)?x.additional_teacher_ids.map(String):[], class_id: String(x.class_id), course_id: String(x.course_id), assigned_hours: Number(x.assigned_hours), week_pattern:m.week_pattern??"ALL", valid_from:m.valid_from??null, valid_to:m.valid_to??null, term_no:m.term_no==null?null:Number(m.term_no), schedule_session_id:m.schedule_session_id?String(m.schedule_session_id):null, allowed_periods:Array.isArray(m.allowed_periods)?m.allowed_periods.map(Number):[] }; }),
     locked: (l.data ?? []).filter((x: any) => x.teacher_assignment_id).map((x: any) => ({ assignment_id: String(x.teacher_assignment_id), teacher_id: String(x.teacher_id), class_id: x.class_id ? String(x.class_id) : null, weekday: Number(x.weekday), period: Number(x.period), classroom_id: x.classroom_id ? String(x.classroom_id) : null, subgroup_id: x.subgroup_id ? String(x.subgroup_id) : null, schedule_session_id:x.schedule_session_id?String(x.schedule_session_id):null, locked: true })),
     unavailable: (u.data??[]).map((x:any)=>({...x,weekday:Number(x.weekday),period:Number(x.period),schedule_session_id:x.schedule_session_id?String(x.schedule_session_id):null})), teacherConstraints: t.data ?? [],
     courseRules: (c.data ?? []).map((x: any) => ({ ...x, block_pattern: Array.isArray(x.block_pattern) ? x.block_pattern.map(Number) : null })),

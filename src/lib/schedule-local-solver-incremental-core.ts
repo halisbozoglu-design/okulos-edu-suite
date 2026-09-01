@@ -11,6 +11,8 @@ import {
 } from "@/lib/schedule-construction-heuristics";
 import {
   localScopesOverlap,
+  localAssignmentTeacherIds,
+  localAssignmentsShareTeacher,
   type LocalAssignment,
   type LocalCandidate,
   type LocalCourseRule,
@@ -99,7 +101,7 @@ const selector = (t: Task, s: PlanningSelector) =>
   (!s.activity_key || s.activity_key === t.activityKey) &&
   (!s.assignment_id || s.assignment_id === t.a.assignment_id) &&
   (!s.course_id || s.course_id === t.a.course_id) &&
-  (!s.teacher_id || s.teacher_id === t.a.teacher_id) &&
+  (!s.teacher_id || localAssignmentTeacherIds(t.a).includes(s.teacher_id)) &&
   (!s.class_id || s.class_id === t.a.class_id);
 const activitySelector = (a: PlanningActivity, s: PlanningSelector) =>
   (!s.activity_key || s.activity_key === a.activity_key) &&
@@ -213,20 +215,21 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
   const unavailable = (a: LocalAssignment, d: number, s: number) =>
     p.unavailable.some(
       (u) =>
-        u.teacher_id === a.teacher_id &&
+        localAssignmentTeacherIds(a).includes(u.teacher_id) &&
         u.weekday === d &&
         u.period === s &&
         (u.schedule_session_id == null || u.schedule_session_id === a.schedule_session_id),
     );
   const consecutive = (
     a: LocalAssignment,
+    teacherId: string,
     d: number,
     start: number,
     duration: number,
     max: number | null | undefined,
   ) => {
     if (!max) return true;
-    const ps = state.index.teacherPeriods(a, d);
+    const ps = state.index.teacherPeriodsFor(a, teacherId, d);
     for (let x = start; x < start + duration; x++) ps.add(x);
     let run = 0,
       best = 0;
@@ -311,7 +314,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
   const cells = (t: Task): Cell[] => {
     const a = t.a,
       r = rules.get(a.course_id),
-      c = cons.get(a.teacher_id),
+      teachers = localAssignmentTeacherIds(a),
       out: Cell[] = [],
       // Only tasks selected by a HARD relation can be affected by it.  Avoid
       // rebuilding the activity list and evaluating every relation for the
@@ -333,11 +336,14 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
             break;
           }
         if (bad) continue;
-        const td = state.index.teacherDay(a, d).length,
+        const teacherLoads = teachers.map((id) => state.index.teacherDayFor(a, id, d).length),
           cd = state.index.courseDay(a, d).length;
-        if (c?.max_daily_hours && td + t.duration > c.max_daily_hours) continue;
+        if (teachers.some((id, i) => {
+          const c = cons.get(id);
+          return Boolean(c?.max_daily_hours && teacherLoads[i]! + t.duration > c.max_daily_hours) ||
+            !consecutive(a, id, d, s, t.duration, c?.max_consecutive_hours);
+        })) continue;
         if (r?.max_per_day && cd + t.duration > r.max_per_day) continue;
-        if (!consecutive(a, d, s, t.duration, c?.max_consecutive_hours)) continue;
         const rcs = roomChoices(a, d, s, t.duration);
         if (!rcs.length) continue;
         for (const rc of rcs) {
@@ -358,7 +364,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
             s,
             classroom_id: rc.id,
             score:
-              td * 3 +
+              teacherLoads.reduce((n, v) => n + v, 0) * 3 +
               cd * 8 +
               Math.max(0, s + t.duration - 1 - 6) * 2 +
               (rel.medium + student) * 100 +
@@ -593,7 +599,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
           kind === "TEACHER_DAY"
             ? all.filter(
                 (g) =>
-                  g.a.teacher_id === seed.a.teacher_id &&
+                  localAssignmentsShareTeacher(g.a, seed.a) &&
                   g.rows[0]!.weekday === seed.rows[0]!.weekday,
               )
             : kind === "CLASS_DAY"
