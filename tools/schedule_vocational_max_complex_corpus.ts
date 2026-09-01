@@ -928,7 +928,11 @@ export async function runVocationalMaxCorpus(seedCount = manifest.seed_count): P
   };
 }
 
-export function assertVocationalMaxGate(r: Report, minSeeds = manifest.seed_count) {
+export function assertVocationalMaxGate(
+  r: Report,
+  minSeeds = manifest.seed_count,
+  enforceRuntimeBudget = true,
+) {
   if (
     r.seed_count < minSeeds ||
     r.results.length !== manifest.profiles.length ||
@@ -962,7 +966,7 @@ export function assertVocationalMaxGate(r: Report, minSeeds = manifest.seed_coun
       !x.general_culture_soft_preferences ||
       !x.atomic_blocks ||
       !x.deterministic_replay ||
-      !x.budget_pass
+      (enforceRuntimeBudget && !x.budget_pass)
     )
       throw new Error(`VOCATIONAL_MAX_CORPUS_GATE_FAILED:${x.profile_id}`);
 }
