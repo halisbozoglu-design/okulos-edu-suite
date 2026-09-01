@@ -1,5 +1,5 @@
 -- Apply the official Turkish course schedule to one class without overwriting
--- deliberate local work.  Elective choices remain an operator decision.
+-- deliberate local work. Elective choices remain an operator decision.
 create or replace function public.apply_official_curriculum_to_class_v2(
   p_class_id uuid,
   p_mode text default 'APPLY'
@@ -36,19 +36,12 @@ begin
     and c.institution_code = public.current_tenant_code()
     and c.active;
 
-  if not found then
-    raise exception 'CLASS_NOT_FOUND';
-  end if;
-
-  if v_mode not in ('PREVIEW', 'APPLY') then
-    raise exception 'INVALID_MODE';
-  end if;
+  if not found then raise exception 'CLASS_NOT_FOUND'; end if;
+  if v_mode not in ('PREVIEW', 'APPLY') then raise exception 'INVALID_MODE'; end if;
 
   v_year := v_class.academic_year_code;
   v_school_type := public.infer_school_type_for_class_v1(
-    v_class.grade_level,
-    v_class.program_type,
-    v_class.school_type
+    v_class.grade_level, v_class.program_type, v_class.school_type
   );
   v_field_name := v_class.field_name;
   v_branch_name := v_class.branch_name;
@@ -61,8 +54,7 @@ begin
     );
   end if;
 
-  select count(*)
-  into v_offerings
+  select count(*) into v_offerings
   from public.official_course_schedule_effective o
   where o.effective_academic_year = v_year
     and o.school_type = v_school_type
@@ -97,8 +89,7 @@ begin
     and (o.field_name is null or o.field_name = v_field_name)
     and (o.branch_name is null or o.branch_name = v_branch_name);
 
-  select count(*)
-  into v_preserved
+  select count(*) into v_preserved
   from public.class_course_requirements r
   join public.official_course_schedule_effective o on o.course_id = r.course_id
   where r.class_id = p_class_id
@@ -141,7 +132,6 @@ begin
     );
   end if;
 
-  -- Keep the reusable offering pool in sync, including elective alternatives.
   v_synced := public.sync_official_course_offerings_for_class_v1(p_class_id);
 
   insert into public.class_course_requirements(
@@ -175,8 +165,7 @@ begin
 
   if v_target is not null then
     update public.school_classes
-    set expected_weekly_hours = v_target,
-        updated_at = now()
+    set expected_weekly_hours = v_target, updated_at = now()
     where id = p_class_id
       and institution_code = public.current_tenant_code();
   end if;
@@ -198,116 +187,3 @@ $$;
 
 revoke all on function public.apply_official_curriculum_to_class_v2(uuid, text) from public;
 grant execute on function public.apply_official_curriculum_to_class_v2(uuid, text) to authenticated;
-
--- A copied justified exception is a new administrator action, so retain its
--- reason while recording the current actor and time.  Without these fields,
--- the TTKB guard correctly rejects the copy as an unexplained mismatch.
-create or replace function public.clone_class_curriculum(
-  p_source_class_id uuid,
-  p_target_class_id uuid,
-  p_copy_teachers boolean default false
-)
-returns integer
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-  v_count integer := 0;
-begin
-  perform public.open_permission_context('curriculum.manage');
-
-  if p_source_class_id = p_target_class_id then
-    raise exception 'SOURCE_AND_TARGET_MUST_DIFFER';
-  end if;
-
-  if not exists (
-    select 1 from public.school_classes
-    where id = p_source_class_id
-      and active
-      and institution_code = public.current_tenant_code()
-  ) or not exists (
-    select 1 from public.school_classes
-    where id = p_target_class_id
-      and active
-      and institution_code = public.current_tenant_code()
-  ) then
-    raise exception 'CLASS_NOT_FOUND';
-  end if;
-
-  insert into public.class_course_requirements(
-    class_id, course_id, weekly_hours, category, source_template_id, locked, note, updated_at
-  )
-  select p_target_class_id, course_id, weekly_hours, category, source_template_id, false, note, now()
-  from public.class_course_requirements
-  where class_id = p_source_class_id
-  on conflict (class_id, course_id) do update
-  set weekly_hours = excluded.weekly_hours,
-      category = excluded.category,
-      source_template_id = excluded.source_template_id,
-      note = excluded.note,
-      updated_at = now()
-  where not class_course_requirements.locked;
-  get diagnostics v_count = row_count;
-
-  update public.school_classes target
-  set expected_weekly_hours = source.expected_weekly_hours,
-      updated_at = now()
-  from public.school_classes source
-  where source.id = p_source_class_id
-    and target.id = p_target_class_id
-    and target.institution_code = public.current_tenant_code();
-
-  if p_copy_teachers then
-    insert into public.teacher_course_assignments(
-      class_course_requirement_id,
-      teacher_id,
-      assigned_hours,
-      assignment_group,
-      note,
-      created_by,
-      is_justified_exception,
-      exception_reason,
-      exception_permission_status,
-      exception_approved_by,
-      exception_approved_at,
-      updated_at
-    )
-    select
-      target_requirement.id,
-      assignment.teacher_id,
-      assignment.assigned_hours,
-      assignment.assignment_group,
-      assignment.note,
-      auth.uid(),
-      assignment.is_justified_exception,
-      assignment.exception_reason,
-      case when assignment.is_justified_exception then 'NOT_ALLOWED' else null end,
-      case when assignment.is_justified_exception then auth.uid() else null end,
-      case when assignment.is_justified_exception then now() else null end,
-      now()
-    from public.teacher_course_assignments assignment
-    join public.class_course_requirements source_requirement
-      on source_requirement.id = assignment.class_course_requirement_id
-      and source_requirement.class_id = p_source_class_id
-    join public.class_course_requirements target_requirement
-      on target_requirement.class_id = p_target_class_id
-      and target_requirement.course_id = source_requirement.course_id
-    on conflict (class_course_requirement_id, teacher_id, assignment_group) do update
-    set assigned_hours = excluded.assigned_hours,
-        note = excluded.note,
-        is_justified_exception = excluded.is_justified_exception,
-        exception_reason = excluded.exception_reason,
-        exception_permission_status = excluded.exception_permission_status,
-        exception_approved_by = excluded.exception_approved_by,
-        exception_approved_at = excluded.exception_approved_at,
-        updated_at = now();
-  end if;
-
-  perform public.refresh_class_curriculum_status(p_target_class_id);
-  return v_count;
-end;
-$$;
-
-revoke all on function public.clone_class_curriculum(uuid, uuid, boolean) from public;
-grant execute on function public.clone_class_curriculum(uuid, uuid, boolean) to authenticated;
