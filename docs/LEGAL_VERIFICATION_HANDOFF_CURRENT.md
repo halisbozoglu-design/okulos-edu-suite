@@ -14,25 +14,27 @@ ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `m
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **467 / 2.229 = %20,9511**
 - Kalan exact: **1.762**
-- Atom havuzu: **21.275**
-- Son batch: **V82**
-- Sonraki batch: **V83**
+- Atom havuzu: **21.685**
+- Son batch: **V83**
+- Sonraki batch: **V84**
 
-## V82 — 410 atom
-- Integrity: `docs/legal-student-operations-integrity-v82.md` — `7c75beab93670eb391116a23c28cd4c452250ce9`
-- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v82.md` — `13b7b04910ec20b24c9fe2195b2737d1ad7edbde`
-- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v82.md` — `7da4bbd17ea2b2a574dc5fea96672ec20b441e14`
-- Progress: `docs/legal-verification-progress-v82-delta.json` — `570099c2828f79679548931c4ff2a09f99f5ea4e`
-- Support atoms: **410**, pool **20.865 -> 21.275**.
+## V83 — 410 atom
+- Integrity: `docs/legal-student-operations-integrity-v83.md` — `c9f2f99c7de7d6df799c139aa0e81d2c3f3500e2`
+- Coverage: `docs/legal-article-verified-focused-deepening-batch-400plus-v83.md` — `2a13d68a2ec801ca3129fb7250042e8208d8f1c6`
+- ARTICLE_VERIFIED: `docs/legal-article-verified-batch-v83.md` — `dca451640d1826ce7b33a017ffde7e1dcd5356eb`
+- Progress: `docs/legal-verification-progress-v83-delta.json` — `abb8b48e2f5066ad1c6b448de75a37b640effa5d`
+- Support atoms: **410**, pool **21.275 -> 21.685**.
 - ARTICLE_VERIFIED: **467 -> 467**, delta **0**.
 
-### V82 findings
-- HB-1735+ student-operation boundary entered.
-- Repository code search did not provide sufficiently reliable exact master ID-title extraction for this boundary; canonical no-guess rule therefore blocked speculative promotions.
-- Student representative/class-president roles must be school-type exact; OÖKY/OÖİKY semantics cannot be merged under ALL without a common exact parent.
-- Attendance and leave are separate atoms; recipient/timing/notification channel are exactness fields.
-- Electronic student documents do not imply wet-signature, print or physical archive requirements unless current provision explicitly requires them.
-- Current open-education parent remains the 22.10.2024 Açık Öğretim Kurumları Yönetmeliği; repealed separate regulations are provenance only.
+### V83 findings
+- Exact canonical master ID/text was recovered for HB-1735..HB-1748 from File Library artifacts.
+- HB-1735..1737 map text-exact to current OÖKY Md32/1-3 class presidency family; existing ALL scope is too broad, so promotion is withheld until HS/secondary scope publish.
+- HB-1738..1741 map text-exact to OÖKY Md33/1-2 student-duty family. HB-1740 also has an OÖİKY candidate, but common semantic equivalence must be independently proven before COMMON publication.
+- HB-1742/HB-1743 have exact guardian/custody parents in OÖKY Md34/1,5 and OÖİKY Md17/1,5. This proves multiple school families, not universal ALL.
+- HB-1744/HB-1746 map to OÖKY Md35; secondary-specific late-arrival model.
+- HB-1745 mixes statutory five-late-arrivals rule with a parenthetical e-Okul automation assertion not found in the regulation; split required.
+- HB-1747/HB-1748 map to OÖKY Md36/2-a,b. OÖİKY uses a different attendance actor model, so ALL cannot survive.
+- No safe duplicate rollback found for HB-1735..1748 in the searched verified batches.
 
 ## Tenant requirement
 - **Sosyal Sorumluluk Kulübü** ayrıca kurulacak ve aktif tenant kulübü olarak tutulacak.
@@ -40,20 +42,20 @@ ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `m
 - Canonical tenant doc: `docs/tenant-required-social-responsibility-club.md`.
 
 ## New guards
-- STUDENT_REPRESENTATIVE_ROLE_IS_SCHOOL_TYPE_SPECIFIC.
-- ATTENDANCE_AND_LEAVE_ARE_DISTINCT_ATOMS.
-- ATTENDANCE_NOTIFICATION_RECIPIENT_AND_TIMING_ARE_EXACTNESS_FIELDS.
-- ELECTRONIC_STUDENT_DOCUMENT_DOES_NOT_IMPLY_WET_SIGNATURE.
-- OPEN_ED_CURRENT_PARENT_OVERRIDES_REPEALED_SEPARATE_REGULATIONS.
-- BROAD_ALL_STUDENT_OPERATION_REQUIRES_COMMON_EXACT_PARENT.
+- CLASS_PRESIDENCY_OOKY_MD32_IS_NOT_ALL.
+- STUDENT_DUTY_OOKY_MD33_IS_NOT_ALL.
+- GUARDIAN_RULE_CAN_SHARE_MULTIPLE_SCHOOL_FAMILIES_WITHOUT_BECOMING_GLOBAL_ALL.
+- EOKUL_AUTOMATION_ASSERTION_REQUIRES_SYSTEM_SOURCE_NOT_JUST_REGULATION.
+- PRIMARY_MIDDLE_ATTENDANCE_ACTOR_MODEL_DIFFERS_FROM_SECONDARY.
+- LATE_ARRIVAL_THRESHOLD_AND_CONVERSION_RULE_ARE_SCHOOL_TYPE_SPECIFIC.
 
-## V83 priority — 300+ atoms
-1. Resume exact master extraction at HB-1735+ using canonical master artifacts/File Library when available; never guess ID-title mapping.
-2. Lock student representative/class-president, attendance, leave, document and school-type student-operation rows to current OÖKY/OÖİKY provisions.
-3. Audit nearby old ARTICLE batches for ALL rows that improperly inherited one school-type regulation.
-4. Continue HB-1729..1734 only when exact current parents are proven.
+## V84 priority — 300+ atoms
+1. Continue exact master extraction from HB-1749+.
+2. Audit attendance notification thresholds, excuse-document deadlines, maximum absence limits, relationship termination and MESEM theoretical-course attendance against current official OÖKY/RG chain.
+3. Stage school-family scope children for HB-1735..1748; denominator unchanged until Super Admin publish.
+4. Search old ARTICLE batches for any nearby ALL rows already counted with only one school-type parent; rollback once only if found.
 5. Keep Sosyal Sorumluluk Kulübü tenant requirement active.
 6. Migration **0**, Lovable **0**.
 
 ## Repo sınırı
-Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış. Kullanıcı `Devam` dediğinde soru sormadan **V83** başlat; minimum **300 atom** hedefle.
+Yalnız `halisbozoglu-design/okulos-edu-suite` üzerinde çalış. Kullanıcı `Devam` dediğinde soru sormadan **V84** başlat; minimum **300 atom** hedefle.
