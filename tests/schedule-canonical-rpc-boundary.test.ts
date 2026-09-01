@@ -9,8 +9,8 @@ describe("canonical schedule validation RPC boundary",()=>{
     expect(migration).toContain("has_permission('schedule.view')");
   });
   it("does not relax inherited hard validation and closes anonymous execution",()=>{
-    expect(migration).toContain("validate_schedule_scenario_pre_timebound_exception_v1");
-    expect(migration).toContain("get_schedule_scenario_hard_issues_pre_timebound_exception_v1");
+    expect(migration).toContain("validate_schedule_scenario_pre_access_v1");
+    expect(migration).toContain("get_schedule_scenario_hard_issues_pre_access_v1");
     expect(migration).toContain("from public, anon");
     expect(migration).toContain("to authenticated");
   });
