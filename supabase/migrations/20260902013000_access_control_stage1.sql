@@ -85,6 +85,7 @@ as $$
   select auth.uid() is not null and exists (
     select 1 from public.students s
     where s.id=p_student_id and s.auth_user_id=auth.uid() and s.active
+      and s.institution_code=public.current_tenant_code()
   );
 $$;
 
@@ -111,7 +112,7 @@ as $$
         public.is_institution_admin(sc.institution_code)
         or public.teacher_can_access_class(sc.id)
         or exists(select 1 from public.students s where s.class_id=sc.id and s.auth_user_id=auth.uid() and s.active)
-        or exists(select 1 from public.student_guardians g join public.students s on s.id=g.student_id where g.guardian_user_id=auth.uid() and g.active and s.class_id=sc.id)
+        or exists(select 1 from public.student_guardians g join public.students s on s.id=g.student_id where g.guardian_user_id=auth.uid() and g.active and g.institution_code=sc.institution_code and s.class_id=sc.id)
       )
   );
 $$;
@@ -154,15 +155,19 @@ grant execute on function public.can_access_student(uuid) to authenticated;
 alter table public.student_guardians enable row level security;
 alter table public.security_audit_log enable row level security;
 
--- Remove permissive read policies that bypass tenant/scope checks because RLS policies are OR'ed by default.
+-- Remove permissive policies that would OR around the scoped policies below.
 drop policy if exists "authenticated can read school classes" on public.school_classes;
 drop policy if exists "tenant_boundary_school_classes" on public.school_classes;
+drop policy if exists "delegated class managers manage classes" on public.school_classes;
 drop policy if exists "authenticated can read students" on public.students;
 drop policy if exists "tenant_boundary_students" on public.students;
 drop policy if exists "authenticated read teacher course assignments" on public.teacher_course_assignments;
 drop policy if exists "tenant guard teacher course assignments" on public.teacher_course_assignments;
 drop policy if exists "tenant_boundary_teacher_course_assignments" on public.teacher_course_assignments;
+drop policy if exists "delegated curriculum managers manage teacher course assignments" on public.teacher_course_assignments;
+drop policy if exists "managers manage teacher course assignments" on public.teacher_course_assignments;
 drop policy if exists "admins can read all profiles" on public.profiles;
+drop policy if exists "admins can update all profiles" on public.profiles;
 drop policy if exists "managers can read operational profiles" on public.profiles;
 drop policy if exists "delegated operators read operational profiles" on public.profiles;
 drop policy if exists "tenant_boundary_profiles" on public.profiles;
@@ -170,14 +175,20 @@ drop policy if exists "tenant_boundary_profiles" on public.profiles;
 create policy school_classes_scoped_read on public.school_classes
 for select to authenticated using (public.can_access_class(id));
 create policy school_classes_admin_write on public.school_classes
-for all to authenticated using (public.is_institution_admin(institution_code) or public.has_permission('classes.manage'))
-with check (public.tenant_row_allowed(institution_code) and (public.is_institution_admin(institution_code) or public.has_permission('classes.manage')));
+for all to authenticated using (
+  public.is_system_admin() or (institution_code=public.current_tenant_code() and (public.is_institution_admin(institution_code) or public.has_permission('classes.manage')))
+) with check (
+  public.is_system_admin() or (institution_code=public.current_tenant_code() and (public.is_institution_admin(institution_code) or public.has_permission('classes.manage')))
+);
 
 create policy students_scoped_read on public.students
 for select to authenticated using (public.can_access_student(id));
 create policy students_admin_write on public.students
-for all to authenticated using (public.is_institution_admin(institution_code) or public.has_permission('classes.manage'))
-with check (public.tenant_row_allowed(institution_code) and (public.is_institution_admin(institution_code) or public.has_permission('classes.manage')));
+for all to authenticated using (
+  public.is_system_admin() or (institution_code=public.current_tenant_code() and (public.is_institution_admin(institution_code) or public.has_permission('classes.manage')))
+) with check (
+  public.is_system_admin() or (institution_code=public.current_tenant_code() and (public.is_institution_admin(institution_code) or public.has_permission('classes.manage')))
+);
 
 create policy teacher_assignments_scoped_read on public.teacher_course_assignments
 for select to authenticated using (
@@ -188,11 +199,9 @@ for select to authenticated using (
 );
 create policy teacher_assignments_scoped_write on public.teacher_course_assignments
 for all to authenticated using (
-  institution_code=public.current_tenant_code()
-  and (public.is_institution_admin(institution_code) or public.has_permission('curriculum.manage'))
+  public.is_system_admin() or (institution_code=public.current_tenant_code() and (public.is_institution_admin(institution_code) or public.has_permission('curriculum.manage')))
 ) with check (
-  institution_code=public.current_tenant_code()
-  and (public.is_institution_admin(institution_code) or public.has_permission('curriculum.manage'))
+  public.is_system_admin() or (institution_code=public.current_tenant_code() and (public.is_institution_admin(institution_code) or public.has_permission('curriculum.manage')))
 );
 
 create policy profiles_scoped_read on public.profiles
@@ -211,11 +220,17 @@ for update to authenticated using (
 
 create policy student_guardians_read on public.student_guardians
 for select to authenticated using (
-  public.is_system_admin() or guardian_user_id=auth.uid() or public.is_institution_admin(institution_code)
+  public.is_system_admin() or (
+    institution_code=public.current_tenant_code()
+    and (guardian_user_id=auth.uid() or public.is_institution_admin(institution_code))
+  )
 );
 create policy student_guardians_manage on public.student_guardians
-for all to authenticated using (public.is_institution_admin(institution_code))
-with check (institution_code=public.current_tenant_code() and public.is_institution_admin(institution_code));
+for all to authenticated using (
+  public.is_system_admin() or (institution_code=public.current_tenant_code() and public.is_institution_admin(institution_code))
+) with check (
+  public.is_system_admin() or (institution_code=public.current_tenant_code() and public.is_institution_admin(institution_code))
+);
 
 create policy security_audit_read on public.security_audit_log
 for select to authenticated using (
@@ -226,17 +241,21 @@ create or replace function public.audit_access_change()
 returns trigger
 language plpgsql security definer set search_path=public
 as $$
+declare
+  v_new jsonb := case when tg_op <> 'DELETE' then to_jsonb(new) else '{}'::jsonb end;
+  v_old jsonb := case when tg_op <> 'INSERT' then to_jsonb(old) else '{}'::jsonb end;
 begin
   insert into public.security_audit_log(institution_code,actor_user_id,event_type,target_type,target_id,metadata)
   values(
-    coalesce(new.institution_code, old.institution_code, public.current_tenant_code()),
+    coalesce(v_new->>'institution_code', v_old->>'institution_code', public.current_tenant_code()),
     auth.uid(),
     tg_op,
     tg_table_name,
-    coalesce((to_jsonb(new)->>'id'), (to_jsonb(old)->>'id'), (to_jsonb(new)->>'user_id'), (to_jsonb(old)->>'user_id')),
-    jsonb_build_object('old', case when tg_op in ('UPDATE','DELETE') then to_jsonb(old) else null end, 'new', case when tg_op in ('INSERT','UPDATE') then to_jsonb(new) else null end)
+    coalesce(v_new->>'id', v_old->>'id', v_new->>'user_id', v_old->>'user_id'),
+    jsonb_build_object('old', v_old, 'new', v_new)
   );
-  return coalesce(new, old);
+  if tg_op='DELETE' then return old; end if;
+  return new;
 end;
 $$;
 
@@ -248,6 +267,7 @@ create trigger audit_student_guardians_access after insert or update or delete o
 for each row execute function public.audit_access_change();
 
 -- Membership management remains tenant-bound; a principal/institution admin can manage only their institution.
+drop policy if exists memberships_admin_manage on public.institution_memberships;
 create policy memberships_admin_manage on public.institution_memberships
-for all to authenticated using (public.is_institution_admin(institution_code))
-with check (public.is_institution_admin(institution_code));
+for all to authenticated using (public.is_system_admin() or public.is_institution_admin(institution_code))
+with check (public.is_system_admin() or public.is_institution_admin(institution_code));
