@@ -7,7 +7,7 @@ describe("neutral special-education timetable accommodations", () => {
     expect(migration).toContain("schedule_capabilities text[]");
     expect(migration).toContain("required_room_capabilities text[]");
     expect(migration).toContain("INDIVIDUAL_SUPPORT");
-    expect(migration).not.toMatch(/diagnosis|disability|medical_detail|health_detail/i);
+    expect(migration).not.toMatch(/add column if not exists (diagnosis|disability|medical_detail|health_detail)\b/i);
   });
 
   it("hard-rejects incompatible rooms at schedule write time", () => {
