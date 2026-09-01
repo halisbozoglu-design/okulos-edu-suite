@@ -1,0 +1,20 @@
+{
+  "schema": "okulos.general-school-types.v1",
+  "provenance": "Synthetic structural timetable corpus; contains no real school, teacher or student data and does not claim official weekly-hour values.",
+  "profiles": [
+    {
+      "id": "IMAM_HATIP_STRUCTURAL",
+      "days": 5,
+      "periods": 8,
+      "classes": 6,
+      "purpose": "Shared Arabic/religion/core-subject teachers across multiple classes with ordinary class collision rules."
+    },
+    {
+      "id": "PRIMARY_MIDDLE_STRUCTURAL",
+      "days": 5,
+      "periods": 8,
+      "classes": 8,
+      "purpose": "Classroom-teacher continuity plus shared branch teachers across primary/middle classes."
+    }
+  ]
+}
