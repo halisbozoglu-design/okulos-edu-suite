@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 
 const migration = await Bun.file("supabase/migrations/20260831001000_teacher_course_assignment_exceptions.sql").text();
-const cloneMigration = await Bun.file("supabase/migrations/20260831003000_time_bound_teacher_assignment_exceptions.sql").text();
+const cloneMigration = await Bun.file("supabase/migrations/20260831003000_manual_teacher_assignment_clone.sql").text();
 const curriculum = await Bun.file("src/routes/curriculum.tsx").text();
 
 test("manual teacher assignment needs confirmation but no reason or validity range", () => {
