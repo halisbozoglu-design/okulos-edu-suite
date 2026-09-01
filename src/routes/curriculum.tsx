@@ -49,6 +49,7 @@ type Summary = {
   curriculum_status: string;
 };
 type ElectiveOffering = { offering_id: string; course_id: string; course_name: string; category: string; hour_options: number[]; elective_group_key: string | null; max_selections: number; source_note: string | null };
+type OfficialPreview = { applied?: boolean; message?: string; requirements_created_or_refreshed?: number; elective_offerings?: number; manual_or_locked_preserved?: number; offering_rules?: number; automatic_requirements?: number; ambiguous_hour_offerings?: number; expected_weekly_hours?: number };
 
 function CurriculumManager() {
   const [classes, setClasses] = useState<SchoolClass[]>([]);
@@ -66,7 +67,7 @@ function CurriculumManager() {
   const [assignTeacher, setAssignTeacher] = useState("");
   const [assignmentPermission, setAssignmentPermission] = useState<string | null>(null);
   const [confirmManualOverride, setConfirmManualOverride] = useState(false);
-  const [officialPreview, setOfficialPreview] = useState<Record<string, unknown> | null>(null);
+  const [officialPreview, setOfficialPreview] = useState<OfficialPreview | null>(null);
   const [electiveOfferings, setElectiveOfferings] = useState<ElectiveOffering[]>([]);
   const [cloneTarget, setCloneTarget] = useState("");
   const [busy, setBusy] = useState(false);
@@ -98,7 +99,7 @@ function CurriculumManager() {
   useEffect(() => {
     if (!classId) { setElectiveOfferings([]); return; }
     let alive = true;
-    void supabase.rpc("list_official_electives_for_class_v1" as never, { p_class_id: classId } as never).then(({ data, error }) => {
+    void supabase.rpc("list_official_electives_for_class_v1" as never, { p_class_id: classId } as never).then(({ data, error }: { data: unknown; error: unknown }) => {
       if (!alive) return;
       if (error) { setElectiveOfferings([]); return; }
       setElectiveOfferings((data ?? []) as ElectiveOffering[]);
@@ -110,7 +111,7 @@ function CurriculumManager() {
     const requirement = requirements.find((item) => item.id === assignRequirement);
     if (!requirement || !assignTeacher) { setAssignmentPermission(null); setConfirmManualOverride(false); return; }
     let alive = true;
-    void supabase.rpc("teacher_course_permission_status", { p_teacher_id: assignTeacher, p_course_id: requirement.course_id }).then(({ data, error }) => {
+    void supabase.rpc("teacher_course_permission_status", { p_teacher_id: assignTeacher, p_course_id: requirement.course_id }).then(({ data, error }: { data: string | null; error: unknown }) => {
       if (!alive) return;
       setAssignmentPermission(error ? null : data ?? null);
       if (data !== "NOT_ALLOWED") setConfirmManualOverride(false);
@@ -148,11 +149,11 @@ function CurriculumManager() {
     const { data, error } = await supabase.rpc("apply_official_curriculum_to_class_v2", { p_class_id: classId, p_mode: "APPLY" });
     setBusy(false);
     if (error) { setMessage("Resmî ders çizelgesi uygulanamadı. Sınıf türü, yıl ve çizelge kaydını kontrol edin."); return; }
-    const result = data as Record<string, unknown> | null;
-    if (!result?.applied) { setMessage(String(result?.message ?? "Bu sınıf için etkin resmî ders çizelgesi bulunamadı.")); return; }
-    const automatic = Number(result.requirements_created_or_refreshed ?? 0);
-    const electives = Number(result.elective_offerings ?? 0);
-    const preserved = Number(result.manual_or_locked_preserved ?? 0);
+    const result = data as OfficialPreview | null;
+    if (!result?.['applied']) { setMessage(String(result?.['message'] ?? "Bu sınıf için etkin resmî ders çizelgesi bulunamadı.")); return; }
+    const automatic = Number(result['requirements_created_or_refreshed'] ?? 0);
+    const electives = Number(result['elective_offerings'] ?? 0);
+    const preserved = Number(result['manual_or_locked_preserved'] ?? 0);
     setMessage(`Resmî çizelge uygulandı: ${automatic} zorunlu/uygulama dersi güncellendi. ${electives} seçmeli seçenek olarak bırakıldı${preserved ? `; ${preserved} manuel veya kilitli kayıt korundu` : ""}.`);
     await load();
   }
@@ -163,9 +164,9 @@ function CurriculumManager() {
     const { data, error } = await supabase.rpc("apply_official_curriculum_to_class_v2", { p_class_id: classId, p_mode: "PREVIEW" });
     setBusy(false);
     if (error) { setMessage("Resmî çizelge önizlemesi alınamadı."); return; }
-    const result = data as Record<string, unknown> | null;
+    const result = data as OfficialPreview | null;
     setOfficialPreview(result);
-    if (Number(result?.offering_rules ?? 0) === 0) setMessage(String(result?.message ?? "Bu sınıf için etkin resmî çizelge bulunamadı."));
+    if (Number(result?.['offering_rules'] ?? 0) === 0) setMessage(String(result?.['message'] ?? "Bu sınıf için etkin resmî çizelge bulunamadı."));
   }
 
   async function addCourse() {
