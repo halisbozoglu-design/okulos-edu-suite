@@ -13,6 +13,12 @@ describe("official curriculum PDF evidence", () => {
     expect(extractCourseCandidatesFromText("Matematik  6\nToplam  40")).toEqual([{ course_name:"Matematik",hour_options:[6],source_text:"Matematik  6",confidence:.72,needs_review:true }]);
   });
 
+  it("preserves raw PDF line boundaries before candidate extraction", () => {
+    expect(source).toContain('const rawText=pages.join("\\n")');
+    expect(source).toContain("course_candidates:extractCourseCandidatesFromText(rawText)");
+    expect(source).not.toContain("course_candidates:extractCourseCandidatesFromText(text)");
+  });
+
   it("extracts a local PDF fingerprint and metadata without an upload path", () => {
     expect(source).toContain('parser_version:"okulos-official-pdf-evidence-v1"');
     expect(source).toContain("crypto.subtle.digest(\"SHA-256\"");
