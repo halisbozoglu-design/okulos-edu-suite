@@ -58,6 +58,22 @@ end$$;
 drop trigger if exists trg_student_enrollment_slot_v1 on public.student_schedule_enrollments;
 create trigger trg_student_enrollment_slot_v1 after insert or update of student_id,teacher_assignment_id,request_id,active,participation_kind on public.student_schedule_enrollments for each row execute function public.guard_student_enrollment_slot_v1();
 
+create or replace function public.guard_classroom_schedule_capabilities_v1()returns trigger language plpgsql security definer set search_path=public as $$
+begin
+ if exists(select 1 from public.teacher_schedule ts join public.teacher_course_assignments ta on ta.id=ts.teacher_assignment_id and ta.institution_code=ts.institution_code join public.class_course_requirements cr on cr.id=ta.class_course_requirement_id and cr.institution_code=ts.institution_code where ts.active and ts.institution_code=new.institution_code and ts.classroom_id=new.id and not(cr.required_room_capabilities<@coalesce(new.schedule_capabilities,'{}'::text[]))) then raise exception 'CLASSROOM_CAPABILITY_IN_USE';end if;
+ return new;
+end$$;
+drop trigger if exists trg_classroom_schedule_capabilities_v1 on public.classrooms;
+create trigger trg_classroom_schedule_capabilities_v1 before update of schedule_capabilities on public.classrooms for each row execute function public.guard_classroom_schedule_capabilities_v1();
+
+create or replace function public.guard_requirement_room_capabilities_v1()returns trigger language plpgsql security definer set search_path=public as $$
+begin
+ if exists(select 1 from public.teacher_course_assignments ta join public.teacher_schedule ts on ts.teacher_assignment_id=ta.id and ts.institution_code=ta.institution_code and ts.active left join public.classrooms c on c.id=ts.classroom_id and c.institution_code=ts.institution_code where ta.institution_code=new.institution_code and ta.class_course_requirement_id=new.id and cardinality(coalesce(new.required_room_capabilities,'{}'::text[]))>0 and(ts.classroom_id is null or c.id is null or not(new.required_room_capabilities<@coalesce(c.schedule_capabilities,'{}'::text[])))) then raise exception 'REQUIREMENT_ROOM_CAPABILITY_CONFLICT';end if;
+ return new;
+end$$;
+drop trigger if exists trg_requirement_room_capabilities_v1 on public.class_course_requirements;
+create trigger trg_requirement_room_capabilities_v1 before update of required_room_capabilities on public.class_course_requirements for each row execute function public.guard_requirement_room_capabilities_v1();
+
 create or replace function public.get_schedule_accommodation_hard_issues_v1()
 returns table(issue_code text,teacher_assignment_id uuid,student_id uuid,classroom_id uuid,weekday integer,period integer,detail text)
 language sql stable security definer set search_path=public as $$
@@ -73,5 +89,5 @@ with room_issues as(
 )select * from room_issues union all select * from student_issues order by weekday,period,issue_code;
 $$;
 
-revoke all on function public.assert_schedule_accommodation_slot_v1(uuid,uuid,integer,integer,uuid),public.get_schedule_accommodation_hard_issues_v1() from public,anon;
+revoke all on function public.assert_schedule_accommodation_slot_v1(uuid,uuid,integer,integer,uuid),public.guard_schedule_accommodation_slot_v1(),public.guard_student_enrollment_slot_v1(),public.guard_classroom_schedule_capabilities_v1(),public.guard_requirement_room_capabilities_v1(),public.get_schedule_accommodation_hard_issues_v1() from public,anon,authenticated;
 grant execute on function public.get_schedule_accommodation_hard_issues_v1() to authenticated;
