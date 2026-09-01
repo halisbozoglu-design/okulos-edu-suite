@@ -1,0 +1,17 @@
+{
+  "batch": "V83",
+  "date": "2026-09-02",
+  "master_workflows": 2229,
+  "article_verified_before": 467,
+  "promotions": 0,
+  "rollbacks": 0,
+  "article_verified_after": 467,
+  "ratio_percent": 20.9511,
+  "remaining_exact": 1762,
+  "support_atoms": 410,
+  "atom_pool_before": 21275,
+  "atom_pool_after": 21685,
+  "migration": 0,
+  "lovable": 0,
+  "next_batch": "V84"
+}
