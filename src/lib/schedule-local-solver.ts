@@ -9,7 +9,7 @@ export type LocalSolveMode = "AUTO" | "CPU" | "GPU" | "HYBRID" | "DB";
 export type LocalSolveProgress = { worker: number; kind: "CPU" | "GPU"; status: "running" | "done" | "error"; completed: number; total: number; durationMs?: number };
 type Candidate=LocalCandidate;
 
-async function problem() {
+export async function loadLocalScheduleProblem() {
   const [a, l, u, t, c, p, rel, sw, tm] = await Promise.all([
     supabase.from("schedule_assignment_options").select("teacher_assignment_id,teacher_id,additional_teacher_ids,class_id,course_id,assigned_hours"),
     supabase.from("teacher_schedule").select("teacher_assignment_id,teacher_id,class_id,weekday,period,classroom_id,subgroup_id,schedule_session_id,locked").eq("active", true).eq("locked", true),
@@ -42,7 +42,7 @@ const derivedSeed=(base:number,i:number)=>((base^Math.imul(i+1,0x9e3779b1))>>>0)
 
 export async function runLocalScheduleSolve(opts: { candidateCount: number; mode: LocalSolveMode; enableLns?: boolean; lnsIterations?: number; seed?:number; onProgress?: (p: LocalSolveProgress) => void }) {
   if (opts.mode === "DB") return { scenarioIds: [], capability: await detectLocalScheduleCompute(), generated: 0, complete: 0, useGpu: false, lns: null as LnsStats | null,adaptive:null };
-  const cap=await detectLocalScheduleCompute(),baseSeed=(opts.seed??Date.now())>>>0,raw=await problem(),p={...raw,seed:baseSeed} as LocalProblem,useGpu=(opts.mode==="GPU"||opts.mode==="HYBRID"||opts.mode==="AUTO")&&cap.webGpu,oversample=useGpu?Math.max(opts.candidateCount*3,8):Math.max(opts.candidateCount*2,8),workers=opts.mode==="GPU"?1:Math.max(1,Math.min(cap.recommendedCpuWorkers,oversample)),context=adaptiveContextKey(p);
+  const cap=await detectLocalScheduleCompute(),baseSeed=(opts.seed??Date.now())>>>0,raw=await loadLocalScheduleProblem(),p={...raw,seed:baseSeed} as LocalProblem,useGpu=(opts.mode==="GPU"||opts.mode==="HYBRID"||opts.mode==="AUTO")&&cap.webGpu,oversample=useGpu?Math.max(opts.candidateCount*3,8):Math.max(opts.candidateCount*2,8),workers=opts.mode==="GPU"?1:Math.max(1,Math.min(cap.recommendedCpuWorkers,oversample)),context=adaptiveContextKey(p);
   const priorQ=await supabase.rpc("get_schedule_solver_operator_priors_v1",{p_context_key:context}),priors:OperatorPrior[]=priorQ.error?[]:((priorQ.data??[]) as OperatorPrior[]).map(x=>({...x,attempts:Number(x.attempts),wins:Number(x.wins),reward_sum:Number(x.reward_sum)})),plan=chooseAdaptiveStrategies(priors,oversample),out:Array<Candidate|undefined>=Array(oversample);let next=0,done=0;
   await Promise.all(Array.from({length:workers},async(_,wi)=>{while(true){const i=next++;if(i>=oversample)break;opts.onProgress?.({worker:wi+1,kind:"CPU",status:"running",completed:done,total:oversample});const st=performance.now();try{out[i]=await runWorker({...p,seed:derivedSeed(baseSeed,i),strategy:plan[i],enableLns:opts.enableLns??true,lnsIterations:opts.lnsIterations});done++;opts.onProgress?.({worker:wi+1,kind:"CPU",status:"done",completed:done,total:oversample,durationMs:Math.round(performance.now()-st)})}catch{done++;opts.onProgress?.({worker:wi+1,kind:"CPU",status:"error",completed:done,total:oversample})}}}));
   let candidates=out.filter((x):x is Candidate=>Boolean(x)),complete=candidates.filter(x=>x.complete&&x.failed===0&&x.score.hard===0),elite=selectElite(complete,Math.max(6,opts.candidateCount*2),.08),relinks=0,restarts=0;

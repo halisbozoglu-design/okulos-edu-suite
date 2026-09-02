@@ -127,7 +127,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
             [`${t.to_building_id}|${t.from_building_id}`, t.minutes],
           ] as const,
       ),
-    );
+    ),forbidden=new Set((p.studentForbiddenSlots??[]).map(x=>`${x.assignment_id}|${x.weekday}|${x.period}`));
   let baseHard = 0,
     failed = 0;
   const rows: LocalLockedRow[] = [],
@@ -152,7 +152,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
       const ak = `${a.assignment_id}:locked:${++n}`;
       for (const period of run.periods) {
         const o = locked.find((x) => x.weekday === run.day && x.period === period)!;
-        if (a.allowed_periods?.length && !a.allowed_periods.includes(period)) baseHard++;
+        if ((a.allowed_periods?.length && !a.allowed_periods.includes(period))||forbidden.has(`${a.assignment_id}|${run.day}|${period}`)) baseHard++;
         rows.push({
           ...o,
           schedule_session_id: a.schedule_session_id ?? o.schedule_session_id ?? null,
@@ -171,6 +171,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
     rows,
     relations,
     p.studentConflictWeights ?? [],
+    p.studentConflictMode ?? "MEDIUM",
   );
   const groups = (): Placement[] =>
     state.index.activityGroups().flatMap((g) => {
@@ -328,6 +329,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
         for (let x = s; x < s + t.duration; x++)
           if (
             (a.allowed_periods?.length && !a.allowed_periods.includes(x)) ||
+            forbidden.has(`${a.assignment_id}|${d}|${x}`) ||
             r?.prohibited_periods?.includes(x) ||
             unavailable(a, d, x) ||
             state.index.occupied(a, d, x)
@@ -662,6 +664,7 @@ export function incrementalCoreStats(p: JointLocalProblem) {
     rows,
     p.planningRelations ?? [],
     p.studentConflictWeights ?? [],
+    p.studentConflictMode ?? "MEDIUM",
   );
   return s.stats();
 }

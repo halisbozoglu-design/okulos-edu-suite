@@ -16,7 +16,8 @@ test("coverage matrix is explicit and only marks evidenced rows direct", async (
   expect(manifest.school_types.find((x) => x.id === "PRIMARY_MIDDLE")?.status).toBe("DIRECT");
   expect(manifest.school_types.find((x) => x.id === "SPECIAL_EDUCATION")?.status).toBe("DIRECT");
   expect(manifest.hard_families.find((x) => x.id === "MULTI_WEEK_BELL_SCHEDULE")?.status).toBe("DIRECT");
-  expect(manifest.hard_families.find((x) => x.id === "SECTIONING_JOINT_OPTIMIZATION")?.status).toBe("GAP");
+  expect(manifest.school_types.find((x) => x.id === "SECTIONING")?.status).toBe("DIRECT");
+  expect(manifest.hard_families.find((x) => x.id === "SECTIONING_JOINT_OPTIMIZATION")?.status).toBe("DIRECT");
   expect(manifest.hard_families.find((x) => x.id === "ASSISTANT_CO_TEACHER")?.status).toBe("DIRECT");
   for (const path of rows.flatMap((x) => x.evidence))
     expect(await Bun.file(path).exists(), `${path} must exist`).toBe(true);
