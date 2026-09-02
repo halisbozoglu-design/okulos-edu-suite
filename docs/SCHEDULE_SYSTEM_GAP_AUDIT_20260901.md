@@ -2,12 +2,12 @@
 
 Tarih: 2026-09-01  
 Kapsam: Okulos ders programı sistemi (Web/Lovable Cloud, solver, veri katmanı, Windows/macOS hedefleri ve release kapıları)  
-Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-coverage/manifest.json`, PR #25 ve CI #1375.
+Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-coverage/manifest.json`, PR #25, son yeşil CI #1392 ve yeni head doğrulaması CI #1393.
 
 ## Güncel doğrulanmış durum
 
 - PR #25 açık ve merge edilebilir.
-- CI #1375 yeniden koşusu tamamen başarılıdır: unit/parser, CP-SAT oracle, 30-seed benchmark, migration/replay, tenant/auth/route guard, production build ve TypeScript.
+- Önceki head için CI #1392 tamamen başarılıdır. Joint timetable-sectioning head'i `bb8530d` için CI #1393 ve ayrı corpus workflow'ları çalışmaktadır; tamamlanmadan yeşil sayılmaz.
 - MTAL, MESEM, oda/bina extreme ve maksimum mesleki corpus workflow'ları aynı head üzerinde başarılıdır.
 - Lovable AI/chat/agent kullanılmaz; Lovable token tüketimi sıfırdır. Lovable Cloud yalnız mevcut çalışma ortamıdır.
 - HARD kurallar sessiz gevşetilmez; canonical server validator son otoritedir.
@@ -21,19 +21,15 @@ Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-c
 | Özel eğitim çizelgeleme kaynakları | DIRECT | Nötr bireysel destek katılımı, gerekli oda yetenekleri, öğrenci zaman çakışması |
 | Çok haftalı zil çizelgesi | DIRECT | Tek/çift hafta, dönem ve tarih aralığına göre gerçek saat çözümü |
 | Yardımcı/eş öğretmen tüm yolları | DIRECT | Atomik yönetim UI'si, ana program, filtre, rapor/CSV/Excel/PDF/e-Okul ve substitution; DB ile iki local solver çekirdeğinde gerçek HARD öğretmen kaynağı |
+| Joint timetable-sectioning | DIRECT | Tek lexicographic arama, HARD öğrenci/free-time çakışması, staged enrollment planı ve canonical timetable validator üzerinden atomik apply |
 | MTAL / MESEM / İmam Hatip / ilkokul-ortaokul corpus | DIRECT | Ayrı test ve benchmark kanıtları |
 | Gözetim/nöbet solver çekirdeği | UYGULANMIŞ | HARD ders doluluğu, aynı-slot, uygunluk ve azami yük testleri mevcut; ürün entegrasyon auditi açık |
 
 ## Resmî coverage manifestindeki gerçek GAP'ler
 
-Coverage manifestinde şu anda yalnız iki satır açık GAP'tir:
+Coverage manifestinde şu anda yalnız bir satır açık GAP'tir:
 
-1. **SECTIONING_JOINT_OPTIMIZATION**
-   - Bugün timetable üretimi ve öğrenci sectioning ardışık/two-phase çalışır.
-   - Tek objective içinde zaman + derslik + öğrenci section seçimini birlikte optimize eden solver ve extreme corpus yoktur.
-   - Kapanış kanıtı: canonical ortak problem modeli, HARD öğrenci çakışma doğrulaması, deterministik extreme corpus ve UI çalışma modu.
-
-2. **VIRTUAL_COMPOSITE_SHARED_ROOM**
+1. **VIRTUAL_COMPOSITE_SHARED_ROOM**
    - Mevcut room pool aynı havuzdaki toplam kapasite ve eşzamanlı etkinlik sayısını korur.
    - Her program satırı hâlâ tek `classroom_id` taşır.
    - Bir dersin aynı anda birden fazla fiziksel bileşeni zorunlu tutması (ör. laboratuvar + hazırlık alanı) modellenmemiştir.
@@ -43,7 +39,6 @@ Coverage manifestinde şu anda yalnız iki satır açık GAP'tir:
 
 | ID | Eksik | Bugünkü gerçek durum | Kapanış ölçütü |
 |---|---|---|---|
-| P0.1 | Joint timetable-sectioning optimization | Two-phase var; joint optimizer yok | Manifest DIRECT + extreme corpus |
 | P0.2 | Virtual/composite shared room | Pool var; atomik çoklu oda kaynağı yok | DB + solver + validator + UI + corpus |
 | P0.4 | Gözetim/nöbet ürün entegrasyon auditi | Ayrı solver/test var | Canlı ders doluluğu girişi, persist/preview/report ve E2E |
 | P0.5 | Son canonical şema-diff auditi | Model geniş; kullanılmayan/duplicate alanların sıfır olduğu kanıtlanmadı | Otomatik schema/reference raporu |
@@ -146,7 +141,7 @@ Eski master tree'de 99 adet işaretlenmemiş kutu vardır. Bu, 99 bağımsız ç
 
 Bugünkü en net özet:
 
-- Coverage manifestinde **2 gerçek GAP**.
-- Web/Cloud release yolunda **7 açık P0 kapanış işi**; P0.3 yardımcı/eş öğretmen tüm yolları 2026-09-02'de kapandı.
+- Coverage manifestinde **1 gerçek GAP**.
+- Web/Cloud release yolunda **6 açık P0 kapanış işi**; P0.1 joint optimization ve P0.3 yardımcı/eş öğretmen tüm yolları 2026-09-02'de kapandı.
 - Windows'ta **9**, macOS'ta **11** açık hedef.
 - Self-host geçişi mevcut Lovable Cloud kullanımı için **gelecek hedef**.
