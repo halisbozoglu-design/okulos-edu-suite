@@ -1,0 +1,18 @@
+{
+  "batch": "V85",
+  "date": "2026-09-02",
+  "master_workflows": 2229,
+  "article_verified_before": 466,
+  "promotions": 0,
+  "rollbacks": 3,
+  "rollback_ids": ["HB-1762", "HB-1763", "HB-1766"],
+  "article_verified_after": 463,
+  "ratio_percent": 20.7716,
+  "remaining_exact": 1766,
+  "support_atoms": 410,
+  "atom_pool_before": 22095,
+  "atom_pool_after": 22505,
+  "migration": 0,
+  "lovable": 0,
+  "next_batch": "V86"
+}
