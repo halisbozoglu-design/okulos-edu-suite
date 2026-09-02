@@ -24,7 +24,7 @@ Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-c
 | Joint timetable-sectioning | DIRECT | Tek lexicographic arama, HARD öğrenci/free-time çakışması, staged enrollment planı ve canonical timetable validator üzerinden atomik apply |
 | Sanal/bileşik/paylaşımlı derslik | DIRECT | Ana oda + tüm fiziksel destek bileşenleri atomik demet; mixed collision/pool HARD, local+joint import/apply, solver ve yönetim UI |
 | MTAL / MESEM / İmam Hatip / ilkokul-ortaokul corpus | DIRECT | Ayrı test ve benchmark kanıtları |
-| Gözetim/nöbet solver çekirdeği | UYGULANMIŞ | HARD ders doluluğu, aynı-slot, uygunluk ve azami yük testleri mevcut; ürün entegrasyon auditi açık |
+| Gözetim/nöbet ürün zinciri | DIRECT | Canlı ana/eş öğretmen doluluğu + uygunsuzluk, solver önizleme, tenant-scoped taslak, server revalidation, idari onay, stale-safe yayın, rapor ve E2E sözleşmesi |
 
 ## Resmî coverage manifestindeki gerçek GAP'ler
 
@@ -34,7 +34,6 @@ Coverage manifestinde açık `GAP` kalmadı. Bu yalnız manifestteki tanımlı H
 
 | ID | Eksik | Bugünkü gerçek durum | Kapanış ölçütü |
 |---|---|---|---|
-| P0.4 | Gözetim/nöbet ürün entegrasyon auditi | Ayrı solver/test var | Canlı ders doluluğu girişi, persist/preview/report ve E2E |
 | P0.5 | Son canonical şema-diff auditi | Model geniş; kullanılmayan/duplicate alanların sıfır olduğu kanıtlanmadı | Otomatik schema/reference raporu |
 | P0.6 | Birleşik edge-case suite | Güçlü ayrı corpus'lar var | Sectioning + composite room + co-teacher + multi-week birlikte stress |
 | P0.7 | DB/Web/native score-vector eşitliği | Web/DB kanıtları parçalı; native binding açık | Aynı fixture için aynı lexicographic skor |
@@ -136,6 +135,6 @@ Eski master tree'de 99 adet işaretlenmemiş kutu vardır. Bu, 99 bağımsız ç
 Bugünkü en net özet:
 
 - Coverage manifestinde **0 açık GAP**.
-- Web/Cloud release yolunda **5 açık P0 kapanış işi**; P0.1 joint optimization, P0.2 virtual/composite shared room ve P0.3 yardımcı/eş öğretmen tüm yolları 2026-09-02'de kapandı.
+- Web/Cloud release yolunda **4 açık P0 kapanış işi**; P0.1 joint optimization, P0.2 virtual/composite shared room, P0.3 yardımcı/eş öğretmen ve P0.4 gözetim/nöbet ürün entegrasyonu 2026-09-02'de kapandı.
 - Windows'ta **9**, macOS'ta **11** açık hedef.
 - Self-host geçişi mevcut Lovable Cloud kullanımı için **gelecek hedef**.

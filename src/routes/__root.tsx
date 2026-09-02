@@ -112,6 +112,7 @@ const protectedRoutes: RouteRule[] = [
   { prefix: "/payroll", any: ["payroll.view", "payroll.calculate", "payroll.edit", "payroll.approve", "payroll.publish"] },
   { prefix: "/substitutes", any: ["substitutes.view", "substitutes.manage"] },
   { prefix: "/duty-book", any: ["duty.view", "duty.manage"] },
+  { prefix: "/schedule-supervision", any: ["duty.view", "duty.manage", "duty.generate", "duty.lock"] },
   { prefix: "/settings", any: ["duty.view", "duty.manage", "duty.generate", "duty.lock", "permissions.manage", "settings.manage"] },
   { prefix: "/super-admin", any: [], superOnly: true },
 ];
