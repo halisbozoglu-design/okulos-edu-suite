@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BookOpenCheck, Copy, Plus, RefreshCw, UserRoundCheck } from "lucide-react";
+import { AlertTriangle, BookOpenCheck, Copy, Download, Plus, RefreshCw, UserRoundCheck } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,7 @@ type Assignment = {
   teacher_id: string;
   assigned_hours: number;
   assignment_group: string;
+  is_manual_override: boolean;
 };
 type Summary = {
   class_id: string;
@@ -47,6 +48,8 @@ type Summary = {
   assigned_teacher_hours: number;
   curriculum_status: string;
 };
+type ElectiveOffering = { offering_id: string; course_id: string; course_name: string; category: string; hour_options: number[]; elective_group_key: string | null; max_selections: number; source_note: string | null };
+type OfficialPreview = { applied?: boolean; message?: string; requirements_created_or_refreshed?: number; elective_offerings?: number; manual_or_locked_preserved?: number; offering_rules?: number; automatic_requirements?: number; ambiguous_hour_offerings?: number; expected_weekly_hours?: number };
 
 function CurriculumManager() {
   const [classes, setClasses] = useState<SchoolClass[]>([]);
@@ -62,6 +65,10 @@ function CurriculumManager() {
   const [courseCategory, setCourseCategory] = useState("zorunlu");
   const [assignRequirement, setAssignRequirement] = useState("");
   const [assignTeacher, setAssignTeacher] = useState("");
+  const [assignmentPermission, setAssignmentPermission] = useState<string | null>(null);
+  const [confirmManualOverride, setConfirmManualOverride] = useState(false);
+  const [officialPreview, setOfficialPreview] = useState<OfficialPreview | null>(null);
+  const [electiveOfferings, setElectiveOfferings] = useState<ElectiveOffering[]>([]);
   const [cloneTarget, setCloneTarget] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -72,7 +79,7 @@ function CurriculumManager() {
       supabase.from("course_catalog").select("id,name,short_name,category").eq("active", true).order("name"),
       supabase.from("profiles").select("user_id,full_name").eq("role", "teacher").order("full_name"),
       supabase.from("class_course_requirements").select("id,class_id,course_id,weekly_hours,category,locked,note"),
-      supabase.from("teacher_course_assignments").select("id,class_course_requirement_id,teacher_id,assigned_hours,assignment_group"),
+      supabase.from("teacher_course_assignments").select("id,class_course_requirement_id,teacher_id,assigned_hours,assignment_group,is_manual_override"),
       supabase.from("class_curriculum_summary").select("class_id,expected_weekly_hours,planned_weekly_hours,assigned_teacher_hours,curriculum_status"),
     ]);
     if (c.error || co.error || t.error || r.error || a.error || s.error) {
@@ -88,6 +95,29 @@ function CurriculumManager() {
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+
+  useEffect(() => {
+    if (!classId) { setElectiveOfferings([]); return; }
+    let alive = true;
+    void supabase.rpc("list_official_electives_for_class_v1" as never, { p_class_id: classId } as never).then(({ data, error }: { data: unknown; error: unknown }) => {
+      if (!alive) return;
+      if (error) { setElectiveOfferings([]); return; }
+      setElectiveOfferings((data ?? []) as ElectiveOffering[]);
+    });
+    return () => { alive = false; };
+  }, [classId]);
+
+  useEffect(() => {
+    const requirement = requirements.find((item) => item.id === assignRequirement);
+    if (!requirement || !assignTeacher) { setAssignmentPermission(null); setConfirmManualOverride(false); return; }
+    let alive = true;
+    void supabase.rpc("teacher_course_permission_status", { p_teacher_id: assignTeacher, p_course_id: requirement.course_id }).then(({ data, error }: { data: string | null; error: unknown }) => {
+      if (!alive) return;
+      setAssignmentPermission(error ? null : data ?? null);
+      if (data !== "NOT_ALLOWED") setConfirmManualOverride(false);
+    });
+    return () => { alive = false; };
+  }, [assignRequirement, assignTeacher, requirements]);
 
   const selectedClass = classes.find((c) => c.id === classId);
   const selectedSummary = summaries.find((s) => s.class_id === classId);
@@ -113,6 +143,32 @@ function CurriculumManager() {
     await load();
   }
 
+  async function applyOfficialCurriculum() {
+    if (!classId) return;
+    setBusy(true); setMessage(null);
+    const { data, error } = await supabase.rpc("apply_official_curriculum_to_class_v2", { p_class_id: classId, p_mode: "APPLY" });
+    setBusy(false);
+    if (error) { setMessage("Resmî ders çizelgesi uygulanamadı. Sınıf türü, yıl ve çizelge kaydını kontrol edin."); return; }
+    const result = data as OfficialPreview | null;
+    if (!result?.['applied']) { setMessage(String(result?.['message'] ?? "Bu sınıf için etkin resmî ders çizelgesi bulunamadı.")); return; }
+    const automatic = Number(result['requirements_created_or_refreshed'] ?? 0);
+    const electives = Number(result['elective_offerings'] ?? 0);
+    const preserved = Number(result['manual_or_locked_preserved'] ?? 0);
+    setMessage(`Resmî çizelge uygulandı: ${automatic} zorunlu/uygulama dersi güncellendi. ${electives} seçmeli seçenek olarak bırakıldı${preserved ? `; ${preserved} manuel veya kilitli kayıt korundu` : ""}.`);
+    await load();
+  }
+
+  async function previewOfficialCurriculum() {
+    if (!classId) return;
+    setBusy(true); setMessage(null);
+    const { data, error } = await supabase.rpc("apply_official_curriculum_to_class_v2", { p_class_id: classId, p_mode: "PREVIEW" });
+    setBusy(false);
+    if (error) { setMessage("Resmî çizelge önizlemesi alınamadı."); return; }
+    const result = data as OfficialPreview | null;
+    setOfficialPreview(result);
+    if (Number(result?.['offering_rules'] ?? 0) === 0) setMessage(String(result?.['message'] ?? "Bu sınıf için etkin resmî çizelge bulunamadı."));
+  }
+
   async function addCourse() {
     if (!classId || !courseName.trim()) return;
     const hours = Number(courseHours);
@@ -133,6 +189,20 @@ function CurriculumManager() {
     await load();
   }
 
+  async function selectOfficialElective(offering: ElectiveOffering, weeklyHours: number) {
+    if (!classId) return;
+    setBusy(true); setMessage(null);
+    const { error } = await supabase.rpc("select_official_elective_for_class_v1" as never, { p_class_id: classId, p_offering_id: offering.offering_id, p_weekly_hours: weeklyHours } as never);
+    setBusy(false);
+    if (error) {
+      const known = error.message;
+      setMessage(known.includes("EXCEEDS") ? "Bu seçim resmî haftalık toplamı aşar." : known.includes("MANUAL_OR_LOCKED") ? "Bu ders için manuel veya kilitli kayıt korunuyor." : known.includes("TEACHER_ASSIGNMENT") ? "Bu seçmeli derste öğretmen ataması bulunduğu için saat değiştirilemez." : "Resmî seçmeli ders kaydedilemedi.");
+      return;
+    }
+    setMessage(`${offering.course_name} · ${weeklyHours} saat seçmeli ders yüküne eklendi.`);
+    await load();
+  }
+
   async function removeRequirement(id: string) {
     setBusy(true); setMessage(null);
     const { error } = await supabase.from("class_course_requirements").delete().eq("id", id);
@@ -145,18 +215,21 @@ function CurriculumManager() {
 
   async function submitTeacherAssignment() {
     if (!assignRequirement || !assignTeacher) return;
+    if (assignmentPermission === "NOT_ALLOWED" && !confirmManualOverride) { setMessage("Bu öğretmen bu dersi normalde okutamaz. Devam etmek için uyarıyı onaylayın."); return; }
     setBusy(true); setMessage(null);
-    const { error } = await supabase.rpc("assign_teacher_to_class_course", {
+    const { error } = await supabase.rpc("assign_teacher_to_class_course_v4" as never, {
       p_requirement_id: assignRequirement,
       p_teacher_id: assignTeacher,
       p_group: "main",
-    });
+      p_confirm_manual_override: confirmManualOverride,
+    } as never);
     setBusy(false);
     if (error) {
-      setMessage(error.message.includes("EXCEED") ? "Atanan öğretmen saatleri dersin haftalık saatini aşamaz." : "Öğretmen derse atanamadı.");
+      setMessage(error.message.includes("EXCEED") ? "Atanan öğretmen saatleri dersin haftalık saatini aşamaz." : error.message.includes("CONFIRMATION") ? "Bu öğretmen bu dersi normalde okutamaz. Devam etmek için uyarıyı onaylayın." : "Öğretmen derse atanamadı.");
       return;
     }
-    setMessage("Öğretmen ders yüküne atandı. Bu işlem henüz haftalık timetable hücresi oluşturmaz.");
+    setConfirmManualOverride(false);
+    setMessage(confirmManualOverride ? "Uyarı onaylandı ve öğretmen derse manuel olarak atandı." : "Öğretmen ders yüküne atandı. Bu işlem henüz haftalık timetable hücresi oluşturmaz.");
     await load();
   }
 
@@ -187,10 +260,12 @@ function CurriculumManager() {
 
     <section className="mt-5 rounded-xl border border-border bg-card p-4">
       <div className="grid gap-3 md:grid-cols-[1fr_180px_auto]">
-        <div className="space-y-2"><Label>Sınıf / Program</Label><select value={classId} onChange={(e) => { setClassId(e.target.value); const c = classes.find((x) => x.id === e.target.value); setTargetHours(c?.expected_weekly_hours ? String(c.expected_weekly_hours) : ""); }} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Seçiniz</option>{classes.map((c) => <option key={c.id} value={c.id}>{c.composite_key ?? c.class_name}</option>)}</select></div>
+        <div className="space-y-2"><Label>Sınıf / Program</Label><select value={classId} onChange={(e) => { setClassId(e.target.value); setOfficialPreview(null); const c = classes.find((x) => x.id === e.target.value); setTargetHours(c?.expected_weekly_hours ? String(c.expected_weekly_hours) : ""); }} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Seçiniz</option>{classes.map((c) => <option key={c.id} value={c.id}>{c.composite_key ?? c.class_name}</option>)}</select></div>
         <div className="space-y-2"><Label>Hedef Haftalık Saat</Label><Input inputMode="numeric" value={targetHours} onChange={(e) => setTargetHours(e.target.value.replace(/\D/g, ""))} placeholder="35 / 40" /></div>
-        <div className="flex items-end"><Button onClick={() => void saveTargetHours()} disabled={busy || !classId}>Kaydet</Button></div>
+        <div className="flex items-end gap-2"><Button variant="outline" onClick={() => void previewOfficialCurriculum()} disabled={busy || !classId}>Önizle</Button><Button variant="outline" onClick={() => void applyOfficialCurriculum()} disabled={busy || !classId} className="gap-2"><Download className="size-4" /> Resmî Çizelgeden Yükle</Button><Button onClick={() => void saveTargetHours()} disabled={busy || !classId}>Kaydet</Button></div>
       </div>
+      <p className="mt-3 text-xs text-muted-foreground">Resmî yükleme kesin saatli zorunlu, uygulama ve rehberlik derslerini getirir. Seçmeli alternatifleri karar için bırakır; kilitli veya manuel satırları değiştirmez.</p>
+      {officialPreview ? <div className="mt-3 grid gap-2 rounded-xl border border-indigo-200 bg-indigo-50 p-3 text-sm text-indigo-950 sm:grid-cols-2 lg:grid-cols-5"><div><span className="text-xs text-indigo-700">Kesin saatli ders</span><p className="font-semibold">{String(officialPreview.automatic_requirements ?? 0)}</p></div><div><span className="text-xs text-indigo-700">Seçmeli seçenek</span><p className="font-semibold">{String(officialPreview.elective_offerings ?? 0)}</p></div><div><span className="text-xs text-indigo-700">Belirsiz saat</span><p className="font-semibold">{String(officialPreview.ambiguous_hour_offerings ?? 0)}</p></div><div><span className="text-xs text-indigo-700">Korunacak kayıt</span><p className="font-semibold">{String(officialPreview.manual_or_locked_preserved ?? 0)}</p></div><div><span className="text-xs text-indigo-700">Resmî hedef</span><p className="font-semibold">{String(officialPreview.expected_weekly_hours ?? "—")}</p></div><p className="sm:col-span-2 lg:col-span-5 text-xs">Önizleme yalnız etkiyi gösterir; uygulama için “Resmî Çizelgeden Yükle” düğmesini kullanın.</p></div> : null}
 
       {classId ? <div className="mt-4 rounded-xl border border-border p-3">
         <div className="flex items-center justify-between gap-3"><div><p className="text-sm font-semibold">Ders Yükü</p><p className="text-xs text-muted-foreground">Planlanan {planned} saat · Öğretmene atanan {assigned} saat</p></div><Badge variant={status === "complete" ? "default" : status === "overflow" ? "destructive" : "secondary"}>{expected ? `${planned}/${expected}` : `${planned}/?`}</Badge></div>
@@ -200,6 +275,10 @@ function CurriculumManager() {
     </section>
 
     {classId ? <>
+      <section className="mt-5 rounded-xl border border-border bg-card p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2"><div><h2 className="font-semibold">Resmî Seçmeli Ders Havuzu</h2><p className="mt-1 text-xs text-muted-foreground">Seçim, kaynakta tanımlı saat seçenekleriyle kaydedilir. Manuel/ kilitli kayıtlar ve atanmış dersler korunur.</p></div><Badge variant="secondary">{electiveOfferings.length} seçenek</Badge></div>
+        {electiveOfferings.length ? <div className="mt-3 grid gap-2 md:grid-cols-2">{electiveOfferings.map((o) => <div key={o.offering_id} className="rounded-lg border p-3"><div className="flex items-start justify-between gap-2"><div><p className="font-medium text-sm">{o.course_name}</p><p className="text-xs text-muted-foreground">{o.elective_group_key ? `Grup: ${o.elective_group_key}` : "Genel seçmeli"}{o.source_note ? ` · ${o.source_note}` : ""}</p></div><Badge variant="outline">en çok {o.max_selections}</Badge></div><div className="mt-2 flex flex-wrap gap-2">{o.hour_options.map((h) => <Button key={h} size="sm" variant="outline" disabled={busy} onClick={() => void selectOfficialElective(o, h)}>{h} saat seç</Button>)}</div></div>)}</div> : <p className="mt-3 text-sm text-muted-foreground">Seçmeli havuz henüz yok. Önce “Resmî Çizelgeden Yükle” ile sınıfın resmî çizelgesini eşitleyin.</p>}
+      </section>
       <section className="mt-5 grid gap-4 lg:grid-cols-2">
         <div className="rounded-xl border border-border bg-card p-4">
           <h2 className="flex items-center gap-2 font-semibold"><Plus className="size-4" /> Sınıfa Ders Ekle</h2>
@@ -208,7 +287,7 @@ function CurriculumManager() {
 
         <div className="rounded-xl border border-border bg-card p-4">
           <h2 className="flex items-center gap-2 font-semibold"><UserRoundCheck className="size-4" /> Öğretmen Ata</h2>
-          <div className="mt-3 space-y-3"><select value={assignRequirement} onChange={(e) => setAssignRequirement(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Ders seçiniz</option>{classRequirements.map((r) => <option key={r.id} value={r.id}>{courseMap[r.course_id]?.name ?? "Ders"} · {r.weekly_hours} saat</option>)}</select><select value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçiniz</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select><Button className="w-full" onClick={() => void submitTeacherAssignment()} disabled={busy}>Derse Ata</Button><p className="text-xs text-muted-foreground">Branş/TTKB uygunluğu bir sonraki kural motorunda zorunlu doğrulamaya bağlanacaktır.</p></div>
+          <div className="mt-3 space-y-3"><select value={assignRequirement} onChange={(e) => setAssignRequirement(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Ders seçiniz</option>{classRequirements.map((r) => <option key={r.id} value={r.id}>{courseMap[r.course_id]?.name ?? "Ders"} · {r.weekly_hours} saat</option>)}</select><select value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)} className="h-10 w-full rounded-md border bg-background px-3 text-sm"><option value="">Öğretmen seçiniz</option>{teachers.map((t) => <option key={t.user_id} value={t.user_id}>{t.full_name}</option>)}</select>{assignmentPermission ? <p className={`rounded-lg border p-2 text-xs ${assignmentPermission === "ALLOWED" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : assignmentPermission === "NOT_ALLOWED" ? "border-amber-300 bg-amber-50 text-amber-950" : "border-muted bg-muted/40 text-muted-foreground"}`}>{assignmentPermission === "ALLOWED" ? "TTKB alan–ders uygunluğu doğrulandı." : assignmentPermission === "NOT_ALLOWED" ? "Bu öğretmen bu dersi normalde okutamaz." : "Alan veya yetki kuralı henüz tanımlı değil; atama kayda alınır ve kontrol listesinde izlenir."}</p> : null}{assignmentPermission === "NOT_ALLOWED" ? <div className="rounded-lg border border-amber-300 bg-amber-50 p-3"><label className="flex items-start gap-2 text-sm font-medium text-amber-950"><input type="checkbox" checked={confirmManualOverride} onChange={(e) => setConfirmManualOverride(e.target.checked)} className="mt-1" /> Evet, yine de ata</label><p className="mt-2 text-xs text-amber-900">Bu yalnız alan–ders uyarısını onaylar; ders saati, çakışma, oda ve diğer program kuralları değişmez.</p></div> : null}<Button className="w-full" onClick={() => void submitTeacherAssignment()} disabled={busy || !assignRequirement || !assignTeacher}>Derse Ata</Button><p className="text-xs text-muted-foreground">Uygun olmayan branş eşleşmesinde kullanıcı onayı istenir. Onaydan sonra manuel atama yapılır.</p></div>
         </div>
       </section>
 
@@ -219,7 +298,7 @@ function CurriculumManager() {
 
       <section className="mt-5">
         <div className="mb-2 flex items-center justify-between"><h2 className="flex items-center gap-2 font-semibold"><BookOpenCheck className="size-4" /> {selectedClass?.composite_key ?? selectedClass?.class_name} Dersleri</h2><Button variant="outline" size="sm" onClick={() => void load()} className="gap-2"><RefreshCw className="size-4" /> Yenile</Button></div>
-        <div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="min-w-[760px] w-full text-sm"><thead><tr className="border-b bg-muted/40"><th className="p-3 text-left">Ders</th><th className="p-3 text-left">Tür</th><th className="p-3 text-left">HDS</th><th className="p-3 text-left">Öğretmen</th><th className="p-3 text-left">Atanan Saat</th><th className="p-3 text-right">İşlem</th></tr></thead><tbody>{classRequirements.length ? classRequirements.map((r) => { const list = assignmentMap[r.id] ?? []; return <tr key={r.id} className="border-b last:border-0"><td className="p-3 font-medium">{courseMap[r.course_id]?.name ?? "Ders"}</td><td className="p-3">{r.category}</td><td className="p-3">{r.weekly_hours}</td><td className="p-3">{list.map((a) => teacherMap[a.teacher_id]).join(" · ") || <span className="text-amber-600">Atanmadı</span>}</td><td className="p-3">{list.reduce((sum, a) => sum + a.assigned_hours, 0)}/{r.weekly_hours}</td><td className="p-3 text-right"><Button variant="ghost" size="sm" onClick={() => void removeRequirement(r.id)} disabled={r.locked || busy}>Kaldır</Button></td></tr>; }) : <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">Bu sınıfa henüz ders yükü tanımlanmadı.</td></tr>}</tbody></table></div>
+        <div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="min-w-[760px] w-full text-sm"><thead><tr className="border-b bg-muted/40"><th className="p-3 text-left">Ders</th><th className="p-3 text-left">Tür</th><th className="p-3 text-left">HDS</th><th className="p-3 text-left">Öğretmen</th><th className="p-3 text-left">Atanan Saat</th><th className="p-3 text-right">İşlem</th></tr></thead><tbody>{classRequirements.length ? classRequirements.map((r) => { const list = assignmentMap[r.id] ?? []; return <tr key={r.id} className="border-b last:border-0"><td className="p-3 font-medium">{courseMap[r.course_id]?.name ?? "Ders"}</td><td className="p-3">{r.category}</td><td className="p-3">{r.weekly_hours}</td><td className="p-3">{list.length ? <div className="space-y-1">{list.map((a) => <div key={a.id} className="flex items-center gap-1.5">{a.is_manual_override ? <AlertTriangle className="size-3.5 text-amber-600" aria-label="Manuel atama" /> : null}<span>{teacherMap[a.teacher_id]}</span>{a.is_manual_override ? <span className="text-xs text-amber-700">Manuel atama</span> : null}</div>)}</div> : <span className="text-amber-600">Atanmadı</span>}</td><td className="p-3">{list.reduce((sum, a) => sum + a.assigned_hours, 0)}/{r.weekly_hours}</td><td className="p-3 text-right"><Button variant="ghost" size="sm" onClick={() => void removeRequirement(r.id)} disabled={r.locked || busy}>Kaldır</Button></td></tr>; }) : <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">Bu sınıfa henüz ders yükü tanımlanmadı.</td></tr>}</tbody></table></div>
       </section>
     </> : null}
 

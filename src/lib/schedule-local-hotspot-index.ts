@@ -1,4 +1,4 @@
-import { localScopesOverlap,localStudentScopesOverlap, type LocalAssignment, type LocalLockedRow, type LocalStudentConflictWeight } from "@/lib/schedule-local-solver-time-core";
+import { localAssignmentTeacherIds,localAssignmentsShareTeacher,localScopesOverlap,localStudentScopesOverlap, type LocalAssignment, type LocalLockedRow, type LocalStudentConflictWeight } from "@/lib/schedule-local-solver-time-core";
 
 const k=(...v:(string|number|null|undefined)[])=>v.join("|");
 
@@ -23,15 +23,18 @@ export class ScheduleHotspotIndex {
   private courseKey(r:LocalLockedRow){const a=this.assignments.get(r.assignment_id);return a?k(this.classScope(r),a.course_id,r.weekday):null}
   private activityKey(r:LocalLockedRow){return r.activity_key??k(r.assignment_id,"row",r.weekday,r.period)}
 
-  add(r:LocalLockedRow){this.put(this.slotRows,k(r.weekday,r.period),r);this.put(this.teacherDayRows,k(r.teacher_id,r.weekday),r);this.put(this.classDayRows,k(this.classScope(r),r.weekday),r);const c=this.courseKey(r);if(c)this.put(this.courseClassDayRows,c,r);this.put(this.activityRows,this.activityKey(r),r)}
-  remove(r:LocalLockedRow){this.drop(this.slotRows,k(r.weekday,r.period),r);this.drop(this.teacherDayRows,k(r.teacher_id,r.weekday),r);this.drop(this.classDayRows,k(this.classScope(r),r.weekday),r);const c=this.courseKey(r);if(c)this.drop(this.courseClassDayRows,c,r);this.drop(this.activityRows,this.activityKey(r),r)}
+  private teacherIds(r:LocalLockedRow){const a=this.assignments.get(r.assignment_id);return a?localAssignmentTeacherIds(a):[r.teacher_id]}
+  add(r:LocalLockedRow){this.put(this.slotRows,k(r.weekday,r.period),r);for(const id of this.teacherIds(r))this.put(this.teacherDayRows,k(id,r.weekday),r);this.put(this.classDayRows,k(this.classScope(r),r.weekday),r);const c=this.courseKey(r);if(c)this.put(this.courseClassDayRows,c,r);this.put(this.activityRows,this.activityKey(r),r)}
+  remove(r:LocalLockedRow){this.drop(this.slotRows,k(r.weekday,r.period),r);for(const id of this.teacherIds(r))this.drop(this.teacherDayRows,k(id,r.weekday),r);this.drop(this.classDayRows,k(this.classScope(r),r.weekday),r);const c=this.courseKey(r);if(c)this.drop(this.courseClassDayRows,c,r);this.drop(this.activityRows,this.activityKey(r),r)}
 
   private overlaps(a:LocalAssignment,r:LocalLockedRow){return localScopesOverlap(a,this.assignments.get(r.assignment_id))}
   slot(a:LocalAssignment,day:number,period:number){return [...(this.slotRows.get(k(day,period))??[])].filter(r=>this.overlaps(a,r))}
-  occupied(a:LocalAssignment,day:number,period:number){return this.slot(a,day,period).some(r=>r.teacher_id===a.teacher_id||localStudentScopesOverlap(a,this.assignments.get(r.assignment_id)))}
-  teacherDay(a:LocalAssignment,day:number){return [...(this.teacherDayRows.get(k(a.teacher_id,day))??[])].filter(r=>this.overlaps(a,r))}
+  occupied(a:LocalAssignment,day:number,period:number){return this.slot(a,day,period).some(r=>localAssignmentsShareTeacher(a,this.assignments.get(r.assignment_id))||localStudentScopesOverlap(a,this.assignments.get(r.assignment_id)))}
+  teacherDayFor(a:LocalAssignment,teacherId:string,day:number){return [...(this.teacherDayRows.get(k(teacherId,day))??[])].filter(r=>this.overlaps(a,r))}
+  teacherDay(a:LocalAssignment,day:number){return [...new Set(localAssignmentTeacherIds(a).flatMap(id=>this.teacherDayFor(a,id,day)))]}
   classDay(a:LocalAssignment,day:number){return [...(this.classDayRows.get(k(a.class_id,a.subgroup_id??"*",day))??[])].filter(r=>this.overlaps(a,r))}
   courseDay(a:LocalAssignment,day:number){return [...(this.courseClassDayRows.get(k(a.class_id,a.subgroup_id??"*",a.course_id,day))??[])].filter(r=>this.overlaps(a,r))}
+  teacherPeriodsFor(a:LocalAssignment,teacherId:string,day:number){return new Set(this.teacherDayFor(a,teacherId,day).map(r=>r.period))}
   teacherPeriods(a:LocalAssignment,day:number){return new Set(this.teacherDay(a,day).map(r=>r.period))}
   activityGroups(){return [...this.activityRows.entries()].map(([activity_key,set])=>({activity_key,rows:[...set]}))}
   studentPenalty(assignmentId:string,day:number,start:number,duration:number){const a=this.assignments.get(assignmentId);if(!a)return 0;const adj=this.conflictAdjacency.get(assignmentId);if(!adj?.size)return 0;let total=0;for(let p=start;p<start+duration;p++)for(const r of this.slot(a,day,p))total+=adj.get(r.assignment_id)??0;return total}

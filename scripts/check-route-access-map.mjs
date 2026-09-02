@@ -24,6 +24,7 @@ const required=[
   ["/payroll","payroll.view"],
   ["/substitutes","substitutes.view"],
   ["/duty-book","duty.view"],
+  ["/schedule-supervision","duty.view"],
   ["/super-admin","superOnly"],
 ];
 for(const [route,marker] of required){

@@ -1,4 +1,5 @@
 mod compute;
+mod objective;
 mod sync;
 
 use rusqlite::Connection;
@@ -18,6 +19,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             compute::desktop_capabilities,
             compute::desktop_compute_plan,
+            compute::compare_desktop_objective_vectors,
             sync::desktop_sync_contract,
             sync::save_sync_policy,
             sync::load_sync_policy,

@@ -126,6 +126,7 @@ type Result = {
   general_culture_soft_preferences: boolean;
   atomic_blocks: boolean;
   deterministic_replay: boolean;
+  deterministic_replay_count: number;
   runtime_p50_ms: number;
   runtime_p95_ms: number;
   runtime_max_ms: number;
@@ -843,6 +844,7 @@ export async function runVocationalMaxCorpus(seedCount = manifest.seed_count): P
       audits: Audit[] = [];
     let feasible = 0,
       deterministic = true,
+      replayCount = 0,
       lastRows = 0,
       assignmentCount = 0;
     for (let i = 0; i < seeds.length; i++) {
@@ -856,12 +858,10 @@ export async function runVocationalMaxCorpus(seedCount = manifest.seed_count): P
       audits.push(a);
       lastRows = r.rows.length;
       if (r.complete && r.failed === 0 && a.hard === 0 && a.unplaced === 0) feasible++;
-      if (i === 0) {
-        const replay = solveIncrementalSchedule(makeVocationalMaxProblem(profile, seeds[i]!));
-        deterministic =
-          JSON.stringify(stable(r.rows)) === JSON.stringify(stable(replay.rows)) &&
-          JSON.stringify(r.score) === JSON.stringify(replay.score);
-      }
+      const replay = solveIncrementalSchedule(makeVocationalMaxProblem(profile, seeds[i]!));
+      const same = JSON.stringify(stable(r.rows)) === JSON.stringify(stable(replay.rows)) && JSON.stringify(r.score) === JSON.stringify(replay.score);
+      deterministic &&= same;
+      replayCount += same ? 1 : 0;
     }
     results.push({
       profile_id: profile.id,
@@ -894,6 +894,7 @@ export async function runVocationalMaxCorpus(seedCount = manifest.seed_count): P
       ),
       atomic_blocks: audits.every((a) => a.atomic),
       deterministic_replay: deterministic,
+      deterministic_replay_count: replayCount,
       runtime_p50_ms: Math.round(pct(times, 0.5)),
       runtime_p95_ms: Math.round(pct(times, 0.95)),
       runtime_max_ms: Math.round(Math.max(...times)),
@@ -928,7 +929,11 @@ export async function runVocationalMaxCorpus(seedCount = manifest.seed_count): P
   };
 }
 
-export function assertVocationalMaxGate(r: Report, minSeeds = manifest.seed_count) {
+export function assertVocationalMaxGate(
+  r: Report,
+  minSeeds = manifest.seed_count,
+  enforceRuntimeBudget = true,
+) {
   if (
     r.seed_count < minSeeds ||
     r.results.length !== manifest.profiles.length ||
@@ -962,7 +967,8 @@ export function assertVocationalMaxGate(r: Report, minSeeds = manifest.seed_coun
       !x.general_culture_soft_preferences ||
       !x.atomic_blocks ||
       !x.deterministic_replay ||
-      !x.budget_pass
+      x.deterministic_replay_count !== x.runs ||
+      (enforceRuntimeBudget && !x.budget_pass)
     )
       throw new Error(`VOCATIONAL_MAX_CORPUS_GATE_FAILED:${x.profile_id}`);
 }

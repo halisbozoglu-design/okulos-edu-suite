@@ -167,7 +167,13 @@ describe("maximum-complexity vocational-school corpus", () => {
   test("smoke report is deterministic and gate semantics cannot weaken", async () => {
     const r = await runVocationalMaxCorpus(1);
     expect(r.results.every((x) => x.deterministic_replay)).toBe(true);
-    expect(() => assertVocationalMaxGate(r, 1)).not.toThrow();
+    expect(() => assertVocationalMaxGate(r, 1, false)).not.toThrow();
+    expect(() =>
+      assertVocationalMaxGate(
+        { ...r, results: [{ ...r.results[0]!, budget_pass: false }, ...r.results.slice(1)] },
+        1,
+      ),
+    ).toThrow("VOCATIONAL_MAX_CORPUS_GATE_FAILED");
     expect(() =>
       assertVocationalMaxGate(
         {

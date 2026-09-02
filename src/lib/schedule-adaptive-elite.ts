@@ -6,6 +6,7 @@ export type OperatorPrior={strategy:AdaptiveArm;attempts:number;wins:number;rewa
 export type OperatorObservation={strategy:AdaptiveArm;reward:number;win:boolean};
 
 const scoreCmp=(a:LocalScore,b:LocalScore)=>a.hard-b.hard||a.medium-b.medium||a.soft-b.soft;
+const candidateScoreCmp=(a:LocalCandidate,b:LocalCandidate)=>a.score.hard-b.score.hard||a.failed-b.failed||a.score.medium-b.score.medium||a.score.soft-b.score.soft;
 const rowSig=(r:LocalLockedRow)=>`${r.assignment_id}@${r.weekday}:${r.period}`;
 const candidateSet=(c:LocalCandidate)=>new Set(c.rows.map(rowSig));
 const seededHash=(s:string,seed:number)=>{let h=seed|0;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return h>>>0};
@@ -24,7 +25,7 @@ export function buildRelinkProblem(p:LocalProblem,base:LocalCandidate,guide:Loca
 
 export function normalizeRelinkCandidate(c:LocalCandidate,p:LocalProblem):LocalCandidate{const original=new Set(p.locked.map(rowSig));return{...c,rows:c.rows.map(r=>({...r,locked:original.has(rowSig(r))}))}}
 
-export function telemetryObservations(candidates:LocalCandidate[]):OperatorObservation[]{const valid=candidates.filter(c=>ADAPTIVE_ARMS.includes(c.strategy as AdaptiveArm));if(!valid.length)return[];const best=[...valid].sort((a,b)=>scoreCmp(a.score,b.score)||a.failed-b.failed)[0]!,base=Math.max(1,best.score.medium*100+best.score.soft);return valid.map(c=>{const v=Math.max(0,c.score.hard*1e9+c.failed*1e7+c.score.medium*100+c.score.soft),reward=c.complete&&c.score.hard===0?1/(1+v/base):0;return{strategy:c.strategy as AdaptiveArm,reward,win:c===best}})}
+export function telemetryObservations(candidates:LocalCandidate[]):OperatorObservation[]{const valid=candidates.filter(c=>ADAPTIVE_ARMS.includes(c.strategy as AdaptiveArm));if(!valid.length)return[];const best=[...valid].sort(candidateScoreCmp)[0]!,base=Math.max(1,best.score.medium*100+best.score.soft);return valid.map(c=>{const v=Math.max(0,c.score.hard*1e9+c.failed*1e7+c.score.medium*100+c.score.soft),reward=c.complete&&c.score.hard===0?1/(1+v/base):0;return{strategy:c.strategy as AdaptiveArm,reward,win:c===best}})}
 
 export function mergeOperatorPriors(priors:OperatorPrior[],observations:OperatorObservation[]):OperatorPrior[]{const m=new Map<AdaptiveArm,OperatorPrior>();for(const arm of ADAPTIVE_ARMS){const p=priors.find(x=>x.strategy===arm);m.set(arm,{strategy:arm,attempts:Number(p?.attempts??0),wins:Number(p?.wins??0),reward_sum:Number(p?.reward_sum??0)})}for(const o of observations){const x=m.get(o.strategy)!;x.attempts++;x.wins+=o.win?1:0;x.reward_sum+=o.reward}return[...m.values()]}
 

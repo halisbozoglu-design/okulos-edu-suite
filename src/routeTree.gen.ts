@@ -45,6 +45,7 @@ import { Route as ScheduleRulesRelationsRouteImport } from './routes/schedule-ru
 import { Route as ScheduleScenarioComparisonRouteImport } from './routes/schedule-scenario-comparison'
 import { Route as ScheduleScopedRulesRouteImport } from './routes/schedule-scoped-rules'
 import { Route as ScheduleSolverRouteImport } from './routes/schedule-solver'
+import { Route as ScheduleSupervisionRouteImport } from './routes/schedule-supervision'
 import { Route as ScheduleTimeMapRouteImport } from './routes/schedule-time-map'
 import { Route as ScheduleTimeModelRouteImport } from './routes/schedule-time-model'
 import { Route as ScheduleTimeOverridesRouteImport } from './routes/schedule-time-overrides'
@@ -242,6 +243,11 @@ const ScheduleSolverRoute = ScheduleSolverRouteImport.update({
   path: '/schedule-solver',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleSupervisionRoute = ScheduleSupervisionRouteImport.update({
+  id: '/schedule-supervision',
+  path: '/schedule-supervision',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScheduleTimeMapRoute = ScheduleTimeMapRouteImport.update({
   id: '/schedule-time-map',
   path: '/schedule-time-map',
@@ -355,6 +361,7 @@ export interface FileRoutesByFullPath {
   '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
   '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
+  '/schedule-supervision': typeof ScheduleSupervisionRoute
   '/schedule-time-map': typeof ScheduleTimeMapRoute
   '/schedule-time-model': typeof ScheduleTimeModelRoute
   '/schedule-time-overrides': typeof ScheduleTimeOverridesRoute
@@ -408,6 +415,7 @@ export interface FileRoutesByTo {
   '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
   '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
+  '/schedule-supervision': typeof ScheduleSupervisionRoute
   '/schedule-time-map': typeof ScheduleTimeMapRoute
   '/schedule-time-model': typeof ScheduleTimeModelRoute
   '/schedule-time-overrides': typeof ScheduleTimeOverridesRoute
@@ -462,6 +470,7 @@ export interface FileRoutesById {
   '/schedule-scenario-comparison': typeof ScheduleScenarioComparisonRoute
   '/schedule-scoped-rules': typeof ScheduleScopedRulesRoute
   '/schedule-solver': typeof ScheduleSolverRoute
+  '/schedule-supervision': typeof ScheduleSupervisionRoute
   '/schedule-time-map': typeof ScheduleTimeMapRoute
   '/schedule-time-model': typeof ScheduleTimeModelRoute
   '/schedule-time-overrides': typeof ScheduleTimeOverridesRoute
@@ -517,6 +526,7 @@ export interface FileRouteTypes {
     | '/schedule-scenario-comparison'
     | '/schedule-scoped-rules'
     | '/schedule-solver'
+    | '/schedule-supervision'
     | '/schedule-time-map'
     | '/schedule-time-model'
     | '/schedule-time-overrides'
@@ -570,6 +580,7 @@ export interface FileRouteTypes {
     | '/schedule-scenario-comparison'
     | '/schedule-scoped-rules'
     | '/schedule-solver'
+    | '/schedule-supervision'
     | '/schedule-time-map'
     | '/schedule-time-model'
     | '/schedule-time-overrides'
@@ -623,6 +634,7 @@ export interface FileRouteTypes {
     | '/schedule-scenario-comparison'
     | '/schedule-scoped-rules'
     | '/schedule-solver'
+    | '/schedule-supervision'
     | '/schedule-time-map'
     | '/schedule-time-model'
     | '/schedule-time-overrides'
@@ -677,6 +689,7 @@ export interface RootRouteChildren {
   ScheduleScenarioComparisonRoute: typeof ScheduleScenarioComparisonRoute
   ScheduleScopedRulesRoute: typeof ScheduleScopedRulesRoute
   ScheduleSolverRoute: typeof ScheduleSolverRoute
+  ScheduleSupervisionRoute: typeof ScheduleSupervisionRoute
   ScheduleTimeMapRoute: typeof ScheduleTimeMapRoute
   ScheduleTimeModelRoute: typeof ScheduleTimeModelRoute
   ScheduleTimeOverridesRoute: typeof ScheduleTimeOverridesRoute
@@ -948,6 +961,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScheduleSolverRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule-supervision': {
+      id: '/schedule-supervision'
+      path: '/schedule-supervision'
+      fullPath: '/schedule-supervision'
+      preLoaderRoute: typeof ScheduleSupervisionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/schedule-time-map': {
       id: '/schedule-time-map'
       path: '/schedule-time-map'
@@ -1093,6 +1113,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScheduleScenarioComparisonRoute: ScheduleScenarioComparisonRoute,
   ScheduleScopedRulesRoute: ScheduleScopedRulesRoute,
   ScheduleSolverRoute: ScheduleSolverRoute,
+  ScheduleSupervisionRoute: ScheduleSupervisionRoute,
   ScheduleTimeMapRoute: ScheduleTimeMapRoute,
   ScheduleTimeModelRoute: ScheduleTimeModelRoute,
   ScheduleTimeOverridesRoute: ScheduleTimeOverridesRoute,

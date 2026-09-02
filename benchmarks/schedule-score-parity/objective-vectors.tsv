@@ -1,0 +1,7 @@
+id	hard	unplaced	medium	soft	rank
+perfect	0	0	0	0	1
+soft_only	0	0	0	9	2
+medium_beats_soft	0	0	1	0	3
+fractional_quality	0	0	1.5	2.25	4
+unplaced_beats_medium	0	1	0	0	5
+hard_last	1	0	0	0	6

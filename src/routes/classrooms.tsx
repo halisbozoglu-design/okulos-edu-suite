@@ -17,6 +17,10 @@ type Rule = { id: string; subject_pattern: string; required_room_type: string | 
 type Profile = { id: string; periods_per_day: number };
 type BreakRow = { after_period: number; minutes: number; transfer_allowed: boolean };
 type Travel = { id: string; from_building_id: string; to_building_id: string; minutes: number; active: boolean };
+type RoomBundle = { id:string;name:string;active:boolean };
+type RoomBundleMember = { bundle_id:string;classroom_id:string;member_role:"PRIMARY"|"SUPPORT";ordinal:number };
+type AssignmentChoice = { assignment_id:string;class_name:string;subject:string };
+type BundleOption = { teacher_assignment_id:string;bundle_id:string };
 
 const db = supabase as any;
 
@@ -29,6 +33,10 @@ function Classrooms() {
   const [pools, setPools] = useState<Pool[]>([]);
   const [travels, setTravels] = useState<Travel[]>([]);
   const [breaks, setBreaks] = useState<BreakRow[]>([]);
+  const [roomBundles,setRoomBundles]=useState<RoomBundle[]>([]);
+  const [bundleMembers,setBundleMembers]=useState<RoomBundleMember[]>([]);
+  const [assignmentChoices,setAssignmentChoices]=useState<AssignmentChoice[]>([]);
+  const [bundleOptions,setBundleOptions]=useState<BundleOption[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -63,22 +71,32 @@ function Classrooms() {
   const [breakPeriod, setBreakPeriod] = useState("1");
   const [breakMinutes, setBreakMinutes] = useState("10");
   const [transferAllowed, setTransferAllowed] = useState(true);
+  const [bundleName,setBundleName]=useState("");
+  const [bundlePrimary,setBundlePrimary]=useState("");
+  const [bundleSupport,setBundleSupport]=useState("");
+  const [bundleAssignment,setBundleAssignment]=useState("");
+  const [bundleOption,setBundleOption]=useState("");
 
   const buildingNames = useMemo(() => Object.fromEntries(buildings.map((x) => [x.id, x.name])), [buildings]);
   const poolNames = useMemo(() => Object.fromEntries(pools.map((x) => [x.id, x.name])), [pools]);
 
   const load = useCallback(async () => {
-    const [r, rr, b, p, t, prof] = await Promise.all([
+    const [r, rr, b, p, t, prof,rb,rm,ac,bo] = await Promise.all([
       db.from("classrooms").select("id,name,room_type,capacity,department,hardware,active,building_id,floor,room_pool_id").order("name"),
       db.from("lesson_room_rules").select("id,subject_pattern,required_room_type,required_department,required_hardware,preferred_room_type,preferred_department,preferred_hardware,preferred_building_id,preferred_room_ids,avoided_room_ids,active").eq("active", true).order("subject_pattern"),
       db.from("schedule_buildings").select("id,name,code,active").eq("active", true).order("name"),
       db.from("schedule_room_pools").select("id,name,capacity,max_simultaneous_activities,active").eq("active", true).order("name"),
       db.from("schedule_building_travel").select("id,from_building_id,to_building_id,minutes,active").eq("active", true),
       db.rpc("get_active_schedule_time_profile"),
+      db.from("schedule_room_bundles").select("id,name,active").eq("active",true).order("name"),
+      db.from("schedule_room_bundle_members").select("bundle_id,classroom_id,member_role,ordinal").order("ordinal"),
+      db.rpc("get_schedule_room_bundle_assignment_choices_v1"),
+      db.from("schedule_assignment_room_bundle_options").select("teacher_assignment_id,bundle_id"),
     ]);
-    const err = r.error || rr.error || b.error || p.error || t.error || prof.error;
+    const err = r.error || rr.error || b.error || p.error || t.error || prof.error||rb.error||rm.error||ac.error||bo.error;
     if (err) return setMessage(`Derslik verileri okunamadı: ${err.message}`);
     setRooms((r.data ?? []) as Room[]); setRules((rr.data ?? []) as Rule[]); setBuildings((b.data ?? []) as Building[]); setPools((p.data ?? []) as Pool[]); setTravels((t.data ?? []) as Travel[]);
+    setRoomBundles((rb.data??[])as RoomBundle[]);setBundleMembers((rm.data??[])as RoomBundleMember[]);setAssignmentChoices((ac.data??[])as AssignmentChoice[]);setBundleOptions((bo.data??[])as BundleOption[]);
     const activeProfile = (Array.isArray(prof.data) ? prof.data[0] : prof.data) as Profile | null; setProfile(activeProfile ?? null);
     if (activeProfile?.id) {
       const br = await db.from("schedule_period_breaks").select("after_period,minutes,transfer_allowed").eq("time_profile_id", activeProfile.id).order("after_period");
@@ -122,6 +140,13 @@ function Classrooms() {
     const { error } = await db.from("schedule_period_breaks").upsert({ time_profile_id: profile.id, after_period: Number(breakPeriod), minutes: Number(breakMinutes), transfer_allowed: transferAllowed }, { onConflict: "institution_code,time_profile_id,after_period" });
     if (error) return setMessage(`Teneffüs kaydedilemedi: ${error.message}`); setMessage("Teneffüs/transfer kuralı kaydedildi."); await load();
   }
+  async function saveRoomBundle(){
+    if(!editable||!bundleName.trim()||!bundlePrimary)return setMessage("Demet adı, ana oda ve en az bir destek odası gerekir.");const support=roomIds(bundleSupport).filter(id=>id!==bundlePrimary);if(!support.length)return setMessage("Destek odalarını derslik adlarıyla virgülle ayırın.");
+    const{error}=await db.rpc("upsert_schedule_room_bundle_v1",{p_name:bundleName.trim(),p_primary_classroom_id:bundlePrimary,p_component_classroom_ids:support});if(error)return setMessage(`Oda demeti kaydedilemedi: ${error.message}`);setBundleName("");setBundleSupport("");setMessage("Atomik oda demeti kaydedildi.");await load();
+  }
+  async function saveBundleOption(){
+    if(!editable||!bundleAssignment||!bundleOption)return;const{error}=await db.rpc("set_assignment_room_bundle_option_v1",{p_teacher_assignment_id:bundleAssignment,p_bundle_id:bundleOption,p_enabled:true});if(error)return setMessage(`Ders-demeti seçeneği kaydedilemedi: ${error.message}`);setMessage("Ders için bileşik oda seçeneği kaydedildi.");await load();
+  }
 
   return <AppShell title="Derslik · Bina · Oda Havuzu" subtitle="Kapasite · donanım · bina geçişi · shared/virtual room · HARD/SOFT tercihler" action={<Building2 className="size-5"/>}>
     <div className="grid gap-2 sm:grid-cols-2"><Link to="/room-assignment"><Button variant="outline" className="w-full">Otomatik Derslik Atama</Button></Link><Link to="/timetable"><Button variant="outline" className="w-full">Ders Programı</Button></Link></div>
@@ -138,6 +163,8 @@ function Classrooms() {
       <section className="rounded-xl border bg-card p-4"><h2 className="font-semibold">Derslik Ekle / Güncelle</h2><div className="mt-3 grid gap-3 sm:grid-cols-2"><div><Label>Ad</Label><Input disabled={!editable} value={name} onChange={(e) => setName(e.target.value)} placeholder="Fen Laboratuvarı 1"/></div><div><Label>Tip</Label><Input disabled={!editable} value={type} onChange={(e) => setType(e.target.value)} placeholder="standard / lab / gym"/></div><div><Label>Kapasite</Label><Input disabled={!editable} type="number" min={1} value={capacity} onChange={(e) => setCapacity(e.target.value)}/></div><div><Label>Bölüm</Label><Input disabled={!editable} value={department} onChange={(e) => setDepartment(e.target.value)} placeholder="Fen / Spor / Bilişim"/></div><div><Label>Bina</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" disabled={!editable} value={buildingId} onChange={(e) => setBuildingId(e.target.value)}><option value="">Belirtilmemiş</option>{buildings.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></div><div><Label>Kat</Label><Input type="number" disabled={!editable} value={floor} onChange={(e) => setFloor(e.target.value)}/></div><div className="sm:col-span-2"><Label>Fiziksel oda havuzu</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" disabled={!editable} value={poolId} onChange={(e) => setPoolId(e.target.value)}><option value="">Bağımsız oda</option>{pools.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}</select></div><div className="sm:col-span-2"><Label>Donanım JSON</Label><Input disabled={!editable} value={hardware} onChange={(e) => setHardware(e.target.value)} placeholder='{"projector":true}'/></div></div><Button disabled={!editable} className="mt-3 w-full" onClick={() => void addRoom()}><Plus className="mr-2 size-4"/>Dersliği Kaydet</Button></section>
       <section className="rounded-xl border bg-card p-4"><h2 className="font-semibold">Teneffüs / Transfer</h2><p className="mt-1 text-xs text-muted-foreground">Farklı binalardaki ardışık dersler yalnız transfer açık ve süre yeterliyse atanabilir.</p><div className="mt-3 grid gap-3 sm:grid-cols-2"><div><Label>Kaçıncı dersten sonra</Label><Input type="number" min={1} max={Math.max(1,(profile?.periods_per_day ?? 8)-1)} disabled={!editable} value={breakPeriod} onChange={(e) => setBreakPeriod(e.target.value)}/></div><div><Label>Teneffüs (dk)</Label><Input type="number" min={0} disabled={!editable} value={breakMinutes} onChange={(e) => setBreakMinutes(e.target.value)}/></div><label className="flex items-center gap-2 text-sm sm:col-span-2"><input type="checkbox" disabled={!editable} checked={transferAllowed} onChange={(e) => setTransferAllowed(e.target.checked)}/>Bu teneffüste bina değişimine izin ver</label></div><Button disabled={!editable || !profile} className="mt-3 w-full" onClick={() => void saveBreak()}>Teneffüs Kuralını Kaydet</Button><div className="mt-3 flex flex-wrap gap-2">{breaks.map((b) => <span key={b.after_period} className="rounded-full border px-2 py-1 text-xs">{b.after_period}. ders sonrası · {b.minutes} dk · {b.transfer_allowed ? "transfer açık" : "kapalı"}</span>)}</div></section>
     </div>
+
+    <section className="mt-4 rounded-xl border bg-card p-4"><h2 className="font-semibold">Atomik Oda Demeti</h2><p className="mt-1 text-xs text-muted-foreground">Bir etkinliğin aynı anda kullanacağı tüm fiziksel odaları birlikte tanımlar. Ana oda programda görünür; destek odaları da HARD kaynak olarak rezerve edilir.</p><div className="mt-3 grid gap-3 md:grid-cols-3"><div><Label>Demet adı</Label><Input disabled={!editable} value={bundleName} onChange={e=>setBundleName(e.target.value)} placeholder="Fen Lab + Hazırlık"/></div><div><Label>Ana oda</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" disabled={!editable} value={bundlePrimary} onChange={e=>setBundlePrimary(e.target.value)}><option value="">Seç</option>{rooms.filter(r=>r.active).map(r=><option key={r.id} value={r.id}>{r.name}</option>)}</select></div><div><Label>Destek odaları</Label><Input disabled={!editable} value={bundleSupport} onChange={e=>setBundleSupport(e.target.value)} placeholder="Hazırlık Odası, Depo 1"/></div></div><Button disabled={!editable} className="mt-3" onClick={()=>void saveRoomBundle()}><Plus className="mr-2 size-4"/>Oda Demetini Kaydet</Button><div className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr_auto]"><div><Label>Ders / şube ataması</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" disabled={!editable} value={bundleAssignment} onChange={e=>setBundleAssignment(e.target.value)}><option value="">Seç</option>{assignmentChoices.map(a=><option key={a.assignment_id} value={a.assignment_id}>{a.class_name} · {a.subject}</option>)}</select></div><div><Label>İzinli oda demeti</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" disabled={!editable} value={bundleOption} onChange={e=>setBundleOption(e.target.value)}><option value="">Seç</option>{roomBundles.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}</select></div><Button disabled={!editable} className="self-end" onClick={()=>void saveBundleOption()}>Seçeneği Ekle</Button></div><div className="mt-3 divide-y rounded-lg border">{roomBundles.map(b=>{const ms=bundleMembers.filter(m=>m.bundle_id===b.id),used=bundleOptions.filter(o=>o.bundle_id===b.id).length;return <div key={b.id} className="p-3 text-sm"><b>{b.name}</b><p className="text-xs text-muted-foreground">{ms.map(m=>`${m.member_role==="PRIMARY"?"Ana":"Destek"}: ${rooms.find(r=>r.id===m.classroom_id)?.name??"?"}`).join(" · ")} · {used} ders seçeneği</p></div>})}{!roomBundles.length?<p className="p-4 text-sm text-muted-foreground">Atomik oda demeti tanımlı değil.</p>:null}</div></section>
 
     <section className="mt-4 rounded-xl border bg-card p-4"><h2 className="font-semibold">Ders → Derslik Kuralı</h2><p className="mt-1 text-xs text-muted-foreground">Zorunlular HARD; tercihler SOFT. Oda listelerinde derslik adlarını virgülle ayırın.</p><div className="mt-3 grid gap-3 md:grid-cols-3"><div><Label>Ders deseni</Label><Input disabled={!editable} value={pattern} onChange={(e) => setPattern(e.target.value)} placeholder="%Bilişim%"/></div><div><Label>Zorunlu tip</Label><Input disabled={!editable} value={ruleType} onChange={(e) => setRuleType(e.target.value)}/></div><div><Label>Zorunlu bölüm</Label><Input disabled={!editable} value={ruleDepartment} onChange={(e) => setRuleDepartment(e.target.value)}/></div><div><Label>Zorunlu donanım JSON</Label><Input disabled={!editable} value={ruleHardware} onChange={(e) => setRuleHardware(e.target.value)}/></div><div><Label>Tercih edilen tip</Label><Input disabled={!editable} value={preferredType} onChange={(e) => setPreferredType(e.target.value)}/></div><div><Label>Tercih edilen bölüm</Label><Input disabled={!editable} value={preferredDepartment} onChange={(e) => setPreferredDepartment(e.target.value)}/></div><div><Label>Tercih edilen donanım JSON</Label><Input disabled={!editable} value={preferredHardware} onChange={(e) => setPreferredHardware(e.target.value)}/></div><div><Label>Tercih edilen bina</Label><select className="h-10 w-full rounded-md border bg-background px-3 text-sm" disabled={!editable} value={preferredBuildingId} onChange={(e) => setPreferredBuildingId(e.target.value)}><option value="">Serbest</option>{buildings.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></div><div><Label>Tercih edilen odalar</Label><Input disabled={!editable} value={preferredRooms} onChange={(e) => setPreferredRooms(e.target.value)} placeholder="Lab 1, Lab 2"/></div><div><Label>Kaçınılacak odalar</Label><Input disabled={!editable} value={avoidedRooms} onChange={(e) => setAvoidedRooms(e.target.value)} placeholder="Salon 3"/></div></div><Button disabled={!editable} className="mt-3 w-full" onClick={() => void addRule()}><Plus className="mr-2 size-4"/>Kuralı Kaydet</Button></section>
 

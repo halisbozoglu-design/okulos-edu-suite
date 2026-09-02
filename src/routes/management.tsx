@@ -32,6 +32,7 @@ const items:readonly ManagementItem[]=[
  {group:"operations",to:'/payroll-rules',title:'Ek Ders Kuralları',desc:'Yürürlük tarihli kurallar ve KBS veri tipleri',icon:Calculator,permissions:['payroll.edit']},
  {group:"operations",to:'/substitutes',title:'Vekalet',desc:'Devamsızlık, boş ders ve vekalet atamaları',icon:Users,permissions:['substitutes.view','substitutes.manage']},
  {group:"operations",to:'/settings',title:'Nöbet',desc:'Aylık idareci/öğretmen nöbet planı',icon:Settings,permissions:['duty.view','duty.manage','duty.generate','duty.lock']},
+ {group:"operations",to:'/schedule-supervision',title:'Gözetim & Alan Nöbeti',desc:'Canlı ders doluluğuyla önizleme, idari onay, yayın ve rapor',icon:ShieldCheck,permissions:['duty.view','duty.manage','duty.generate','duty.lock']},
  {group:"operations",to:'/duty-book',title:'Nöbet Defteri',desc:'Günlük nöbet, boş ders, gecikme ve olay kayıtları',icon:FileClock,permissions:['duty.view','duty.manage']},
 
  {group:"system",to:'/legislation',title:'Mevzuat Kütüphanesi',desc:'Mevzuatı kaydet, ara, oku ve personele gönder',icon:BookOpen,permissions:['settings.manage']},

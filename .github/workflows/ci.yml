@@ -53,6 +53,12 @@ jobs:
       - name: Run unit and parser regression tests
         run: bun test
 
+      - name: Setup Rust for native parity gate
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Verify native objective-vector parity
+        run: rustc --edition=2021 --test desktop/src-tauri/src/objective.rs -o /tmp/okulos-objective-test && /tmp/okulos-objective-test
+
       - name: Setup Python for CP-SAT oracle
         uses: actions/setup-python@v5
         with:
@@ -65,7 +71,7 @@ jobs:
         run: PYTHONPATH=tools python tools/test_schedule_cpsat_oracle.py
 
       - name: Run 30-seed world benchmark gate
-        run: bun tools/schedule_world_benchmark.ts --ci --out /tmp/schedule-world-benchmark.json
+        run: bun tools/schedule_world_benchmark.ts --ci --replay-all --out /tmp/schedule-world-benchmark.json
 
       - name: Report final parity truth gate
         run: bun tools/schedule_parity_gate.ts
@@ -75,6 +81,16 @@ jobs:
         with:
           name: schedule-world-benchmark-${{ github.sha }}
           path: /tmp/schedule-world-benchmark.json
+          retention-days: 30
+
+      - name: Audit canonical schedule schema references
+        run: node scripts/report-schedule-schema-references.mjs --ci --out /tmp/schedule-schema-reference-audit.json
+
+      - name: Upload canonical schema reference evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: schedule-schema-reference-${{ github.sha }}
+          path: /tmp/schedule-schema-reference-audit.json
           retention-days: 30
 
       - name: Check Supabase migrations
