@@ -7,7 +7,7 @@ Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-c
 ## Güncel doğrulanmış durum
 
 - PR #25 açık ve merge edilebilir.
-- P0.4 head `ed816cd` için CI #1405 tamamen başarılıdır: unit/parser, CP-SAT oracle, 30-seed benchmark, migration/replay, tenant/auth/route guard, timetable authority, production build ve TypeScript. Impossible, MESEM, MTAL, room-building ve vocational-max corpus workflow'ları da aynı head üzerinde başarılıdır.
+- P0.8 head `5fff4d8` için CI #1426 tamamen başarılıdır: 323 unit/parser testi, native Rust objective parity, CP-SAT oracle, tüm seed'leri çift çözen 30-seed world matrisi, migration/replay, tenant/auth/route guard, timetable authority, production build ve TypeScript. Impossible, MESEM, MTAL, room-building, vocational-max ve 606-case stress workflow'ları da aynı head üzerinde başarılıdır.
 - MTAL, MESEM, oda/bina extreme ve maksimum mesleki corpus workflow'ları aynı head üzerinde başarılıdır.
 - Lovable AI/chat/agent kullanılmaz; Lovable token tüketimi sıfırdır. Lovable Cloud yalnız mevcut çalışma ortamıdır.
 - HARD kurallar sessiz gevşetilmez; canonical server validator son otoritedir.
@@ -32,9 +32,7 @@ Coverage manifestinde açık `GAP` kalmadı. Bu yalnız manifestteki tanımlı H
 
 ## P0 — Web/Lovable Cloud çekirdeği için release blokajları
 
-| ID | Eksik | Bugünkü gerçek durum | Kapanış ölçütü |
-|---|---|---|---|
-| P0.8 | Tekrarlı determinism ve performans eşiği | Bazı corpus'larda determinism var | Tüm release corpus'larında tekrar + regresyon threshold |
+Açık P0 kalmadı. P0.7 ortak DB/Web/native `[HARD, unplaced, MEDIUM, SOFT]` fixture ve gerçek Rust testiyle; P0.8 ise her release seed'inin ikinci çözümünde birebir satır/skor eşitliği ve seed başına en fazla 8 saniyelik performans bütçesiyle kapandı.
 
 ## P1 — Web üretim kalitesi
 
@@ -132,6 +130,6 @@ Eski master tree'de 99 adet işaretlenmemiş kutu vardır. Bu, 99 bağımsız ç
 Bugünkü en net özet:
 
 - Coverage manifestinde **0 açık GAP**.
-- Web/Cloud release yolunda **1 açık P0 kapanış işi**. P0.7, ortak fixture ve gerçek native Rust testiyle kapandı: DB, Web ve native katmanları `[HARD, unplaced, MEDIUM, SOFT]` sırasını kullanır; Web'de `unplaced` artık `HARD` içine katlanmaz. Kalan tek madde P0.8 tekrarlı determinism ve performans eşiğidir.
+- Web/Cloud release yolunda **0 açık P0 kapanış işi**. P0.7 ve P0.8, CI #1426 ve altı ayrı corpus/stress workflow'unda kanıtlanarak kapandı.
 - Windows'ta **9**, macOS'ta **11** açık hedef.
 - Self-host geçişi mevcut Lovable Cloud kullanımı için **gelecek hedef**.
