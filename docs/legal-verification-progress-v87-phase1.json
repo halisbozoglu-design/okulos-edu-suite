@@ -1,0 +1,20 @@
+{
+  "batch": "V87",
+  "phase": 1,
+  "date": "2026-09-02",
+  "status": "ACTIVE",
+  "master_workflow_count": 2229,
+  "article_verified_before": 460,
+  "article_verified_promotions": 0,
+  "article_verified_rollbacks": [],
+  "article_verified_after": 460,
+  "article_verified_percent": 20.6371,
+  "remaining_exact": 1769,
+  "closed_support_pool_before": 22805,
+  "support_atoms_phase1_active": 130,
+  "closed_support_pool_after": 22805,
+  "migration_count": 0,
+  "lovable_usage": 0,
+  "phase_boundary": "HB-1774..HB-1786",
+  "next_boundary": "V87 Phase2 exact-clause/dedupe audit, then HB-1787+"
+}
