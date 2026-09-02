@@ -22,7 +22,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - run: bun install --frozen-lockfile
       - name: Desktop policy regression
-        run: bun test tests/desktop-sync-policy.test.ts tests/desktop-command-contract.test.ts tests/desktop-solver-compute-policy.test.ts
+        run: bun test tests/desktop-sync-policy.test.ts tests/desktop-command-contract.test.ts tests/desktop-solver-compute-policy.test.ts tests/schedule-objective-vector-parity.test.ts
       - name: Build web client assets
         run: bun run build
       - name: Verify desktop frontend payload

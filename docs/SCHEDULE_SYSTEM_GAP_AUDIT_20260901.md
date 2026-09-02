@@ -34,7 +34,6 @@ Coverage manifestinde açık `GAP` kalmadı. Bu yalnız manifestteki tanımlı H
 
 | ID | Eksik | Bugünkü gerçek durum | Kapanış ölçütü |
 |---|---|---|---|
-| P0.7 | DB/Web/native score-vector eşitliği | Web/DB kanıtları parçalı; native binding açık | Aynı fixture için aynı lexicographic skor |
 | P0.8 | Tekrarlı determinism ve performans eşiği | Bazı corpus'larda determinism var | Tüm release corpus'larında tekrar + regresyon threshold |
 
 ## P1 — Web üretim kalitesi
@@ -133,6 +132,6 @@ Eski master tree'de 99 adet işaretlenmemiş kutu vardır. Bu, 99 bağımsız ç
 Bugünkü en net özet:
 
 - Coverage manifestinde **0 açık GAP**.
-- Web/Cloud release yolunda **2 açık P0 kapanış işi**; P0.1–P0.5'e ek olarak P0.6 birleşik edge-case suite de 2026-09-02'de kapandı. Aynı fixture sectioning, bileşik derslik, eş öğretmen ve tek/çift hafta fiziksel saatlerini 20 seed determinism ile birlikte sınar; iki periyotlu imkânsız kaynak döngüsü ve çakışan gerçek zil saati fail-closed kalır.
+- Web/Cloud release yolunda **1 açık P0 kapanış işi**. P0.7, ortak fixture ve gerçek native Rust testiyle kapandı: DB, Web ve native katmanları `[HARD, unplaced, MEDIUM, SOFT]` sırasını kullanır; Web'de `unplaced` artık `HARD` içine katlanmaz. Kalan tek madde P0.8 tekrarlı determinism ve performans eşiğidir.
 - Windows'ta **9**, macOS'ta **11** açık hedef.
 - Self-host geçişi mevcut Lovable Cloud kullanımı için **gelecek hedef**.

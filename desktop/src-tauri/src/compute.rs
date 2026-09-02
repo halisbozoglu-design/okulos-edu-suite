@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+use crate::objective::{compare_objective_vectors, ObjectiveVector};
+use std::cmp::Ordering;
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -34,6 +36,14 @@ pub struct DesktopComputePlan {
     pub effort: SolverEffort,
     pub search_policy: &'static str,
 }
+
+#[derive(Debug,Clone,Copy,Deserialize)]
+#[serde(rename_all="camelCase")]
+pub struct DesktopObjectiveVector{pub hard:f64,pub unplaced:f64,pub medium:f64,pub soft:f64}
+impl From<DesktopObjectiveVector> for ObjectiveVector{fn from(v:DesktopObjectiveVector)->Self{Self{hard:v.hard,unplaced:v.unplaced,medium:v.medium,soft:v.soft}}}
+
+#[tauri::command]
+pub fn compare_desktop_objective_vectors(left:DesktopObjectiveVector,right:DesktopObjectiveVector)->Result<i8,String>{compare_objective_vectors(left.into(),right.into()).map(|x|match x{Ordering::Less=>-1,Ordering::Equal=>0,Ordering::Greater=>1}).map_err(str::to_string)}
 
 #[tauri::command]
 pub fn desktop_capabilities() -> DesktopCapabilities {

@@ -53,6 +53,12 @@ jobs:
       - name: Run unit and parser regression tests
         run: bun test
 
+      - name: Setup Rust for native parity gate
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Verify native objective-vector parity
+        run: rustc --edition=2021 --test desktop/src-tauri/src/objective.rs -o /tmp/okulos-objective-test && /tmp/okulos-objective-test
+
       - name: Setup Python for CP-SAT oracle
         uses: actions/setup-python@v5
         with:
