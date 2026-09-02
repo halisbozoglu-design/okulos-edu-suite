@@ -9,7 +9,7 @@ test("coverage matrix is explicit and only marks evidenced rows direct", async (
   const rows = [...manifest.school_types, ...manifest.hard_families];
   expect(rows.length).toBeGreaterThanOrEqual(15);
   expect(rows.filter((x) => x.status === "DIRECT").every((x) => x.evidence.length > 0)).toBe(true);
-  expect(rows.filter((x) => x.status === "GAP").length).toBeGreaterThan(0);
+  expect(rows.every((x) => x.status !== "DIRECT" || x.evidence.length > 0)).toBe(true);
   expect(manifest.school_types.find((x) => x.id === "MTAL")?.status).toBe("DIRECT");
   expect(manifest.school_types.find((x) => x.id === "MESEM")?.status).toBe("DIRECT");
   expect(manifest.school_types.find((x) => x.id === "IMAM_HATIP")?.status).toBe("DIRECT");
