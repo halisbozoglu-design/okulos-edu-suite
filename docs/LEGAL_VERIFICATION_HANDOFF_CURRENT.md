@@ -1,14 +1,14 @@
 # Okulos Mevzuat Doğrulama — Kanonik Handoff
 
 Güncelleme: 2026-09-02
-Durum: AKTİF — V86 CLOSED / V87 NEXT
+Durum: AKTİF — V87 PHASE 1 COMPLETE / PHASE 2 NEXT
 Repo: `halisbozoglu-design/okulos-edu-suite`
 Mode: `ARTICLE_VERIFIED_PRIORITY`
 Migration: **0**
 Lovable usage: **0**
 
 ## Kaynak politikası
-ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `meb.gov.tr` birimleri ve `resmigazete.gov.tr`. Current RG amendment chain stale consolidated/handbook kaynakların üstündedir. School-type/program-specific provisions broad ALL metadata ile miras alınamaz. Thematic/adjacent article exact proof değildir.
+ARTICLE_VERIFIED için yalnız güncel/uygulanabilir resmî otorite: `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `meb.gov.tr` birimleri, `resmigazete.gov.tr`; arşiv/dosya planı ailesinde Devlet Arşivleri Başkanlığı resmî yayınları. Current RG chain stale consolidation/handbook kaynakların üstündedir. School/program/system-specific hükümler broad ALL metadata ile miras alınamaz. Thematic/adjacent hüküm exact proof değildir.
 
 ## Güncel kesin durum
 - Master workflow: **2.229**
@@ -16,92 +16,79 @@ ARTICLE_VERIFIED için yalnız `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `m
 - Kalan exact: **1.769**
 - Kapanmış support-atom pool: **22.805**
 - Son kapanmış batch: **V86**
-- Sıradaki batch: **V87**
+- Aktif batch: **V87**
+- V87 Phase 1 active atoms: **130**
 - Migration: **0**
 - Lovable: **0**
 
-## V85 özeti
-Canonical: `docs/legal-course-selection-integrity-v85.md`.
-- ARTICLE_VERIFIED **466 -> 463**, delta -3.
-- Rollback: HB-1762, HB-1763, HB-1766.
-- OÖİKY Md5/A school-level/timing scope cannot validate secondary/MTAL ALL rows.
+## V86 lock
+V86 300 support atom ile kapandı. HB-1771/1772/1773 eski `ALL + OÖİKY Md5/A` yanlış otorite eşleşmeleri birer kez rollback edildi; ARTICLE_VERIFIED 463 -> 460.
+MTAL 2026-2027 elective resolver:
+- 12 -> TTKB 2023-40
+- 10-11 -> TTKB 2024-41
+- hazırlık/9 -> TTKB 2026-62
+- framework authority ayrıca versioned; latest-decision-wins yasak.
+Canonical V86 files: `docs/legal-article-verified-focused-deepening-batch-v86-phase3.md`, `docs/legal-article-verified-batch-v86.md`, `docs/legal-verification-progress-v86-delta.json`.
 
-## V86 — 300 support atoms CLOSED
-Phase docs:
-- `docs/legal-article-verified-focused-deepening-batch-v86-phase1.md` — 40 atoms.
-- `docs/legal-article-verified-focused-deepening-batch-v86-phase2.md` — 80 atoms.
-- `docs/legal-article-verified-focused-deepening-batch-v86-phase3.md` — 180 atoms.
-ARTICLE_VERIFIED summary: `docs/legal-article-verified-batch-v86.md`.
-Progress: `docs/legal-verification-progress-v86-delta.json`.
+## V87 Phase 1 — HB-1774..HB-1786
+Canonical: `docs/legal-article-verified-focused-deepening-batch-v87-phase1.md`.
+Progress: `docs/legal-verification-progress-v87-phase1.json`.
 
-### Exact master boundary recovered from File Library
-Canonical 2,229-row master was recovered from `Mimaros_Master_Is_Akisi_FINAL.md/jsonl`, eliminating GitHub HB-ID index dependency.
-- HB-1768: MTAL 11/12 branch elective vocational courses; coordinator + zümre + sector vocational-person cooperation.
-- HB-1769: framework-program weekly schedule; branch, school type, year/grade; diploma-leading/supporting course construction.
-- HB-1770: TTK decisions + weekly-schedule explanations; general elective / own field-branch / other field-branch selection.
-- HB-1771: sector needs + zümre + coordinator + student demand + field/branch characteristics -> school administration determination.
-- HB-1772: prerequisite/program sequence.
-- HB-1773: weekly scheduled elective-hour requirement.
-- HB-1774 begins a new family: EVRAK KAYIT DOSYALAMA VE SEVK.
+Exact master boundary:
+- HB-1774 physical evrak delivery / zimmet defteri.
+- HB-1775 Standart Dosya Planı filing.
+- HB-1776 Belgenet/EBYS official correspondence.
+- HB-1777 petition or information request timely response.
+- HB-1778 superior-authority information-request response.
+- HB-1779 current official-correspondence regulation compliance.
+- HB-1780 classified/confidential document handling.
+- HB-1781 `ASLI GİBİDİR` certified copy.
+- HB-1782 electronic user groups/authorizations.
+- HB-1783 information-system prevention/detection/correction controls.
+- HB-1784 MEBBİS timely/accurate/current data.
+- HB-1785 mixed teacher system applications approval/rejection.
+- HB-1786 three-copy physical output/distribution.
+HB-1787 begins `2.13 ÖĞRETMENLİK UYGULAMASI`.
 
-### Current 2026-2027 MTAL elective cohort resolver
-Official MTEGM Duyuru No 17 (`https://meslek.meb.gov.tr/duyurugoster.aspx?d_id=17`):
-- Grade 12 -> **TTKB 2023-40**.
-- Grades 10-11 -> **TTKB 2024-41**.
-- Preparatory + Grade 9 -> **TTKB 2026-62**.
-Official decision registry: `https://meslek.meb.gov.tr/kararlar`.
-2026-85 is separately a framework-program authority beginning prep/Grade 9; elective-table and framework-program authority kinds must remain distinct.
+### V87 Phase 1 legal locks
+1. Current Saklama Süreli Standart Dosya Planı update is applicable from 02.01.2024. HB-1775 strong candidate; promotion withheld pending canonical row-ledger dedupe.
+2. Current official-writing family is `Resmî Yazışmalarda Uygulanacak Usul ve Esaslar Hakkında Yönetmelik`, CB Kararı 2646, RG 10.06.2020/31151. Master singular-title drift is normalization only.
+3. HB-1774 cannot be treated as universal physical-zimmet default in electronic-first correspondence regime; exact MEB-specific authority required.
+4. HB-1776 legal rule must not be hardcoded to `Belgenet` product name; product/provider is configuration, official-correspondence/electronic-document rule is authority layer.
+5. 4982 Md11 deadline engine: default 15 business days; specified multi-unit/opinion cases 30 business days; extension reason notified before initial period expires. HB-1777/1778 `zamanında` therefore cannot be one static deadline.
+6. HB-1780 specialized current family: CB Kararı 5529, `Gizlilik Dereceli Belgelerde Uygulanacak Usul ve Esaslar Hakkında Yönetmelik`, RG 26.04.2022/31821. Clause lock required.
+7. HB-1781 current Md29/2 is near word-for-word semantic candidate (`ASLI GİBİDİR` + authorized official + name/surname/title/date/signature), but ARTICLE promotion withheld until exact official RG clause + dedupe lock.
+8. HB-1782..1784 generic MEBBİS/security family labels are insufficient for exact actor/action/module proof.
+9. HB-1785 must split by application subtype (transfer/exam/lodging/appointment/in-service etc.).
+10. HB-1786 three-copy physical-output practice cannot be assumed current/global in digital workflows; special current process authority required.
 
-Canonical resolver is now:
-`education_year + grade/cohort + school/program + field + branch + authority_kind + TTKB_decision_version`
+### V87 active guards
+- PHYSICAL_ZIMMET_IS_NOT_GLOBAL_DEFAULT_IN_EBYS_REGIME
+- STANDARD_FILE_PLAN_VERSION_IS_EFFECTIVE_DATE_BOUND
+- BELGENET_PRODUCT_NAME_IS_NOT_THE_LEGAL_RULE
+- INFORMATION_REQUEST_TIMELY_IS_15_OR_CONDITIONAL_30_BUSINESS_DAYS
+- PETITION_AND_INFORMATION_REQUEST_DEADLINES_MUST_BE_SEPARATE
+- SUPERIOR_AUTHORITY_COVER_LETTER_DEADLINE_IS_NOT_INFERRED_FROM_4982
+- CURRENT_OFFICIAL_WRITING_AUTHORITY_USES_YAZISMALARDA_TITLE
+- SOURCE_TITLE_TYPO_DOES_NOT_CHANGE_AUTHORITY_IF_IDENTIFIER_IS_LOCKED
+- CLASSIFIED_DOCUMENT_RULE_USES_SPECIALIZED_5529_OVERLAY
+- ASLI_GIBIDIR_REQUIRES_EXACT_CURRENT_MD29_ROUTE
+- GENERIC_MEBBIS_EXISTENCE_DOES_NOT_PROVE_MODULE_UPDATE_DUTY
+- MIXED_TEACHER_APPLICATION_PARENT_REQUIRES_SUBTYPE_SPLIT
+- THREE_COPY_OUTPUT_IS_NOT_A_GLOBAL_DIGITAL_WORKFLOW_RULE
 
-Forbidden: `latest decision wins` in phased transitions.
-
-### V86 rollbacks
-ARTICLE_VERIFIED **463 -> 460**, delta **-3**.
-1. **HB-1771 ROLLBACK -1** — Batch02 used `ALL + OÖİKY Md5/A(2-4)` for an MTAL-specific sector/actor/field-branch determination workflow. No exact all-atom current replacement locked in V86.
-2. **HB-1772 ROLLBACK -1** — Batch02 used `ALL + OÖİKY Md5/A(2-4)` for a program prerequisite/sequence rule. Similar official program wording is insufficient without applicable cohort/program/version lock.
-3. **HB-1773 ROLLBACK -1** — Batch02 used `ALL + OÖİKY Md5/A(2-4)` for a weekly schedule/hour rule; applicable schedule/program version is required.
-No prior rollback for HB-1771..1773 exists in canonical V85/V86 history; these are once-only.
-
-HB-1768..1770 remain WITHHELD master parents; program/grade/cohort children may be promoted only after exact decision/annex match.
-
-## Active guards — additions from V86
-- MTAL_2026_2027_ELECTIVE_AUTHORITY_IS_GRADE_COHORT_SPECIFIC
-- GRADE12_2026_2027_USES_2023_40_FOR_MTEGM_ELECTIVES
-- GRADE10_11_2026_2027_USE_2024_41_FOR_MTEGM_ELECTIVES
-- PREP_GRADE9_2026_2027_USE_2026_62_FOR_MTEGM_ELECTIVES
-- PROGRAM_PREREQUISITE_RULE_CANNOT_INHERIT_OOIKY_5A
-- WEEKLY_HOUR_RULE_REQUIRES_APPLICABLE_SCHEDULE_VERSION
-- MTAL_SECTOR_ACTOR_RULE_CANNOT_BE_ALL_SCOPE
-- WRONG_AUTHORITY_KIND_REQUIRES_ROLLBACK_OR_REPUBLISH
-- MASTER_PARENT_AND_EXECUTABLE_CHILD_MUST_BE_SEPARABLE
-- COURSE_DEPENDENCY_GRAPH_IS_VERSIONED
-- MTAL_ELECTIVE_ELIGIBILITY_REQUIRES_TTKB_PROGRAM_LOCK
-- LATEST_TTKB_DECISION_DOES_NOT_AUTOMATICALLY_WIN
-- PHASED_TTKB_TRANSITION_REQUIRES_COHORT_RESOLUTION
-- DELIVERY_PERMISSION_DOES_NOT_PROVE_COURSE_ELIGIBILITY
-- ELECTIVE_TABLE_AND_FRAMEWORK_PROGRAM_ARE_DISTINCT_AUTHORITIES
-- LEGACY_COHORT_MAY_RETAIN_PRIOR_TTKB_VERSION
-- ALL_SCOPE_CANNOT_INHERIT_PROGRAM_SPECIFIC_MTAL_RULE
-- OÖİKY_CANNOT_VALIDATE_MTAL_SPECIFIC_RULE_BY_THEME
+## V87 Phase 2 priority
+1. Lock exact official RG wording/article for 2646 Md29 and dedupe HB-1781.
+2. Lock 3071 current petition response deadline/article and atomize HB-1777.
+3. Lock exact 5529 clauses for HB-1780 handling routes.
+4. Audit historical ARTICLE_VERIFIED ledger specifically for HB-1774..1786 before promotion/rollback.
+5. Resolve current MEB Information/System Security provisions for HB-1782/1783.
+6. Resolve module-specific MEBBİS obligations for HB-1784.
+7. Split HB-1785; test HB-1786 three-copy practice against current special processes.
+8. Then continue HB-1787+ teacher-practice family in a large batch.
 
 ## Tenant requirement
-**Sosyal Sorumluluk Kulübü** tenant requirement remains active; ARTICLE_VERIFIED sayacına eklenmez. Canonical: `docs/tenant-required-social-responsibility-club.md`.
+**Sosyal Sorumluluk Kulübü** tenant requirement remains active; ARTICLE_VERIFIED sayacına eklenmez.
 
-## V87 priority — HB-1774+ EVRAK KAYIT / DOSYALAMA / SEVK
-Start row-level exact audit from master:
-- HB-1774: evrak tesliminde usulüne uygun zimmet defteri.
-- HB-1775: Standard Dosya Planına uygun dosyalama.
-- HB-1776: resmî yazışmaların Belgenet/EBYS üzerinden yapılması.
-- HB-1777: dilekçe veya bilgi edinme başvurularının işleme alınması ve zamanında cevap.
-- HB-1778: master exact text recover first.
-- HB-1779: Resmî Yazışmalarda Uygulanacak Usul ve Esaslar Hakkında Yönetmeliğe uygunluk.
-- HB-1780: gizlilik niteliğindeki yazı/belgelerde gizlilik usulü.
-- HB-1781: belge örneğinde `ASLI GİBİDİR`, yetkili ad/soyad/unvan/tarih/imza.
-Then continue HB-1782+ bilişim/MEBBİS cluster after exact boundary extraction.
-
-V87 target: large row-level batch; only exact claim + current official provision changes ARTICLE_VERIFIED. Audit legacy Batch02 broad mappings before new promotion. No migration unless schema truly requires it. Work mode remains reserved until all mevzuat verification is complete.
-
-## Repo sınırı
-Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` dediğinde soru sormadan **V87**'ye proceed.
+## Repo / execution boundary
+Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` dediğinde soru sormadan V87 Phase 2'ye geç. ARTICLE_VERIFIED only exact current/applicable authority match. Work mode is reserved until all legislation verification is complete. Migration **0**, Lovable **0**.
