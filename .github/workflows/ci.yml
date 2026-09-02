@@ -71,7 +71,7 @@ jobs:
         run: PYTHONPATH=tools python tools/test_schedule_cpsat_oracle.py
 
       - name: Run 30-seed world benchmark gate
-        run: bun tools/schedule_world_benchmark.ts --ci --out /tmp/schedule-world-benchmark.json
+        run: bun tools/schedule_world_benchmark.ts --ci --replay-all --out /tmp/schedule-world-benchmark.json
 
       - name: Report final parity truth gate
         run: bun tools/schedule_parity_gate.ts
