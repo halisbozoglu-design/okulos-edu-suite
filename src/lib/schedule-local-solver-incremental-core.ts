@@ -104,7 +104,8 @@ const runGroups = (rs: LocalLockedRow[]) => {
   return out;
 };
 type Task = { a: LocalAssignment; duration: number; activityKey: string };
-type Cell = { d: number; s: number; classroom_id: string | null; room_bundle_id: string | null; classroom_ids: string[]; score: number };
+type Cell = { d: number; s: number; classroom_id: string | null; room_bundle_id?: string; classroom_ids?: string[]; score: number };
+type RoomChoice={id:string|null;penalty:number;bundleId?:string;classroomIds?:string[]};
 type Placement = { key: string; a: LocalAssignment; rows: LocalLockedRow[]; locked: boolean };
 const selector = (t: Task, s: PlanningSelector) =>
   (!s.activity_key || s.activity_key === t.activityKey) &&
@@ -310,8 +311,8 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
     }
     return true;
   };
-  const roomChoices = (a: LocalAssignment, d: number, s: number, n: number) => {
-    if (!rooms.length) return [{ id: null as string | null, bundleId:null as string|null, classroomIds:[] as string[], penalty: 0 }];
+  const roomChoices = (a: LocalAssignment, d: number, s: number, n: number):RoomChoice[] => {
+    if (!rooms.length) return [{ id: null, penalty: 0 }];
     const q = p.roomRequirements?.[a.assignment_id],
       preferred = new Set(q?.preferred_classroom_ids ?? []),
       allowedBundles=p.roomBundleOptions?.[a.assignment_id];
@@ -321,13 +322,11 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
       const primary=roomById.get(b.primary_classroom_id);if(!primary||!transferOk(a,primary,d,s,n))return[];
       return[{id:b.primary_classroom_id,bundleId:b.room_bundle_id,classroomIds:[...b.classroom_ids],penalty:Number(b.preference_penalty??0)}];
     }).sort((x,y)=>x.penalty-y.penalty||x.bundleId.localeCompare(y.bundleId));
-    if(p.deferSingleRoomAssignment)return[{id:null as string|null,bundleId:null as string|null,classroomIds:[] as string[],penalty:0}];
+    if(p.deferSingleRoomAssignment)return[{id:null,penalty:0}];
     return rooms
       .filter((r) => roomEligible(a, r) && roomFree(a, r, d, s, n) && transferOk(a, r, d, s, n))
       .map((r) => ({
         id: r.classroom_id,
-        bundleId:null as string|null,
-        classroomIds:[r.classroom_id],
         penalty: preferred.size && !preferred.has(r.classroom_id) ? 4 : 0,
       }))
       .sort((x, y) => x.penalty - y.penalty || String(x.id).localeCompare(String(y.id)));
@@ -387,12 +386,10 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
             )
               ? (a.preferred_period_weight ?? 1)
               : 0;
-          out.push({
+          const cell:Cell={
             d,
             s,
             classroom_id: rc.id,
-            room_bundle_id:rc.bundleId,
-            classroom_ids:rc.classroomIds,
             score:
               teacherLoads.reduce((n, v) => n + v, 0) * 3 +
               cd * 8 +
@@ -402,7 +399,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
               preferredPenalty +
               rc.penalty +
               R() * 0.35,
-          });
+          };if(rc.bundleId&&rc.classroomIds){cell.room_bundle_id=rc.bundleId;cell.classroom_ids=rc.classroomIds}out.push(cell);
         }
       }
     return out.sort(
@@ -486,11 +483,11 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
       if (peer) {
         let paired = false;
         for (const candidate of cs) {
-          place(t, candidate.d, candidate.s, candidate.classroom_id,candidate.room_bundle_id,candidate.classroom_ids);
+          place(t, candidate.d, candidate.s, candidate.classroom_id,candidate.room_bundle_id??null,candidate.classroom_ids??[]);
           const peerCell = cells(peer.task).find((x) => x.d === candidate.d && x.s === candidate.s);
           if (peerCell) {
             q.splice(peer.index, 1);
-            place(peer.task, peerCell.d, peerCell.s, peerCell.classroom_id,peerCell.room_bundle_id,peerCell.classroom_ids);
+            place(peer.task, peerCell.d, peerCell.s, peerCell.classroom_id,peerCell.room_bundle_id??null,peerCell.classroom_ids??[]);
             paired = true;
             break;
           }
@@ -499,7 +496,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
         }
         if (paired) continue;
       }
-      place(t, c.d, c.s, c.classroom_id,c.room_bundle_id,c.classroom_ids);
+      place(t, c.d, c.s, c.classroom_id,c.room_bundle_id??null,c.classroom_ids??[]);
     }
     return f;
   };
@@ -548,7 +545,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
             : strategy;
       let accepted = false;
       for (const c of choices) {
-        place(t, c.d, c.s, c.classroom_id,c.room_bundle_id,c.classroom_ids);
+        place(t, c.d, c.s, c.classroom_id,c.room_bundle_id??null,c.classroom_ids??[]);
         const next = score(0),
           cur = current.medium * 100 + current.soft,
           nv = next.medium * 100 + next.soft,
