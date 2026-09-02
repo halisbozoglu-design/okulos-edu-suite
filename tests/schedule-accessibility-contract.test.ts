@@ -35,13 +35,13 @@ describe("schedule keyboard and screen-reader contract", () => {
     expect(route).toContain('role="status" aria-live="polite"');
     expect(route.match(/role="alert"/g)?.length).toBeGreaterThanOrEqual(3);
     expect(preview).toContain("aria-busy={loading}");
-    expect(preview).toContain('role="status" aria-live="polite"');
+    expect(preview).toMatch(/role="status"\s+aria-live="polite"/);
   });
   test("scenario preview preserves caption, header scopes and filter labels", () => {
     expect(preview).toContain('aria-label="Önizleme sınıf filtresi"');
     expect(preview).toContain('aria-label="Önizleme öğretmen filtresi"');
-    expect(preview).toContain(
-      '<caption className="sr-only">Filtrelenmiş ders programı senaryo önizlemesi</caption>',
+    expect(preview).toMatch(
+      /<caption className="sr-only">\s*Filtrelenmiş ders programı senaryo önizlemesi\s*<\/caption>/,
     );
     expect(preview).toContain('scope="row"');
   });
