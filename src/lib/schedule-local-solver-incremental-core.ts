@@ -265,6 +265,12 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
       return false;
     return true;
   };
+  const rowUsesRoom=(row:LocalLockedRow,classroomId:string)=>row.room_bundle_id!=null
+    ? Boolean(row.classroom_ids?.includes(classroomId))
+    : row.classroom_id===classroomId;
+  const rowUsesPool=(row:LocalLockedRow,poolId:string)=>row.room_bundle_id!=null
+    ? Boolean(row.classroom_ids?.some(id=>roomById.get(id)?.room_pool_id===poolId))
+    : roomById.get(row.classroom_id??"")?.room_pool_id===poolId;
   const roomFree = (a: LocalAssignment, room: LocalRoom, d: number, s: number, n: number) => {
     for (let x = s; x < s + n; x++) {
       if (
@@ -275,11 +281,11 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
         return false;
       const slot = state.index.slot(a, d, x);
       if (!room.room_pool_id) {
-        if (slot.some((r) => (r.classroom_ids?.length ? r.classroom_ids : [r.classroom_id]).includes(room.classroom_id))) return false;
+        if (slot.some((r) => rowUsesRoom(r,room.classroom_id))) return false;
         continue;
       }
       const poolRows = slot.filter(
-          (r) => (r.classroom_ids?.length ? r.classroom_ids : [r.classroom_id]).some(id=>roomById.get(id ?? "")?.room_pool_id === room.room_pool_id),
+          (r) => rowUsesPool(r,room.room_pool_id!),
         ),
         max = Math.max(1, room.max_simultaneous_activities ?? 1),
         used = poolRows.reduce((v, r) => v + (assign.get(r.assignment_id)?.student_count ?? 0), 0),
@@ -413,7 +419,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
         period: x,
         classroom_id,
         room_bundle_id,
-        classroom_ids:[...classroom_ids],
+        classroom_ids:room_bundle_id?[...classroom_ids]:null,
         subgroup_id: t.a.subgroup_id ?? null,
         schedule_session_id: t.a.schedule_session_id ?? null,
         locked: false,
