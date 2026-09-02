@@ -19,6 +19,8 @@
   "shortcuts": [
     { "name": "Panel", "short_name": "Panel", "url": "/dashboard", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] },
     { "name": "Vekalet", "short_name": "Vekalet", "url": "/substitutes", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] },
-    { "name": "Bildirimler", "short_name": "Bildirim", "url": "/notifications", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] }
+    { "name": "Bildirimler", "short_name": "Bildirim", "url": "/notifications", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] },
+    { "name": "Hızlı Ziyaretçi Girişi", "short_name": "Ziyaretçi Girişi", "url": "/security/visitors/check-in", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] },
+    { "name": "Öğrenci Nöbeti", "short_name": "Öğrenci Nöbeti", "url": "/security/student-duty", "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }] }
   ]
 }

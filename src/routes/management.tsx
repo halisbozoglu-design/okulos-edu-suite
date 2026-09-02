@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, CalendarRange, Calculator, Crown, FileClock, GraduationCap, KeyRound, Scale, Settings, ShieldCheck, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
+import { BookOpen, BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, CalendarRange, Calculator, Crown, DoorOpen, FileClock, GraduationCap, KeyRound, Scale, Settings, ShieldCheck, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { supabase } from "@/lib/supabase";
 
@@ -31,8 +31,10 @@ const items:readonly ManagementItem[]=[
  {group:"operations",to:'/payroll',title:'Ek Ders',desc:'Puantaj, faaliyetler, onay ve KBS çıktısı',icon:Table2,permissions:['payroll.view','payroll.calculate','payroll.edit','payroll.approve','payroll.publish']},
  {group:"operations",to:'/payroll-rules',title:'Ek Ders Kuralları',desc:'Yürürlük tarihli kurallar ve KBS veri tipleri',icon:Calculator,permissions:['payroll.edit']},
  {group:"operations",to:'/substitutes',title:'Vekalet',desc:'Devamsızlık, boş ders ve vekalet atamaları',icon:Users,permissions:['substitutes.view','substitutes.manage']},
- {group:"operations",to:'/settings',title:'Nöbet',desc:'Aylık idareci/öğretmen nöbet planı',icon:Settings,permissions:['duty.view','duty.manage','duty.generate','duty.lock']},
- {group:"operations",to:'/duty-book',title:'Nöbet Defteri',desc:'Günlük nöbet, boş ders, gecikme ve olay kayıtları',icon:FileClock,permissions:['duty.view','duty.manage']},
+  {group:"operations",to:'/settings',title:'Nöbet',desc:'Aylık idareci/öğretmen nöbet planı',icon:Settings,permissions:['duty.view','duty.manage','duty.generate','duty.lock']},
+  {group:"operations",to:'/duty-book',title:'Nöbet Defteri',desc:'Günlük nöbet, boş ders, gecikme ve olay kayıtları',icon:FileClock,permissions:['duty.view','duty.manage']},
+  {group:"operations",to:'/security/visitors/check-in',title:'Güvenlik & Ziyaretçi',desc:'Canlı kimlik doğrulamalı ziyaretçi girişleri, içeridekiler ve öğrenci nöbeti',icon:DoorOpen,permissions:['security.view','security.checkin','security.manage','security.student_duty']},
+
 
  {group:"system",to:'/legislation',title:'Mevzuat Kütüphanesi',desc:'Mevzuatı kaydet, ara, oku ve personele gönder',icon:BookOpen,permissions:['settings.manage']},
  {group:"system",to:'/settings-permissions',title:'Görev ve Yetki Atama',desc:'Personel bazlı modül, işlem, süre ve delegasyon',icon:KeyRound,permissions:['permissions.manage']},
