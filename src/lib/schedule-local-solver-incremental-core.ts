@@ -49,6 +49,12 @@ export type LocalRoomRequirement = {
   required_features?: string[] | null;
   minimum_capacity?: number | null;
 };
+export type LocalRoomBundle = {
+  room_bundle_id: string;
+  primary_classroom_id: string;
+  classroom_ids: string[];
+  preference_penalty?: number | null;
+};
 export type LocalPeriodBreak = { after_period: number; minutes: number; transfer_allowed: boolean };
 export type LocalBuildingTravel = {
   from_building_id: string;
@@ -58,6 +64,9 @@ export type LocalBuildingTravel = {
 export type LocalRoomUnavailable = { classroom_id: string; weekday: number; period: number };
 export type JointLocalProblem = LocalProblem & {
   rooms?: LocalRoom[];
+  roomBundles?: LocalRoomBundle[];
+  roomBundleOptions?: Record<string, string[]>;
+  deferSingleRoomAssignment?: boolean;
   roomRequirements?: Record<string, LocalRoomRequirement>;
   roomUnavailable?: LocalRoomUnavailable[];
   periodBreaks?: LocalPeriodBreak[];
@@ -95,7 +104,7 @@ const runGroups = (rs: LocalLockedRow[]) => {
   return out;
 };
 type Task = { a: LocalAssignment; duration: number; activityKey: string };
-type Cell = { d: number; s: number; classroom_id: string | null; score: number };
+type Cell = { d: number; s: number; classroom_id: string | null; room_bundle_id: string | null; classroom_ids: string[]; score: number };
 type Placement = { key: string; a: LocalAssignment; rows: LocalLockedRow[]; locked: boolean };
 const selector = (t: Task, s: PlanningSelector) =>
   (!s.activity_key || s.activity_key === t.activityKey) &&
@@ -118,6 +127,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
     cons = new Map(p.teacherConstraints.map((c) => [c.teacher_id, c])),
     rooms = p.rooms ?? [],
     roomById = new Map(rooms.map((r) => [r.classroom_id, r])),
+    bundles = p.roomBundles ?? [],
     breakByPeriod = new Map((p.periodBreaks ?? []).map((b) => [b.after_period, b])),
     travelByPair = new Map(
       (p.buildingTravel ?? []).flatMap(
@@ -265,11 +275,11 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
         return false;
       const slot = state.index.slot(a, d, x);
       if (!room.room_pool_id) {
-        if (slot.some((r) => r.classroom_id === room.classroom_id)) return false;
+        if (slot.some((r) => (r.classroom_ids?.length ? r.classroom_ids : [r.classroom_id]).includes(room.classroom_id))) return false;
         continue;
       }
       const poolRows = slot.filter(
-          (r) => roomById.get(r.classroom_id ?? "")?.room_pool_id === room.room_pool_id,
+          (r) => (r.classroom_ids?.length ? r.classroom_ids : [r.classroom_id]).some(id=>roomById.get(id ?? "")?.room_pool_id === room.room_pool_id),
         ),
         max = Math.max(1, room.max_simultaneous_activities ?? 1),
         used = poolRows.reduce((v, r) => v + (assign.get(r.assignment_id)?.student_count ?? 0), 0),
@@ -295,13 +305,23 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
     return true;
   };
   const roomChoices = (a: LocalAssignment, d: number, s: number, n: number) => {
-    if (!rooms.length) return [{ id: null as string | null, penalty: 0 }];
+    if (!rooms.length) return [{ id: null as string | null, bundleId:null as string|null, classroomIds:[] as string[], penalty: 0 }];
     const q = p.roomRequirements?.[a.assignment_id],
-      preferred = new Set(q?.preferred_classroom_ids ?? []);
+      preferred = new Set(q?.preferred_classroom_ids ?? []),
+      allowedBundles=p.roomBundleOptions?.[a.assignment_id];
+    if(allowedBundles?.length)return bundles.filter(b=>allowedBundles.includes(b.room_bundle_id)).flatMap(b=>{
+      const componentRooms=b.classroom_ids.map(id=>roomById.get(id)).filter((x):x is LocalRoom=>Boolean(x));
+      if(componentRooms.length!==b.classroom_ids.length||componentRooms.length<2||!componentRooms.every(r=>roomEligible(a,r)&&roomFree(a,r,d,s,n)))return[];
+      const primary=roomById.get(b.primary_classroom_id);if(!primary||!transferOk(a,primary,d,s,n))return[];
+      return[{id:b.primary_classroom_id,bundleId:b.room_bundle_id,classroomIds:[...b.classroom_ids],penalty:Number(b.preference_penalty??0)}];
+    }).sort((x,y)=>x.penalty-y.penalty||x.bundleId.localeCompare(y.bundleId));
+    if(p.deferSingleRoomAssignment)return[{id:null as string|null,bundleId:null as string|null,classroomIds:[] as string[],penalty:0}];
     return rooms
       .filter((r) => roomEligible(a, r) && roomFree(a, r, d, s, n) && transferOk(a, r, d, s, n))
       .map((r) => ({
         id: r.classroom_id,
+        bundleId:null as string|null,
+        classroomIds:[r.classroom_id],
         penalty: preferred.size && !preferred.has(r.classroom_id) ? 4 : 0,
       }))
       .sort((x, y) => x.penalty - y.penalty || String(x.id).localeCompare(String(y.id)));
@@ -365,6 +385,8 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
             d,
             s,
             classroom_id: rc.id,
+            room_bundle_id:rc.bundleId,
+            classroom_ids:rc.classroomIds,
             score:
               teacherLoads.reduce((n, v) => n + v, 0) * 3 +
               cd * 8 +
@@ -381,7 +403,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
       (x, y) => x.score - y.score || String(x.classroom_id).localeCompare(String(y.classroom_id)),
     );
   };
-  const place = (t: Task, d: number, s: number, classroom_id: string | null) => {
+  const place = (t: Task, d: number, s: number, classroom_id: string | null,room_bundle_id:string|null=null,classroom_ids:string[]=[] ) => {
     for (let x = s; x < s + t.duration; x++) {
       const row: LocalLockedRow = {
         assignment_id: t.a.assignment_id,
@@ -390,6 +412,8 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
         weekday: d,
         period: x,
         classroom_id,
+        room_bundle_id,
+        classroom_ids:[...classroom_ids],
         subgroup_id: t.a.subgroup_id ?? null,
         schedule_session_id: t.a.schedule_session_id ?? null,
         locked: false,
@@ -456,11 +480,11 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
       if (peer) {
         let paired = false;
         for (const candidate of cs) {
-          place(t, candidate.d, candidate.s, candidate.classroom_id);
+          place(t, candidate.d, candidate.s, candidate.classroom_id,candidate.room_bundle_id,candidate.classroom_ids);
           const peerCell = cells(peer.task).find((x) => x.d === candidate.d && x.s === candidate.s);
           if (peerCell) {
             q.splice(peer.index, 1);
-            place(peer.task, peerCell.d, peerCell.s, peerCell.classroom_id);
+            place(peer.task, peerCell.d, peerCell.s, peerCell.classroom_id,peerCell.room_bundle_id,peerCell.classroom_ids);
             paired = true;
             break;
           }
@@ -469,7 +493,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
         }
         if (paired) continue;
       }
-      place(t, c.d, c.s, c.classroom_id);
+      place(t, c.d, c.s, c.classroom_id,c.room_bundle_id,c.classroom_ids);
     }
     return f;
   };
@@ -518,7 +542,7 @@ export function solveIncrementalSchedule(p: JointLocalProblem): LocalCandidate {
             : strategy;
       let accepted = false;
       for (const c of choices) {
-        place(t, c.d, c.s, c.classroom_id);
+        place(t, c.d, c.s, c.classroom_id,c.room_bundle_id,c.classroom_ids);
         const next = score(0),
           cur = current.medium * 100 + current.soft,
           nv = next.medium * 100 + next.soft,

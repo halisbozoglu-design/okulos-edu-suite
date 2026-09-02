@@ -21,8 +21,8 @@ export async function runLocalJointScheduleSectioning(opts:{seed?:number;beamWid
  const solution=solveJointScheduleSectioning({timetable:{...timetable,seed:(opts.seed??Date.now())>>>0},requests:jointRequests,existing_locked,hard_free_time:hardFree.map(f=>({student_id:f.student_id,weekday:Number(f.weekday),periods:f.periods.map(Number)})),beam_width:opts.beamWidth??48,max_timetable_evaluations:opts.maxTimetableEvaluations??48});
  if(!solution.complete)throw new Error(`JOINT_SOLUTION_INCOMPLETE hard=${solution.score.hard} primary=${solution.score.unassigned_primary}`);
  opts.onProgress?.({stage:"IMPORT",detail:"Joint aday server canonical audit kapısına gönderiliyor."});
- const rows=solution.timetable.rows.map(r=>({assignment_id:r.assignment_id,weekday:r.weekday,period:r.period,classroom_id:r.classroom_id??null,subgroup_id:r.subgroup_id??null,locked:r.locked}));
+ const rows=solution.timetable.rows.map(r=>({assignment_id:r.assignment_id,weekday:r.weekday,period:r.period,classroom_id:r.classroom_id??null,room_bundle_id:r.room_bundle_id??null,subgroup_id:r.subgroup_id??null,locked:r.locked}));
  const enrollments=solution.enrollments.map(e=>({student_id:e.student_id,assignment_id:e.assignment_id,request_id:e.request_id.startsWith("locked:")?null:e.request_id,locked:e.locked,allow_overlap:e.allow_overlap}));
- const imported=await db.rpc("import_joint_schedule_candidate_v1",{p_rows:rows,p_enrollments:enrollments,p_title:"Joint timetable + sectioning adayı"});if(imported.error)throw imported.error;
+ const imported=await db.rpc("import_joint_composite_schedule_candidate_v1",{p_rows:rows,p_enrollments:enrollments,p_title:"Joint timetable + sectioning adayı"});if(imported.error)throw imported.error;
  return{scenarioId:String(imported.data),solution};
 }

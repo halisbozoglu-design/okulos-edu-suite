@@ -2,7 +2,7 @@ import { evaluateCandidateRelations,evaluatePlanningRelations,type PlanningActiv
 
 export type WeekPattern="ALL"|"ODD"|"EVEN";
 export type LocalAssignment={assignment_id:string;teacher_id:string;additional_teacher_ids?:string[]|null;class_id:string;course_id:string;assigned_hours:number;week_pattern?:WeekPattern;valid_from?:string|null;valid_to?:string|null;term_no?:number|null;schedule_session_id?:string|null;allowed_periods?:number[]|null;preferred_periods?:number[]|null;preferred_period_weight?:number|null;subgroup_id?:string|null;student_count?:number|null};
-export type LocalLockedRow={assignment_id:string;teacher_id:string;class_id:string|null;weekday:number;period:number;classroom_id?:string|null;subgroup_id?:string|null;schedule_session_id?:string|null;locked:boolean;activity_key?:string|null;activity_duration?:number|null};
+export type LocalLockedRow={assignment_id:string;teacher_id:string;class_id:string|null;weekday:number;period:number;classroom_id?:string|null;room_bundle_id?:string|null;classroom_ids?:string[]|null;subgroup_id?:string|null;schedule_session_id?:string|null;locked:boolean;activity_key?:string|null;activity_duration?:number|null};
 export type LocalUnavailable={teacher_id:string;weekday:number;period:number;schedule_session_id?:string|null};
 export type LocalTeacherConstraint={teacher_id:string;max_daily_hours:number|null;max_consecutive_hours:number|null};
 export type LocalCourseRule={course_id:string;block_pattern?:number[]|null;max_per_day:number|null;prohibited_days:number[]|null;prohibited_periods:number[]|null};
