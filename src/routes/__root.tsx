@@ -113,6 +113,7 @@ const protectedRoutes: RouteRule[] = [
   { prefix: "/substitutes", any: ["substitutes.view", "substitutes.manage"] },
   { prefix: "/duty-book", any: ["duty.view", "duty.manage"] },
   { prefix: "/settings", any: ["duty.view", "duty.manage", "duty.generate", "duty.lock", "permissions.manage", "settings.manage"] },
+  { prefix: "/security", any: ["security.view", "security.checkin", "security.manage", "security.student_duty"] },
   { prefix: "/super-admin", any: [], superOnly: true },
 ];
 
