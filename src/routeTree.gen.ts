@@ -60,6 +60,11 @@ import { Route as SuperAdminCoursePoolRouteImport } from './routes/super-admin-c
 import { Route as SuperAdminTenantsRouteImport } from './routes/super-admin-tenants'
 import { Route as TimetableRouteImport } from './routes/timetable'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as SecurityLocationsRouteImport } from './routes/security.locations'
+import { Route as SecurityStudentDutyRouteImport } from './routes/security.student-duty'
+import { Route as SecurityVisitorsCheckInRouteImport } from './routes/security.visitors.check-in'
+import { Route as SecurityVisitorsInsideRouteImport } from './routes/security.visitors.inside'
+import { Route as SecurityVisitorsLedgerRouteImport } from './routes/security.visitors.ledger'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -317,6 +322,31 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SecurityLocationsRoute = SecurityLocationsRouteImport.update({
+  id: '/security/locations',
+  path: '/security/locations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityStudentDutyRoute = SecurityStudentDutyRouteImport.update({
+  id: '/security/student-duty',
+  path: '/security/student-duty',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityVisitorsCheckInRoute = SecurityVisitorsCheckInRouteImport.update({
+  id: '/security/visitors/check-in',
+  path: '/security/visitors/check-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityVisitorsInsideRoute = SecurityVisitorsInsideRouteImport.update({
+  id: '/security/visitors/inside',
+  path: '/security/visitors/inside',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityVisitorsLedgerRoute = SecurityVisitorsLedgerRouteImport.update({
+  id: '/security/visitors/ledger',
+  path: '/security/visitors/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -370,6 +400,11 @@ export interface FileRoutesByFullPath {
   '/super-admin-tenants': typeof SuperAdminTenantsRoute
   '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/security/locations': typeof SecurityLocationsRoute
+  '/security/student-duty': typeof SecurityStudentDutyRoute
+  '/security/visitors/check-in': typeof SecurityVisitorsCheckInRoute
+  '/security/visitors/inside': typeof SecurityVisitorsInsideRoute
+  '/security/visitors/ledger': typeof SecurityVisitorsLedgerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -423,6 +458,11 @@ export interface FileRoutesByTo {
   '/super-admin-tenants': typeof SuperAdminTenantsRoute
   '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/security/locations': typeof SecurityLocationsRoute
+  '/security/student-duty': typeof SecurityStudentDutyRoute
+  '/security/visitors/check-in': typeof SecurityVisitorsCheckInRoute
+  '/security/visitors/inside': typeof SecurityVisitorsInsideRoute
+  '/security/visitors/ledger': typeof SecurityVisitorsLedgerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -477,6 +517,11 @@ export interface FileRoutesById {
   '/super-admin-tenants': typeof SuperAdminTenantsRoute
   '/timetable': typeof TimetableRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/security/locations': typeof SecurityLocationsRoute
+  '/security/student-duty': typeof SecurityStudentDutyRoute
+  '/security/visitors/check-in': typeof SecurityVisitorsCheckInRoute
+  '/security/visitors/inside': typeof SecurityVisitorsInsideRoute
+  '/security/visitors/ledger': typeof SecurityVisitorsLedgerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -532,6 +577,11 @@ export interface FileRouteTypes {
     | '/super-admin-tenants'
     | '/timetable'
     | '/auth/callback'
+    | '/security/locations'
+    | '/security/student-duty'
+    | '/security/visitors/check-in'
+    | '/security/visitors/inside'
+    | '/security/visitors/ledger'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -585,6 +635,11 @@ export interface FileRouteTypes {
     | '/super-admin-tenants'
     | '/timetable'
     | '/auth/callback'
+    | '/security/locations'
+    | '/security/student-duty'
+    | '/security/visitors/check-in'
+    | '/security/visitors/inside'
+    | '/security/visitors/ledger'
   id:
     | '__root__'
     | '/'
@@ -638,6 +693,11 @@ export interface FileRouteTypes {
     | '/super-admin-tenants'
     | '/timetable'
     | '/auth/callback'
+    | '/security/locations'
+    | '/security/student-duty'
+    | '/security/visitors/check-in'
+    | '/security/visitors/inside'
+    | '/security/visitors/ledger'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -692,6 +752,11 @@ export interface RootRouteChildren {
   SuperAdminTenantsRoute: typeof SuperAdminTenantsRoute
   TimetableRoute: typeof TimetableRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  SecurityLocationsRoute: typeof SecurityLocationsRoute
+  SecurityStudentDutyRoute: typeof SecurityStudentDutyRoute
+  SecurityVisitorsCheckInRoute: typeof SecurityVisitorsCheckInRoute
+  SecurityVisitorsInsideRoute: typeof SecurityVisitorsInsideRoute
+  SecurityVisitorsLedgerRoute: typeof SecurityVisitorsLedgerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1053,6 +1118,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/security/locations': {
+      id: '/security/locations'
+      path: '/security/locations'
+      fullPath: '/security/locations'
+      preLoaderRoute: typeof SecurityLocationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/security/student-duty': {
+      id: '/security/student-duty'
+      path: '/security/student-duty'
+      fullPath: '/security/student-duty'
+      preLoaderRoute: typeof SecurityStudentDutyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/security/visitors/check-in': {
+      id: '/security/visitors/check-in'
+      path: '/security/visitors/check-in'
+      fullPath: '/security/visitors/check-in'
+      preLoaderRoute: typeof SecurityVisitorsCheckInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/security/visitors/inside': {
+      id: '/security/visitors/inside'
+      path: '/security/visitors/inside'
+      fullPath: '/security/visitors/inside'
+      preLoaderRoute: typeof SecurityVisitorsInsideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/security/visitors/ledger': {
+      id: '/security/visitors/ledger'
+      path: '/security/visitors/ledger'
+      fullPath: '/security/visitors/ledger'
+      preLoaderRoute: typeof SecurityVisitorsLedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1108,6 +1208,11 @@ const rootRouteChildren: RootRouteChildren = {
   SuperAdminTenantsRoute: SuperAdminTenantsRoute,
   TimetableRoute: TimetableRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  SecurityLocationsRoute: SecurityLocationsRoute,
+  SecurityStudentDutyRoute: SecurityStudentDutyRoute,
+  SecurityVisitorsCheckInRoute: SecurityVisitorsCheckInRoute,
+  SecurityVisitorsInsideRoute: SecurityVisitorsInsideRoute,
+  SecurityVisitorsLedgerRoute: SecurityVisitorsLedgerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
