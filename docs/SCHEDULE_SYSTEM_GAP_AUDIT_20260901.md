@@ -36,7 +36,7 @@ Açık P0 kalmadı. P0.7 ortak DB/Web/native `[HARD, unplaced, MEDIUM, SOFT]` fi
 
 ## P1 — Web üretim kalitesi
 
-- Klavye ve ekran okuyucu erişilebilirlik auditi.
+- Ders programı ana ızgarasında klavye/ekran okuyucu semantiği doğrudan kanıtlandı; NVDA, VoiceOver ve tarayıcı bazlı son kullanıcı auditi açık.
 - Büyük çizelgede virtualization ve etkileşim performansı.
 - Uzun undo/redo zinciri stress testi.
 - Düşük bellekli tarayıcı profili.
