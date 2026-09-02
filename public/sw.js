@@ -1,4 +1,4 @@
-const CACHE_NAME = "okulos-shell-v2";
+const CACHE_NAME = "okulos-shell-v3";
 const STATIC_SHELL = ["/manifest.webmanifest", "/icons/icon-192.svg", "/icons/icon-512.svg", "/icons/icon-maskable.svg", "/icons/badge.svg"];
 
 self.addEventListener("install", (event) => {

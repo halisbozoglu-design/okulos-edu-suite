@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.17"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -18,33 +18,45 @@ export type Database = {
         Row: {
           class_id: string | null
           class_name: string
+          classroom_id: string | null
+          course_id: string | null
           crisis_report_id: string
           id: string
           institution_code: string | null
           lesson_date: string
           period: number
+          source_schedule_id: string | null
+          subgroup_id: string | null
           subject: string
           teacher_id: string
         }
         Insert: {
           class_id?: string | null
           class_name: string
+          classroom_id?: string | null
+          course_id?: string | null
           crisis_report_id: string
           id?: string
           institution_code?: string | null
           lesson_date: string
           period: number
+          source_schedule_id?: string | null
+          subgroup_id?: string | null
           subject: string
           teacher_id: string
         }
         Update: {
           class_id?: string | null
           class_name?: string
+          classroom_id?: string | null
+          course_id?: string | null
           crisis_report_id?: string
           id?: string
           institution_code?: string | null
           lesson_date?: string
           period?: number
+          source_schedule_id?: string | null
+          subgroup_id?: string | null
           subject?: string
           teacher_id?: string
         }
@@ -71,10 +83,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "absence_lessons_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "absence_lessons_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "absence_lessons_crisis_report_id_fkey"
             columns: ["crisis_report_id"]
             isOneToOne: false
             referencedRelation: "crisis_reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "absence_lessons_source_schedule_id_fkey"
+            columns: ["source_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "absence_lessons_source_schedule_id_fkey"
+            columns: ["source_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_schedule"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "absence_lessons_subgroup_id_fkey"
+            columns: ["subgroup_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
             referencedColumns: ["id"]
           },
           {
@@ -1815,27 +1862,45 @@ export type Database = {
       duty_locations: {
         Row: {
           active: boolean
+          code: string | null
           critical: boolean
+          gender_rule: string
           id: string
           institution_code: string | null
+          kind: string | null
           name: string
           sort_order: number
+          student_capacity: number
+          student_duty_enabled: boolean
+          visitor_entry_enabled: boolean
         }
         Insert: {
           active?: boolean
+          code?: string | null
           critical?: boolean
+          gender_rule?: string
           id?: string
           institution_code?: string | null
+          kind?: string | null
           name: string
           sort_order?: number
+          student_capacity?: number
+          student_duty_enabled?: boolean
+          visitor_entry_enabled?: boolean
         }
         Update: {
           active?: boolean
+          code?: string | null
           critical?: boolean
+          gender_rule?: string
           id?: string
           institution_code?: string | null
+          kind?: string | null
           name?: string
           sort_order?: number
+          student_capacity?: number
+          student_duty_enabled?: boolean
+          visitor_entry_enabled?: boolean
         }
         Relationships: [
           {
@@ -2549,8 +2614,14 @@ export type Database = {
       lesson_room_rules: {
         Row: {
           active: boolean
+          avoided_room_ids: string[]
           id: string
           institution_code: string | null
+          preferred_building_id: string | null
+          preferred_department: string | null
+          preferred_hardware: Json
+          preferred_room_ids: string[]
+          preferred_room_type: string | null
           required_department: string | null
           required_hardware: Json
           required_room_type: string | null
@@ -2558,8 +2629,14 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          avoided_room_ids?: string[]
           id?: string
           institution_code?: string | null
+          preferred_building_id?: string | null
+          preferred_department?: string | null
+          preferred_hardware?: Json
+          preferred_room_ids?: string[]
+          preferred_room_type?: string | null
           required_department?: string | null
           required_hardware?: Json
           required_room_type?: string | null
@@ -2567,8 +2644,14 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          avoided_room_ids?: string[]
           id?: string
           institution_code?: string | null
+          preferred_building_id?: string | null
+          preferred_department?: string | null
+          preferred_hardware?: Json
+          preferred_room_ids?: string[]
+          preferred_room_type?: string | null
           required_department?: string | null
           required_hardware?: Json
           required_room_type?: string | null
@@ -2581,6 +2664,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "institutions"
             referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "lesson_room_rules_preferred_building_id_fkey"
+            columns: ["preferred_building_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_buildings"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -3110,6 +3200,77 @@ export type Database = {
           },
         ]
       }
+      official_course_transition_mappings: {
+        Row: {
+          active: boolean
+          approved_at: string
+          approved_by: string
+          created_at: string
+          decision_no: string
+          effective_from: string
+          id: string
+          reason: string
+          source_course_id: string
+          target_course_id: string
+          transition_kind: string
+        }
+        Insert: {
+          active?: boolean
+          approved_at?: string
+          approved_by: string
+          created_at?: string
+          decision_no: string
+          effective_from: string
+          id?: string
+          reason: string
+          source_course_id: string
+          target_course_id: string
+          transition_kind: string
+        }
+        Update: {
+          active?: boolean
+          approved_at?: string
+          approved_by?: string
+          created_at?: string
+          decision_no?: string
+          effective_from?: string
+          id?: string
+          reason?: string
+          source_course_id?: string
+          target_course_id?: string
+          transition_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_course_transition_mappings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "official_course_transition_mappings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "official_course_transition_mappings_source_course_id_fkey"
+            columns: ["source_course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "official_course_transition_mappings_target_course_id_fkey"
+            columns: ["target_course_id"]
+            isOneToOne: false
+            referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       official_curriculum_catalog_status: {
         Row: {
           branch_name: string
@@ -3412,8 +3573,10 @@ export type Database = {
       official_source_change_queue: {
         Row: {
           applied_at: string | null
+          applied_by: string | null
           approval_required: boolean
           approved_at: string | null
+          approved_by: string | null
           change_type: string
           detected_at: string
           effective_from: string | null
@@ -3429,8 +3592,10 @@ export type Database = {
         }
         Insert: {
           applied_at?: string | null
+          applied_by?: string | null
           approval_required?: boolean
           approved_at?: string | null
+          approved_by?: string | null
           change_type?: string
           detected_at?: string
           effective_from?: string | null
@@ -3446,8 +3611,10 @@ export type Database = {
         }
         Update: {
           applied_at?: string | null
+          applied_by?: string | null
           approval_required?: boolean
           approved_at?: string | null
+          approved_by?: string | null
           change_type?: string
           detected_at?: string
           effective_from?: string | null
@@ -3462,6 +3629,34 @@ export type Database = {
           status?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "official_source_change_queue_applied_by_fkey"
+            columns: ["applied_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "official_source_change_queue_applied_by_fkey"
+            columns: ["applied_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "official_source_change_queue_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "official_source_change_queue_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
           {
             foreignKeyName: "official_source_change_queue_previous_snapshot_id_fkey"
             columns: ["previous_snapshot_id"]
@@ -5374,6 +5569,71 @@ export type Database = {
         }
         Relationships: []
       }
+      schedule_calendar_slot_overrides: {
+        Row: {
+          calendar_date: string
+          created_at: string
+          created_by: string | null
+          id: string
+          institution_code: string
+          period: number
+          reason: string | null
+          session_id: string
+          state: string
+        }
+        Insert: {
+          calendar_date: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          institution_code?: string
+          period: number
+          reason?: string | null
+          session_id: string
+          state: string
+        }
+        Update: {
+          calendar_date?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          institution_code?: string
+          period?: number
+          reason?: string | null
+          session_id?: string
+          state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_calendar_slot_overrides_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_calendar_slot_overrides_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "schedule_calendar_slot_overrides_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "schedule_calendar_slot_overrides_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schedule_compute_workers: {
         Row: {
           active: boolean
@@ -5445,6 +5705,320 @@ export type Database = {
           worker_type?: string
         }
         Relationships: []
+      }
+      schedule_daily_overlay_audit: {
+        Row: {
+          action: string
+          actor: string | null
+          created_at: string
+          detail: Json
+          id: string
+          institution_code: string
+          operation_group_id: string
+          overlay_date: string
+        }
+        Insert: {
+          action: string
+          actor?: string | null
+          created_at?: string
+          detail?: Json
+          id?: string
+          institution_code?: string
+          operation_group_id: string
+          overlay_date: string
+        }
+        Update: {
+          action?: string
+          actor?: string | null
+          created_at?: string
+          detail?: Json
+          id?: string
+          institution_code?: string
+          operation_group_id?: string
+          overlay_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_daily_overlay_audit_actor_fkey"
+            columns: ["actor"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlay_audit_actor_fkey"
+            columns: ["actor"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlay_audit_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      schedule_daily_overlays: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          effective_class_id: string | null
+          effective_class_ids: string[] | null
+          effective_class_name: string | null
+          effective_classroom_id: string | null
+          effective_period: number | null
+          effective_subgroup_id: string | null
+          effective_subject: string | null
+          effective_teacher_id: string | null
+          emits_event: boolean
+          id: string
+          institution_code: string
+          notified_at: string | null
+          operation_group_id: string
+          operation_kind: string
+          overlay_date: string
+          payload: Json
+          reverted_at: string | null
+          reverted_by: string | null
+          source_absence_lesson_id: string | null
+          source_schedule_id: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          effective_class_id?: string | null
+          effective_class_ids?: string[] | null
+          effective_class_name?: string | null
+          effective_classroom_id?: string | null
+          effective_period?: number | null
+          effective_subgroup_id?: string | null
+          effective_subject?: string | null
+          effective_teacher_id?: string | null
+          emits_event?: boolean
+          id?: string
+          institution_code?: string
+          notified_at?: string | null
+          operation_group_id?: string
+          operation_kind: string
+          overlay_date: string
+          payload?: Json
+          reverted_at?: string | null
+          reverted_by?: string | null
+          source_absence_lesson_id?: string | null
+          source_schedule_id?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          effective_class_id?: string | null
+          effective_class_ids?: string[] | null
+          effective_class_name?: string | null
+          effective_classroom_id?: string | null
+          effective_period?: number | null
+          effective_subgroup_id?: string | null
+          effective_subject?: string | null
+          effective_teacher_id?: string | null
+          emits_event?: boolean
+          id?: string
+          institution_code?: string
+          notified_at?: string | null
+          operation_group_id?: string
+          operation_kind?: string
+          overlay_date?: string
+          payload?: Json
+          reverted_at?: string | null
+          reverted_by?: string | null
+          source_absence_lesson_id?: string | null
+          source_schedule_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_daily_overlays_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_effective_class_id_fkey"
+            columns: ["effective_class_id"]
+            isOneToOne: false
+            referencedRelation: "class_curriculum_summary"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_effective_class_id_fkey"
+            columns: ["effective_class_id"]
+            isOneToOne: false
+            referencedRelation: "class_roster_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_effective_class_id_fkey"
+            columns: ["effective_class_id"]
+            isOneToOne: false
+            referencedRelation: "school_classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_effective_classroom_id_fkey"
+            columns: ["effective_classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_effective_subgroup_id_fkey"
+            columns: ["effective_subgroup_id"]
+            isOneToOne: false
+            referencedRelation: "class_subgroups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_effective_teacher_id_fkey"
+            columns: ["effective_teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_effective_teacher_id_fkey"
+            columns: ["effective_teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_reverted_by_fkey"
+            columns: ["reverted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_reverted_by_fkey"
+            columns: ["reverted_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_source_absence_lesson_id_fkey"
+            columns: ["source_absence_lesson_id"]
+            isOneToOne: false
+            referencedRelation: "absence_lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_source_schedule_id_fkey"
+            columns: ["source_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_daily_overlays_source_schedule_id_fkey"
+            columns: ["source_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_diagnostic_sandboxes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          diagnostic_summary: Json
+          id: string
+          institution_code: string
+          non_publishable: boolean
+          source_basis_revision: number | null
+          source_scenario_id: string
+          source_snapshot: Json
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          diagnostic_summary?: Json
+          id?: string
+          institution_code: string
+          non_publishable?: boolean
+          source_basis_revision?: number | null
+          source_scenario_id: string
+          source_snapshot: Json
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          diagnostic_summary?: Json
+          id?: string
+          institution_code?: string
+          non_publishable?: boolean
+          source_basis_revision?: number | null
+          source_scenario_id?: string
+          source_snapshot?: Json
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_diagnostic_sandboxes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_diagnostic_sandboxes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "schedule_diagnostic_sandboxes_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "schedule_diagnostic_sandboxes_source_scenario_id_fkey"
+            columns: ["source_scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenario_status_v2"
+            referencedColumns: ["scenario_id"]
+          },
+          {
+            foreignKeyName: "schedule_diagnostic_sandboxes_source_scenario_id_fkey"
+            columns: ["source_scenario_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       schedule_duty_optimization: {
         Row: {
@@ -5525,8 +6099,55 @@ export type Database = {
         }
         Relationships: []
       }
+      schedule_exact_oracle_runs: {
+        Row: {
+          best_bound: number | null
+          created_at: string
+          diagnostics: Json
+          gap: number | null
+          id: string
+          input_hash: string
+          institution_code: string
+          objective: number | null
+          solver: string
+          status: string
+          unsupported: Json
+          wall_ms: number | null
+        }
+        Insert: {
+          best_bound?: number | null
+          created_at?: string
+          diagnostics?: Json
+          gap?: number | null
+          id?: string
+          input_hash: string
+          institution_code?: string
+          objective?: number | null
+          solver?: string
+          status: string
+          unsupported?: Json
+          wall_ms?: number | null
+        }
+        Update: {
+          best_bound?: number | null
+          created_at?: string
+          diagnostics?: Json
+          gap?: number | null
+          id?: string
+          input_hash?: string
+          institution_code?: string
+          objective?: number | null
+          solver?: string
+          status?: string
+          unsupported?: Json
+          wall_ms?: number | null
+        }
+        Relationships: []
+      }
       schedule_generation_settings: {
         Row: {
+          building_change_penalty: number
+          capacity_waste_penalty: number
           gap_penalty: number
           id: boolean
           institution_code: string
@@ -5534,11 +6155,16 @@ export type Database = {
           max_same_course_per_day: number
           periods_per_day: number
           repeated_course_penalty: number
+          room_preference_penalty: number
+          section_balance_penalty: number
+          section_change_penalty: number
           student_conflict_penalty: number
           teaching_days: number[]
           updated_at: string
         }
         Insert: {
+          building_change_penalty?: number
+          capacity_waste_penalty?: number
           gap_penalty?: number
           id?: boolean
           institution_code?: string
@@ -5546,11 +6172,16 @@ export type Database = {
           max_same_course_per_day?: number
           periods_per_day?: number
           repeated_course_penalty?: number
+          room_preference_penalty?: number
+          section_balance_penalty?: number
+          section_change_penalty?: number
           student_conflict_penalty?: number
           teaching_days?: number[]
           updated_at?: string
         }
         Update: {
+          building_change_penalty?: number
+          capacity_waste_penalty?: number
           gap_penalty?: number
           id?: boolean
           institution_code?: string
@@ -5558,6 +6189,9 @@ export type Database = {
           max_same_course_per_day?: number
           periods_per_day?: number
           repeated_course_penalty?: number
+          room_preference_penalty?: number
+          section_balance_penalty?: number
+          section_change_penalty?: number
           student_conflict_penalty?: number
           teaching_days?: number[]
           updated_at?: string
@@ -5765,6 +6399,57 @@ export type Database = {
           },
         ]
       }
+      schedule_period_definitions: {
+        Row: {
+          active: boolean
+          ends_at: string | null
+          id: string
+          institution_code: string
+          local_period: number | null
+          period: number
+          session_id: string
+          starts_at: string | null
+          teaching_minutes: number | null
+        }
+        Insert: {
+          active?: boolean
+          ends_at?: string | null
+          id?: string
+          institution_code?: string
+          local_period?: number | null
+          period: number
+          session_id: string
+          starts_at?: string | null
+          teaching_minutes?: number | null
+        }
+        Update: {
+          active?: boolean
+          ends_at?: string | null
+          id?: string
+          institution_code?: string
+          local_period?: number | null
+          period?: number
+          session_id?: string
+          starts_at?: string | null
+          teaching_minutes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_period_definitions_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "schedule_period_definitions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schedule_planning_relations: {
         Row: {
           active: boolean
@@ -5950,6 +6635,7 @@ export type Database = {
       schedule_publications: {
         Row: {
           academic_year: string | null
+          curriculum_hash: string | null
           effective_from: string
           id: string
           institution_code: string | null
@@ -5962,6 +6648,7 @@ export type Database = {
         }
         Insert: {
           academic_year?: string | null
+          curriculum_hash?: string | null
           effective_from: string
           id?: string
           institution_code?: string | null
@@ -5974,6 +6661,7 @@ export type Database = {
         }
         Update: {
           academic_year?: string | null
+          curriculum_hash?: string | null
           effective_from?: string
           id?: string
           institution_code?: string | null
@@ -6470,12 +7158,82 @@ export type Database = {
           },
         ]
       }
+      schedule_rule_override_events: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          id: number
+          institution_code: string
+          reason: string | null
+          schedule_rule_override_id: string | null
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: never
+          institution_code: string
+          reason?: string | null
+          schedule_rule_override_id?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: never
+          institution_code?: string
+          reason?: string | null
+          schedule_rule_override_id?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_rule_override_events_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_override_events_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_override_events_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "schedule_rule_override_events_schedule_rule_override_id_fkey"
+            columns: ["schedule_rule_override_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_rule_overrides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schedule_rule_overrides: {
         Row: {
           active: boolean
+          approved_at: string | null
+          approved_by: string | null
           avoid_last_period: boolean
           block_pattern: number[]
           class_course_requirement_id: string | null
+          created_at: string
+          created_by: string | null
+          exception_reason: string | null
           id: string
           institution_code: string
           max_per_day: number | null
@@ -6485,14 +7243,24 @@ export type Database = {
           preferred_periods: number[]
           prohibited_days: number[]
           prohibited_periods: number[]
+          retired_at: string | null
+          retired_by: string | null
+          retirement_reason: string | null
           teacher_assignment_id: string | null
           updated_at: string
+          valid_from: string | null
+          valid_until: string | null
         }
         Insert: {
           active?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
           avoid_last_period?: boolean
           block_pattern?: number[]
           class_course_requirement_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          exception_reason?: string | null
           id?: string
           institution_code?: string
           max_per_day?: number | null
@@ -6502,14 +7270,24 @@ export type Database = {
           preferred_periods?: number[]
           prohibited_days?: number[]
           prohibited_periods?: number[]
+          retired_at?: string | null
+          retired_by?: string | null
+          retirement_reason?: string | null
           teacher_assignment_id?: string | null
           updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
         }
         Update: {
           active?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
           avoid_last_period?: boolean
           block_pattern?: number[]
           class_course_requirement_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          exception_reason?: string | null
           id?: string
           institution_code?: string
           max_per_day?: number | null
@@ -6519,8 +7297,13 @@ export type Database = {
           preferred_periods?: number[]
           prohibited_days?: number[]
           prohibited_periods?: number[]
+          retired_at?: string | null
+          retired_by?: string | null
+          retirement_reason?: string | null
           teacher_assignment_id?: string | null
           updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
         }
         Relationships: [
           {
@@ -6529,6 +7312,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "institutions"
             referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
           {
             foreignKeyName: "schedule_rule_overrides_class_course_requirement_id_fkey"
@@ -6543,6 +7340,34 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "schedule_assignment_options"
             referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_retired_by_fkey"
+            columns: ["retired_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "schedule_rule_overrides_retired_by_fkey"
+            columns: ["retired_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
           },
           {
             foreignKeyName: "schedule_rule_overrides_teacher_assignment_id_fkey"
@@ -6693,6 +7518,7 @@ export type Database = {
           period: number
           requirement_id: string | null
           scenario_id: string
+          schedule_session_id: string | null
           source_schedule_id: string | null
           subgroup_id: string | null
           subgroup_key: string | null
@@ -6715,6 +7541,7 @@ export type Database = {
           period: number
           requirement_id?: string | null
           scenario_id: string
+          schedule_session_id?: string | null
           source_schedule_id?: string | null
           subgroup_id?: string | null
           subgroup_key?: string | null
@@ -6737,6 +7564,7 @@ export type Database = {
           period?: number
           requirement_id?: string | null
           scenario_id?: string
+          schedule_session_id?: string | null
           source_schedule_id?: string | null
           subgroup_id?: string | null
           subgroup_key?: string | null
@@ -6815,6 +7643,13 @@ export type Database = {
             columns: ["scenario_id"]
             isOneToOne: false
             referencedRelation: "schedule_scenarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_scenario_rows_schedule_session_id_fkey"
+            columns: ["schedule_session_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sessions"
             referencedColumns: ["id"]
           },
           {
@@ -6942,9 +7777,62 @@ export type Database = {
           },
         ]
       }
+      schedule_sessions: {
+        Row: {
+          active: boolean
+          code: string
+          ends_at: string | null
+          id: string
+          institution_code: string
+          name: string
+          ordinal: number
+          starts_at: string | null
+          time_profile_id: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          ends_at?: string | null
+          id?: string
+          institution_code?: string
+          name: string
+          ordinal?: number
+          starts_at?: string | null
+          time_profile_id: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          ends_at?: string | null
+          id?: string
+          institution_code?: string
+          name?: string
+          ordinal?: number
+          starts_at?: string | null
+          time_profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_sessions_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "schedule_sessions_time_profile_id_fkey"
+            columns: ["time_profile_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_time_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schedule_solve_attempts: {
         Row: {
+          accepted_at: string | null
           attempt_no: number
+          audit_status: string | null
           claimed_at: string | null
           diagnostics: Json
           duration_ms: number | null
@@ -6954,6 +7842,7 @@ export type Database = {
           job_id: string
           lease_until: string | null
           profile_key: string | null
+          result_fingerprint: string | null
           result_payload: Json
           scenario_id: string | null
           score: number | null
@@ -6964,7 +7853,9 @@ export type Database = {
           worker_id: string | null
         }
         Insert: {
+          accepted_at?: string | null
           attempt_no: number
+          audit_status?: string | null
           claimed_at?: string | null
           diagnostics?: Json
           duration_ms?: number | null
@@ -6974,6 +7865,7 @@ export type Database = {
           job_id: string
           lease_until?: string | null
           profile_key?: string | null
+          result_fingerprint?: string | null
           result_payload?: Json
           scenario_id?: string | null
           score?: number | null
@@ -6984,7 +7876,9 @@ export type Database = {
           worker_id?: string | null
         }
         Update: {
+          accepted_at?: string | null
           attempt_no?: number
+          audit_status?: string | null
           claimed_at?: string | null
           diagnostics?: Json
           duration_ms?: number | null
@@ -6994,6 +7888,7 @@ export type Database = {
           job_id?: string
           lease_until?: string | null
           profile_key?: string | null
+          result_fingerprint?: string | null
           result_payload?: Json
           scenario_id?: string | null
           score?: number | null
@@ -7036,10 +7931,14 @@ export type Database = {
       }
       schedule_solve_jobs: {
         Row: {
+          base_seed: number | null
+          budget_ms: number
+          cancel_reason: string | null
           candidate_count: number
           compute_preference: string
           config: Json
           created_at: string
+          deadline_at: string | null
           finished_at: string | null
           id: string
           institution_code: string
@@ -7050,10 +7949,14 @@ export type Database = {
           status: string
         }
         Insert: {
+          base_seed?: number | null
+          budget_ms?: number
+          cancel_reason?: string | null
           candidate_count?: number
           compute_preference?: string
           config?: Json
           created_at?: string
+          deadline_at?: string | null
           finished_at?: string | null
           id?: string
           institution_code?: string
@@ -7064,10 +7967,14 @@ export type Database = {
           status?: string
         }
         Update: {
+          base_seed?: number | null
+          budget_ms?: number
+          cancel_reason?: string | null
           candidate_count?: number
           compute_preference?: string
           config?: Json
           created_at?: string
+          deadline_at?: string | null
           finished_at?: string | null
           id?: string
           institution_code?: string
@@ -7076,6 +7983,36 @@ export type Database = {
           requested_by?: string | null
           started_at?: string | null
           status?: string
+        }
+        Relationships: []
+      }
+      schedule_solver_operator_telemetry: {
+        Row: {
+          attempts: number
+          context_key: string
+          institution_code: string
+          reward_sum: number
+          strategy: string
+          updated_at: string
+          wins: number
+        }
+        Insert: {
+          attempts?: number
+          context_key: string
+          institution_code: string
+          reward_sum?: number
+          strategy: string
+          updated_at?: string
+          wins?: number
+        }
+        Update: {
+          attempts?: number
+          context_key?: string
+          institution_code?: string
+          reward_sum?: number
+          strategy?: string
+          updated_at?: string
+          wins?: number
         }
         Relationships: []
       }
@@ -7226,6 +8163,7 @@ export type Database = {
           session_scope: string
           teaching_days: number[]
           updated_at: string
+          week_parity_anchor: string | null
         }
         Insert: {
           active?: boolean
@@ -7239,6 +8177,7 @@ export type Database = {
           session_scope?: string
           teaching_days?: number[]
           updated_at?: string
+          week_parity_anchor?: string | null
         }
         Update: {
           active?: boolean
@@ -7252,6 +8191,7 @@ export type Database = {
           session_scope?: string
           teaching_days?: number[]
           updated_at?: string
+          week_parity_anchor?: string | null
         }
         Relationships: [
           {
@@ -7592,6 +8532,7 @@ export type Database = {
           institution_code: string | null
           predecessor_class_id: string | null
           program_type: string | null
+          schedule_session_id: string | null
           school_subtype: string | null
           school_type: string | null
           section: string | null
@@ -7617,6 +8558,7 @@ export type Database = {
           institution_code?: string | null
           predecessor_class_id?: string | null
           program_type?: string | null
+          schedule_session_id?: string | null
           school_subtype?: string | null
           school_type?: string | null
           section?: string | null
@@ -7642,6 +8584,7 @@ export type Database = {
           institution_code?: string | null
           predecessor_class_id?: string | null
           program_type?: string | null
+          schedule_session_id?: string | null
           school_subtype?: string | null
           school_type?: string | null
           section?: string | null
@@ -7707,6 +8650,13 @@ export type Database = {
             referencedRelation: "school_classes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "school_classes_schedule_session_id_fkey"
+            columns: ["schedule_session_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sessions"
+            referencedColumns: ["id"]
+          },
         ]
       }
       student_course_requests: {
@@ -7720,6 +8670,7 @@ export type Database = {
           institution_code: string
           priority: number
           request_kind: string
+          scope_mode: string
           source: string | null
           student_id: string
           updated_at: string
@@ -7734,6 +8685,7 @@ export type Database = {
           institution_code?: string
           priority?: number
           request_kind?: string
+          scope_mode?: string
           source?: string | null
           student_id: string
           updated_at?: string
@@ -7748,6 +8700,7 @@ export type Database = {
           institution_code?: string
           priority?: number
           request_kind?: string
+          scope_mode?: string
           source?: string | null
           student_id?: string
           updated_at?: string
@@ -7766,6 +8719,301 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "students"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_duty_assignments: {
+        Row: {
+          academic_year_id: string | null
+          active: boolean
+          assignment_source: string
+          checked_at: string | null
+          checked_by: string | null
+          created_at: string
+          duty_date: string
+          id: string
+          institution_code: string | null
+          location_id: string | null
+          manual_change_reason: string | null
+          manual_changed_at: string | null
+          manual_changed_by: string | null
+          presence_state: string | null
+          student_id: string
+          updated_at: string
+          vice_principal_user_id: string | null
+        }
+        Insert: {
+          academic_year_id?: string | null
+          active?: boolean
+          assignment_source?: string
+          checked_at?: string | null
+          checked_by?: string | null
+          created_at?: string
+          duty_date: string
+          id?: string
+          institution_code?: string | null
+          location_id?: string | null
+          manual_change_reason?: string | null
+          manual_changed_at?: string | null
+          manual_changed_by?: string | null
+          presence_state?: string | null
+          student_id: string
+          updated_at?: string
+          vice_principal_user_id?: string | null
+        }
+        Update: {
+          academic_year_id?: string | null
+          active?: boolean
+          assignment_source?: string
+          checked_at?: string | null
+          checked_by?: string | null
+          created_at?: string
+          duty_date?: string
+          id?: string
+          institution_code?: string | null
+          location_id?: string | null
+          manual_change_reason?: string | null
+          manual_changed_at?: string | null
+          manual_changed_by?: string | null
+          presence_state?: string | null
+          student_id?: string
+          updated_at?: string
+          vice_principal_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_duty_assignments_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_checked_by_fkey"
+            columns: ["checked_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_checked_by_fkey"
+            columns: ["checked_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "duty_locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_manual_changed_by_fkey"
+            columns: ["manual_changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_manual_changed_by_fkey"
+            columns: ["manual_changed_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_vice_principal_user_id_fkey"
+            columns: ["vice_principal_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "student_duty_assignments_vice_principal_user_id_fkey"
+            columns: ["vice_principal_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      student_duty_exemptions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          ends_on: string | null
+          id: string
+          institution_code: string | null
+          is_active: boolean
+          reason: string | null
+          starts_on: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          ends_on?: string | null
+          id?: string
+          institution_code?: string | null
+          is_active?: boolean
+          reason?: string | null
+          starts_on: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          ends_on?: string | null
+          id?: string
+          institution_code?: string | null
+          is_active?: boolean
+          reason?: string | null
+          starts_on?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_duty_exemptions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "student_duty_exemptions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "student_duty_exemptions_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "student_duty_exemptions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_duty_generation_state: {
+        Row: {
+          academic_year_id: string | null
+          created_at: string
+          id: string
+          institution_code: string | null
+          last_generated_on: string | null
+          rotation_cursor: Json
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id?: string | null
+          created_at?: string
+          id?: string
+          institution_code?: string | null
+          last_generated_on?: string | null
+          rotation_cursor?: Json
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string | null
+          created_at?: string
+          id?: string
+          institution_code?: string | null
+          last_generated_on?: string | null
+          rotation_cursor?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_duty_generation_state_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_duty_generation_state_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      student_duty_settings: {
+        Row: {
+          academic_year_id: string | null
+          created_at: string
+          daily_student_per_location: number
+          gender_rule_enabled: boolean
+          id: string
+          included_class_ids: string[]
+          included_grade_levels: number[]
+          institution_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          academic_year_id?: string | null
+          created_at?: string
+          daily_student_per_location?: number
+          gender_rule_enabled?: boolean
+          id?: string
+          included_class_ids?: string[]
+          included_grade_levels?: number[]
+          institution_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          academic_year_id?: string | null
+          created_at?: string
+          daily_student_per_location?: number
+          gender_rule_enabled?: boolean
+          id?: string
+          included_class_ids?: string[]
+          included_grade_levels?: number[]
+          institution_code?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_duty_settings_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_duty_settings_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
           },
         ]
       }
@@ -7823,6 +9071,7 @@ export type Database = {
           id: string
           institution_code: string
           locked: boolean
+          request_id: string | null
           source: string
           student_id: string
           teacher_assignment_id: string
@@ -7834,6 +9083,7 @@ export type Database = {
           id?: string
           institution_code?: string
           locked?: boolean
+          request_id?: string | null
           source?: string
           student_id: string
           teacher_assignment_id: string
@@ -7845,12 +9095,20 @@ export type Database = {
           id?: string
           institution_code?: string
           locked?: boolean
+          request_id?: string | null
           source?: string
           student_id?: string
           teacher_assignment_id?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "student_schedule_enrollments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "student_course_requests"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "student_schedule_enrollments_student_id_fkey"
             columns: ["student_id"]
@@ -7997,6 +9255,7 @@ export type Database = {
       substitute_assignments: {
         Row: {
           absence_lesson_id: string
+          active: boolean
           approval_status: string
           approved_at: string | null
           approved_by: string | null
@@ -8005,10 +9264,13 @@ export type Database = {
           id: string
           institution_code: string | null
           notified_at: string | null
+          overlay_id: string | null
+          reason: string | null
           substitute_user_id: string
         }
         Insert: {
           absence_lesson_id: string
+          active?: boolean
           approval_status?: string
           approved_at?: string | null
           approved_by?: string | null
@@ -8017,10 +9279,13 @@ export type Database = {
           id?: string
           institution_code?: string | null
           notified_at?: string | null
+          overlay_id?: string | null
+          reason?: string | null
           substitute_user_id: string
         }
         Update: {
           absence_lesson_id?: string
+          active?: boolean
           approval_status?: string
           approved_at?: string | null
           approved_by?: string | null
@@ -8029,6 +9294,8 @@ export type Database = {
           id?: string
           institution_code?: string | null
           notified_at?: string | null
+          overlay_id?: string | null
+          reason?: string | null
           substitute_user_id?: string
         }
         Relationships: [
@@ -8073,6 +9340,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "substitute_assignments_overlay_id_fkey"
+            columns: ["overlay_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_daily_overlays"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "substitute_assignments_substitute_user_id_fkey"
@@ -8297,6 +9571,115 @@ export type Database = {
           },
         ]
       }
+      teacher_course_assignment_exception_events: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          class_course_requirement_id: string
+          created_at: string
+          id: number
+          institution_code: string
+          permission_status: string | null
+          reason: string | null
+          teacher_assignment_id: string | null
+          teacher_id: string
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          class_course_requirement_id: string
+          created_at?: string
+          id?: never
+          institution_code: string
+          permission_status?: string | null
+          reason?: string | null
+          teacher_assignment_id?: string | null
+          teacher_id: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          class_course_requirement_id?: string
+          created_at?: string
+          id?: never
+          institution_code?: string
+          permission_status?: string | null
+          reason?: string | null
+          teacher_assignment_id?: string | null
+          teacher_id?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_course_assignment_exce_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "class_course_requirements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignment_exce_class_course_requirement_id_fkey"
+            columns: ["class_course_requirement_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["requirement_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignment_exception__teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_assignment_options"
+            referencedColumns: ["teacher_assignment_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignment_exception__teacher_assignment_id_fkey"
+            columns: ["teacher_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignment_exception_event_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignment_exception_events_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignment_exception_events_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignment_exception_events_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignment_exception_events_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
       teacher_course_assignments: {
         Row: {
           assigned_hours: number
@@ -8304,12 +9687,25 @@ export type Database = {
           class_course_requirement_id: string
           created_at: string
           created_by: string | null
+          exception_approved_at: string | null
+          exception_approved_by: string | null
+          exception_permission_status: string | null
+          exception_reason: string | null
+          exception_valid_from: string | null
+          exception_valid_until: string | null
           id: string
           institution_code: string | null
+          is_justified_exception: boolean
+          is_manual_override: boolean
           note: string | null
+          schedule_session_id: string | null
           section_capacity: number | null
           teacher_id: string
+          term_no: number | null
           updated_at: string
+          valid_from: string | null
+          valid_to: string | null
+          week_pattern: string
         }
         Insert: {
           assigned_hours: number
@@ -8317,12 +9713,25 @@ export type Database = {
           class_course_requirement_id: string
           created_at?: string
           created_by?: string | null
+          exception_approved_at?: string | null
+          exception_approved_by?: string | null
+          exception_permission_status?: string | null
+          exception_reason?: string | null
+          exception_valid_from?: string | null
+          exception_valid_until?: string | null
           id?: string
           institution_code?: string | null
+          is_justified_exception?: boolean
+          is_manual_override?: boolean
           note?: string | null
+          schedule_session_id?: string | null
           section_capacity?: number | null
           teacher_id: string
+          term_no?: number | null
           updated_at?: string
+          valid_from?: string | null
+          valid_to?: string | null
+          week_pattern?: string
         }
         Update: {
           assigned_hours?: number
@@ -8330,12 +9739,25 @@ export type Database = {
           class_course_requirement_id?: string
           created_at?: string
           created_by?: string | null
+          exception_approved_at?: string | null
+          exception_approved_by?: string | null
+          exception_permission_status?: string | null
+          exception_reason?: string | null
+          exception_valid_from?: string | null
+          exception_valid_until?: string | null
           id?: string
           institution_code?: string | null
+          is_justified_exception?: boolean
+          is_manual_override?: boolean
           note?: string | null
+          schedule_session_id?: string | null
           section_capacity?: number | null
           teacher_id?: string
+          term_no?: number | null
           updated_at?: string
+          valid_from?: string | null
+          valid_to?: string | null
+          week_pattern?: string
         }
         Relationships: [
           {
@@ -8372,6 +9794,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_exception_approved_by_fkey"
+            columns: ["exception_approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_exception_approved_by_fkey"
+            columns: ["exception_approved_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_assignments_schedule_session_id_fkey"
+            columns: ["schedule_session_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sessions"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
@@ -8630,6 +10073,7 @@ export type Database = {
           is_group_split: boolean
           locked: boolean
           period: number
+          schedule_session_id: string | null
           source_kind: string
           subgroup_id: string | null
           subgroup_key: string | null
@@ -8654,6 +10098,7 @@ export type Database = {
           is_group_split?: boolean
           locked?: boolean
           period: number
+          schedule_session_id?: string | null
           source_kind?: string
           subgroup_id?: string | null
           subgroup_key?: string | null
@@ -8678,6 +10123,7 @@ export type Database = {
           is_group_split?: boolean
           locked?: boolean
           period?: number
+          schedule_session_id?: string | null
           source_kind?: string
           subgroup_id?: string | null
           subgroup_key?: string | null
@@ -8743,6 +10189,13 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "course_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_schedule_schedule_session_id_fkey"
+            columns: ["schedule_session_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sessions"
             referencedColumns: ["id"]
           },
           {
@@ -8915,6 +10368,7 @@ export type Database = {
           note: string | null
           period: number
           reason: string
+          schedule_session_id: string | null
           source: string
           teacher_id: string
           weekday: number
@@ -8928,6 +10382,7 @@ export type Database = {
           note?: string | null
           period: number
           reason?: string
+          schedule_session_id?: string | null
           source?: string
           teacher_id: string
           weekday: number
@@ -8941,6 +10396,7 @@ export type Database = {
           note?: string | null
           period?: number
           reason?: string
+          schedule_session_id?: string | null
           source?: string
           teacher_id?: string
           weekday?: number
@@ -8966,6 +10422,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "teacher_unavailability_schedule_session_id_fkey"
+            columns: ["schedule_session_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_sessions"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "teacher_unavailability_teacher_id_fkey"
@@ -9354,6 +10817,284 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "teacher_course_load_summary"
             referencedColumns: ["teacher_id"]
+          },
+        ]
+      }
+      visitor_access_restrictions: {
+        Row: {
+          created_at: string
+          decision: string
+          ends_at: string | null
+          id: string
+          institution_code: string | null
+          is_active: boolean
+          legal_basis_note: string | null
+          legal_basis_type: string | null
+          related_student_id: string | null
+          restriction_type: string
+          starts_at: string | null
+          updated_at: string
+          visitor_person_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          decision?: string
+          ends_at?: string | null
+          id?: string
+          institution_code?: string | null
+          is_active?: boolean
+          legal_basis_note?: string | null
+          legal_basis_type?: string | null
+          related_student_id?: string | null
+          restriction_type?: string
+          starts_at?: string | null
+          updated_at?: string
+          visitor_person_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          decision?: string
+          ends_at?: string | null
+          id?: string
+          institution_code?: string | null
+          is_active?: boolean
+          legal_basis_note?: string | null
+          legal_basis_type?: string | null
+          related_student_id?: string | null
+          restriction_type?: string
+          starts_at?: string | null
+          updated_at?: string
+          visitor_person_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitor_access_restrictions_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "visitor_access_restrictions_related_student_id_fkey"
+            columns: ["related_student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visitor_access_restrictions_visitor_person_id_fkey"
+            columns: ["visitor_person_id"]
+            isOneToOne: false
+            referencedRelation: "visitor_people"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visitor_people: {
+        Row: {
+          created_at: string
+          full_name: string
+          id: string
+          institution_code: string | null
+          phone: string | null
+          source: string
+          tc_last4: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          full_name: string
+          id?: string
+          institution_code?: string | null
+          phone?: string | null
+          source?: string
+          tc_last4?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string
+          id?: string
+          institution_code?: string | null
+          phone?: string | null
+          source?: string
+          tc_last4?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitor_people_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+        ]
+      }
+      visitor_visits: {
+        Row: {
+          cancellation_reason: string | null
+          card_no: string | null
+          created_at: string
+          entered_by: string | null
+          entry_at: string
+          entry_location_id: string | null
+          exit_at: string | null
+          exit_location_id: string | null
+          exited_by: string | null
+          id: string
+          identity_method: string
+          identity_verified_at: string | null
+          identity_verified_by: string | null
+          institution_code: string | null
+          person_to_meet_user_id: string | null
+          phone_used: string | null
+          physical_id_seen: boolean
+          related_student_id: string | null
+          status: string
+          updated_at: string
+          visit_reason: string | null
+          visitor_person_id: string
+        }
+        Insert: {
+          cancellation_reason?: string | null
+          card_no?: string | null
+          created_at?: string
+          entered_by?: string | null
+          entry_at?: string
+          entry_location_id?: string | null
+          exit_at?: string | null
+          exit_location_id?: string | null
+          exited_by?: string | null
+          id?: string
+          identity_method?: string
+          identity_verified_at?: string | null
+          identity_verified_by?: string | null
+          institution_code?: string | null
+          person_to_meet_user_id?: string | null
+          phone_used?: string | null
+          physical_id_seen?: boolean
+          related_student_id?: string | null
+          status?: string
+          updated_at?: string
+          visit_reason?: string | null
+          visitor_person_id: string
+        }
+        Update: {
+          cancellation_reason?: string | null
+          card_no?: string | null
+          created_at?: string
+          entered_by?: string | null
+          entry_at?: string
+          entry_location_id?: string | null
+          exit_at?: string | null
+          exit_location_id?: string | null
+          exited_by?: string | null
+          id?: string
+          identity_method?: string
+          identity_verified_at?: string | null
+          identity_verified_by?: string | null
+          institution_code?: string | null
+          person_to_meet_user_id?: string | null
+          phone_used?: string | null
+          physical_id_seen?: boolean
+          related_student_id?: string | null
+          status?: string
+          updated_at?: string
+          visit_reason?: string | null
+          visitor_person_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitor_visits_entered_by_fkey"
+            columns: ["entered_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_entered_by_fkey"
+            columns: ["entered_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_entry_location_id_fkey"
+            columns: ["entry_location_id"]
+            isOneToOne: false
+            referencedRelation: "duty_locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_exit_location_id_fkey"
+            columns: ["exit_location_id"]
+            isOneToOne: false
+            referencedRelation: "duty_locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_exited_by_fkey"
+            columns: ["exited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_exited_by_fkey"
+            columns: ["exited_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_identity_verified_by_fkey"
+            columns: ["identity_verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_identity_verified_by_fkey"
+            columns: ["identity_verified_by"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_institution_code_fkey"
+            columns: ["institution_code"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["institution_code"]
+          },
+          {
+            foreignKeyName: "visitor_visits_person_to_meet_user_id_fkey"
+            columns: ["person_to_meet_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_person_to_meet_user_id_fkey"
+            columns: ["person_to_meet_user_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_course_load_summary"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_related_student_id_fkey"
+            columns: ["related_student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visitor_visits_visitor_person_id_fkey"
+            columns: ["visitor_person_id"]
+            isOneToOne: false
+            referencedRelation: "visitor_people"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -9910,6 +11651,10 @@ export type Database = {
         Args: { p_attempt_id: string }
         Returns: string
       }
+      accept_schedule_worker_result_v2: {
+        Args: { p_attempt_id: string }
+        Returns: string
+      }
       apply_approved_payroll_activities: {
         Args: { p_month: number; p_run_id: string; p_year: number }
         Returns: number
@@ -9921,6 +11666,18 @@ export type Database = {
       apply_curriculum_template_permission_core_v2: {
         Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
         Returns: number
+      }
+      apply_official_course_transition_to_drafts_v1: {
+        Args: { p_confirm?: boolean; p_mapping_id: string }
+        Returns: number
+      }
+      apply_official_curriculum_to_class_v2: {
+        Args: { p_class_id: string; p_mode?: string }
+        Returns: Json
+      }
+      apply_schedule_daily_overlay_v1: {
+        Args: { p_date: string; p_operations: Json }
+        Returns: Json
       }
       apply_schedule_edge_slot_repairs_v1: {
         Args: { p_scenario_id: string }
@@ -9946,6 +11703,14 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      apply_substitution_chain_v4: {
+        Args: {
+          p_absence_lesson_id: string
+          p_cover_teacher_id: string
+          p_primary_teacher_id: string
+        }
+        Returns: Json
+      }
       approve_official_source_change_v1: {
         Args: {
           p_calendar_event_type?: string
@@ -9953,6 +11718,10 @@ export type Database = {
           p_queue_id: string
         }
         Returns: string
+      }
+      approve_official_source_change_v2: {
+        Args: { p_note?: string; p_queue_id: string }
+        Returns: undefined
       }
       approve_payroll_activity: {
         Args: { p_activity_id: string; p_approve?: boolean }
@@ -9970,10 +11739,22 @@ export type Database = {
         Args: { p_month: number; p_year: number }
         Returns: number
       }
+      assert_canonical_schedule_scenario_access_v1: {
+        Args: { p_scenario_id: string }
+        Returns: undefined
+      }
       assert_curriculum_ready_for_timetable: { Args: never; Returns: boolean }
       assert_date_in_active_academic_year: {
         Args: { p_date: string }
         Returns: boolean
+      }
+      assert_schedule_current_generic_relations_v1: {
+        Args: never
+        Returns: undefined
+      }
+      assert_schedule_daily_overlay_hard_v1: {
+        Args: { p_date: string }
+        Returns: undefined
       }
       assert_schedule_preparation_ready: { Args: never; Returns: boolean }
       assert_schedule_publishable: { Args: never; Returns: boolean }
@@ -10057,6 +11838,10 @@ export type Database = {
         Args: { p_date?: string }
         Returns: number
       }
+      assign_substitutes_for_day_v4: {
+        Args: { p_date?: string }
+        Returns: Json
+      }
       assign_substitutes_permission_core_v2: {
         Args: { p_date?: string }
         Returns: {
@@ -10090,6 +11875,40 @@ export type Database = {
       }
       assign_teacher_to_class_course_permission_core_v2: {
         Args: {
+          p_group?: string
+          p_hours?: number
+          p_requirement_id: string
+          p_teacher_id: string
+        }
+        Returns: string
+      }
+      assign_teacher_to_class_course_v2: {
+        Args: {
+          p_exception_reason?: string
+          p_force_exception?: boolean
+          p_group?: string
+          p_hours?: number
+          p_requirement_id: string
+          p_teacher_id: string
+        }
+        Returns: string
+      }
+      assign_teacher_to_class_course_v3: {
+        Args: {
+          p_exception_reason?: string
+          p_exception_valid_from?: string
+          p_exception_valid_until?: string
+          p_force_exception?: boolean
+          p_group?: string
+          p_hours?: number
+          p_requirement_id: string
+          p_teacher_id: string
+        }
+        Returns: string
+      }
+      assign_teacher_to_class_course_v4: {
+        Args: {
+          p_confirm_manual_override?: boolean
           p_group?: string
           p_hours?: number
           p_requirement_id: string
@@ -10162,6 +11981,10 @@ export type Database = {
       }
       can_manage_permissions: { Args: never; Returns: boolean }
       can_manage_personnel_private_data: { Args: never; Returns: boolean }
+      cancel_schedule_solve_job_v2: {
+        Args: { p_job_id: string; p_reason?: string }
+        Returns: number
+      }
       claim_schedule_worker_attempt_v1: {
         Args: { p_worker_key: string }
         Returns: {
@@ -10239,6 +12062,10 @@ export type Database = {
           p_weekday: number
         }
         Returns: number
+      }
+      create_schedule_diagnostic_sandbox_v1: {
+        Args: { p_source_scenario_id: string; p_title?: string }
+        Returns: string
       }
       create_schedule_restore_point: {
         Args: { p_label: string; p_reason?: string }
@@ -10426,6 +12253,7 @@ export type Database = {
           session_scope: string
           teaching_days: number[]
           updated_at: string
+          week_parity_anchor: string | null
         }
         SetofOptions: {
           from: "*"
@@ -10530,6 +12358,20 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_event_cover_candidates_v1: {
+        Args: { p_date: string; p_source_schedule_id: string }
+        Returns: {
+          candidate_name: string
+          candidate_user_id: string
+          duty: boolean
+          feasible: boolean
+          hard_reasons: string[]
+          monthly_load: number
+          qualified: boolean
+          rank_score: number
+          weekly_load: number
+        }[]
+      }
       get_feature_access_state: { Args: { p_path: string }; Returns: Json }
       get_formal_norm_analysis: {
         Args: { p_on_date?: string }
@@ -10557,6 +12399,15 @@ export type Database = {
           selection_scope: string
           total_max: number
           total_min: number
+        }[]
+      }
+      get_manual_teacher_assignment_overrides_v1: {
+        Args: never
+        Returns: {
+          class_name: string
+          course_name: string
+          teacher_assignment_id: string
+          teacher_name: string
         }[]
       }
       get_my_active_institution_code: { Args: never; Returns: string }
@@ -10736,6 +12587,18 @@ export type Database = {
           student_weight: number
         }[]
       }
+      get_schedule_assignment_time_model_v1: {
+        Args: never
+        Returns: {
+          allowed_periods: number[]
+          assignment_id: string
+          schedule_session_id: string
+          term_no: number
+          valid_from: string
+          valid_to: string
+          week_pattern: string
+        }[]
+      }
       get_schedule_atomic_move_plan_v1: {
         Args: {
           p_classroom_id?: string
@@ -10780,6 +12643,23 @@ export type Database = {
           worker_type: string
         }[]
       }
+      get_schedule_compute_capabilities_v2: {
+        Args: never
+        Returns: {
+          available_slots: number
+          avg_latency_ms: number
+          current_load: number
+          display_name: string
+          health: string
+          heartbeat_fresh: boolean
+          lease_seconds: number
+          load_ratio: number
+          max_parallel: number
+          recommended: boolean
+          worker_key: string
+          worker_type: string
+        }[]
+      }
       get_schedule_configuration_issues_before_scoped_rules_v2: {
         Args: never
         Returns: {
@@ -10796,6 +12676,54 @@ export type Database = {
           detail: string
         }[]
       }
+      get_schedule_current_generic_relation_summary_v1: {
+        Args: never
+        Returns: {
+          hard: number
+          hard_violations: number
+          medium: number
+          soft: number
+        }[]
+      }
+      get_schedule_daily_effective_v1: {
+        Args: { p_date?: string }
+        Returns: {
+          class_id: string
+          class_name: string
+          classroom_id: string
+          course_id: string
+          event_key: string
+          is_overlay: boolean
+          operation_group_id: string
+          operation_kind: string
+          period: number
+          source_absence_lesson_id: string
+          source_schedule_id: string
+          subgroup_id: string
+          subject: string
+          teacher_id: string
+        }[]
+      }
+      get_schedule_daily_effective_v2: {
+        Args: { p_date?: string }
+        Returns: {
+          class_id: string
+          class_ids: string[]
+          class_name: string
+          classroom_id: string
+          course_id: string
+          event_key: string
+          is_overlay: boolean
+          operation_group_id: string
+          operation_kind: string
+          period: number
+          source_absence_lesson_id: string
+          source_schedule_id: string
+          subgroup_id: string
+          subject: string
+          teacher_id: string
+        }[]
+      }
       get_schedule_edge_slot_integrity_issues_v1: {
         Args: never
         Returns: {
@@ -10803,6 +12731,36 @@ export type Database = {
           code: string
           detail: string
           severity: string
+        }[]
+      }
+      get_schedule_exact_oracle_health_v1: { Args: never; Returns: Json }
+      get_schedule_exact_oracle_problem_v1: { Args: never; Returns: Json }
+      get_schedule_generic_relation_evaluation_v1: {
+        Args: { p_scenario_id?: string }
+        Returns: {
+          mode: string
+          penalty: number
+          relation_id: string
+          relation_type: string
+          violation_count: number
+        }[]
+      }
+      get_schedule_generic_relation_evaluation_v2: {
+        Args: { p_scenario_id?: string }
+        Returns: {
+          mode: string
+          penalty: number
+          relation_id: string
+          relation_type: string
+          violation_count: number
+        }[]
+      }
+      get_schedule_hybrid_health_v2: {
+        Args: never
+        Returns: {
+          detail: string
+          metric: string
+          value: number
         }[]
       }
       get_schedule_integrity_report: {
@@ -10841,7 +12799,34 @@ export type Database = {
           severity: string
         }[]
       }
+      get_schedule_integrity_report_pre_manual_override_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
       get_schedule_integrity_report_pre_phase3: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_integrity_report_pre_teacher_exception_v1: {
+        Args: never
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+          severity: string
+        }[]
+      }
+      get_schedule_integrity_report_pre_timebound_exception_v1: {
         Args: never
         Returns: {
           affected_count: number
@@ -10973,6 +12958,20 @@ export type Database = {
           title: string
         }[]
       }
+      get_schedule_relation_selected_activities_v1: {
+        Args: { p_relation_id: string; p_scenario_id?: string }
+        Returns: {
+          activity_key: string
+          assignment_id: string
+          class_id: string
+          classroom_id: string
+          course_id: string
+          end_p: number
+          start_p: number
+          teacher_id: string
+          weekday: number
+        }[]
+      }
       get_schedule_scenario_advanced_hard_issues_v1: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -10995,6 +12994,23 @@ export type Database = {
           affected_count: number
           code: string
           detail: string
+        }[]
+      }
+      get_schedule_scenario_generic_relation_issues_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_generic_relation_summary_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          hard: number
+          hard_violations: number
+          medium: number
+          soft: number
         }[]
       }
       get_schedule_scenario_hard_issues_parallel_core_v2: {
@@ -11021,7 +13037,31 @@ export type Database = {
           detail: string
         }[]
       }
+      get_schedule_scenario_hard_issues_pre_manual_override_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
       get_schedule_scenario_hard_issues_pre_phase3: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_pre_teacher_exception_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_hard_issues_pre_timebound_exception_v1: {
         Args: { p_scenario_id: string }
         Returns: {
           affected_count: number
@@ -11037,6 +13077,16 @@ export type Database = {
           detail: string
         }[]
       }
+      get_schedule_scenario_objective_vector_v1: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          hard: number
+          legacy_score: number
+          medium: number
+          soft: number
+          unplaced: number
+        }[]
+      }
       get_schedule_scenario_quality_breakdown_v1: {
         Args: { p_scenario_id: string }
         Returns: {
@@ -11045,12 +13095,60 @@ export type Database = {
           score: number
         }[]
       }
+      get_schedule_scenario_room_candidates_v2: {
+        Args: { p_row_id: string; p_scenario_id: string }
+        Returns: {
+          classroom_id: string
+          soft_penalty: number
+        }[]
+      }
+      get_schedule_scenario_room_issues_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          affected_count: number
+          code: string
+          detail: string
+        }[]
+      }
+      get_schedule_scenario_room_summary_v2: {
+        Args: { p_scenario_id: string }
+        Returns: {
+          hard: number
+          soft: number
+        }[]
+      }
       get_schedule_scenario_student_conflict_summary_v1: {
         Args: { p_scenario_id: string }
         Returns: {
           affected_students: number
           conflict_events: number
           weighted_conflict: number
+        }[]
+      }
+      get_schedule_solve_job_status_v2: {
+        Args: { p_job_id: string }
+        Returns: {
+          attempt_id: string
+          attempt_no: number
+          attempt_status: string
+          audit_status: string
+          budget_ms: number
+          deadline_at: string
+          duration_ms: number
+          finished_at: string
+          job_status: string
+          scenario_id: string
+          worker_key: string
+          worker_type: string
+        }[]
+      }
+      get_schedule_solver_operator_priors_v1: {
+        Args: { p_context_key: string }
+        Returns: {
+          attempts: number
+          reward_sum: number
+          strategy: string
+          wins: number
         }[]
       }
       get_schedule_student_conflict_report_v1: {
@@ -11073,6 +13171,71 @@ export type Database = {
           subjects: string[]
           weekday: number
         }[]
+      }
+      get_schedule_time_model_health_v1: { Args: never; Returns: Json }
+      get_schedule_week_index_v1: { Args: { p_date: string }; Returns: number }
+      get_student_section_candidates_v2: {
+        Args: { p_request_id: string }
+        Returns: {
+          assignment_id: string
+          capacity: number
+          feasible: boolean
+          hard_reasons: string[]
+          is_current: boolean
+          load: number
+          medium_penalty: number
+          soft_penalty: number
+          teacher_id: string
+        }[]
+      }
+      get_student_sectioning_health_v2: {
+        Args: never
+        Returns: {
+          active_enrollments: number
+          active_requests: number
+          conflict_events: number
+          locked_enrollments: number
+          open_issues: number
+          sections_at_capacity: number
+          students_with_requests: number
+        }[]
+      }
+      get_substitute_candidates_v4: {
+        Args: { p_absence_lesson_id: string }
+        Returns: {
+          candidate_name: string
+          candidate_user_id: string
+          duty: boolean
+          feasible: boolean
+          hard_reasons: string[]
+          monthly_load: number
+          qualified: boolean
+          rank_score: number
+          reason: string
+          weekly_load: number
+        }[]
+      }
+      get_substitution_day_health_v4: {
+        Args: { p_date?: string }
+        Returns: {
+          absence_lessons: number
+          active_overlays: number
+          chain_operations: number
+          covered: number
+          direct_covers: number
+          pending_notifications: number
+          reverted_groups: number
+          uncovered: number
+        }[]
+      }
+      get_substitution_transfer_issues_v1: {
+        Args: {
+          p_classroom: string
+          p_date: string
+          p_period: number
+          p_teacher: string
+        }
+        Returns: string[]
       }
       get_super_admin_personnel: {
         Args: never
@@ -11102,6 +13265,50 @@ export type Database = {
           sort_order: number
         }[]
       }
+      get_teacher_course_assignment_exceptions_v1: {
+        Args: never
+        Returns: {
+          approved_at: string
+          approved_by: string
+          class_course_requirement_id: string
+          class_name: string
+          course_name: string
+          reason: string
+          teacher_assignment_id: string
+          teacher_id: string
+        }[]
+      }
+      get_teacher_course_assignment_exceptions_v2: {
+        Args: never
+        Returns: {
+          approved_at: string
+          approved_by: string
+          class_course_requirement_id: string
+          class_name: string
+          course_name: string
+          is_current: boolean
+          reason: string
+          teacher_assignment_id: string
+          teacher_id: string
+          valid_from: string
+          valid_until: string
+        }[]
+      }
+      get_teacher_schedule_for_date_v1: {
+        Args: { p_date?: string; p_teacher: string }
+        Returns: {
+          class_id: string
+          class_name: string
+          classroom_id: string
+          course_id: string
+          period: number
+          schedule_session_id: string
+          source_schedule_id: string
+          subgroup_id: string
+          subject: string
+          teacher_assignment_id: string
+        }[]
+      }
       has_any_module_permission: {
         Args: { p_module: string }
         Returns: boolean
@@ -11121,6 +13328,15 @@ export type Database = {
           p_avg_latency_ms?: number
           p_current_load?: number
           p_health?: string
+          p_worker_key: string
+        }
+        Returns: boolean
+      }
+      heartbeat_schedule_worker_attempt_v2: {
+        Args: {
+          p_attempt_id: string
+          p_avg_latency_ms?: number
+          p_current_load?: number
           p_worker_key: string
         }
         Returns: boolean
@@ -11188,12 +13404,87 @@ export type Database = {
         Args: { p_academic_year_id: string }
         Returns: number
       }
+      list_official_course_transition_mappings_v1: {
+        Args: never
+        Returns: {
+          active: boolean
+          approved_at: string
+          decision_no: string
+          effective_from: string
+          id: string
+          reason: string
+          source_course_id: string
+          source_course_name: string
+          target_course_id: string
+          target_course_name: string
+          transition_kind: string
+        }[]
+      }
+      list_official_electives_for_class_v1: {
+        Args: { p_class_id: string }
+        Returns: {
+          category: string
+          course_id: string
+          course_name: string
+          elective_group_key: string
+          hour_options: number[]
+          max_selections: number
+          offering_id: string
+          source_note: string
+        }[]
+      }
+      list_official_source_changes_v1: {
+        Args: never
+        Returns: {
+          applied_at: string
+          approval_required: boolean
+          approved_at: string
+          approved_by: string
+          change_type: string
+          decision_no: string
+          detected_at: string
+          effective_from: string
+          note: string
+          parser_result: Json
+          queue_id: string
+          source_key: string
+          source_url: string
+          status: string
+          title: string
+        }[]
+      }
+      list_schedule_rule_override_events_v1: {
+        Args: never
+        Returns: {
+          action: string
+          actor_user_id: string
+          created_at: string
+          reason: string
+          schedule_rule_override_id: string
+          valid_from: string
+          valid_until: string
+        }[]
+      }
+      mark_official_source_change_applied_v1: {
+        Args: { p_note?: string; p_queue_id: string }
+        Returns: undefined
+      }
       mark_official_source_change_parsed_v1: {
         Args: {
           p_approval_required?: boolean
           p_effective_from?: string
           p_parser_result: Json
           p_queue_id: string
+        }
+        Returns: undefined
+      }
+      mark_official_source_change_parsed_v2: {
+        Args: {
+          p_approval_required?: boolean
+          p_effective_from?: string
+          p_parser_result: Json
+          p_queue_id: string
+          p_review_note: string
         }
         Returns: undefined
       }
@@ -11247,6 +13538,13 @@ export type Database = {
         Returns: undefined
       }
       open_permission_context: { Args: { p_code: string }; Returns: undefined }
+      optimize_classrooms_to_scenario_v2: {
+        Args: { p_preserve_locked?: boolean; p_scenario_id: string }
+        Returns: {
+          assigned_count: number
+          unassigned_count: number
+        }[]
+      }
       payroll_month_is_locked: {
         Args: { p_month: number; p_year: number }
         Returns: boolean
@@ -11279,6 +13577,17 @@ export type Database = {
       }
       plan_schedule_solve_job_v1: {
         Args: {
+          p_candidate_count?: number
+          p_compute_preference?: string
+          p_mode?: string
+          p_quality_target?: number
+        }
+        Returns: string
+      }
+      plan_schedule_solve_job_v2: {
+        Args: {
+          p_base_seed?: number
+          p_budget_ms?: number
           p_candidate_count?: number
           p_compute_preference?: string
           p_mode?: string
@@ -11352,8 +13661,44 @@ export type Database = {
         Args: { p_preserve?: boolean }
         Returns: number
       }
+      preview_official_course_transition_impact_v1: {
+        Args: { p_mapping_id: string }
+        Returns: {
+          class_id: string
+          class_name: string
+          locked: boolean
+          mapping_id: string
+          note: string
+          recommended_action: string
+          requirement_id: string
+          source_course_name: string
+          target_course_name: string
+          weekly_hours: number
+        }[]
+      }
+      preview_schedule_assignment_slot_v1: {
+        Args: {
+          p_classroom_id?: string
+          p_locked?: boolean
+          p_period: number
+          p_source_kind?: string
+          p_subgroup_id?: string
+          p_teacher_assignment_id: string
+          p_weekday: number
+        }
+        Returns: Json
+      }
       preview_schedule_batch_move_v1: { Args: { p_moves: Json }; Returns: Json }
       preview_schedule_block_move_v1: {
+        Args: {
+          p_classroom_id?: string
+          p_period: number
+          p_schedule_id: string
+          p_weekday: number
+        }
+        Returns: Json
+      }
+      preview_schedule_move_quality_v1: {
         Args: {
           p_classroom_id?: string
           p_period: number
@@ -11371,8 +13716,16 @@ export type Database = {
         }
         Returns: Json
       }
+      preview_schedule_swap_quality_v1: {
+        Args: { p_left_id: string; p_right_id: string }
+        Returns: Json
+      }
       preview_schedule_swap_v1: {
         Args: { p_left_id: string; p_right_id: string }
+        Returns: Json
+      }
+      preview_teacher_slot_unavailable_v1: {
+        Args: { p_period: number; p_teacher_id: string; p_weekday: number }
         Returns: Json
       }
       publish_current_schedule: {
@@ -11413,6 +13766,7 @@ export type Database = {
       }
       quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
       reap_stale_schedule_worker_attempts_v1: { Args: never; Returns: number }
+      reap_stale_schedule_worker_attempts_v2: { Args: never; Returns: number }
       recalculate_payroll_month: {
         Args: { p_month: number; p_year: number }
         Returns: string
@@ -11424,6 +13778,23 @@ export type Database = {
       recalculate_payroll_month_v2: {
         Args: { p_month: number; p_year: number }
         Returns: string
+      }
+      record_schedule_exact_oracle_result_v1: {
+        Args: {
+          p_best_bound?: number
+          p_diagnostics?: Json
+          p_gap?: number
+          p_input_hash: string
+          p_objective?: number
+          p_status: string
+          p_unsupported?: Json
+          p_wall_ms?: number
+        }
+        Returns: string
+      }
+      record_schedule_solver_operator_telemetry_v1: {
+        Args: { p_context_key: string; p_observations: Json }
+        Returns: undefined
       }
       refresh_class_curriculum_status: {
         Args: { p_class_id: string }
@@ -11484,6 +13855,10 @@ export type Database = {
         }
         Returns: string
       }
+      reject_schedule_diagnostic_sandbox_publish_v1: {
+        Args: { p_sandbox_id: string }
+        Returns: undefined
+      }
       repair_schedule_scenario_core_v2: {
         Args: { p_scenario_id: string }
         Returns: number
@@ -11500,6 +13875,7 @@ export type Database = {
         Args: { p_scenario_id: string }
         Returns: number
       }
+      repair_student_sectioning_conflicts_v2: { Args: never; Returns: Json }
       rescore_schedule_scenario_permission_core_v2: {
         Args: { p_scenario_id: string }
         Returns: number
@@ -11542,9 +13918,36 @@ export type Database = {
         Args: { p_restore_point_id: string }
         Returns: number
       }
+      retire_schedule_rule_override_v1: {
+        Args: { p_override_id: string; p_retirement_reason: string }
+        Returns: boolean
+      }
+      revert_schedule_daily_overlay_v1: {
+        Args: { p_operation_group_id: string }
+        Returns: Json
+      }
       revoke_task_role_template: {
         Args: { p_template_id: string; p_user_id: string }
         Returns: number
+      }
+      save_schedule_rule_override_v3: {
+        Args: {
+          p_avoid_last_period: boolean
+          p_block_pattern: number[]
+          p_class_course_requirement_id: string
+          p_exception_reason: string
+          p_max_per_day: number
+          p_min_distinct_days: number
+          p_note: string
+          p_preferred_days: number[]
+          p_preferred_periods: number[]
+          p_prohibited_days: number[]
+          p_prohibited_periods: number[]
+          p_teacher_assignment_id: string
+          p_valid_from: string
+          p_valid_until: string
+        }
+        Returns: string
       }
       save_task_role_template: {
         Args: {
@@ -11576,6 +13979,17 @@ export type Database = {
         }
         Returns: number
       }
+      scenario_teacher_consecutive_count_block_scope_v1: {
+        Args: {
+          p_assignment: string
+          p_block: number
+          p_day: number
+          p_scenario: string
+          p_start: number
+          p_teacher: string
+        }
+        Returns: number
+      }
       scenario_teacher_consecutive_count_block_v2: {
         Args: {
           p_block_hours: number
@@ -11590,6 +14004,15 @@ export type Database = {
         Args: { p_day: number; p_scenario: string; p_teacher: string }
         Returns: number
       }
+      scenario_teacher_daily_count_scope_v1: {
+        Args: {
+          p_assignment: string
+          p_day: number
+          p_scenario: string
+          p_teacher: string
+        }
+        Returns: number
+      }
       scenario_teacher_working_days: {
         Args: {
           p_candidate_day?: number
@@ -11598,13 +14021,60 @@ export type Database = {
         }
         Returns: number
       }
+      scenario_teacher_working_days_scope_v1: {
+        Args: {
+          p_assignment: string
+          p_candidate_day: number
+          p_scenario: string
+          p_teacher: string
+        }
+        Returns: number
+      }
+      schedule_assignment_applies_on_date_v1: {
+        Args: { p_assignment: string; p_date: string }
+        Returns: boolean
+      }
       schedule_assignment_run_lengths: {
         Args: { p_assignment: string }
         Returns: number[]
       }
+      schedule_assignment_scopes_overlap_v1: {
+        Args: { p_a: string; p_b: string }
+        Returns: boolean
+      }
       schedule_current_block_matches_phase3_v1: {
         Args: { p_assignment_id: string }
         Returns: boolean
+      }
+      schedule_relation_pair_violates_v1: {
+        Args: {
+          l_day: number
+          l_end: number
+          l_room: string
+          l_start: number
+          p_params: Json
+          p_type: string
+          r_day: number
+          r_end: number
+          r_room: string
+          r_start: number
+        }
+        Returns: boolean
+      }
+      schedule_relation_selector_matches_v1: {
+        Args: {
+          p_activity_key: string
+          p_assignment_id: string
+          p_class_id: string
+          p_course_id: string
+          p_selector: Json
+          p_teacher_id: string
+        }
+        Returns: boolean
+      }
+      schedule_relation_set_violation_v1: {
+        Args: { p_relation_id: string; p_scenario_id?: string }
+        Returns: number
       }
       schedule_relation_slot_allowed_v1: {
         Args: {
@@ -11614,6 +14084,20 @@ export type Database = {
           p_scenario_id: string
           p_weekday: number
         }
+        Returns: boolean
+      }
+      schedule_relation_unary_violates_v1: {
+        Args: {
+          p_day: number
+          p_end: number
+          p_params: Json
+          p_start: number
+          p_type: string
+        }
+        Returns: boolean
+      }
+      schedule_requirement_slot_allowed_v1: {
+        Args: { p_period: number; p_requirement: string }
         Returns: boolean
       }
       schedule_rule_mode_v1: { Args: { p_rule_code: string }; Returns: string }
@@ -11629,17 +14113,59 @@ export type Database = {
         Args: { p_assignment_id: string; p_scenario_id: string }
         Returns: boolean
       }
+      schedule_slot_open_on_date_v1: {
+        Args: { p_date: string; p_period: number; p_session: string }
+        Returns: boolean
+      }
+      schedule_slots_overlap_state_v1: {
+        Args: {
+          p_period_a: number
+          p_period_b: number
+          p_session_a: string
+          p_session_b: string
+        }
+        Returns: string
+      }
+      schedule_slots_overlap_v1: {
+        Args: {
+          p_period_a: number
+          p_period_b: number
+          p_session_a: string
+          p_session_b: string
+        }
+        Returns: boolean
+      }
       schedule_subject_matches_edge_rule_v1: {
         Args: { p_rule_code: string; p_subject: string }
         Returns: boolean
       }
+      schedule_week_pattern_applies_v1: {
+        Args: { p_date: string; p_pattern: string }
+        Returns: boolean
+      }
+      section_student_v2: {
+        Args: { p_replace_solver?: boolean; p_student_id: string }
+        Returns: Json
+      }
       section_students_batch_v1: {
+        Args: { p_replace_solver?: boolean }
+        Returns: Json
+      }
+      section_students_batch_v2: {
         Args: { p_replace_solver?: boolean }
         Returns: Json
       }
       seed_timetable_defaults_for_tenant_v1: {
         Args: { p_code: string }
         Returns: undefined
+      }
+      select_official_elective_for_class_v1: {
+        Args: {
+          p_class_id: string
+          p_offering_id: string
+          p_weekly_hours: number
+        }
+        Returns: string
       }
       set_active_academic_year: {
         Args: { p_academic_year_id: string }
@@ -11785,6 +14311,21 @@ export type Database = {
           reason: string
           subject: string
           weekly_load: number
+        }[]
+      }
+      suggest_substitution_chains_v4: {
+        Args: { p_date?: string; p_limit?: number }
+        Returns: {
+          absence_lesson_id: string
+          class_name: string
+          cover_teacher_id: string
+          cover_teacher_name: string
+          operations: Json
+          period: number
+          primary_teacher_id: string
+          primary_teacher_name: string
+          subject: string
+          total_score: number
         }[]
       }
       super_admin_feature_catalog_audit: {
@@ -11978,6 +14519,17 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      upsert_official_course_transition_mapping_v1: {
+        Args: {
+          p_decision_no: string
+          p_effective_from: string
+          p_reason: string
+          p_source_course_id: string
+          p_target_course_id: string
+          p_transition_kind: string
+        }
+        Returns: string
+      }
       upsert_official_vocational_catalog_batch: {
         Args: { p_rows: Json }
         Returns: {
@@ -12015,7 +14567,19 @@ export type Database = {
         }
         Returns: string
       }
+      validate_schedule_scenario_pre_manual_override_v1: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
       validate_schedule_scenario_pre_phase3_tenant: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      validate_schedule_scenario_pre_teacher_exception_v1: {
+        Args: { p_scenario_id: string }
+        Returns: number
+      }
+      validate_schedule_scenario_pre_timebound_exception_v1: {
         Args: { p_scenario_id: string }
         Returns: number
       }
@@ -12048,12 +14612,27 @@ export type Database = {
         Args: { p_worker_key: string }
         Returns: Json
       }
+      worker_claim_schedule_attempt_v2: {
+        Args: { p_worker_key: string }
+        Returns: Json
+      }
       worker_complete_schedule_attempt_v1: {
         Args: {
           p_attempt_id: string
           p_duration_ms?: number
           p_error?: string
           p_result: Json
+          p_worker_key: string
+        }
+        Returns: boolean
+      }
+      worker_complete_schedule_attempt_v2: {
+        Args: {
+          p_attempt_id: string
+          p_diagnostics?: Json
+          p_duration_ms?: number
+          p_error?: string
+          p_result?: Json
           p_worker_key: string
         }
         Returns: boolean
@@ -12087,12 +14666,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -12116,11 +14695,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -12141,11 +14720,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -12166,11 +14745,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -12183,11 +14762,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }

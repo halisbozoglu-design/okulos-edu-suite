@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Bell, CalendarClock, Check, Copy, GraduationCap, LayoutGrid, Send, Settings, Table2, UserRound, Users, X } from "lucide-react";
+import { Bell, CalendarClock, Check, Copy, DoorOpen, GraduationCap, LayoutGrid, Send, Settings, Table2, UserRound, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { usePermissions } from "@/lib/permissions";
@@ -15,6 +15,7 @@ const primaryNav = [
   { to: "/substitutes", label: "Vekalet", icon: Users, permissions: ["substitutes.view", "substitutes.manage"] },
   { to: "/payroll", label: "Ek Ders", icon: Table2, permissions: ["payroll.view", "payroll.calculate", "payroll.edit", "payroll.approve", "payroll.publish"] },
   { to: "/classes", label: "Sınıflar", icon: CalendarClock, permissions: ["classes.manage"] },
+  { to: "/security/visitors/check-in", label: "Güvenlik", icon: DoorOpen, permissions: ["security.view", "security.checkin", "security.manage", "security.student_duty"] },
 ] as const;
 const managerNavItem = { to: "/management", label: "Yönetim", icon: Settings } as const;
 const teacherNavItem = { to: "/notifications", label: "Bildirim", icon: Bell } as const;
@@ -25,6 +26,7 @@ const managementCodes = [
   "payroll.view", "payroll.calculate", "payroll.edit", "payroll.approve", "payroll.publish",
   "substitutes.view", "substitutes.manage", "classes.manage", "personnel.view", "personnel.manage",
   "norm.view", "norm.manage", "quran.manage", "notifications.manage",
+  "security.view", "security.checkin", "security.manage", "security.student_duty",
 ] as const;
 
 const TELEGRAM_BOT_USERNAME = "okulos_bildirim_botu";
