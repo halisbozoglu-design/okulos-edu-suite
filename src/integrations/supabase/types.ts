@@ -1,12205 +1,1 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
-
-export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.17"
-  }
-  public: {
-    Tables: {
-      absence_lessons: {
-        Row: {
-          class_id: string | null
-          class_name: string
-          crisis_report_id: string
-          id: string
-          institution_code: string | null
-          lesson_date: string
-          period: number
-          subject: string
-          teacher_id: string
-        }
-        Insert: {
-          class_id?: string | null
-          class_name: string
-          crisis_report_id: string
-          id?: string
-          institution_code?: string | null
-          lesson_date: string
-          period: number
-          subject: string
-          teacher_id: string
-        }
-        Update: {
-          class_id?: string | null
-          class_name?: string
-          crisis_report_id?: string
-          id?: string
-          institution_code?: string | null
-          lesson_date?: string
-          period?: number
-          subject?: string
-          teacher_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "absence_lessons_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "absence_lessons_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "absence_lessons_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "absence_lessons_crisis_report_id_fkey"
-            columns: ["crisis_report_id"]
-            isOneToOne: false
-            referencedRelation: "crisis_reports"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "absence_lessons_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "absence_lessons_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_absence_lessons_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      absences: {
-        Row: {
-          absence_date: string
-          approval_status: string
-          approved_at: string | null
-          approved_by: string | null
-          created_at: string
-          crisis_report_id: string
-          has_medical_report: boolean
-          id: string
-          institution_code: string | null
-          note: string | null
-          status: string
-          teacher_id: string
-        }
-        Insert: {
-          absence_date: string
-          approval_status?: string
-          approved_at?: string | null
-          approved_by?: string | null
-          created_at?: string
-          crisis_report_id: string
-          has_medical_report?: boolean
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          status?: string
-          teacher_id: string
-        }
-        Update: {
-          absence_date?: string
-          approval_status?: string
-          approved_at?: string | null
-          approved_by?: string | null
-          created_at?: string
-          crisis_report_id?: string
-          has_medical_report?: boolean
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          status?: string
-          teacher_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "absences_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "absences_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "absences_crisis_report_id_fkey"
-            columns: ["crisis_report_id"]
-            isOneToOne: true
-            referencedRelation: "crisis_reports"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "absences_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "absences_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_absences_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      academic_years: {
-        Row: {
-          active: boolean
-          code: string
-          created_at: string
-          created_by: string | null
-          ends_on: string
-          first_term_ends_on: string | null
-          id: string
-          institution_code: string | null
-          second_term_starts_on: string | null
-          source_note: string | null
-          starts_on: string
-          teacher_work_starts_on: string | null
-          teaching_ends_on: string | null
-          teaching_starts_on: string | null
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          code: string
-          created_at?: string
-          created_by?: string | null
-          ends_on: string
-          first_term_ends_on?: string | null
-          id?: string
-          institution_code?: string | null
-          second_term_starts_on?: string | null
-          source_note?: string | null
-          starts_on: string
-          teacher_work_starts_on?: string | null
-          teaching_ends_on?: string | null
-          teaching_starts_on?: string | null
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          code?: string
-          created_at?: string
-          created_by?: string | null
-          ends_on?: string
-          first_term_ends_on?: string | null
-          id?: string
-          institution_code?: string | null
-          second_term_starts_on?: string | null
-          source_note?: string | null
-          starts_on?: string
-          teacher_work_starts_on?: string | null
-          teaching_ends_on?: string | null
-          teaching_starts_on?: string | null
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "academic_years_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "academic_years_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_academic_years_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      area_course_permissions: {
-        Row: {
-          active: boolean
-          condition_note: string | null
-          course_id: string
-          created_at: string
-          effective_from: string
-          effective_to: string | null
-          id: string
-          priority_order: number
-          source_id: string | null
-          teaching_area_id: string
-        }
-        Insert: {
-          active?: boolean
-          condition_note?: string | null
-          course_id: string
-          created_at?: string
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          priority_order?: number
-          source_id?: string | null
-          teaching_area_id: string
-        }
-        Update: {
-          active?: boolean
-          condition_note?: string | null
-          course_id?: string
-          created_at?: string
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          priority_order?: number
-          source_id?: string | null
-          teaching_area_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "area_course_permissions_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "area_course_permissions_source_id_fkey"
-            columns: ["source_id"]
-            isOneToOne: false
-            referencedRelation: "legal_rule_sources"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "area_course_permissions_teaching_area_id_fkey"
-            columns: ["teaching_area_id"]
-            isOneToOne: false
-            referencedRelation: "teaching_areas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      assignment_audit_log: {
-        Row: {
-          absence_lesson_id: string | null
-          action: string
-          actor_user_id: string | null
-          assignment_id: string | null
-          created_at: string
-          id: number
-          institution_code: string | null
-          metadata: Json
-          new_substitute_user_id: string | null
-          old_substitute_user_id: string | null
-        }
-        Insert: {
-          absence_lesson_id?: string | null
-          action: string
-          actor_user_id?: string | null
-          assignment_id?: string | null
-          created_at?: string
-          id?: never
-          institution_code?: string | null
-          metadata?: Json
-          new_substitute_user_id?: string | null
-          old_substitute_user_id?: string | null
-        }
-        Update: {
-          absence_lesson_id?: string | null
-          action?: string
-          actor_user_id?: string | null
-          assignment_id?: string | null
-          created_at?: string
-          id?: never
-          institution_code?: string | null
-          metadata?: Json
-          new_substitute_user_id?: string | null
-          old_substitute_user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "assignment_audit_log_absence_lesson_id_fkey"
-            columns: ["absence_lesson_id"]
-            isOneToOne: false
-            referencedRelation: "absence_lessons"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assignment_audit_log_actor_user_id_fkey"
-            columns: ["actor_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "assignment_audit_log_actor_user_id_fkey"
-            columns: ["actor_user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "assignment_audit_log_assignment_id_fkey"
-            columns: ["assignment_id"]
-            isOneToOne: false
-            referencedRelation: "substitute_assignments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assignment_audit_log_new_substitute_user_id_fkey"
-            columns: ["new_substitute_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "assignment_audit_log_new_substitute_user_id_fkey"
-            columns: ["new_substitute_user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "assignment_audit_log_old_substitute_user_id_fkey"
-            columns: ["old_substitute_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "assignment_audit_log_old_substitute_user_id_fkey"
-            columns: ["old_substitute_user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_assignment_audit_log_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      calendar_event_tasks: {
-        Row: {
-          assigned_personnel_id: string | null
-          assigned_responsibility_id: string | null
-          assigned_user_id: string | null
-          calendar_event_id: string
-          created_at: string
-          due_on: string | null
-          file_required: boolean
-          id: string
-          institution_code: string | null
-          note: string | null
-          recurrence: string
-          report_frequency: string | null
-          report_required: boolean
-          starts_on: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          assigned_personnel_id?: string | null
-          assigned_responsibility_id?: string | null
-          assigned_user_id?: string | null
-          calendar_event_id: string
-          created_at?: string
-          due_on?: string | null
-          file_required?: boolean
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          recurrence?: string
-          report_frequency?: string | null
-          report_required?: boolean
-          starts_on?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          assigned_personnel_id?: string | null
-          assigned_responsibility_id?: string | null
-          assigned_user_id?: string | null
-          calendar_event_id?: string
-          created_at?: string
-          due_on?: string | null
-          file_required?: boolean
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          recurrence?: string
-          report_frequency?: string | null
-          report_required?: boolean
-          starts_on?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "calendar_event_tasks_assigned_personnel_id_fkey"
-            columns: ["assigned_personnel_id"]
-            isOneToOne: false
-            referencedRelation: "personnel_registry"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "calendar_event_tasks_assigned_responsibility_id_fkey"
-            columns: ["assigned_responsibility_id"]
-            isOneToOne: false
-            referencedRelation: "responsibility_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "calendar_event_tasks_calendar_event_id_fkey"
-            columns: ["calendar_event_id"]
-            isOneToOne: false
-            referencedRelation: "school_calendar_events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_calendar_event_tasks_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      calendar_task_files: {
-        Row: {
-          file_name: string | null
-          file_url: string
-          id: string
-          institution_code: string | null
-          task_id: string
-          uploaded_at: string
-          uploaded_by: string | null
-        }
-        Insert: {
-          file_name?: string | null
-          file_url: string
-          id?: string
-          institution_code?: string | null
-          task_id: string
-          uploaded_at?: string
-          uploaded_by?: string | null
-        }
-        Update: {
-          file_name?: string | null
-          file_url?: string
-          id?: string
-          institution_code?: string | null
-          task_id?: string
-          uploaded_at?: string
-          uploaded_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "calendar_task_files_task_id_fkey"
-            columns: ["task_id"]
-            isOneToOne: false
-            referencedRelation: "calendar_event_tasks"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_calendar_task_files_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      class_course_requirements: {
-        Row: {
-          academic_year_id: string | null
-          category: string
-          class_id: string
-          course_id: string
-          created_at: string
-          delivery_mode: string | null
-          id: string
-          institution_code: string | null
-          locked: boolean
-          note: string | null
-          offering_rule_id: string | null
-          source_kind: string
-          source_template_id: string | null
-          updated_at: string
-          weekly_hours: number
-          workshop_required: boolean
-        }
-        Insert: {
-          academic_year_id?: string | null
-          category?: string
-          class_id: string
-          course_id: string
-          created_at?: string
-          delivery_mode?: string | null
-          id?: string
-          institution_code?: string | null
-          locked?: boolean
-          note?: string | null
-          offering_rule_id?: string | null
-          source_kind?: string
-          source_template_id?: string | null
-          updated_at?: string
-          weekly_hours: number
-          workshop_required?: boolean
-        }
-        Update: {
-          academic_year_id?: string | null
-          category?: string
-          class_id?: string
-          course_id?: string
-          created_at?: string
-          delivery_mode?: string | null
-          id?: string
-          institution_code?: string | null
-          locked?: boolean
-          note?: string | null
-          offering_rule_id?: string | null
-          source_kind?: string
-          source_template_id?: string | null
-          updated_at?: string
-          weekly_hours?: number
-          workshop_required?: boolean
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_course_requirements_academic_year_id_fkey"
-            columns: ["academic_year_id"]
-            isOneToOne: false
-            referencedRelation: "academic_years"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_offering_rule_id_fkey"
-            columns: ["offering_rule_id"]
-            isOneToOne: false
-            referencedRelation: "course_offering_rules"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_source_template_id_fkey"
-            columns: ["source_template_id"]
-            isOneToOne: false
-            referencedRelation: "curriculum_templates"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_class_course_requirements_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      class_course_workshop_options: {
-        Row: {
-          active: boolean
-          classroom_id: string
-          institution_code: string
-          priority: number
-          requirement_id: string
-        }
-        Insert: {
-          active?: boolean
-          classroom_id: string
-          institution_code: string
-          priority?: number
-          requirement_id: string
-        }
-        Update: {
-          active?: boolean
-          classroom_id?: string
-          institution_code?: string
-          priority?: number
-          requirement_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_course_workshop_options_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classrooms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_workshop_options_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "class_course_workshop_options_requirement_id_fkey"
-            columns: ["requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_workshop_options_requirement_id_fkey"
-            columns: ["requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-        ]
-      }
-      class_enterprise_week_patterns: {
-        Row: {
-          active: boolean
-          class_id: string
-          consecutive_days_required: boolean
-          enterprise_day_count: number | null
-          enterprise_hours_per_day: number
-          enterprise_weekly_hours: number
-          institution_code: string
-          movable_days: boolean
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          class_id: string
-          consecutive_days_required?: boolean
-          enterprise_day_count?: number | null
-          enterprise_hours_per_day?: number
-          enterprise_weekly_hours: number
-          institution_code: string
-          movable_days?: boolean
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          class_id?: string
-          consecutive_days_required?: boolean
-          enterprise_day_count?: number | null
-          enterprise_hours_per_day?: number
-          enterprise_weekly_hours?: number
-          institution_code?: string
-          movable_days?: boolean
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_enterprise_week_patterns_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: true
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "class_enterprise_week_patterns_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: true
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_enterprise_week_patterns_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: true
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_enterprise_week_patterns_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      class_subgroup_students: {
-        Row: {
-          institution_code: string | null
-          student_id: string
-          subgroup_id: string
-        }
-        Insert: {
-          institution_code?: string | null
-          student_id: string
-          subgroup_id: string
-        }
-        Update: {
-          institution_code?: string | null
-          student_id?: string
-          subgroup_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_subgroup_students_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_subgroup_students_subgroup_id_fkey"
-            columns: ["subgroup_id"]
-            isOneToOne: false
-            referencedRelation: "class_subgroups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_class_subgroup_students_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      class_subgroups: {
-        Row: {
-          active: boolean
-          class_id: string
-          id: string
-          institution_code: string | null
-          label: string | null
-          subgroup_key: string
-        }
-        Insert: {
-          active?: boolean
-          class_id: string
-          id?: string
-          institution_code?: string | null
-          label?: string | null
-          subgroup_key: string
-        }
-        Update: {
-          active?: boolean
-          class_id?: string
-          id?: string
-          institution_code?: string | null
-          label?: string | null
-          subgroup_key?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_subgroups_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "class_subgroups_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_subgroups_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_class_subgroups_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      class_timetable_application_selections: {
-        Row: {
-          active: boolean
-          class_id: string
-          created_at: string
-          extra_hours: number | null
-          id: string
-          rule_id: string
-          selection_scope: string
-          settings: Json
-          subject_choice: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          class_id: string
-          created_at?: string
-          extra_hours?: number | null
-          id?: string
-          rule_id: string
-          selection_scope?: string
-          settings?: Json
-          subject_choice?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          class_id?: string
-          created_at?: string
-          extra_hours?: number | null
-          id?: string
-          rule_id?: string
-          selection_scope?: string
-          settings?: Json
-          subject_choice?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_timetable_application_selections_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "class_timetable_application_selections_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_timetable_application_selections_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_timetable_application_selections_rule_id_fkey"
-            columns: ["rule_id"]
-            isOneToOne: false
-            referencedRelation: "official_timetable_application_rules"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      classrooms: {
-        Row: {
-          active: boolean
-          aggregate_capacity_enforced: boolean
-          branch_id: string | null
-          building_id: string | null
-          capacity: number
-          created_at: string
-          department: string | null
-          field_id: string | null
-          floor: number | null
-          hardware: Json
-          id: string
-          institution_code: string | null
-          is_vocational_workshop: boolean
-          max_simultaneous_activities: number
-          name: string
-          room_pool_id: string | null
-          room_type: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          aggregate_capacity_enforced?: boolean
-          branch_id?: string | null
-          building_id?: string | null
-          capacity: number
-          created_at?: string
-          department?: string | null
-          field_id?: string | null
-          floor?: number | null
-          hardware?: Json
-          id?: string
-          institution_code?: string | null
-          is_vocational_workshop?: boolean
-          max_simultaneous_activities?: number
-          name: string
-          room_pool_id?: string | null
-          room_type?: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          aggregate_capacity_enforced?: boolean
-          branch_id?: string | null
-          building_id?: string | null
-          capacity?: number
-          created_at?: string
-          department?: string | null
-          field_id?: string | null
-          floor?: number | null
-          hardware?: Json
-          id?: string
-          institution_code?: string | null
-          is_vocational_workshop?: boolean
-          max_simultaneous_activities?: number
-          name?: string
-          room_pool_id?: string | null
-          room_type?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "classrooms_branch_id_fkey"
-            columns: ["branch_id"]
-            isOneToOne: false
-            referencedRelation: "institution_branches"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "classrooms_building_id_fkey"
-            columns: ["building_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_buildings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "classrooms_field_id_fkey"
-            columns: ["field_id"]
-            isOneToOne: false
-            referencedRelation: "institution_fields"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "classrooms_room_pool_id_fkey"
-            columns: ["room_pool_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_room_pools"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_classrooms_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      course_block_preferences: {
-        Row: {
-          active: boolean
-          block_pattern: number[]
-          class_course_requirement_id: string
-          created_at: string
-          id: string
-          institution_code: string
-          priority: number
-        }
-        Insert: {
-          active?: boolean
-          block_pattern: number[]
-          class_course_requirement_id: string
-          created_at?: string
-          id?: string
-          institution_code?: string
-          priority: number
-        }
-        Update: {
-          active?: boolean
-          block_pattern?: number[]
-          class_course_requirement_id?: string
-          created_at?: string
-          id?: string
-          institution_code?: string
-          priority?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "course_block_preferences_class_course_requirement_id_fkey"
-            columns: ["class_course_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "course_block_preferences_class_course_requirement_id_fkey"
-            columns: ["class_course_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-          {
-            foreignKeyName: "course_block_preferences_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      course_catalog: {
-        Row: {
-          active: boolean
-          category: string
-          code: string | null
-          created_at: string
-          id: string
-          name: string
-          short_name: string | null
-        }
-        Insert: {
-          active?: boolean
-          category?: string
-          code?: string | null
-          created_at?: string
-          id?: string
-          name: string
-          short_name?: string | null
-        }
-        Update: {
-          active?: boolean
-          category?: string
-          code?: string | null
-          created_at?: string
-          id?: string
-          name?: string
-          short_name?: string | null
-        }
-        Relationships: []
-      }
-      course_offering_rules: {
-        Row: {
-          academic_year: string
-          active: boolean
-          branch_name: string | null
-          category: string
-          course_id: string
-          created_at: string
-          elective_group_key: string | null
-          field_name: string | null
-          grade_level: number
-          hour_options: number[]
-          id: string
-          institution_code: string
-          max_selections: number
-          parsed_constraints: Json
-          program_type: string | null
-          repeat_across_years: boolean
-          school_level: string | null
-          school_subtype: string | null
-          source_file_name: string | null
-          source_note: string | null
-          updated_at: string
-        }
-        Insert: {
-          academic_year: string
-          active?: boolean
-          branch_name?: string | null
-          category: string
-          course_id: string
-          created_at?: string
-          elective_group_key?: string | null
-          field_name?: string | null
-          grade_level: number
-          hour_options?: number[]
-          id?: string
-          institution_code?: string
-          max_selections?: number
-          parsed_constraints?: Json
-          program_type?: string | null
-          repeat_across_years?: boolean
-          school_level?: string | null
-          school_subtype?: string | null
-          source_file_name?: string | null
-          source_note?: string | null
-          updated_at?: string
-        }
-        Update: {
-          academic_year?: string
-          active?: boolean
-          branch_name?: string | null
-          category?: string
-          course_id?: string
-          created_at?: string
-          elective_group_key?: string | null
-          field_name?: string | null
-          grade_level?: number
-          hour_options?: number[]
-          id?: string
-          institution_code?: string
-          max_selections?: number
-          parsed_constraints?: Json
-          program_type?: string | null
-          repeat_across_years?: boolean
-          school_level?: string | null
-          school_subtype?: string | null
-          source_file_name?: string | null
-          source_note?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "course_offering_rules_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "course_offering_rules_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      course_pedagogy_profiles: {
-        Row: {
-          academic_load: number
-          attention_load: number
-          avoid_early: boolean
-          course_id: string
-          difficulty: number
-          institution_code: string
-          is_vocational_practice: boolean
-          is_workshop: boolean
-          lesson_family: string | null
-          physical_load: number
-          practical_load: number
-          prefer_early: boolean
-          prefer_weekdays: number[]
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          academic_load?: number
-          attention_load?: number
-          avoid_early?: boolean
-          course_id: string
-          difficulty?: number
-          institution_code?: string
-          is_vocational_practice?: boolean
-          is_workshop?: boolean
-          lesson_family?: string | null
-          physical_load?: number
-          practical_load?: number
-          prefer_early?: boolean
-          prefer_weekdays?: number[]
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          academic_load?: number
-          attention_load?: number
-          avoid_early?: boolean
-          course_id?: string
-          difficulty?: number
-          institution_code?: string
-          is_vocational_practice?: boolean
-          is_workshop?: boolean
-          lesson_family?: string | null
-          physical_load?: number
-          practical_load?: number
-          prefer_early?: boolean
-          prefer_weekdays?: number[]
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "course_pedagogy_profiles_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "course_pedagogy_profiles_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "course_pedagogy_profiles_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_course_pedagogy_profiles_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      course_schedule_rules: {
-        Row: {
-          active: boolean
-          avoid_last_period: boolean
-          block_pattern: number[]
-          course_id: string
-          id: string
-          institution_code: string | null
-          max_per_day: number | null
-          min_distinct_days: number | null
-          note: string | null
-          preferred_days: number[]
-          preferred_periods: number[]
-          prohibited_days: number[]
-          prohibited_periods: number[]
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          avoid_last_period?: boolean
-          block_pattern?: number[]
-          course_id: string
-          id?: string
-          institution_code?: string | null
-          max_per_day?: number | null
-          min_distinct_days?: number | null
-          note?: string | null
-          preferred_days?: number[]
-          preferred_periods?: number[]
-          prohibited_days?: number[]
-          prohibited_periods?: number[]
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          avoid_last_period?: boolean
-          block_pattern?: number[]
-          course_id?: string
-          id?: string
-          institution_code?: string | null
-          max_per_day?: number | null
-          min_distinct_days?: number | null
-          note?: string | null
-          preferred_days?: number[]
-          preferred_periods?: number[]
-          prohibited_days?: number[]
-          prohibited_periods?: number[]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "course_schedule_rules_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_course_schedule_rules_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      course_time_preferences: {
-        Row: {
-          active: boolean
-          course_id: string
-          id: string
-          institution_code: string
-          mode: string
-          note: string | null
-          period: number
-          updated_at: string
-          weekday: number
-          weight: number
-        }
-        Insert: {
-          active?: boolean
-          course_id: string
-          id?: string
-          institution_code?: string
-          mode: string
-          note?: string | null
-          period: number
-          updated_at?: string
-          weekday: number
-          weight?: number
-        }
-        Update: {
-          active?: boolean
-          course_id?: string
-          id?: string
-          institution_code?: string
-          mode?: string
-          note?: string | null
-          period?: number
-          updated_at?: string
-          weekday?: number
-          weight?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "course_time_preferences_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "course_time_preferences_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      crisis_reports: {
-        Row: {
-          created_at: string
-          has_medical_report: boolean
-          id: string
-          institution_code: string | null
-          note: string | null
-          report_date: string
-          status: string
-          teacher_id: string
-        }
-        Insert: {
-          created_at?: string
-          has_medical_report?: boolean
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          report_date?: string
-          status?: string
-          teacher_id: string
-        }
-        Update: {
-          created_at?: string
-          has_medical_report?: boolean
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          report_date?: string
-          status?: string
-          teacher_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "crisis_reports_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "crisis_reports_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_crisis_reports_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      curriculum_template_courses: {
-        Row: {
-          category: string
-          course_id: string
-          id: string
-          institution_code: string | null
-          sort_order: number
-          template_id: string
-          weekly_hours: number
-        }
-        Insert: {
-          category?: string
-          course_id: string
-          id?: string
-          institution_code?: string | null
-          sort_order?: number
-          template_id: string
-          weekly_hours: number
-        }
-        Update: {
-          category?: string
-          course_id?: string
-          id?: string
-          institution_code?: string | null
-          sort_order?: number
-          template_id?: string
-          weekly_hours?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "curriculum_template_courses_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "curriculum_template_courses_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "curriculum_templates"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_curriculum_template_courses_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      curriculum_templates: {
-        Row: {
-          academic_year: string | null
-          active: boolean
-          created_at: string
-          created_by: string | null
-          expected_weekly_hours: number | null
-          grade_level: number | null
-          id: string
-          institution_code: string | null
-          name: string
-          program_type: string | null
-          school_level: string | null
-          source_note: string | null
-        }
-        Insert: {
-          academic_year?: string | null
-          active?: boolean
-          created_at?: string
-          created_by?: string | null
-          expected_weekly_hours?: number | null
-          grade_level?: number | null
-          id?: string
-          institution_code?: string | null
-          name: string
-          program_type?: string | null
-          school_level?: string | null
-          source_note?: string | null
-        }
-        Update: {
-          academic_year?: string | null
-          active?: boolean
-          created_at?: string
-          created_by?: string | null
-          expected_weekly_hours?: number | null
-          grade_level?: number | null
-          id?: string
-          institution_code?: string | null
-          name?: string
-          program_type?: string | null
-          school_level?: string | null
-          source_note?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "curriculum_templates_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "curriculum_templates_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_curriculum_templates_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      duty_assignment_history: {
-        Row: {
-          assignment_type: string
-          change_reason: string | null
-          changed_at: string
-          changed_by: string | null
-          duty_date: string
-          duty_location: string | null
-          effective_end_date: string | null
-          effective_start_date: string
-          id: number
-          institution_code: string | null
-          new_record: Json | null
-          previous_record: Json | null
-          source: string
-          subject_user_id: string
-        }
-        Insert: {
-          assignment_type: string
-          change_reason?: string | null
-          changed_at?: string
-          changed_by?: string | null
-          duty_date: string
-          duty_location?: string | null
-          effective_end_date?: string | null
-          effective_start_date: string
-          id?: never
-          institution_code?: string | null
-          new_record?: Json | null
-          previous_record?: Json | null
-          source?: string
-          subject_user_id: string
-        }
-        Update: {
-          assignment_type?: string
-          change_reason?: string | null
-          changed_at?: string
-          changed_by?: string | null
-          duty_date?: string
-          duty_location?: string | null
-          effective_end_date?: string | null
-          effective_start_date?: string
-          id?: never
-          institution_code?: string | null
-          new_record?: Json | null
-          previous_record?: Json | null
-          source?: string
-          subject_user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "duty_assignment_history_changed_by_fkey"
-            columns: ["changed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "duty_assignment_history_changed_by_fkey"
-            columns: ["changed_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "duty_assignment_history_subject_user_id_fkey"
-            columns: ["subject_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "duty_assignment_history_subject_user_id_fkey"
-            columns: ["subject_user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_duty_assignment_history_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      duty_day_notes: {
-        Row: {
-          closed_at: string | null
-          closed_by: string | null
-          duty_date: string
-          empty_lesson_resolution: string | null
-          end_time: string | null
-          general_note: string | null
-          institution_code: string | null
-          principal_approval_note: string | null
-          start_time: string | null
-          teaching_mode: string
-          updated_at: string
-        }
-        Insert: {
-          closed_at?: string | null
-          closed_by?: string | null
-          duty_date: string
-          empty_lesson_resolution?: string | null
-          end_time?: string | null
-          general_note?: string | null
-          institution_code?: string | null
-          principal_approval_note?: string | null
-          start_time?: string | null
-          teaching_mode?: string
-          updated_at?: string
-        }
-        Update: {
-          closed_at?: string | null
-          closed_by?: string | null
-          duty_date?: string
-          empty_lesson_resolution?: string | null
-          end_time?: string | null
-          general_note?: string | null
-          institution_code?: string | null
-          principal_approval_note?: string | null
-          start_time?: string | null
-          teaching_mode?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "duty_day_notes_closed_by_fkey"
-            columns: ["closed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "duty_day_notes_closed_by_fkey"
-            columns: ["closed_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_duty_day_notes_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      duty_incident_logs: {
-        Row: {
-          action_taken: string | null
-          created_at: string
-          description: string
-          duty_date: string
-          duty_location: string | null
-          id: string
-          institution_code: string | null
-          occurred_at: string
-          reporter_id: string | null
-        }
-        Insert: {
-          action_taken?: string | null
-          created_at?: string
-          description: string
-          duty_date: string
-          duty_location?: string | null
-          id?: string
-          institution_code?: string | null
-          occurred_at?: string
-          reporter_id?: string | null
-        }
-        Update: {
-          action_taken?: string | null
-          created_at?: string
-          description?: string
-          duty_date?: string
-          duty_location?: string | null
-          id?: string
-          institution_code?: string | null
-          occurred_at?: string
-          reporter_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "duty_incident_logs_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "duty_incident_logs_reporter_id_fkey"
-            columns: ["reporter_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_duty_incident_logs_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      duty_locations: {
-        Row: {
-          active: boolean
-          critical: boolean
-          id: string
-          institution_code: string | null
-          name: string
-          sort_order: number
-        }
-        Insert: {
-          active?: boolean
-          critical?: boolean
-          id?: string
-          institution_code?: string | null
-          name: string
-          sort_order?: number
-        }
-        Update: {
-          active?: boolean
-          critical?: boolean
-          id?: string
-          institution_code?: string | null
-          name?: string
-          sort_order?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_duty_locations_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      duty_month_locks: {
-        Row: {
-          generated_at: string
-          generated_by: string | null
-          institution_code: string | null
-          locked: boolean
-          month_start: string
-          note: string | null
-          schedule_signature: string | null
-        }
-        Insert: {
-          generated_at?: string
-          generated_by?: string | null
-          institution_code?: string | null
-          locked?: boolean
-          month_start: string
-          note?: string | null
-          schedule_signature?: string | null
-        }
-        Update: {
-          generated_at?: string
-          generated_by?: string | null
-          institution_code?: string | null
-          locked?: boolean
-          month_start?: string
-          note?: string | null
-          schedule_signature?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "duty_month_locks_generated_by_fkey"
-            columns: ["generated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "duty_month_locks_generated_by_fkey"
-            columns: ["generated_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_duty_month_locks_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      duty_rotation: {
-        Row: {
-          assignment_source: string
-          created_at: string
-          cycle_month: string | null
-          duty_date: string
-          institution_code: string
-          vice_principal_id: string
-        }
-        Insert: {
-          assignment_source?: string
-          created_at?: string
-          cycle_month?: string | null
-          duty_date: string
-          institution_code?: string
-          vice_principal_id: string
-        }
-        Update: {
-          assignment_source?: string
-          created_at?: string
-          cycle_month?: string | null
-          duty_date?: string
-          institution_code?: string
-          vice_principal_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "duty_rotation_vice_principal_id_fkey"
-            columns: ["vice_principal_id"]
-            isOneToOne: false
-            referencedRelation: "vice_principals"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "fk_duty_rotation_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      duty_tardiness_logs: {
-        Row: {
-          class_name: string | null
-          created_at: string
-          duty_date: string
-          id: string
-          institution_code: string | null
-          minutes_late: number
-          note: string | null
-          period: number | null
-          recorded_by: string | null
-          teacher_id: string
-        }
-        Insert: {
-          class_name?: string | null
-          created_at?: string
-          duty_date: string
-          id?: string
-          institution_code?: string | null
-          minutes_late: number
-          note?: string | null
-          period?: number | null
-          recorded_by?: string | null
-          teacher_id: string
-        }
-        Update: {
-          class_name?: string | null
-          created_at?: string
-          duty_date?: string
-          id?: string
-          institution_code?: string | null
-          minutes_late?: number
-          note?: string | null
-          period?: number | null
-          recorded_by?: string | null
-          teacher_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "duty_tardiness_logs_recorded_by_fkey"
-            columns: ["recorded_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "duty_tardiness_logs_recorded_by_fkey"
-            columns: ["recorded_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "duty_tardiness_logs_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "duty_tardiness_logs_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_duty_tardiness_logs_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      eokul_import_batches: {
-        Row: {
-          file_name: string
-          file_type: string
-          id: string
-          imported_at: string
-          imported_by: string
-          institution_code: string | null
-          row_count: number
-        }
-        Insert: {
-          file_name: string
-          file_type: string
-          id?: string
-          imported_at?: string
-          imported_by: string
-          institution_code?: string | null
-          row_count?: number
-        }
-        Update: {
-          file_name?: string
-          file_type?: string
-          id?: string
-          imported_at?: string
-          imported_by?: string
-          institution_code?: string | null
-          row_count?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "eokul_import_batches_imported_by_fkey"
-            columns: ["imported_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "eokul_import_batches_imported_by_fkey"
-            columns: ["imported_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_eokul_import_batches_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      fcm_tokens: {
-        Row: {
-          id: string
-          institution_code: string | null
-          platform: string
-          token: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          id?: string
-          institution_code?: string | null
-          platform?: string
-          token: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          id?: string
-          institution_code?: string | null
-          platform?: string
-          token?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fcm_tokens_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "fcm_tokens_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "fk_fcm_tokens_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      institution_branches: {
-        Row: {
-          active: boolean
-          code: string | null
-          created_at: string
-          field_id: string
-          id: string
-          name: string
-        }
-        Insert: {
-          active?: boolean
-          code?: string | null
-          created_at?: string
-          field_id: string
-          id?: string
-          name: string
-        }
-        Update: {
-          active?: boolean
-          code?: string | null
-          created_at?: string
-          field_id?: string
-          id?: string
-          name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "institution_branches_field_id_fkey"
-            columns: ["field_id"]
-            isOneToOne: false
-            referencedRelation: "institution_fields"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      institution_education_units: {
-        Row: {
-          academic_year_id: string | null
-          active: boolean
-          created_at: string
-          education_mode: string
-          id: string
-          institution_code: string
-          program_type: string | null
-          school_subtype: string | null
-          school_type: string
-          session_scope: string
-          updated_at: string
-        }
-        Insert: {
-          academic_year_id?: string | null
-          active?: boolean
-          created_at?: string
-          education_mode?: string
-          id?: string
-          institution_code: string
-          program_type?: string | null
-          school_subtype?: string | null
-          school_type: string
-          session_scope?: string
-          updated_at?: string
-        }
-        Update: {
-          academic_year_id?: string | null
-          active?: boolean
-          created_at?: string
-          education_mode?: string
-          id?: string
-          institution_code?: string
-          program_type?: string | null
-          school_subtype?: string | null
-          school_type?: string
-          session_scope?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "institution_education_units_academic_year_id_fkey"
-            columns: ["academic_year_id"]
-            isOneToOne: false
-            referencedRelation: "academic_years"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      institution_fields: {
-        Row: {
-          active: boolean
-          code: string | null
-          created_at: string
-          id: string
-          name: string
-          unit_id: string
-        }
-        Insert: {
-          active?: boolean
-          code?: string | null
-          created_at?: string
-          id?: string
-          name: string
-          unit_id: string
-        }
-        Update: {
-          active?: boolean
-          code?: string | null
-          created_at?: string
-          id?: string
-          name?: string
-          unit_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "institution_fields_unit_id_fkey"
-            columns: ["unit_id"]
-            isOneToOne: false
-            referencedRelation: "institution_education_units"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      institution_memberships: {
-        Row: {
-          active: boolean
-          created_at: string
-          institution_code: string
-          is_owner: boolean
-          membership_role: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          institution_code: string
-          is_owner?: boolean
-          membership_role: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          institution_code?: string
-          is_owner?: boolean
-          membership_role?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "institution_memberships_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      institution_principals: {
-        Row: {
-          active: boolean
-          assigned_at: string
-          institution_code: string
-          user_id: string
-        }
-        Insert: {
-          active?: boolean
-          assigned_at?: string
-          institution_code: string
-          user_id: string
-        }
-        Update: {
-          active?: boolean
-          assigned_at?: string
-          institution_code?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      institutions: {
-        Row: {
-          approval_note: string | null
-          approval_status: string
-          created_at: string
-          created_by: string | null
-          institution_code: string
-          is_metropolitan_district: boolean | null
-          province_name: string | null
-          reviewed_at: string | null
-          reviewed_by: string | null
-          school_name: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          approval_note?: string | null
-          approval_status?: string
-          created_at?: string
-          created_by?: string | null
-          institution_code: string
-          is_metropolitan_district?: boolean | null
-          province_name?: string | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          school_name: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          approval_note?: string | null
-          approval_status?: string
-          created_at?: string
-          created_by?: string | null
-          institution_code?: string
-          is_metropolitan_district?: boolean | null
-          province_name?: string | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          school_name?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      legal_rule_definitions: {
-        Row: {
-          active: boolean
-          condition_note: string | null
-          domain: string
-          effective_from: string
-          effective_to: string | null
-          id: string
-          parameters: Json
-          rule_code: string
-          source_id: string | null
-          subject_type: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          condition_note?: string | null
-          domain: string
-          effective_from: string
-          effective_to?: string | null
-          id?: string
-          parameters: Json
-          rule_code: string
-          source_id?: string | null
-          subject_type: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          condition_note?: string | null
-          domain?: string
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          parameters?: Json
-          rule_code?: string
-          source_id?: string | null
-          subject_type?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "legal_rule_definitions_source_id_fkey"
-            columns: ["source_id"]
-            isOneToOne: false
-            referencedRelation: "legal_rule_sources"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      legal_rule_sources: {
-        Row: {
-          active: boolean
-          authority: string
-          code: string
-          created_at: string
-          decision_date: string | null
-          effective_from: string | null
-          effective_to: string | null
-          id: string
-          note: string | null
-          source_url: string | null
-          title: string
-        }
-        Insert: {
-          active?: boolean
-          authority: string
-          code: string
-          created_at?: string
-          decision_date?: string | null
-          effective_from?: string | null
-          effective_to?: string | null
-          id?: string
-          note?: string | null
-          source_url?: string | null
-          title: string
-        }
-        Update: {
-          active?: boolean
-          authority?: string
-          code?: string
-          created_at?: string
-          decision_date?: string | null
-          effective_from?: string | null
-          effective_to?: string | null
-          id?: string
-          note?: string | null
-          source_url?: string | null
-          title?: string
-        }
-        Relationships: []
-      }
-      legislation_library: {
-        Row: {
-          active: boolean
-          created_at: string
-          created_by: string | null
-          effective_on: string | null
-          file_url: string | null
-          id: string
-          institution_code: string | null
-          legislation_type: string
-          notes: string | null
-          school_levels: string[]
-          school_types: string[]
-          source_url: string | null
-          tags: string[]
-          title: string
-          topic: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          created_by?: string | null
-          effective_on?: string | null
-          file_url?: string | null
-          id?: string
-          institution_code?: string | null
-          legislation_type?: string
-          notes?: string | null
-          school_levels?: string[]
-          school_types?: string[]
-          source_url?: string | null
-          tags?: string[]
-          title: string
-          topic?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          created_by?: string | null
-          effective_on?: string | null
-          file_url?: string | null
-          id?: string
-          institution_code?: string | null
-          legislation_type?: string
-          notes?: string | null
-          school_levels?: string[]
-          school_types?: string[]
-          source_url?: string | null
-          tags?: string[]
-          title?: string
-          topic?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_legislation_library_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      legislation_shares: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          id: string
-          institution_code: string | null
-          legislation_id: string
-          message: string | null
-          read_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          institution_code?: string | null
-          legislation_id: string
-          message?: string | null
-          read_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          institution_code?: string | null
-          legislation_id?: string
-          message?: string | null
-          read_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_legislation_shares_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "legislation_shares_legislation_id_fkey"
-            columns: ["legislation_id"]
-            isOneToOne: false
-            referencedRelation: "legislation_library"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      lesson_room_rules: {
-        Row: {
-          active: boolean
-          id: string
-          institution_code: string | null
-          required_department: string | null
-          required_hardware: Json
-          required_room_type: string | null
-          subject_pattern: string
-        }
-        Insert: {
-          active?: boolean
-          id?: string
-          institution_code?: string | null
-          required_department?: string | null
-          required_hardware?: Json
-          required_room_type?: string | null
-          subject_pattern: string
-        }
-        Update: {
-          active?: boolean
-          id?: string
-          institution_code?: string | null
-          required_department?: string | null
-          required_hardware?: Json
-          required_room_type?: string | null
-          subject_pattern?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_lesson_room_rules_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      metropolitan_provinces: {
-        Row: {
-          active: boolean
-          name: string
-          source_note: string | null
-        }
-        Insert: {
-          active?: boolean
-          name: string
-          source_note?: string | null
-        }
-        Update: {
-          active?: boolean
-          name?: string
-          source_note?: string | null
-        }
-        Relationships: []
-      }
-      norm_area_rule_assignments: {
-        Row: {
-          active: boolean
-          created_at: string
-          effective_from: string
-          effective_to: string | null
-          id: string
-          institution_code: string | null
-          note: string | null
-          rule_set_id: string
-          source_id: string | null
-          teaching_area_id: string
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          effective_from: string
-          effective_to?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          rule_set_id: string
-          source_id?: string | null
-          teaching_area_id: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          rule_set_id?: string
-          source_id?: string | null
-          teaching_area_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_norm_area_rule_assignments_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "norm_area_rule_assignments_rule_set_id_fkey"
-            columns: ["rule_set_id"]
-            isOneToOne: false
-            referencedRelation: "norm_rule_sets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "norm_area_rule_assignments_source_id_fkey"
-            columns: ["source_id"]
-            isOneToOne: false
-            referencedRelation: "legal_rule_sources"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "norm_area_rule_assignments_teaching_area_id_fkey"
-            columns: ["teaching_area_id"]
-            isOneToOne: false
-            referencedRelation: "teaching_areas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      norm_course_area_rules: {
-        Row: {
-          active: boolean
-          course_id: string
-          created_at: string
-          effective_from: string
-          effective_to: string | null
-          id: string
-          institution_code: string | null
-          note: string | null
-          source_id: string | null
-          teaching_area_id: string
-        }
-        Insert: {
-          active?: boolean
-          course_id: string
-          created_at?: string
-          effective_from: string
-          effective_to?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          source_id?: string | null
-          teaching_area_id: string
-        }
-        Update: {
-          active?: boolean
-          course_id?: string
-          created_at?: string
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          source_id?: string | null
-          teaching_area_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_norm_course_area_rules_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "norm_course_area_rules_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "norm_course_area_rules_source_id_fkey"
-            columns: ["source_id"]
-            isOneToOne: false
-            referencedRelation: "legal_rule_sources"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "norm_course_area_rules_teaching_area_id_fkey"
-            columns: ["teaching_area_id"]
-            isOneToOne: false
-            referencedRelation: "teaching_areas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      norm_rule_bands: {
-        Row: {
-          id: string
-          max_hours: number | null
-          min_hours: number
-          norm_count: number
-          rule_set_id: string
-          sort_order: number
-        }
-        Insert: {
-          id?: string
-          max_hours?: number | null
-          min_hours: number
-          norm_count: number
-          rule_set_id: string
-          sort_order?: number
-        }
-        Update: {
-          id?: string
-          max_hours?: number | null
-          min_hours?: number
-          norm_count?: number
-          rule_set_id?: string
-          sort_order?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "norm_rule_bands_rule_set_id_fkey"
-            columns: ["rule_set_id"]
-            isOneToOne: false
-            referencedRelation: "norm_rule_sets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      norm_rule_sets: {
-        Row: {
-          active: boolean
-          code: string
-          created_at: string
-          effective_from: string
-          effective_to: string | null
-          id: string
-          name: string
-          note: string | null
-          remainder_min_hours: number | null
-          repeating_block_hours: number | null
-          source_id: string | null
-          teacher_category: string
-        }
-        Insert: {
-          active?: boolean
-          code: string
-          created_at?: string
-          effective_from: string
-          effective_to?: string | null
-          id?: string
-          name: string
-          note?: string | null
-          remainder_min_hours?: number | null
-          repeating_block_hours?: number | null
-          source_id?: string | null
-          teacher_category: string
-        }
-        Update: {
-          active?: boolean
-          code?: string
-          created_at?: string
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          name?: string
-          note?: string | null
-          remainder_min_hours?: number | null
-          repeating_block_hours?: number | null
-          source_id?: string | null
-          teacher_category?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "norm_rule_sets_source_id_fkey"
-            columns: ["source_id"]
-            isOneToOne: false
-            referencedRelation: "legal_rule_sources"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      notifications: {
-        Row: {
-          action_label: string | null
-          action_url: string | null
-          created_at: string
-          id: string
-          message: string
-          priority: string
-          read_at: string | null
-          title: string
-          type: string
-          user_id: string
-        }
-        Insert: {
-          action_label?: string | null
-          action_url?: string | null
-          created_at?: string
-          id?: string
-          message: string
-          priority?: string
-          read_at?: string | null
-          title: string
-          type: string
-          user_id: string
-        }
-        Update: {
-          action_label?: string | null
-          action_url?: string | null
-          created_at?: string
-          id?: string
-          message?: string
-          priority?: string
-          read_at?: string | null
-          title?: string
-          type?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      official_course_rule_annotations: {
-        Row: {
-          active: boolean
-          catalog_id: string | null
-          created_at: string
-          id: string
-          parameters: Json
-          rule_code: string
-          rule_type: string
-          severity: string
-          source_ref: string | null
-          source_text: string
-        }
-        Insert: {
-          active?: boolean
-          catalog_id?: string | null
-          created_at?: string
-          id?: string
-          parameters?: Json
-          rule_code: string
-          rule_type: string
-          severity?: string
-          source_ref?: string | null
-          source_text: string
-        }
-        Update: {
-          active?: boolean
-          catalog_id?: string | null
-          created_at?: string
-          id?: string
-          parameters?: Json
-          rule_code?: string
-          rule_type?: string
-          severity?: string
-          source_ref?: string | null
-          source_text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_course_rule_annotations_catalog_id_fkey"
-            columns: ["catalog_id"]
-            isOneToOne: false
-            referencedRelation: "official_course_schedule_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "official_course_rule_annotations_catalog_id_fkey"
-            columns: ["catalog_id"]
-            isOneToOne: false
-            referencedRelation: "official_course_schedule_effective"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_course_schedule_catalog: {
-        Row: {
-          active: boolean
-          branch_name: string | null
-          category: string
-          course_id: string
-          effective_academic_year: string
-          elective_group_key: string | null
-          field_name: string | null
-          grade_level: number
-          hour_options: number[]
-          id: string
-          imported_at: string
-          max_selections: number
-          needs_review: boolean
-          parsed_constraints: Json
-          parser_confidence: number | null
-          program_type: string | null
-          repeat_across_years: boolean
-          schedule_variant: string
-          school_subtype: string | null
-          school_type: string
-          source_decision_date: string | null
-          source_decision_no: string | null
-          source_file_name: string | null
-          source_note: string | null
-          source_page: number | null
-          source_section: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          branch_name?: string | null
-          category: string
-          course_id: string
-          effective_academic_year: string
-          elective_group_key?: string | null
-          field_name?: string | null
-          grade_level: number
-          hour_options: number[]
-          id?: string
-          imported_at?: string
-          max_selections?: number
-          needs_review?: boolean
-          parsed_constraints?: Json
-          parser_confidence?: number | null
-          program_type?: string | null
-          repeat_across_years?: boolean
-          schedule_variant?: string
-          school_subtype?: string | null
-          school_type: string
-          source_decision_date?: string | null
-          source_decision_no?: string | null
-          source_file_name?: string | null
-          source_note?: string | null
-          source_page?: number | null
-          source_section?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          branch_name?: string | null
-          category?: string
-          course_id?: string
-          effective_academic_year?: string
-          elective_group_key?: string | null
-          field_name?: string | null
-          grade_level?: number
-          hour_options?: number[]
-          id?: string
-          imported_at?: string
-          max_selections?: number
-          needs_review?: boolean
-          parsed_constraints?: Json
-          parser_confidence?: number | null
-          program_type?: string | null
-          repeat_across_years?: boolean
-          schedule_variant?: string
-          school_subtype?: string | null
-          school_type?: string
-          source_decision_date?: string | null
-          source_decision_no?: string | null
-          source_file_name?: string | null
-          source_note?: string | null
-          source_page?: number | null
-          source_section?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_course_schedule_catalog_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_course_schedule_overrides: {
-        Row: {
-          active: boolean
-          branch_name: string | null
-          catalog_id: string
-          category: string | null
-          elective_group_key: string | null
-          field_name: string | null
-          grade_level: number | null
-          hour_options: number[] | null
-          id: string
-          max_selections: number | null
-          parsed_constraints: Json | null
-          program_type: string | null
-          reason: string
-          repeat_across_years: boolean | null
-          school_subtype: string | null
-          source_note: string | null
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          active?: boolean
-          branch_name?: string | null
-          catalog_id: string
-          category?: string | null
-          elective_group_key?: string | null
-          field_name?: string | null
-          grade_level?: number | null
-          hour_options?: number[] | null
-          id?: string
-          max_selections?: number | null
-          parsed_constraints?: Json | null
-          program_type?: string | null
-          reason: string
-          repeat_across_years?: boolean | null
-          school_subtype?: string | null
-          source_note?: string | null
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          active?: boolean
-          branch_name?: string | null
-          catalog_id?: string
-          category?: string | null
-          elective_group_key?: string | null
-          field_name?: string | null
-          grade_level?: number | null
-          hour_options?: number[] | null
-          id?: string
-          max_selections?: number | null
-          parsed_constraints?: Json | null
-          program_type?: string | null
-          reason?: string
-          repeat_across_years?: boolean | null
-          school_subtype?: string | null
-          source_note?: string | null
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_course_schedule_overrides_catalog_id_fkey"
-            columns: ["catalog_id"]
-            isOneToOne: true
-            referencedRelation: "official_course_schedule_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "official_course_schedule_overrides_catalog_id_fkey"
-            columns: ["catalog_id"]
-            isOneToOne: true
-            referencedRelation: "official_course_schedule_effective"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_curriculum_catalog_status: {
-        Row: {
-          branch_name: string
-          field_name: string
-          institution_type: string
-          reason: string | null
-          source_url: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          branch_name: string
-          field_name: string
-          institution_type: string
-          reason?: string | null
-          source_url?: string | null
-          status: string
-          updated_at?: string
-        }
-        Update: {
-          branch_name?: string
-          field_name?: string
-          institution_type?: string
-          reason?: string | null
-          source_url?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      official_curriculum_profiles: {
-        Row: {
-          academic_support_hours: number | null
-          active: boolean
-          applicability_status: string
-          branch_name: string | null
-          common_hours: number | null
-          effective_academic_year: string
-          elective_course_max: number | null
-          elective_course_min: number
-          elective_hour_max: number
-          elective_hour_min: number
-          elective_hours: number | null
-          elective_vocational_hours: number | null
-          enterprise_hours: number | null
-          field_name: string | null
-          grade_level: number
-          group_rules: Json
-          guidance_hours: number | null
-          id: string
-          parsed_constraints: Json
-          program_type: string | null
-          required_course_count: number
-          required_hour_total: number
-          schedule_variant: string | null
-          school_subtype: string | null
-          school_type: string
-          source_decision_no: string | null
-          source_file_name: string | null
-          source_note: string | null
-          source_page: number | null
-          total_hour_max: number
-          total_hour_min: number
-          total_hour_target: number | null
-          updated_at: string
-          vocational_hours: number | null
-        }
-        Insert: {
-          academic_support_hours?: number | null
-          active?: boolean
-          applicability_status?: string
-          branch_name?: string | null
-          common_hours?: number | null
-          effective_academic_year: string
-          elective_course_max?: number | null
-          elective_course_min?: number
-          elective_hour_max?: number
-          elective_hour_min?: number
-          elective_hours?: number | null
-          elective_vocational_hours?: number | null
-          enterprise_hours?: number | null
-          field_name?: string | null
-          grade_level: number
-          group_rules?: Json
-          guidance_hours?: number | null
-          id?: string
-          parsed_constraints?: Json
-          program_type?: string | null
-          required_course_count?: number
-          required_hour_total?: number
-          schedule_variant?: string | null
-          school_subtype?: string | null
-          school_type: string
-          source_decision_no?: string | null
-          source_file_name?: string | null
-          source_note?: string | null
-          source_page?: number | null
-          total_hour_max?: number
-          total_hour_min?: number
-          total_hour_target?: number | null
-          updated_at?: string
-          vocational_hours?: number | null
-        }
-        Update: {
-          academic_support_hours?: number | null
-          active?: boolean
-          applicability_status?: string
-          branch_name?: string | null
-          common_hours?: number | null
-          effective_academic_year?: string
-          elective_course_max?: number | null
-          elective_course_min?: number
-          elective_hour_max?: number
-          elective_hour_min?: number
-          elective_hours?: number | null
-          elective_vocational_hours?: number | null
-          enterprise_hours?: number | null
-          field_name?: string | null
-          grade_level?: number
-          group_rules?: Json
-          guidance_hours?: number | null
-          id?: string
-          parsed_constraints?: Json
-          program_type?: string | null
-          required_course_count?: number
-          required_hour_total?: number
-          schedule_variant?: string | null
-          school_subtype?: string | null
-          school_type?: string
-          source_decision_no?: string | null
-          source_file_name?: string | null
-          source_note?: string | null
-          source_page?: number | null
-          total_hour_max?: number
-          total_hour_min?: number
-          total_hour_target?: number | null
-          updated_at?: string
-          vocational_hours?: number | null
-        }
-        Relationships: []
-      }
-      official_general_timetable_profiles: {
-        Row: {
-          active: boolean
-          applicability_status: string
-          constraints: Json
-          effective_academic_year: string
-          elective_hours: number
-          fixed_hours: number
-          free_activity_hours: number
-          grade_level: number
-          guidance_hours: number
-          id: string
-          program_variant: string
-          school_subtype: string
-          school_type: string
-          source_decision_date: string | null
-          source_decision_no: string
-          source_page: number | null
-          source_url: string
-          total_hours: number
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          applicability_status?: string
-          constraints?: Json
-          effective_academic_year: string
-          elective_hours?: number
-          fixed_hours: number
-          free_activity_hours?: number
-          grade_level: number
-          guidance_hours?: number
-          id?: string
-          program_variant?: string
-          school_subtype?: string
-          school_type: string
-          source_decision_date?: string | null
-          source_decision_no: string
-          source_page?: number | null
-          source_url: string
-          total_hours: number
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          applicability_status?: string
-          constraints?: Json
-          effective_academic_year?: string
-          elective_hours?: number
-          fixed_hours?: number
-          free_activity_hours?: number
-          grade_level?: number
-          guidance_hours?: number
-          id?: string
-          program_variant?: string
-          school_subtype?: string
-          school_type?: string
-          source_decision_date?: string | null
-          source_decision_no?: string
-          source_page?: number | null
-          source_url?: string
-          total_hours?: number
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      official_general_timetable_rows: {
-        Row: {
-          active: boolean
-          category: string
-          constraints: Json
-          course_id: string
-          id: string
-          profile_id: string
-          source_page: number | null
-          weekly_hours: number
-        }
-        Insert: {
-          active?: boolean
-          category?: string
-          constraints?: Json
-          course_id: string
-          id?: string
-          profile_id: string
-          source_page?: number | null
-          weekly_hours: number
-        }
-        Update: {
-          active?: boolean
-          category?: string
-          constraints?: Json
-          course_id?: string
-          id?: string
-          profile_id?: string
-          source_page?: number | null
-          weekly_hours?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_general_timetable_rows_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "official_general_timetable_rows_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "official_general_timetable_profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_institution_timetable_overrides: {
-        Row: {
-          active: boolean
-          constraints: Json
-          effective_from: string
-          effective_to: string | null
-          id: string
-          institution_code: string
-          scope_code: string
-          source_decision_no: string | null
-          source_url: string | null
-        }
-        Insert: {
-          active?: boolean
-          constraints?: Json
-          effective_from: string
-          effective_to?: string | null
-          id?: string
-          institution_code: string
-          scope_code: string
-          source_decision_no?: string | null
-          source_url?: string | null
-        }
-        Update: {
-          active?: boolean
-          constraints?: Json
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          institution_code?: string
-          scope_code?: string
-          source_decision_no?: string | null
-          source_url?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_institution_timetable_overrides_scope_code_fkey"
-            columns: ["scope_code"]
-            isOneToOne: false
-            referencedRelation: "official_timetable_scope_catalog"
-            referencedColumns: ["code"]
-          },
-        ]
-      }
-      official_source_change_queue: {
-        Row: {
-          applied_at: string | null
-          approval_required: boolean
-          approved_at: string | null
-          change_type: string
-          detected_at: string
-          effective_from: string | null
-          id: string
-          note: string | null
-          parse_required: boolean
-          parsed_at: string | null
-          parser_result: Json
-          previous_snapshot_id: string | null
-          snapshot_id: string
-          source_id: string
-          status: string
-        }
-        Insert: {
-          applied_at?: string | null
-          approval_required?: boolean
-          approved_at?: string | null
-          change_type?: string
-          detected_at?: string
-          effective_from?: string | null
-          id?: string
-          note?: string | null
-          parse_required?: boolean
-          parsed_at?: string | null
-          parser_result?: Json
-          previous_snapshot_id?: string | null
-          snapshot_id: string
-          source_id: string
-          status?: string
-        }
-        Update: {
-          applied_at?: string | null
-          approval_required?: boolean
-          approved_at?: string | null
-          change_type?: string
-          detected_at?: string
-          effective_from?: string | null
-          id?: string
-          note?: string | null
-          parse_required?: boolean
-          parsed_at?: string | null
-          parser_result?: Json
-          previous_snapshot_id?: string | null
-          snapshot_id?: string
-          source_id?: string
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_source_change_queue_previous_snapshot_id_fkey"
-            columns: ["previous_snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "official_source_snapshots"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "official_source_change_queue_snapshot_id_fkey"
-            columns: ["snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "official_source_snapshots"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "official_source_change_queue_source_id_fkey"
-            columns: ["source_id"]
-            isOneToOne: false
-            referencedRelation: "official_source_registry"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_source_registry: {
-        Row: {
-          active: boolean
-          authority: string
-          check_mode: string
-          created_at: string
-          id: string
-          last_changed_at: string | null
-          last_checked_at: string | null
-          last_content_hash: string | null
-          parser_kind: string
-          source_key: string
-          source_type: string
-          source_url: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          authority?: string
-          check_mode?: string
-          created_at?: string
-          id?: string
-          last_changed_at?: string | null
-          last_checked_at?: string | null
-          last_content_hash?: string | null
-          parser_kind?: string
-          source_key: string
-          source_type: string
-          source_url: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          authority?: string
-          check_mode?: string
-          created_at?: string
-          id?: string
-          last_changed_at?: string | null
-          last_checked_at?: string | null
-          last_content_hash?: string | null
-          parser_kind?: string
-          source_key?: string
-          source_type?: string
-          source_url?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      official_source_snapshots: {
-        Row: {
-          content_hash: string
-          decision_no: string | null
-          document_date: string | null
-          effective_from: string | null
-          effective_to: string | null
-          http_status: number | null
-          id: string
-          metadata: Json
-          raw_location: string | null
-          retrieved_at: string
-          source_id: string
-          title: string | null
-        }
-        Insert: {
-          content_hash: string
-          decision_no?: string | null
-          document_date?: string | null
-          effective_from?: string | null
-          effective_to?: string | null
-          http_status?: number | null
-          id?: string
-          metadata?: Json
-          raw_location?: string | null
-          retrieved_at?: string
-          source_id: string
-          title?: string | null
-        }
-        Update: {
-          content_hash?: string
-          decision_no?: string | null
-          document_date?: string | null
-          effective_from?: string | null
-          effective_to?: string | null
-          http_status?: number | null
-          id?: string
-          metadata?: Json
-          raw_location?: string | null
-          retrieved_at?: string
-          source_id?: string
-          title?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_source_snapshots_source_id_fkey"
-            columns: ["source_id"]
-            isOneToOne: false
-            referencedRelation: "official_source_registry"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_timetable_application_profiles: {
-        Row: {
-          profile_id: string
-          rule_id: string
-        }
-        Insert: {
-          profile_id: string
-          rule_id: string
-        }
-        Update: {
-          profile_id?: string
-          rule_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_timetable_application_profiles_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "official_general_timetable_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "official_timetable_application_profiles_rule_id_fkey"
-            columns: ["rule_id"]
-            isOneToOne: false
-            referencedRelation: "official_timetable_application_rules"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_timetable_application_rules: {
-        Row: {
-          active: boolean
-          application_total_max: number | null
-          application_total_min: number | null
-          approval_scope: string | null
-          base_total_hours: number
-          code: string
-          configuration: Json
-          grades: number[]
-          id: string
-          norm_countable_cap: number
-          school_type: string
-          source_decision_no: string
-          source_url: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          application_total_max?: number | null
-          application_total_min?: number | null
-          approval_scope?: string | null
-          base_total_hours?: number
-          code: string
-          configuration?: Json
-          grades: number[]
-          id?: string
-          norm_countable_cap?: number
-          school_type: string
-          source_decision_no: string
-          source_url: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          application_total_max?: number | null
-          application_total_min?: number | null
-          approval_scope?: string | null
-          base_total_hours?: number
-          code?: string
-          configuration?: Json
-          grades?: number[]
-          id?: string
-          norm_countable_cap?: number
-          school_type?: string
-          source_decision_no?: string
-          source_url?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      official_timetable_scope_catalog: {
-        Row: {
-          active: boolean
-          authority_unit: string
-          base_code: string | null
-          code: string
-          constraints: Json
-          effective_from: string | null
-          grade_end: number | null
-          grade_start: number | null
-          program_variant: string | null
-          schedule_mode: string
-          school_subtype: string | null
-          school_type: string
-          source_decision_date: string | null
-          source_decision_no: string | null
-          source_url: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          authority_unit: string
-          base_code?: string | null
-          code: string
-          constraints?: Json
-          effective_from?: string | null
-          grade_end?: number | null
-          grade_start?: number | null
-          program_variant?: string | null
-          schedule_mode: string
-          school_subtype?: string | null
-          school_type: string
-          source_decision_date?: string | null
-          source_decision_no?: string | null
-          source_url?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          authority_unit?: string
-          base_code?: string | null
-          code?: string
-          constraints?: Json
-          effective_from?: string | null
-          grade_end?: number | null
-          grade_start?: number | null
-          program_variant?: string | null
-          schedule_mode?: string
-          school_subtype?: string | null
-          school_type?: string
-          source_decision_date?: string | null
-          source_decision_no?: string | null
-          source_url?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      official_vocational_branches: {
-        Row: {
-          active: boolean
-          branch_name: string
-          field_id: string
-          id: string
-          source_note: string | null
-          source_url: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          branch_name: string
-          field_id: string
-          id?: string
-          source_note?: string | null
-          source_url?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          branch_name?: string
-          field_id?: string
-          id?: string
-          source_note?: string | null
-          source_url?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_vocational_branches_field_id_fkey"
-            columns: ["field_id"]
-            isOneToOne: false
-            referencedRelation: "official_vocational_fields"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_vocational_fields: {
-        Row: {
-          active: boolean
-          field_name: string
-          id: string
-          institution_type: string
-          source_note: string | null
-          source_scope: string
-          source_url: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          field_name: string
-          id?: string
-          institution_type: string
-          source_note?: string | null
-          source_scope?: string
-          source_url?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          field_name?: string
-          id?: string
-          institution_type?: string
-          source_note?: string | null
-          source_scope?: string
-          source_url?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      official_vocational_framework_sources: {
-        Row: {
-          active: boolean
-          applicability_status: string
-          decision_no: string | null
-          field_id: string | null
-          grade_level: number
-          id: string
-          institution_type: string
-          needs_review: boolean
-          portal_program_name: string
-          program_year: number | null
-          source_note: string | null
-          source_url: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          applicability_status?: string
-          decision_no?: string | null
-          field_id?: string | null
-          grade_level: number
-          id?: string
-          institution_type: string
-          needs_review?: boolean
-          portal_program_name: string
-          program_year?: number | null
-          source_note?: string | null
-          source_url: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          applicability_status?: string
-          decision_no?: string | null
-          field_id?: string | null
-          grade_level?: number
-          id?: string
-          institution_type?: string
-          needs_review?: boolean
-          portal_program_name?: string
-          program_year?: number | null
-          source_note?: string | null
-          source_url?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_vocational_framework_sources_field_id_fkey"
-            columns: ["field_id"]
-            isOneToOne: false
-            referencedRelation: "official_vocational_fields"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      payroll_activity_entries: {
-        Row: {
-          activity_date: string
-          approved_at: string | null
-          approved_by: string | null
-          category: string
-          created_at: string
-          entered_by: string | null
-          evidence_reference: string | null
-          explanation: string | null
-          hours: number
-          id: string
-          institution_code: string | null
-          rule_id: string | null
-          status: string
-          teacher_id: string
-          updated_at: string
-        }
-        Insert: {
-          activity_date: string
-          approved_at?: string | null
-          approved_by?: string | null
-          category: string
-          created_at?: string
-          entered_by?: string | null
-          evidence_reference?: string | null
-          explanation?: string | null
-          hours: number
-          id?: string
-          institution_code?: string | null
-          rule_id?: string | null
-          status?: string
-          teacher_id: string
-          updated_at?: string
-        }
-        Update: {
-          activity_date?: string
-          approved_at?: string | null
-          approved_by?: string | null
-          category?: string
-          created_at?: string
-          entered_by?: string | null
-          evidence_reference?: string | null
-          explanation?: string | null
-          hours?: number
-          id?: string
-          institution_code?: string | null
-          rule_id?: string | null
-          status?: string
-          teacher_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_payroll_activity_entries_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "payroll_activity_entries_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_activity_entries_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "payroll_activity_entries_entered_by_fkey"
-            columns: ["entered_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_activity_entries_entered_by_fkey"
-            columns: ["entered_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "payroll_activity_entries_rule_id_fkey"
-            columns: ["rule_id"]
-            isOneToOne: false
-            referencedRelation: "payroll_rule_registry"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payroll_activity_entries_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_activity_entries_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      payroll_calculation_runs: {
-        Row: {
-          calculated_by: string
-          created_at: string
-          id: string
-          institution_code: string | null
-          period_end: string
-          period_start: string
-          rule_version: string
-          status: string
-        }
-        Insert: {
-          calculated_by: string
-          created_at?: string
-          id?: string
-          institution_code?: string | null
-          period_end: string
-          period_start: string
-          rule_version?: string
-          status?: string
-        }
-        Update: {
-          calculated_by?: string
-          created_at?: string
-          id?: string
-          institution_code?: string | null
-          period_end?: string
-          period_start?: string
-          rule_version?: string
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_payroll_calculation_runs_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "payroll_calculation_runs_calculated_by_fkey"
-            columns: ["calculated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_calculation_runs_calculated_by_fkey"
-            columns: ["calculated_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      payroll_calendar: {
-        Row: {
-          approved_at: string | null
-          approved_by: string | null
-          calendar_date: string
-          day_type: string
-          deemed_guidance_performed: boolean
-          deemed_regular_performed: boolean
-          duty_payable: boolean
-          institution_code: string | null
-          source_note: string | null
-          title: string
-        }
-        Insert: {
-          approved_at?: string | null
-          approved_by?: string | null
-          calendar_date: string
-          day_type: string
-          deemed_guidance_performed?: boolean
-          deemed_regular_performed?: boolean
-          duty_payable?: boolean
-          institution_code?: string | null
-          source_note?: string | null
-          title: string
-        }
-        Update: {
-          approved_at?: string | null
-          approved_by?: string | null
-          calendar_date?: string
-          day_type?: string
-          deemed_guidance_performed?: boolean
-          deemed_regular_performed?: boolean
-          duty_payable?: boolean
-          institution_code?: string | null
-          source_note?: string | null
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_payroll_calendar_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "payroll_calendar_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_calendar_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      payroll_day_entries: {
-        Row: {
-          approved: boolean
-          approved_at: string | null
-          approved_by: string | null
-          calculated: boolean
-          category: string
-          created_at: string
-          evidence_note: string | null
-          explanation: string | null
-          hours: number
-          id: string
-          institution_code: string | null
-          kbs_data_type: string
-          rate_multiplier: number
-          rule_code: string | null
-          source_id: string | null
-          source_type: string
-          teacher_id: string
-          work_date: string
-        }
-        Insert: {
-          approved?: boolean
-          approved_at?: string | null
-          approved_by?: string | null
-          calculated?: boolean
-          category: string
-          created_at?: string
-          evidence_note?: string | null
-          explanation?: string | null
-          hours?: number
-          id?: string
-          institution_code?: string | null
-          kbs_data_type?: string
-          rate_multiplier?: number
-          rule_code?: string | null
-          source_id?: string | null
-          source_type: string
-          teacher_id: string
-          work_date: string
-        }
-        Update: {
-          approved?: boolean
-          approved_at?: string | null
-          approved_by?: string | null
-          calculated?: boolean
-          category?: string
-          created_at?: string
-          evidence_note?: string | null
-          explanation?: string | null
-          hours?: number
-          id?: string
-          institution_code?: string | null
-          kbs_data_type?: string
-          rate_multiplier?: number
-          rule_code?: string | null
-          source_id?: string | null
-          source_type?: string
-          teacher_id?: string
-          work_date?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_payroll_day_entries_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "payroll_day_entries_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_day_entries_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "payroll_day_entries_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_day_entries_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      payroll_dirty_periods: {
-        Row: {
-          institution_code: string | null
-          marked_at: string
-          month: number
-          reason: string
-          teacher_id: string
-          year: number
-        }
-        Insert: {
-          institution_code?: string | null
-          marked_at?: string
-          month: number
-          reason: string
-          teacher_id: string
-          year: number
-        }
-        Update: {
-          institution_code?: string | null
-          marked_at?: string
-          month?: number
-          reason?: string
-          teacher_id?: string
-          year?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_payroll_dirty_periods_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "payroll_dirty_periods_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_dirty_periods_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      payroll_rule_registry: {
-        Row: {
-          active: boolean
-          category: string
-          code: string
-          condition_note: string | null
-          created_at: string
-          created_by: string | null
-          effective_from: string
-          effective_to: string | null
-          id: string
-          institution_code: string | null
-          kbs_data_type: string
-          monthly_cap_hours: number | null
-          name: string
-          rate_multiplier: number
-          requires_actual_performance: boolean
-          source_id: string | null
-          weekly_cap_hours: number | null
-        }
-        Insert: {
-          active?: boolean
-          category: string
-          code: string
-          condition_note?: string | null
-          created_at?: string
-          created_by?: string | null
-          effective_from: string
-          effective_to?: string | null
-          id?: string
-          institution_code?: string | null
-          kbs_data_type: string
-          monthly_cap_hours?: number | null
-          name: string
-          rate_multiplier?: number
-          requires_actual_performance?: boolean
-          source_id?: string | null
-          weekly_cap_hours?: number | null
-        }
-        Update: {
-          active?: boolean
-          category?: string
-          code?: string
-          condition_note?: string | null
-          created_at?: string
-          created_by?: string | null
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          institution_code?: string | null
-          kbs_data_type?: string
-          monthly_cap_hours?: number | null
-          name?: string
-          rate_multiplier?: number
-          requires_actual_performance?: boolean
-          source_id?: string | null
-          weekly_cap_hours?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_payroll_rule_registry_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "payroll_rule_registry_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "payroll_rule_registry_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "payroll_rule_registry_source_id_fkey"
-            columns: ["source_id"]
-            isOneToOne: false
-            referencedRelation: "legal_rule_sources"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      permission_audit_log: {
-        Row: {
-          actor_user_id: string | null
-          created_at: string
-          id: string
-          institution_code: string | null
-          note: string | null
-          operation: string
-          permission_code: string
-          scope: Json
-          target_user_id: string
-        }
-        Insert: {
-          actor_user_id?: string | null
-          created_at?: string
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          operation: string
-          permission_code: string
-          scope?: Json
-          target_user_id: string
-        }
-        Update: {
-          actor_user_id?: string | null
-          created_at?: string
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          operation?: string
-          permission_code?: string
-          scope?: Json
-          target_user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_permission_audit_log_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "permission_audit_log_actor_user_id_fkey"
-            columns: ["actor_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "permission_audit_log_actor_user_id_fkey"
-            columns: ["actor_user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "permission_audit_log_target_user_id_fkey"
-            columns: ["target_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "permission_audit_log_target_user_id_fkey"
-            columns: ["target_user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      permission_catalog: {
-        Row: {
-          action: string
-          active: boolean
-          code: string
-          created_at: string
-          dangerous: boolean
-          description: string | null
-          label: string
-          module_code: string
-          module_label: string
-          sort_order: number
-        }
-        Insert: {
-          action: string
-          active?: boolean
-          code: string
-          created_at?: string
-          dangerous?: boolean
-          description?: string | null
-          label: string
-          module_code: string
-          module_label: string
-          sort_order?: number
-        }
-        Update: {
-          action?: string
-          active?: boolean
-          code?: string
-          created_at?: string
-          dangerous?: boolean
-          description?: string | null
-          label?: string
-          module_code?: string
-          module_label?: string
-          sort_order?: number
-        }
-        Relationships: []
-      }
-      personnel_field_catalog: {
-        Row: {
-          data_class: string
-          display_name: string
-          enabled: boolean
-          field_key: string
-          first_seen_at: string
-          last_seen_at: string
-          module_keys: string[]
-          source_headers: string[]
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          data_class?: string
-          display_name: string
-          enabled?: boolean
-          field_key: string
-          first_seen_at?: string
-          last_seen_at?: string
-          module_keys?: string[]
-          source_headers?: string[]
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          data_class?: string
-          display_name?: string
-          enabled?: boolean
-          field_key?: string
-          first_seen_at?: string
-          last_seen_at?: string
-          module_keys?: string[]
-          source_headers?: string[]
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: []
-      }
-      personnel_field_overrides: {
-        Row: {
-          enabled: boolean | null
-          field_key: string
-          institution_code: string
-          module_keys: string[] | null
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          enabled?: boolean | null
-          field_key: string
-          institution_code?: string
-          module_keys?: string[] | null
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          enabled?: boolean | null
-          field_key?: string
-          institution_code?: string
-          module_keys?: string[] | null
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_personnel_field_overrides_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "personnel_field_overrides_field_key_fkey"
-            columns: ["field_key"]
-            isOneToOne: false
-            referencedRelation: "personnel_field_catalog"
-            referencedColumns: ["field_key"]
-          },
-        ]
-      }
-      personnel_import_payloads: {
-        Row: {
-          id: string
-          imported_at: string
-          institution_code: string | null
-          is_current: boolean
-          personnel_id: string
-          raw_data: Json
-          source_file_name: string | null
-          source_format: string | null
-        }
-        Insert: {
-          id?: string
-          imported_at?: string
-          institution_code?: string | null
-          is_current?: boolean
-          personnel_id: string
-          raw_data?: Json
-          source_file_name?: string | null
-          source_format?: string | null
-        }
-        Update: {
-          id?: string
-          imported_at?: string
-          institution_code?: string | null
-          is_current?: boolean
-          personnel_id?: string
-          raw_data?: Json
-          source_file_name?: string | null
-          source_format?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_personnel_import_payloads_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "personnel_import_payloads_personnel_id_fkey"
-            columns: ["personnel_id"]
-            isOneToOne: false
-            referencedRelation: "personnel_registry"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      personnel_private_details: {
-        Row: {
-          archive_no: string | null
-          base_title: string | null
-          birth_date: string | null
-          blood_group: string | null
-          career_stage: string | null
-          district: string | null
-          duty_title: string | null
-          education_status: string | null
-          first_service_date: string | null
-          gender: string | null
-          grade_step: string | null
-          imported_at: string
-          institution_code: string | null
-          institution_name: string | null
-          institution_registry_no: string | null
-          personnel_id: string
-          personnel_status: string | null
-          province: string | null
-          raw_data: Json
-          raw_labels: Json
-          retirement_registry_no: string | null
-          source_file_name: string | null
-          source_format: string | null
-          tc_identity_no: string | null
-          teaching_area: string | null
-          updated_at: string
-        }
-        Insert: {
-          archive_no?: string | null
-          base_title?: string | null
-          birth_date?: string | null
-          blood_group?: string | null
-          career_stage?: string | null
-          district?: string | null
-          duty_title?: string | null
-          education_status?: string | null
-          first_service_date?: string | null
-          gender?: string | null
-          grade_step?: string | null
-          imported_at?: string
-          institution_code?: string | null
-          institution_name?: string | null
-          institution_registry_no?: string | null
-          personnel_id: string
-          personnel_status?: string | null
-          province?: string | null
-          raw_data?: Json
-          raw_labels?: Json
-          retirement_registry_no?: string | null
-          source_file_name?: string | null
-          source_format?: string | null
-          tc_identity_no?: string | null
-          teaching_area?: string | null
-          updated_at?: string
-        }
-        Update: {
-          archive_no?: string | null
-          base_title?: string | null
-          birth_date?: string | null
-          blood_group?: string | null
-          career_stage?: string | null
-          district?: string | null
-          duty_title?: string | null
-          education_status?: string | null
-          first_service_date?: string | null
-          gender?: string | null
-          grade_step?: string | null
-          imported_at?: string
-          institution_code?: string | null
-          institution_name?: string | null
-          institution_registry_no?: string | null
-          personnel_id?: string
-          personnel_status?: string | null
-          province?: string | null
-          raw_data?: Json
-          raw_labels?: Json
-          retirement_registry_no?: string | null
-          source_file_name?: string | null
-          source_format?: string | null
-          tc_identity_no?: string | null
-          teaching_area?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_personnel_private_details_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "personnel_private_details_personnel_id_fkey"
-            columns: ["personnel_id"]
-            isOneToOne: true
-            referencedRelation: "personnel_registry"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      personnel_registry: {
-        Row: {
-          active: boolean
-          derived_roles: string[]
-          duty_title: string | null
-          employment_status: string | null
-          full_name: string
-          id: string
-          imported_at: string
-          institution_code: string | null
-          linked_user_id: string | null
-          source_file_name: string | null
-          system_role: string | null
-          teaching_area_id: string | null
-          teaching_area_raw: string | null
-          title: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          derived_roles?: string[]
-          duty_title?: string | null
-          employment_status?: string | null
-          full_name: string
-          id?: string
-          imported_at?: string
-          institution_code?: string | null
-          linked_user_id?: string | null
-          source_file_name?: string | null
-          system_role?: string | null
-          teaching_area_id?: string | null
-          teaching_area_raw?: string | null
-          title?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          derived_roles?: string[]
-          duty_title?: string | null
-          employment_status?: string | null
-          full_name?: string
-          id?: string
-          imported_at?: string
-          institution_code?: string | null
-          linked_user_id?: string | null
-          source_file_name?: string | null
-          system_role?: string | null
-          teaching_area_id?: string | null
-          teaching_area_raw?: string | null
-          title?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_personnel_registry_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "personnel_registry_teaching_area_id_fkey"
-            columns: ["teaching_area_id"]
-            isOneToOne: false
-            referencedRelation: "teaching_areas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      personnel_responsibilities: {
-        Row: {
-          active: boolean
-          assignment_document_url: string | null
-          created_at: string
-          ends_on: string | null
-          id: string
-          institution_code: string | null
-          legal_basis: string | null
-          personnel_id: string | null
-          responsibility_id: string
-          starts_on: string | null
-          user_id: string | null
-        }
-        Insert: {
-          active?: boolean
-          assignment_document_url?: string | null
-          created_at?: string
-          ends_on?: string | null
-          id?: string
-          institution_code?: string | null
-          legal_basis?: string | null
-          personnel_id?: string | null
-          responsibility_id: string
-          starts_on?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          active?: boolean
-          assignment_document_url?: string | null
-          created_at?: string
-          ends_on?: string | null
-          id?: string
-          institution_code?: string | null
-          legal_basis?: string | null
-          personnel_id?: string | null
-          responsibility_id?: string
-          starts_on?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_personnel_responsibilities_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "personnel_responsibilities_personnel_id_fkey"
-            columns: ["personnel_id"]
-            isOneToOne: false
-            referencedRelation: "personnel_registry"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "personnel_responsibilities_responsibility_id_fkey"
-            columns: ["responsibility_id"]
-            isOneToOne: false
-            referencedRelation: "responsibility_catalog"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pre_registered_teachers: {
-        Row: {
-          active: boolean
-          created_at: string
-          email: string | null
-          full_name: string
-          id: string
-          institution_code: string | null
-          role: Database["public"]["Enums"]["app_role"]
-          tckn: string
-          teaching_area_id: string | null
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          email?: string | null
-          full_name: string
-          id?: string
-          institution_code?: string | null
-          role?: Database["public"]["Enums"]["app_role"]
-          tckn: string
-          teaching_area_id?: string | null
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          email?: string | null
-          full_name?: string
-          id?: string
-          institution_code?: string | null
-          role?: Database["public"]["Enums"]["app_role"]
-          tckn?: string
-          teaching_area_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_pre_registered_teachers_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "pre_registered_teachers_teaching_area_id_fkey"
-            columns: ["teaching_area_id"]
-            isOneToOne: false
-            referencedRelation: "teaching_areas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      principal_recovery_identity: {
-        Row: {
-          created_at: string
-          email: string
-          institution_code: string
-          phone: string
-          tckn_hmac: string
-          tckn_masked: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          institution_code: string
-          phone: string
-          tckn_hmac: string
-          tckn_masked: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          institution_code?: string
-          phone?: string
-          tckn_hmac?: string
-          tckn_masked?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "principal_recovery_identity_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      profile_role_tags: {
-        Row: {
-          active: boolean
-          institution_code: string | null
-          role_tag: string
-          source: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          active?: boolean
-          institution_code?: string | null
-          role_tag: string
-          source?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          active?: boolean
-          institution_code?: string | null
-          role_tag?: string
-          source?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_profile_role_tags_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          blood_type: string | null
-          email: string | null
-          emergency_contact: string | null
-          full_name: string | null
-          institution_code: string | null
-          is_super_admin: boolean
-          permission_mode: string
-          phone: string | null
-          role: Database["public"]["Enums"]["app_role"]
-          tckn: string | null
-          teaching_area_id: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          blood_type?: string | null
-          email?: string | null
-          emergency_contact?: string | null
-          full_name?: string | null
-          institution_code?: string | null
-          is_super_admin?: boolean
-          permission_mode?: string
-          phone?: string | null
-          role?: Database["public"]["Enums"]["app_role"]
-          tckn?: string | null
-          teaching_area_id?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          blood_type?: string | null
-          email?: string | null
-          emergency_contact?: string | null
-          full_name?: string | null
-          institution_code?: string | null
-          is_super_admin?: boolean
-          permission_mode?: string
-          phone?: string | null
-          role?: Database["public"]["Enums"]["app_role"]
-          tckn?: string | null
-          teaching_area_id?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_profiles_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "profiles_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "profiles_teaching_area_id_fkey"
-            columns: ["teaching_area_id"]
-            isOneToOne: false
-            referencedRelation: "teaching_areas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      push_subscriptions: {
-        Row: {
-          active: boolean
-          auth: string
-          created_at: string
-          endpoint: string
-          id: string
-          institution_code: string | null
-          p256dh: string
-          platform: string
-          updated_at: string
-          user_agent: string | null
-          user_id: string
-        }
-        Insert: {
-          active?: boolean
-          auth: string
-          created_at?: string
-          endpoint: string
-          id?: string
-          institution_code?: string | null
-          p256dh: string
-          platform?: string
-          updated_at?: string
-          user_agent?: string | null
-          user_id: string
-        }
-        Update: {
-          active?: boolean
-          auth?: string
-          created_at?: string
-          endpoint?: string
-          id?: string
-          institution_code?: string | null
-          p256dh?: string
-          platform?: string
-          updated_at?: string
-          user_agent?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_push_subscriptions_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "push_subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "push_subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      quran_split_plans: {
-        Row: {
-          academic_year: string
-          class_id: string
-          created_at: string
-          created_by: string | null
-          enabled: boolean
-          group_1_id: string | null
-          group_2_id: string | null
-          id: string
-          institution_code: string | null
-          source_note: string
-          sync_group_id: string | null
-          teacher_1_id: string | null
-          teacher_2_id: string | null
-          threshold: number
-          updated_at: string
-        }
-        Insert: {
-          academic_year: string
-          class_id: string
-          created_at?: string
-          created_by?: string | null
-          enabled?: boolean
-          group_1_id?: string | null
-          group_2_id?: string | null
-          id?: string
-          institution_code?: string | null
-          source_note?: string
-          sync_group_id?: string | null
-          teacher_1_id?: string | null
-          teacher_2_id?: string | null
-          threshold?: number
-          updated_at?: string
-        }
-        Update: {
-          academic_year?: string
-          class_id?: string
-          created_at?: string
-          created_by?: string | null
-          enabled?: boolean
-          group_1_id?: string | null
-          group_2_id?: string | null
-          id?: string
-          institution_code?: string | null
-          source_note?: string
-          sync_group_id?: string | null
-          teacher_1_id?: string | null
-          teacher_2_id?: string | null
-          threshold?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_quran_split_plans_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_group_1_id_fkey"
-            columns: ["group_1_id"]
-            isOneToOne: false
-            referencedRelation: "class_subgroups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_group_2_id_fkey"
-            columns: ["group_2_id"]
-            isOneToOne: false
-            referencedRelation: "class_subgroups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_sync_group_id_fkey"
-            columns: ["sync_group_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_sync_groups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_teacher_1_id_fkey"
-            columns: ["teacher_1_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_teacher_1_id_fkey"
-            columns: ["teacher_1_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_teacher_2_id_fkey"
-            columns: ["teacher_2_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "quran_split_plans_teacher_2_id_fkey"
-            columns: ["teacher_2_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      responsibility_catalog: {
-        Row: {
-          active: boolean
-          applicable_school_types: string[]
-          code: string
-          id: string
-          legal_basis: string | null
-          name: string
-          parent_title: string | null
-          sort_order: number
-        }
-        Insert: {
-          active?: boolean
-          applicable_school_types?: string[]
-          code: string
-          id?: string
-          legal_basis?: string | null
-          name: string
-          parent_title?: string | null
-          sort_order?: number
-        }
-        Update: {
-          active?: boolean
-          applicable_school_types?: string[]
-          code?: string
-          id?: string
-          legal_basis?: string | null
-          name?: string
-          parent_title?: string | null
-          sort_order?: number
-        }
-        Relationships: []
-      }
-      schedule_audit_log: {
-        Row: {
-          action: string
-          actor_user_id: string | null
-          created_at: string
-          id: number
-          institution_code: string | null
-          new_row: Json | null
-          old_row: Json | null
-          schedule_id: string | null
-        }
-        Insert: {
-          action: string
-          actor_user_id?: string | null
-          created_at?: string
-          id?: never
-          institution_code?: string | null
-          new_row?: Json | null
-          old_row?: Json | null
-          schedule_id?: string | null
-        }
-        Update: {
-          action?: string
-          actor_user_id?: string | null
-          created_at?: string
-          id?: never
-          institution_code?: string | null
-          new_row?: Json | null
-          old_row?: Json | null
-          schedule_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_audit_log_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_audit_log_actor_user_id_fkey"
-            columns: ["actor_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_audit_log_actor_user_id_fkey"
-            columns: ["actor_user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "schedule_audit_log_schedule_id_fkey"
-            columns: ["schedule_id"]
-            isOneToOne: false
-            referencedRelation: "schedules"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_audit_log_schedule_id_fkey"
-            columns: ["schedule_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_schedule"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_building_travel: {
-        Row: {
-          active: boolean
-          from_building_id: string
-          id: string
-          institution_code: string
-          minutes: number
-          to_building_id: string
-        }
-        Insert: {
-          active?: boolean
-          from_building_id: string
-          id?: string
-          institution_code?: string
-          minutes: number
-          to_building_id: string
-        }
-        Update: {
-          active?: boolean
-          from_building_id?: string
-          id?: string
-          institution_code?: string
-          minutes?: number
-          to_building_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "schedule_building_travel_from_building_id_fkey"
-            columns: ["from_building_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_buildings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_building_travel_to_building_id_fkey"
-            columns: ["to_building_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_buildings"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_buildings: {
-        Row: {
-          active: boolean
-          code: string | null
-          created_at: string
-          id: string
-          institution_code: string
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          code?: string | null
-          created_at?: string
-          id?: string
-          institution_code?: string
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          code?: string | null
-          created_at?: string
-          id?: string
-          institution_code?: string
-          name?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      schedule_compute_workers: {
-        Row: {
-          active: boolean
-          avg_latency_ms: number | null
-          capabilities: Json
-          connection_mode: string
-          cpu_threads: number | null
-          created_at: string
-          current_load: number
-          display_name: string
-          endpoint_url: string | null
-          gpu_memory_mb: number | null
-          gpu_model: string | null
-          health: string
-          id: string
-          last_heartbeat: string | null
-          lease_seconds: number
-          max_parallel: number
-          priority: number
-          software_version: string | null
-          updated_at: string
-          worker_key: string
-          worker_type: string
-        }
-        Insert: {
-          active?: boolean
-          avg_latency_ms?: number | null
-          capabilities?: Json
-          connection_mode?: string
-          cpu_threads?: number | null
-          created_at?: string
-          current_load?: number
-          display_name: string
-          endpoint_url?: string | null
-          gpu_memory_mb?: number | null
-          gpu_model?: string | null
-          health?: string
-          id?: string
-          last_heartbeat?: string | null
-          lease_seconds?: number
-          max_parallel?: number
-          priority?: number
-          software_version?: string | null
-          updated_at?: string
-          worker_key: string
-          worker_type: string
-        }
-        Update: {
-          active?: boolean
-          avg_latency_ms?: number | null
-          capabilities?: Json
-          connection_mode?: string
-          cpu_threads?: number | null
-          created_at?: string
-          current_load?: number
-          display_name?: string
-          endpoint_url?: string | null
-          gpu_memory_mb?: number | null
-          gpu_model?: string | null
-          health?: string
-          id?: string
-          last_heartbeat?: string | null
-          lease_seconds?: number
-          max_parallel?: number
-          priority?: number
-          software_version?: string | null
-          updated_at?: string
-          worker_key?: string
-          worker_type?: string
-        }
-        Relationships: []
-      }
-      schedule_duty_optimization: {
-        Row: {
-          adjacent_weight: number
-          anchor_period: number | null
-          hard_max: boolean
-          institution_code: string
-          max_duty_day_hours: number
-          overload_weight: number
-          source: string
-          teacher_id: string
-          updated_at: string
-          weekday: number
-        }
-        Insert: {
-          adjacent_weight?: number
-          anchor_period?: number | null
-          hard_max?: boolean
-          institution_code?: string
-          max_duty_day_hours?: number
-          overload_weight?: number
-          source?: string
-          teacher_id: string
-          updated_at?: string
-          weekday: number
-        }
-        Update: {
-          adjacent_weight?: number
-          anchor_period?: number | null
-          hard_max?: boolean
-          institution_code?: string
-          max_duty_day_hours?: number
-          overload_weight?: number
-          source?: string
-          teacher_id?: string
-          updated_at?: string
-          weekday?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_duty_optimization_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_duty_optimization_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_duty_optimization_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_engine_state: {
-        Row: {
-          id: boolean
-          revision: number
-          updated_at: string
-        }
-        Insert: {
-          id?: boolean
-          revision?: number
-          updated_at?: string
-        }
-        Update: {
-          id?: boolean
-          revision?: number
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      schedule_generation_settings: {
-        Row: {
-          gap_penalty: number
-          id: boolean
-          institution_code: string
-          late_period_penalty: number
-          max_same_course_per_day: number
-          periods_per_day: number
-          repeated_course_penalty: number
-          student_conflict_penalty: number
-          teaching_days: number[]
-          updated_at: string
-        }
-        Insert: {
-          gap_penalty?: number
-          id?: boolean
-          institution_code?: string
-          late_period_penalty?: number
-          max_same_course_per_day?: number
-          periods_per_day?: number
-          repeated_course_penalty?: number
-          student_conflict_penalty?: number
-          teaching_days?: number[]
-          updated_at?: string
-        }
-        Update: {
-          gap_penalty?: number
-          id?: boolean
-          institution_code?: string
-          late_period_penalty?: number
-          max_same_course_per_day?: number
-          periods_per_day?: number
-          repeated_course_penalty?: number
-          student_conflict_penalty?: number
-          teaching_days?: number[]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_generation_settings_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      schedule_import_batches: {
-        Row: {
-          file_name: string
-          file_type: string
-          id: string
-          imported_at: string
-          imported_by: string
-          institution_code: string | null
-          row_count: number
-        }
-        Insert: {
-          file_name: string
-          file_type: string
-          id?: string
-          imported_at?: string
-          imported_by: string
-          institution_code?: string | null
-          row_count?: number
-        }
-        Update: {
-          file_name?: string
-          file_type?: string
-          id?: string
-          imported_at?: string
-          imported_by?: string
-          institution_code?: string | null
-          row_count?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_import_batches_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_import_batches_imported_by_fkey"
-            columns: ["imported_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_import_batches_imported_by_fkey"
-            columns: ["imported_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_optimization_profiles: {
-        Row: {
-          active: boolean
-          created_at: string
-          defaults: Json
-          description: string | null
-          institution_code: string | null
-          name: string
-          profile_key: string
-          system_profile: boolean
-          updated_at: string
-          weights: Json
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          defaults?: Json
-          description?: string | null
-          institution_code?: string | null
-          name: string
-          profile_key: string
-          system_profile?: boolean
-          updated_at?: string
-          weights?: Json
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          defaults?: Json
-          description?: string | null
-          institution_code?: string | null
-          name?: string
-          profile_key?: string
-          system_profile?: boolean
-          updated_at?: string
-          weights?: Json
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_optimization_profiles_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      schedule_optimization_settings: {
-        Row: {
-          active_profile_key: string
-          explain_scenarios: boolean
-          id: boolean
-          institution_code: string
-          record_repairs: boolean
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          active_profile_key?: string
-          explain_scenarios?: boolean
-          id?: boolean
-          institution_code?: string
-          record_repairs?: boolean
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          active_profile_key?: string
-          explain_scenarios?: boolean
-          id?: boolean
-          institution_code?: string
-          record_repairs?: boolean
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_optimization_settings_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_optimization_settings_active_profile_key_fkey"
-            columns: ["active_profile_key"]
-            isOneToOne: false
-            referencedRelation: "schedule_optimization_profiles"
-            referencedColumns: ["profile_key"]
-          },
-          {
-            foreignKeyName: "schedule_optimization_settings_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_optimization_settings_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_period_breaks: {
-        Row: {
-          after_period: number
-          id: string
-          institution_code: string
-          minutes: number
-          time_profile_id: string
-          transfer_allowed: boolean
-        }
-        Insert: {
-          after_period: number
-          id?: string
-          institution_code?: string
-          minutes?: number
-          time_profile_id: string
-          transfer_allowed?: boolean
-        }
-        Update: {
-          after_period?: number
-          id?: string
-          institution_code?: string
-          minutes?: number
-          time_profile_id?: string
-          transfer_allowed?: boolean
-        }
-        Relationships: [
-          {
-            foreignKeyName: "schedule_period_breaks_time_profile_id_fkey"
-            columns: ["time_profile_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_time_profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_planning_relations: {
-        Row: {
-          active: boolean
-          created_at: string
-          effective_from: string | null
-          effective_to: string | null
-          id: string
-          institution_code: string
-          left_selector: Json
-          mode: string
-          parameters: Json
-          relation_type: string
-          right_selector: Json
-          source_ref: string | null
-          source_type: string | null
-          updated_at: string
-          weight: number
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          effective_from?: string | null
-          effective_to?: string | null
-          id?: string
-          institution_code?: string
-          left_selector?: Json
-          mode?: string
-          parameters?: Json
-          relation_type: string
-          right_selector?: Json
-          source_ref?: string | null
-          source_type?: string | null
-          updated_at?: string
-          weight?: number
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          effective_from?: string | null
-          effective_to?: string | null
-          id?: string
-          institution_code?: string
-          left_selector?: Json
-          mode?: string
-          parameters?: Json
-          relation_type?: string
-          right_selector?: Json
-          source_ref?: string | null
-          source_type?: string | null
-          updated_at?: string
-          weight?: number
-        }
-        Relationships: []
-      }
-      schedule_publication_rows: {
-        Row: {
-          class_id: string | null
-          class_name: string
-          classroom: string | null
-          classroom_id: string | null
-          id: number
-          institution_code: string | null
-          is_group_split: boolean
-          period: number
-          publication_id: string
-          snapshot: Json
-          source_schedule_id: string | null
-          subgroup_id: string | null
-          subgroup_key: string | null
-          subject: string
-          teacher_id: string
-          weekday: number
-        }
-        Insert: {
-          class_id?: string | null
-          class_name: string
-          classroom?: string | null
-          classroom_id?: string | null
-          id?: never
-          institution_code?: string | null
-          is_group_split?: boolean
-          period: number
-          publication_id: string
-          snapshot: Json
-          source_schedule_id?: string | null
-          subgroup_id?: string | null
-          subgroup_key?: string | null
-          subject: string
-          teacher_id: string
-          weekday: number
-        }
-        Update: {
-          class_id?: string | null
-          class_name?: string
-          classroom?: string | null
-          classroom_id?: string | null
-          id?: never
-          institution_code?: string | null
-          is_group_split?: boolean
-          period?: number
-          publication_id?: string
-          snapshot?: Json
-          source_schedule_id?: string | null
-          subgroup_id?: string | null
-          subgroup_key?: string | null
-          subject?: string
-          teacher_id?: string
-          weekday?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_publication_rows_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classrooms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_publication_id_fkey"
-            columns: ["publication_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_publication_periods"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_publication_id_fkey"
-            columns: ["publication_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_publications"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_subgroup_id_fkey"
-            columns: ["subgroup_id"]
-            isOneToOne: false
-            referencedRelation: "class_subgroups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_publication_rows_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_publications: {
-        Row: {
-          academic_year: string | null
-          effective_from: string
-          id: string
-          institution_code: string | null
-          note: string | null
-          published_at: string
-          published_by: string | null
-          row_count: number
-          schedule_hash: string
-          title: string
-        }
-        Insert: {
-          academic_year?: string | null
-          effective_from: string
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          published_at?: string
-          published_by?: string | null
-          row_count: number
-          schedule_hash: string
-          title?: string
-        }
-        Update: {
-          academic_year?: string | null
-          effective_from?: string
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          published_at?: string
-          published_by?: string | null
-          row_count?: number
-          schedule_hash?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_publications_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_publications_published_by_fkey"
-            columns: ["published_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_publications_published_by_fkey"
-            columns: ["published_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_relation_rules: {
-        Row: {
-          active: boolean
-          created_at: string
-          hard: boolean
-          id: string
-          institution_code: string
-          left_requirement_id: string
-          lunch_after_period: number | null
-          note: string | null
-          right_requirement_id: string | null
-          rule_type: string
-          updated_at: string
-          weight: number
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          hard?: boolean
-          id?: string
-          institution_code?: string
-          left_requirement_id: string
-          lunch_after_period?: number | null
-          note?: string | null
-          right_requirement_id?: string | null
-          rule_type: string
-          updated_at?: string
-          weight?: number
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          hard?: boolean
-          id?: string
-          institution_code?: string
-          left_requirement_id?: string
-          lunch_after_period?: number | null
-          note?: string | null
-          right_requirement_id?: string | null
-          rule_type?: string
-          updated_at?: string
-          weight?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "schedule_relation_rules_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_relation_rules_left_requirement_id_fkey"
-            columns: ["left_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_relation_rules_left_requirement_id_fkey"
-            columns: ["left_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-          {
-            foreignKeyName: "schedule_relation_rules_right_requirement_id_fkey"
-            columns: ["right_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_relation_rules_right_requirement_id_fkey"
-            columns: ["right_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-        ]
-      }
-      schedule_repair_audit: {
-        Row: {
-          action_no: number
-          after_state: Json | null
-          before_state: Json | null
-          created_at: string
-          description: string
-          hard_issues_after: number | null
-          hard_issues_before: number | null
-          id: string
-          institution_code: string | null
-          issue_code: string
-          scenario_id: string
-          score_delta: number | null
-        }
-        Insert: {
-          action_no: number
-          after_state?: Json | null
-          before_state?: Json | null
-          created_at?: string
-          description: string
-          hard_issues_after?: number | null
-          hard_issues_before?: number | null
-          id?: string
-          institution_code?: string | null
-          issue_code: string
-          scenario_id: string
-          score_delta?: number | null
-        }
-        Update: {
-          action_no?: number
-          after_state?: Json | null
-          before_state?: Json | null
-          created_at?: string
-          description?: string
-          hard_issues_after?: number | null
-          hard_issues_before?: number | null
-          id?: string
-          institution_code?: string | null
-          issue_code?: string
-          scenario_id?: string
-          score_delta?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_repair_audit_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_repair_audit_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenario_status_v2"
-            referencedColumns: ["scenario_id"]
-          },
-          {
-            foreignKeyName: "schedule_repair_audit_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenarios"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_repair_suggestions: {
-        Row: {
-          action_code: string
-          applied_at: string | null
-          created_at: string
-          description: string
-          estimated_gain: number | null
-          hard_rule_impact: boolean
-          id: string
-          legal_safe: boolean
-          proposed_change: Json
-          rank: number
-          requires_approval: boolean
-          scenario_id: string
-          title: string
-          unplaced_item_id: string | null
-        }
-        Insert: {
-          action_code: string
-          applied_at?: string | null
-          created_at?: string
-          description: string
-          estimated_gain?: number | null
-          hard_rule_impact?: boolean
-          id?: string
-          legal_safe?: boolean
-          proposed_change?: Json
-          rank?: number
-          requires_approval?: boolean
-          scenario_id: string
-          title: string
-          unplaced_item_id?: string | null
-        }
-        Update: {
-          action_code?: string
-          applied_at?: string | null
-          created_at?: string
-          description?: string
-          estimated_gain?: number | null
-          hard_rule_impact?: boolean
-          id?: string
-          legal_safe?: boolean
-          proposed_change?: Json
-          rank?: number
-          requires_approval?: boolean
-          scenario_id?: string
-          title?: string
-          unplaced_item_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "schedule_repair_suggestions_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenario_status_v2"
-            referencedColumns: ["scenario_id"]
-          },
-          {
-            foreignKeyName: "schedule_repair_suggestions_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_repair_suggestions_unplaced_item_id_fkey"
-            columns: ["unplaced_item_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_unplaced_items"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_restore_point_rows: {
-        Row: {
-          id: number
-          institution_code: string | null
-          restore_point_id: string
-          snapshot: Json
-        }
-        Insert: {
-          id?: never
-          institution_code?: string | null
-          restore_point_id: string
-          snapshot: Json
-        }
-        Update: {
-          id?: never
-          institution_code?: string | null
-          restore_point_id?: string
-          snapshot?: Json
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_restore_point_rows_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_restore_point_rows_restore_point_id_fkey"
-            columns: ["restore_point_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_restore_points"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_restore_points: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          id: string
-          institution_code: string | null
-          label: string
-          reason: string
-          row_count: number
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          institution_code?: string | null
-          label: string
-          reason?: string
-          row_count?: number
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          institution_code?: string | null
-          label?: string
-          reason?: string
-          row_count?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_restore_points_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_restore_points_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_restore_points_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_room_assignment_issues: {
-        Row: {
-          created_at: string
-          detail: string | null
-          id: string
-          institution_code: string | null
-          reason: string
-          scenario_id: string
-          scenario_row_id: string
-        }
-        Insert: {
-          created_at?: string
-          detail?: string | null
-          id?: string
-          institution_code?: string | null
-          reason: string
-          scenario_id: string
-          scenario_row_id: string
-        }
-        Update: {
-          created_at?: string
-          detail?: string | null
-          id?: string
-          institution_code?: string | null
-          reason?: string
-          scenario_id?: string
-          scenario_row_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_room_assignment_issues_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_room_assignment_issues_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenario_status_v2"
-            referencedColumns: ["scenario_id"]
-          },
-          {
-            foreignKeyName: "schedule_room_assignment_issues_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_room_assignment_issues_scenario_row_id_fkey"
-            columns: ["scenario_row_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenario_rows"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_room_pools: {
-        Row: {
-          active: boolean
-          capacity: number
-          created_at: string
-          id: string
-          institution_code: string
-          max_simultaneous_activities: number
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          capacity: number
-          created_at?: string
-          id?: string
-          institution_code?: string
-          max_simultaneous_activities?: number
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          capacity?: number
-          created_at?: string
-          id?: string
-          institution_code?: string
-          max_simultaneous_activities?: number
-          name?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      schedule_rule_modes: {
-        Row: {
-          category: string
-          config: Json
-          institution_code: string
-          label: string
-          mode: string
-          rule_code: string
-          system_rule: boolean
-          updated_at: string
-          updated_by: string | null
-          weight: number
-        }
-        Insert: {
-          category: string
-          config?: Json
-          institution_code?: string
-          label: string
-          mode?: string
-          rule_code: string
-          system_rule?: boolean
-          updated_at?: string
-          updated_by?: string | null
-          weight?: number
-        }
-        Update: {
-          category?: string
-          config?: Json
-          institution_code?: string
-          label?: string
-          mode?: string
-          rule_code?: string
-          system_rule?: boolean
-          updated_at?: string
-          updated_by?: string | null
-          weight?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_rule_modes_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_rule_modes_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_rule_modes_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_rule_overrides: {
-        Row: {
-          active: boolean
-          avoid_last_period: boolean
-          block_pattern: number[]
-          class_course_requirement_id: string | null
-          id: string
-          institution_code: string
-          max_per_day: number | null
-          min_distinct_days: number | null
-          note: string | null
-          preferred_days: number[]
-          preferred_periods: number[]
-          prohibited_days: number[]
-          prohibited_periods: number[]
-          teacher_assignment_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          avoid_last_period?: boolean
-          block_pattern?: number[]
-          class_course_requirement_id?: string | null
-          id?: string
-          institution_code?: string
-          max_per_day?: number | null
-          min_distinct_days?: number | null
-          note?: string | null
-          preferred_days?: number[]
-          preferred_periods?: number[]
-          prohibited_days?: number[]
-          prohibited_periods?: number[]
-          teacher_assignment_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          avoid_last_period?: boolean
-          block_pattern?: number[]
-          class_course_requirement_id?: string | null
-          id?: string
-          institution_code?: string
-          max_per_day?: number | null
-          min_distinct_days?: number | null
-          note?: string | null
-          preferred_days?: number[]
-          preferred_periods?: number[]
-          prohibited_days?: number[]
-          prohibited_periods?: number[]
-          teacher_assignment_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_rule_overrides_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_rule_overrides_class_course_requirement_id_fkey"
-            columns: ["class_course_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_rule_overrides_class_course_requirement_id_fkey"
-            columns: ["class_course_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-          {
-            foreignKeyName: "schedule_rule_overrides_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["teacher_assignment_id"]
-          },
-          {
-            foreignKeyName: "schedule_rule_overrides_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_assignments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_scenario_explanations: {
-        Row: {
-          duty_score: number
-          generated_at: string
-          institution_code: string | null
-          metrics: Json
-          negatives: Json
-          pedagogic_score: number
-          positives: Json
-          room_score: number
-          scenario_id: string
-          teacher_score: number
-          total_score: number
-          workshop_score: number
-        }
-        Insert: {
-          duty_score?: number
-          generated_at?: string
-          institution_code?: string | null
-          metrics?: Json
-          negatives?: Json
-          pedagogic_score?: number
-          positives?: Json
-          room_score?: number
-          scenario_id: string
-          teacher_score?: number
-          total_score?: number
-          workshop_score?: number
-        }
-        Update: {
-          duty_score?: number
-          generated_at?: string
-          institution_code?: string | null
-          metrics?: Json
-          negatives?: Json
-          pedagogic_score?: number
-          positives?: Json
-          room_score?: number
-          scenario_id?: string
-          teacher_score?: number
-          total_score?: number
-          workshop_score?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_scenario_explanations_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_explanations_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: true
-            referencedRelation: "schedule_scenario_status_v2"
-            referencedColumns: ["scenario_id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_explanations_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: true
-            referencedRelation: "schedule_scenarios"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_scenario_integrity_issues: {
-        Row: {
-          affected_count: number
-          code: string
-          created_at: string
-          detail: string
-          id: string
-          institution_code: string | null
-          scenario_id: string
-        }
-        Insert: {
-          affected_count?: number
-          code: string
-          created_at?: string
-          detail: string
-          id?: string
-          institution_code?: string | null
-          scenario_id: string
-        }
-        Update: {
-          affected_count?: number
-          code?: string
-          created_at?: string
-          detail?: string
-          id?: string
-          institution_code?: string | null
-          scenario_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_scenario_integrity_issues_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_integrity_issues_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenario_status_v2"
-            referencedColumns: ["scenario_id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_integrity_issues_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenarios"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_scenario_rows: {
-        Row: {
-          block_key: string | null
-          class_id: string | null
-          class_name: string
-          classroom_id: string | null
-          course_id: string | null
-          id: string
-          institution_code: string | null
-          is_group_split: boolean
-          locked: boolean
-          period: number
-          requirement_id: string | null
-          scenario_id: string
-          source_schedule_id: string | null
-          subgroup_id: string | null
-          subgroup_key: string | null
-          subject: string
-          sync_group_id: string | null
-          teacher_assignment_id: string | null
-          teacher_id: string
-          weekday: number
-        }
-        Insert: {
-          block_key?: string | null
-          class_id?: string | null
-          class_name: string
-          classroom_id?: string | null
-          course_id?: string | null
-          id?: string
-          institution_code?: string | null
-          is_group_split?: boolean
-          locked?: boolean
-          period: number
-          requirement_id?: string | null
-          scenario_id: string
-          source_schedule_id?: string | null
-          subgroup_id?: string | null
-          subgroup_key?: string | null
-          subject: string
-          sync_group_id?: string | null
-          teacher_assignment_id?: string | null
-          teacher_id: string
-          weekday: number
-        }
-        Update: {
-          block_key?: string | null
-          class_id?: string | null
-          class_name?: string
-          classroom_id?: string | null
-          course_id?: string | null
-          id?: string
-          institution_code?: string | null
-          is_group_split?: boolean
-          locked?: boolean
-          period?: number
-          requirement_id?: string | null
-          scenario_id?: string
-          source_schedule_id?: string | null
-          subgroup_id?: string | null
-          subgroup_key?: string | null
-          subject?: string
-          sync_group_id?: string | null
-          teacher_assignment_id?: string | null
-          teacher_id?: string
-          weekday?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_scenario_rows_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classrooms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_requirement_id_fkey"
-            columns: ["requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_requirement_id_fkey"
-            columns: ["requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenario_status_v2"
-            referencedColumns: ["scenario_id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_source_schedule_id_fkey"
-            columns: ["source_schedule_id"]
-            isOneToOne: false
-            referencedRelation: "schedules"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_source_schedule_id_fkey"
-            columns: ["source_schedule_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_schedule"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_subgroup_id_fkey"
-            columns: ["subgroup_id"]
-            isOneToOne: false
-            referencedRelation: "class_subgroups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_sync_group_id_fkey"
-            columns: ["sync_group_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_sync_groups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["teacher_assignment_id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_assignments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_scenario_rows_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_scenarios: {
-        Row: {
-          basis_revision: number | null
-          generated_at: string
-          generated_by: string | null
-          generation_group: string
-          id: string
-          institution_code: string | null
-          row_count: number
-          scenario_no: number
-          score: number
-          status: string
-          title: string
-          unplaced_count: number
-        }
-        Insert: {
-          basis_revision?: number | null
-          generated_at?: string
-          generated_by?: string | null
-          generation_group: string
-          id?: string
-          institution_code?: string | null
-          row_count?: number
-          scenario_no: number
-          score?: number
-          status?: string
-          title: string
-          unplaced_count?: number
-        }
-        Update: {
-          basis_revision?: number | null
-          generated_at?: string
-          generated_by?: string | null
-          generation_group?: string
-          id?: string
-          institution_code?: string | null
-          row_count?: number
-          scenario_no?: number
-          score?: number
-          status?: string
-          title?: string
-          unplaced_count?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_scenarios_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_scenarios_generated_by_fkey"
-            columns: ["generated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_scenarios_generated_by_fkey"
-            columns: ["generated_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_solve_attempts: {
-        Row: {
-          attempt_no: number
-          claimed_at: string | null
-          diagnostics: Json
-          duration_ms: number | null
-          finished_at: string | null
-          hard_issue_count: number | null
-          id: string
-          job_id: string
-          lease_until: string | null
-          profile_key: string | null
-          result_payload: Json
-          scenario_id: string | null
-          score: number | null
-          seed: number | null
-          started_at: string | null
-          status: string
-          unplaced_count: number | null
-          worker_id: string | null
-        }
-        Insert: {
-          attempt_no: number
-          claimed_at?: string | null
-          diagnostics?: Json
-          duration_ms?: number | null
-          finished_at?: string | null
-          hard_issue_count?: number | null
-          id?: string
-          job_id: string
-          lease_until?: string | null
-          profile_key?: string | null
-          result_payload?: Json
-          scenario_id?: string | null
-          score?: number | null
-          seed?: number | null
-          started_at?: string | null
-          status?: string
-          unplaced_count?: number | null
-          worker_id?: string | null
-        }
-        Update: {
-          attempt_no?: number
-          claimed_at?: string | null
-          diagnostics?: Json
-          duration_ms?: number | null
-          finished_at?: string | null
-          hard_issue_count?: number | null
-          id?: string
-          job_id?: string
-          lease_until?: string | null
-          profile_key?: string | null
-          result_payload?: Json
-          scenario_id?: string | null
-          score?: number | null
-          seed?: number | null
-          started_at?: string | null
-          status?: string
-          unplaced_count?: number | null
-          worker_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "schedule_solve_attempts_job_id_fkey"
-            columns: ["job_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_solve_jobs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_solve_attempts_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenario_status_v2"
-            referencedColumns: ["scenario_id"]
-          },
-          {
-            foreignKeyName: "schedule_solve_attempts_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_solve_attempts_worker_id_fkey"
-            columns: ["worker_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_compute_workers"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_solve_jobs: {
-        Row: {
-          candidate_count: number
-          compute_preference: string
-          config: Json
-          created_at: string
-          finished_at: string | null
-          id: string
-          institution_code: string
-          mode: string
-          quality_target: number
-          requested_by: string | null
-          started_at: string | null
-          status: string
-        }
-        Insert: {
-          candidate_count?: number
-          compute_preference?: string
-          config?: Json
-          created_at?: string
-          finished_at?: string | null
-          id?: string
-          institution_code?: string
-          mode?: string
-          quality_target?: number
-          requested_by?: string | null
-          started_at?: string | null
-          status?: string
-        }
-        Update: {
-          candidate_count?: number
-          compute_preference?: string
-          config?: Json
-          created_at?: string
-          finished_at?: string | null
-          id?: string
-          institution_code?: string
-          mode?: string
-          quality_target?: number
-          requested_by?: string | null
-          started_at?: string | null
-          status?: string
-        }
-        Relationships: []
-      }
-      schedule_sync_group_members: {
-        Row: {
-          block_hours: number
-          id: string
-          institution_code: string | null
-          subgroup_id: string | null
-          sync_group_id: string
-          teacher_assignment_id: string
-        }
-        Insert: {
-          block_hours?: number
-          id?: string
-          institution_code?: string | null
-          subgroup_id?: string | null
-          sync_group_id: string
-          teacher_assignment_id: string
-        }
-        Update: {
-          block_hours?: number
-          id?: string
-          institution_code?: string | null
-          subgroup_id?: string | null
-          sync_group_id?: string
-          teacher_assignment_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_sync_group_members_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_sync_group_members_subgroup_id_fkey"
-            columns: ["subgroup_id"]
-            isOneToOne: false
-            referencedRelation: "class_subgroups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_sync_group_members_sync_group_id_fkey"
-            columns: ["sync_group_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_sync_groups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_sync_group_members_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["teacher_assignment_id"]
-          },
-          {
-            foreignKeyName: "schedule_sync_group_members_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_assignments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_sync_groups: {
-        Row: {
-          active: boolean
-          class_id: string | null
-          created_at: string
-          id: string
-          institution_code: string | null
-          name: string
-          note: string | null
-          required_simultaneous: boolean
-          source_block_index: number | null
-          source_id: string | null
-          source_type: string | null
-        }
-        Insert: {
-          active?: boolean
-          class_id?: string | null
-          created_at?: string
-          id?: string
-          institution_code?: string | null
-          name: string
-          note?: string | null
-          required_simultaneous?: boolean
-          source_block_index?: number | null
-          source_id?: string | null
-          source_type?: string | null
-        }
-        Update: {
-          active?: boolean
-          class_id?: string | null
-          created_at?: string
-          id?: string
-          institution_code?: string | null
-          name?: string
-          note?: string | null
-          required_simultaneous?: boolean
-          source_block_index?: number | null
-          source_id?: string | null
-          source_type?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_sync_groups_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_sync_groups_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "schedule_sync_groups_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_sync_groups_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_time_profiles: {
-        Row: {
-          active: boolean
-          created_at: string
-          education_mode: string
-          id: string
-          institution_code: string | null
-          lunch_after_period: number | null
-          name: string
-          periods_per_day: number
-          session_scope: string
-          teaching_days: number[]
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          education_mode?: string
-          id?: string
-          institution_code?: string | null
-          lunch_after_period?: number | null
-          name: string
-          periods_per_day?: number
-          session_scope?: string
-          teaching_days?: number[]
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          education_mode?: string
-          id?: string
-          institution_code?: string | null
-          lunch_after_period?: number | null
-          name?: string
-          periods_per_day?: number
-          session_scope?: string
-          teaching_days?: number[]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_time_profiles_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      schedule_unplaced_items: {
-        Row: {
-          block_hours: number
-          class_id: string | null
-          created_at: string
-          diagnostic: Json
-          id: string
-          institution_code: string | null
-          reason: string
-          requirement_id: string | null
-          scenario_id: string
-          subject: string
-          teacher_assignment_id: string | null
-          teacher_id: string | null
-        }
-        Insert: {
-          block_hours?: number
-          class_id?: string | null
-          created_at?: string
-          diagnostic?: Json
-          id?: string
-          institution_code?: string | null
-          reason: string
-          requirement_id?: string | null
-          scenario_id: string
-          subject: string
-          teacher_assignment_id?: string | null
-          teacher_id?: string | null
-        }
-        Update: {
-          block_hours?: number
-          class_id?: string | null
-          created_at?: string
-          diagnostic?: Json
-          id?: string
-          institution_code?: string | null
-          reason?: string
-          requirement_id?: string | null
-          scenario_id?: string
-          subject?: string
-          teacher_assignment_id?: string | null
-          teacher_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_unplaced_items_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_requirement_id_fkey"
-            columns: ["requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_requirement_id_fkey"
-            columns: ["requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenario_status_v2"
-            referencedColumns: ["scenario_id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_scenario_id_fkey"
-            columns: ["scenario_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_scenarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["teacher_assignment_id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_assignments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_unplaced_items_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_workshop_policies: {
-        Row: {
-          active: boolean
-          course_id: string
-          forbid_all_small_blocks: boolean
-          institution_code: string
-          max_block: number
-          min_block: number
-          minimize_fragmentation: boolean
-          preferred_block: number
-          preferred_patterns: number[]
-          resource_balance_weight: number
-          setup_cleanup_weight: number
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          active?: boolean
-          course_id: string
-          forbid_all_small_blocks?: boolean
-          institution_code?: string
-          max_block?: number
-          min_block?: number
-          minimize_fragmentation?: boolean
-          preferred_block?: number
-          preferred_patterns?: number[]
-          resource_balance_weight?: number
-          setup_cleanup_weight?: number
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          active?: boolean
-          course_id?: string
-          forbid_all_small_blocks?: boolean
-          institution_code?: string
-          max_block?: number
-          min_block?: number
-          minimize_fragmentation?: boolean
-          preferred_block?: number
-          preferred_patterns?: number[]
-          resource_balance_weight?: number
-          setup_cleanup_weight?: number
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_schedule_workshop_policies_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "schedule_workshop_policies_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "schedule_workshop_policies_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_workshop_policies_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      school_calendar_events: {
-        Row: {
-          academic_year_id: string
-          all_day: boolean
-          audiences: string[]
-          blocks_teaching: boolean
-          conditional: boolean
-          counts_as_workday: boolean
-          created_at: string
-          created_by: string | null
-          ends_on: string
-          event_type: string
-          grade_levels: string[]
-          id: string
-          institution_code: string | null
-          note: string | null
-          parsed_from_source: boolean
-          school_levels: string[]
-          school_types: string[]
-          source_file_name: string | null
-          source_note: string | null
-          starts_on: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          academic_year_id: string
-          all_day?: boolean
-          audiences?: string[]
-          blocks_teaching?: boolean
-          conditional?: boolean
-          counts_as_workday?: boolean
-          created_at?: string
-          created_by?: string | null
-          ends_on: string
-          event_type: string
-          grade_levels?: string[]
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          parsed_from_source?: boolean
-          school_levels?: string[]
-          school_types?: string[]
-          source_file_name?: string | null
-          source_note?: string | null
-          starts_on: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          academic_year_id?: string
-          all_day?: boolean
-          audiences?: string[]
-          blocks_teaching?: boolean
-          conditional?: boolean
-          counts_as_workday?: boolean
-          created_at?: string
-          created_by?: string | null
-          ends_on?: string
-          event_type?: string
-          grade_levels?: string[]
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          parsed_from_source?: boolean
-          school_levels?: string[]
-          school_types?: string[]
-          source_file_name?: string | null
-          source_note?: string | null
-          starts_on?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_school_calendar_events_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "school_calendar_events_academic_year_id_fkey"
-            columns: ["academic_year_id"]
-            isOneToOne: false
-            referencedRelation: "academic_years"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "school_calendar_events_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "school_calendar_events_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      school_classes: {
-        Row: {
-          academic_year_id: string | null
-          active: boolean
-          advisor_teacher_id: string | null
-          branch_id: string | null
-          class_name: string
-          composite_key: string | null
-          curriculum_status: string
-          education_unit_id: string | null
-          expected_weekly_hours: number | null
-          field_id: string | null
-          grade_level: number | null
-          id: string
-          imported_student_count: number | null
-          institution_code: string | null
-          predecessor_class_id: string | null
-          program_type: string | null
-          school_subtype: string | null
-          school_type: string | null
-          section: string | null
-          source: string
-          source_file_name: string | null
-          split_threshold: number
-          updated_at: string
-        }
-        Insert: {
-          academic_year_id?: string | null
-          active?: boolean
-          advisor_teacher_id?: string | null
-          branch_id?: string | null
-          class_name: string
-          composite_key?: string | null
-          curriculum_status?: string
-          education_unit_id?: string | null
-          expected_weekly_hours?: number | null
-          field_id?: string | null
-          grade_level?: number | null
-          id?: string
-          imported_student_count?: number | null
-          institution_code?: string | null
-          predecessor_class_id?: string | null
-          program_type?: string | null
-          school_subtype?: string | null
-          school_type?: string | null
-          section?: string | null
-          source?: string
-          source_file_name?: string | null
-          split_threshold?: number
-          updated_at?: string
-        }
-        Update: {
-          academic_year_id?: string | null
-          active?: boolean
-          advisor_teacher_id?: string | null
-          branch_id?: string | null
-          class_name?: string
-          composite_key?: string | null
-          curriculum_status?: string
-          education_unit_id?: string | null
-          expected_weekly_hours?: number | null
-          field_id?: string | null
-          grade_level?: number | null
-          id?: string
-          imported_student_count?: number | null
-          institution_code?: string | null
-          predecessor_class_id?: string | null
-          program_type?: string | null
-          school_subtype?: string | null
-          school_type?: string | null
-          section?: string | null
-          source?: string
-          source_file_name?: string | null
-          split_threshold?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_school_classes_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "school_classes_academic_year_id_fkey"
-            columns: ["academic_year_id"]
-            isOneToOne: false
-            referencedRelation: "academic_years"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "school_classes_branch_id_fkey"
-            columns: ["branch_id"]
-            isOneToOne: false
-            referencedRelation: "institution_branches"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "school_classes_education_unit_id_fkey"
-            columns: ["education_unit_id"]
-            isOneToOne: false
-            referencedRelation: "institution_education_units"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "school_classes_field_id_fkey"
-            columns: ["field_id"]
-            isOneToOne: false
-            referencedRelation: "institution_fields"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "school_classes_predecessor_class_id_fkey"
-            columns: ["predecessor_class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "school_classes_predecessor_class_id_fkey"
-            columns: ["predecessor_class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "school_classes_predecessor_class_id_fkey"
-            columns: ["predecessor_class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      student_course_requests: {
-        Row: {
-          active: boolean
-          allow_overlap: boolean
-          alternative_group: string | null
-          course_id: string
-          created_at: string
-          id: string
-          institution_code: string
-          priority: number
-          request_kind: string
-          source: string | null
-          student_id: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          allow_overlap?: boolean
-          alternative_group?: string | null
-          course_id: string
-          created_at?: string
-          id?: string
-          institution_code?: string
-          priority?: number
-          request_kind?: string
-          source?: string | null
-          student_id: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          allow_overlap?: boolean
-          alternative_group?: string | null
-          course_id?: string
-          created_at?: string
-          id?: string
-          institution_code?: string
-          priority?: number
-          request_kind?: string
-          source?: string | null
-          student_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "student_course_requests_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "student_course_requests_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      student_free_time_requests: {
-        Row: {
-          active: boolean
-          created_at: string
-          id: string
-          institution_code: string
-          mode: string
-          periods: number[]
-          student_id: string
-          updated_at: string
-          weekday: number
-          weight: number
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          id?: string
-          institution_code?: string
-          mode?: string
-          periods: number[]
-          student_id: string
-          updated_at?: string
-          weekday: number
-          weight?: number
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          id?: string
-          institution_code?: string
-          mode?: string
-          periods?: number[]
-          student_id?: string
-          updated_at?: string
-          weekday?: number
-          weight?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "student_free_time_requests_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      student_schedule_enrollments: {
-        Row: {
-          active: boolean
-          created_at: string
-          id: string
-          institution_code: string
-          locked: boolean
-          source: string
-          student_id: string
-          teacher_assignment_id: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          id?: string
-          institution_code?: string
-          locked?: boolean
-          source?: string
-          student_id: string
-          teacher_assignment_id: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          id?: string
-          institution_code?: string
-          locked?: boolean
-          source?: string
-          student_id?: string
-          teacher_assignment_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "student_schedule_enrollments_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "student_schedule_enrollments_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["teacher_assignment_id"]
-          },
-          {
-            foreignKeyName: "student_schedule_enrollments_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_assignments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      student_sectioning_issues: {
-        Row: {
-          code: string
-          created_at: string
-          detail: string | null
-          id: string
-          institution_code: string
-          request_id: string | null
-          student_id: string
-        }
-        Insert: {
-          code: string
-          created_at?: string
-          detail?: string | null
-          id?: string
-          institution_code?: string
-          request_id?: string | null
-          student_id: string
-        }
-        Update: {
-          code?: string
-          created_at?: string
-          detail?: string | null
-          id?: string
-          institution_code?: string
-          request_id?: string | null
-          student_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "student_sectioning_issues_request_id_fkey"
-            columns: ["request_id"]
-            isOneToOne: false
-            referencedRelation: "student_course_requests"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "student_sectioning_issues_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      students: {
-        Row: {
-          active: boolean
-          class_id: string
-          created_at: string
-          full_name: string
-          id: string
-          import_batch_id: string | null
-          institution_code: string | null
-          school_number: string
-          source: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          class_id: string
-          created_at?: string
-          full_name: string
-          id?: string
-          import_batch_id?: string | null
-          institution_code?: string | null
-          school_number: string
-          source?: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          class_id?: string
-          created_at?: string
-          full_name?: string
-          id?: string
-          import_batch_id?: string | null
-          institution_code?: string | null
-          school_number?: string
-          source?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_students_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "students_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "students_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "students_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "students_import_batch_id_fkey"
-            columns: ["import_batch_id"]
-            isOneToOne: false
-            referencedRelation: "eokul_import_batches"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      substitute_assignments: {
-        Row: {
-          absence_lesson_id: string
-          approval_status: string
-          approved_at: string | null
-          approved_by: string | null
-          assigned_at: string
-          assigned_by: string
-          id: string
-          institution_code: string | null
-          notified_at: string | null
-          substitute_user_id: string
-        }
-        Insert: {
-          absence_lesson_id: string
-          approval_status?: string
-          approved_at?: string | null
-          approved_by?: string | null
-          assigned_at?: string
-          assigned_by: string
-          id?: string
-          institution_code?: string | null
-          notified_at?: string | null
-          substitute_user_id: string
-        }
-        Update: {
-          absence_lesson_id?: string
-          approval_status?: string
-          approved_at?: string | null
-          approved_by?: string | null
-          assigned_at?: string
-          assigned_by?: string
-          id?: string
-          institution_code?: string | null
-          notified_at?: string | null
-          substitute_user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_substitute_assignments_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "substitute_assignments_absence_lesson_id_fkey"
-            columns: ["absence_lesson_id"]
-            isOneToOne: true
-            referencedRelation: "absence_lessons"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "substitute_assignments_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "substitute_assignments_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "substitute_assignments_assigned_by_fkey"
-            columns: ["assigned_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "substitute_assignments_assigned_by_fkey"
-            columns: ["assigned_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "substitute_assignments_substitute_user_id_fkey"
-            columns: ["substitute_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "substitute_assignments_substitute_user_id_fkey"
-            columns: ["substitute_user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      super_admin_bootstrap: {
-        Row: {
-          active: boolean
-          claimed_at: string | null
-          claimed_by: string | null
-          created_at: string
-          email: string
-          full_name: string
-          institution_code: string | null
-        }
-        Insert: {
-          active?: boolean
-          claimed_at?: string | null
-          claimed_by?: string | null
-          created_at?: string
-          email: string
-          full_name?: string
-          institution_code?: string | null
-        }
-        Update: {
-          active?: boolean
-          claimed_at?: string | null
-          claimed_by?: string | null
-          created_at?: string
-          email?: string
-          full_name?: string
-          institution_code?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_super_admin_bootstrap_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      system_feature_catalog: {
-        Row: {
-          enabled: boolean
-          feature_key: string
-          label: string
-          maintenance: boolean
-          maintenance_message: string | null
-          parent_key: string | null
-          route_prefix: string | null
-          sort_order: number
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          enabled?: boolean
-          feature_key: string
-          label: string
-          maintenance?: boolean
-          maintenance_message?: string | null
-          parent_key?: string | null
-          route_prefix?: string | null
-          sort_order?: number
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          enabled?: boolean
-          feature_key?: string
-          label?: string
-          maintenance?: boolean
-          maintenance_message?: string | null
-          parent_key?: string | null
-          route_prefix?: string | null
-          sort_order?: number
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "system_feature_catalog_parent_key_fkey"
-            columns: ["parent_key"]
-            isOneToOne: false
-            referencedRelation: "system_feature_catalog"
-            referencedColumns: ["feature_key"]
-          },
-        ]
-      }
-      system_runtime_settings: {
-        Row: {
-          maintenance: boolean
-          maintenance_message: string
-          singleton: boolean
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          maintenance?: boolean
-          maintenance_message?: string
-          singleton?: boolean
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          maintenance?: boolean
-          maintenance_message?: string
-          singleton?: boolean
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: []
-      }
-      task_role_template_permissions: {
-        Row: {
-          institution_code: string | null
-          permission_code: string
-          scope: Json
-          template_id: string
-        }
-        Insert: {
-          institution_code?: string | null
-          permission_code: string
-          scope?: Json
-          template_id: string
-        }
-        Update: {
-          institution_code?: string | null
-          permission_code?: string
-          scope?: Json
-          template_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_task_role_template_permissions_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "task_role_template_permissions_permission_code_fkey"
-            columns: ["permission_code"]
-            isOneToOne: false
-            referencedRelation: "permission_catalog"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "task_role_template_permissions_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "task_role_templates"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      task_role_templates: {
-        Row: {
-          active: boolean
-          created_at: string
-          created_by: string | null
-          description: string | null
-          id: string
-          institution_code: string | null
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          institution_code?: string | null
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          institution_code?: string | null
-          name?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_task_role_templates_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "task_role_templates_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "task_role_templates_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_course_assignments: {
-        Row: {
-          assigned_hours: number
-          assignment_group: string
-          class_course_requirement_id: string
-          created_at: string
-          created_by: string | null
-          id: string
-          institution_code: string | null
-          note: string | null
-          section_capacity: number | null
-          teacher_id: string
-          updated_at: string
-        }
-        Insert: {
-          assigned_hours: number
-          assignment_group?: string
-          class_course_requirement_id: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          section_capacity?: number | null
-          teacher_id: string
-          updated_at?: string
-        }
-        Update: {
-          assigned_hours?: number
-          assignment_group?: string
-          class_course_requirement_id?: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          section_capacity?: number | null
-          teacher_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_teacher_course_assignments_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_course_assignments_class_course_requirement_id_fkey"
-            columns: ["class_course_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_course_assignments_class_course_requirement_id_fkey"
-            columns: ["class_course_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-          {
-            foreignKeyName: "teacher_course_assignments_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_course_assignments_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_duty_assignments: {
-        Row: {
-          assignment_source: string
-          created_at: string
-          duty_date: string
-          duty_location: string | null
-          institution_code: string | null
-          teacher_id: string
-        }
-        Insert: {
-          assignment_source?: string
-          created_at?: string
-          duty_date: string
-          duty_location?: string | null
-          institution_code?: string | null
-          teacher_id: string
-        }
-        Update: {
-          assignment_source?: string
-          created_at?: string
-          duty_date?: string
-          duty_location?: string | null
-          institution_code?: string | null
-          teacher_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_teacher_duty_assignments_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_duty_assignments_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_duty_assignments_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_duty_cycle_members: {
-        Row: {
-          active: boolean
-          institution_code: string | null
-          rotation_offset: number
-          teacher_id: string
-          updated_at: string
-          weekday: number
-        }
-        Insert: {
-          active?: boolean
-          institution_code?: string | null
-          rotation_offset?: number
-          teacher_id: string
-          updated_at?: string
-          weekday: number
-        }
-        Update: {
-          active?: boolean
-          institution_code?: string | null
-          rotation_offset?: number
-          teacher_id?: string
-          updated_at?: string
-          weekday?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_teacher_duty_cycle_members_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_duty_cycle_members_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_duty_cycle_members_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: true
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_flexible_schedule_duties: {
-        Row: {
-          active: boolean
-          duty_type: string
-          id: string
-          institution_code: string
-          locked: boolean
-          min_block_hours: number
-          movable: boolean
-          placement_phase: string
-          placement_strategy: string
-          source_id: string | null
-          teacher_id: string
-          total_hours: number
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          duty_type: string
-          id?: string
-          institution_code: string
-          locked?: boolean
-          min_block_hours?: number
-          movable?: boolean
-          placement_phase: string
-          placement_strategy?: string
-          source_id?: string | null
-          teacher_id: string
-          total_hours: number
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          duty_type?: string
-          id?: string
-          institution_code?: string
-          locked?: boolean
-          min_block_hours?: number
-          movable?: boolean
-          placement_phase?: string
-          placement_strategy?: string
-          source_id?: string | null
-          teacher_id?: string
-          total_hours?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "teacher_flexible_schedule_duties_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_flexible_schedule_duties_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_flexible_schedule_duties_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_payroll_config: {
-        Row: {
-          active: boolean
-          gunduz_kbs_data_type: string
-          has_class_guidance: boolean
-          institution_code: string | null
-          nobet_kbs_data_type: string
-          rehberlik_kbs_data_type: string
-          teacher_id: string
-          updated_at: string
-          weekly_salary_obligation: number
-        }
-        Insert: {
-          active?: boolean
-          gunduz_kbs_data_type?: string
-          has_class_guidance?: boolean
-          institution_code?: string | null
-          nobet_kbs_data_type?: string
-          rehberlik_kbs_data_type?: string
-          teacher_id: string
-          updated_at?: string
-          weekly_salary_obligation?: number
-        }
-        Update: {
-          active?: boolean
-          gunduz_kbs_data_type?: string
-          has_class_guidance?: boolean
-          institution_code?: string | null
-          nobet_kbs_data_type?: string
-          rehberlik_kbs_data_type?: string
-          teacher_id?: string
-          updated_at?: string
-          weekly_salary_obligation?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_teacher_payroll_config_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_payroll_config_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_payroll_config_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: true
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_schedule: {
-        Row: {
-          active: boolean
-          block_key: string | null
-          class_course_requirement_id: string | null
-          class_id: string | null
-          class_name: string
-          classroom: string | null
-          classroom_id: string | null
-          course_id: string | null
-          id: string
-          institution_code: string | null
-          is_group_split: boolean
-          locked: boolean
-          period: number
-          source_kind: string
-          subgroup_id: string | null
-          subgroup_key: string | null
-          subject: string
-          sync_group_id: string | null
-          teacher_assignment_id: string | null
-          teacher_id: string
-          updated_at: string
-          weekday: number
-        }
-        Insert: {
-          active?: boolean
-          block_key?: string | null
-          class_course_requirement_id?: string | null
-          class_id?: string | null
-          class_name: string
-          classroom?: string | null
-          classroom_id?: string | null
-          course_id?: string | null
-          id?: string
-          institution_code?: string | null
-          is_group_split?: boolean
-          locked?: boolean
-          period: number
-          source_kind?: string
-          subgroup_id?: string | null
-          subgroup_key?: string | null
-          subject: string
-          sync_group_id?: string | null
-          teacher_assignment_id?: string | null
-          teacher_id: string
-          updated_at?: string
-          weekday: number
-        }
-        Update: {
-          active?: boolean
-          block_key?: string | null
-          class_course_requirement_id?: string | null
-          class_id?: string | null
-          class_name?: string
-          classroom?: string | null
-          classroom_id?: string | null
-          course_id?: string | null
-          id?: string
-          institution_code?: string | null
-          is_group_split?: boolean
-          locked?: boolean
-          period?: number
-          source_kind?: string
-          subgroup_id?: string | null
-          subgroup_key?: string | null
-          subject?: string
-          sync_group_id?: string | null
-          teacher_assignment_id?: string | null
-          teacher_id?: string
-          updated_at?: string
-          weekday?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_teacher_schedule_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_class_course_requirement_id_fkey"
-            columns: ["class_course_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_class_course_requirement_id_fkey"
-            columns: ["class_course_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classrooms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_subgroup_id_fkey"
-            columns: ["subgroup_id"]
-            isOneToOne: false
-            referencedRelation: "class_subgroups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_sync_group_id_fkey"
-            columns: ["sync_group_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_sync_groups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["teacher_assignment_id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_teacher_assignment_id_fkey"
-            columns: ["teacher_assignment_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_assignments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_schedule_constraints: {
-        Row: {
-          institution_code: string | null
-          max_consecutive_hours: number
-          max_daily_hours: number | null
-          max_weekly_hours: number | null
-          max_working_days: number | null
-          min_working_days: number | null
-          preferred_free_day: number | null
-          teacher_id: string
-          updated_at: string
-        }
-        Insert: {
-          institution_code?: string | null
-          max_consecutive_hours?: number
-          max_daily_hours?: number | null
-          max_weekly_hours?: number | null
-          max_working_days?: number | null
-          min_working_days?: number | null
-          preferred_free_day?: number | null
-          teacher_id: string
-          updated_at?: string
-        }
-        Update: {
-          institution_code?: string | null
-          max_consecutive_hours?: number
-          max_daily_hours?: number | null
-          max_weekly_hours?: number | null
-          max_working_days?: number | null
-          min_working_days?: number | null
-          preferred_free_day?: number | null
-          teacher_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_teacher_schedule_constraints_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_constraints_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_constraints_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: true
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_schedule_preferences: {
-        Row: {
-          active: boolean
-          id: string
-          institution_code: string | null
-          note: string | null
-          period: number
-          preference: string
-          teacher_id: string
-          weekday: number
-          weight: number
-        }
-        Insert: {
-          active?: boolean
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          period: number
-          preference: string
-          teacher_id: string
-          weekday: number
-          weight?: number
-        }
-        Update: {
-          active?: boolean
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          period?: number
-          preference?: string
-          teacher_id?: string
-          weekday?: number
-          weight?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_teacher_schedule_preferences_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_preferences_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_preferences_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_unavailability: {
-        Row: {
-          active: boolean
-          approved_at: string | null
-          approved_by: string | null
-          id: string
-          institution_code: string | null
-          note: string | null
-          period: number
-          reason: string
-          source: string
-          teacher_id: string
-          weekday: number
-        }
-        Insert: {
-          active?: boolean
-          approved_at?: string | null
-          approved_by?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          period: number
-          reason?: string
-          source?: string
-          teacher_id: string
-          weekday: number
-        }
-        Update: {
-          active?: boolean
-          approved_at?: string | null
-          approved_by?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          period?: number
-          reason?: string
-          source?: string
-          teacher_id?: string
-          weekday?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_teacher_unavailability_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "teacher_unavailability_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_unavailability_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "teacher_unavailability_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_unavailability_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teaching_areas: {
-        Row: {
-          active: boolean
-          code: string
-          created_at: string
-          id: string
-          name: string
-        }
-        Insert: {
-          active?: boolean
-          code: string
-          created_at?: string
-          id?: string
-          name: string
-        }
-        Update: {
-          active?: boolean
-          code?: string
-          created_at?: string
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
-      telegram_integrations: {
-        Row: {
-          enabled: boolean
-          linked_at: string | null
-          telegram_chat_id: number | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          enabled?: boolean
-          linked_at?: string | null
-          telegram_chat_id?: number | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          enabled?: boolean
-          linked_at?: string | null
-          telegram_chat_id?: number | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "telegram_integrations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "telegram_integrations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      telegram_link_tokens: {
-        Row: {
-          created_at: string
-          expires_at: string
-          id: string
-          token_hash: string
-          used_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          expires_at: string
-          id?: string
-          token_hash: string
-          used_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          expires_at?: string
-          id?: string
-          token_hash?: string
-          used_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "telegram_link_tokens_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "telegram_link_tokens_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      tenant_messages: {
-        Row: {
-          created_at: string
-          id: string
-          institution_code: string
-          message: string
-          sender_user_id: string | null
-          severity: string
-          title: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          institution_code: string
-          message: string
-          sender_user_id?: string | null
-          severity?: string
-          title: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          institution_code?: string
-          message?: string
-          sender_user_id?: string | null
-          severity?: string
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "tenant_messages_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-        ]
-      }
-      tenant_scope_registry: {
-        Row: {
-          note: string | null
-          scope: string
-          table_name: string
-          updated_at: string
-        }
-        Insert: {
-          note?: string | null
-          scope: string
-          table_name: string
-          updated_at?: string
-        }
-        Update: {
-          note?: string | null
-          scope?: string
-          table_name?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      user_permission_grants: {
-        Row: {
-          active: boolean
-          created_at: string
-          granted_by: string | null
-          id: string
-          institution_code: string | null
-          note: string | null
-          permission_code: string
-          scope: Json
-          updated_at: string
-          user_id: string
-          valid_from: string | null
-          valid_until: string | null
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          granted_by?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          permission_code: string
-          scope?: Json
-          updated_at?: string
-          user_id: string
-          valid_from?: string | null
-          valid_until?: string | null
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          granted_by?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          permission_code?: string
-          scope?: Json
-          updated_at?: string
-          user_id?: string
-          valid_from?: string | null
-          valid_until?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_user_permission_grants_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "user_permission_grants_granted_by_fkey"
-            columns: ["granted_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_permission_grants_granted_by_fkey"
-            columns: ["granted_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "user_permission_grants_permission_code_fkey"
-            columns: ["permission_code"]
-            isOneToOne: false
-            referencedRelation: "permission_catalog"
-            referencedColumns: ["code"]
-          },
-          {
-            foreignKeyName: "user_permission_grants_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_permission_grants_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      user_task_role_assignments: {
-        Row: {
-          active: boolean
-          assigned_at: string
-          assigned_by: string | null
-          id: string
-          institution_code: string | null
-          note: string | null
-          template_id: string
-          user_id: string
-          valid_from: string | null
-          valid_until: string | null
-        }
-        Insert: {
-          active?: boolean
-          assigned_at?: string
-          assigned_by?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          template_id: string
-          user_id: string
-          valid_from?: string | null
-          valid_until?: string | null
-        }
-        Update: {
-          active?: boolean
-          assigned_at?: string
-          assigned_by?: string | null
-          id?: string
-          institution_code?: string | null
-          note?: string | null
-          template_id?: string
-          user_id?: string
-          valid_from?: string | null
-          valid_until?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_user_task_role_assignments_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "user_task_role_assignments_assigned_by_fkey"
-            columns: ["assigned_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_task_role_assignments_assigned_by_fkey"
-            columns: ["assigned_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "user_task_role_assignments_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "task_role_templates"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_task_role_assignments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_task_role_assignments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      vice_principals: {
-        Row: {
-          active: boolean
-          institution_code: string | null
-          user_id: string
-        }
-        Insert: {
-          active?: boolean
-          institution_code?: string | null
-          user_id: string
-        }
-        Update: {
-          active?: boolean
-          institution_code?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_vice_principals_institution_code"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "vice_principals_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "vice_principals_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      vocational_coordination_plans: {
-        Row: {
-          academic_year_id: string | null
-          active: boolean
-          daily_coordination_max_hours: number
-          education_unit_id: string | null
-          eligible_teacher_count: number
-          enterprise_days_per_week: number | null
-          enterprise_weekly_hours: number | null
-          field_id: string
-          grade_level: number | null
-          high_target: number | null
-          high_target_teacher_count: number | null
-          id: string
-          institution_code: string
-          is_metropolitan_district: boolean | null
-          low_target: number | null
-          program_type: string | null
-          source_requirement_id: string | null
-          source_rule: string | null
-          total_hours: number
-          updated_at: string
-        }
-        Insert: {
-          academic_year_id?: string | null
-          active?: boolean
-          daily_coordination_max_hours?: number
-          education_unit_id?: string | null
-          eligible_teacher_count: number
-          enterprise_days_per_week?: number | null
-          enterprise_weekly_hours?: number | null
-          field_id: string
-          grade_level?: number | null
-          high_target?: number | null
-          high_target_teacher_count?: number | null
-          id?: string
-          institution_code: string
-          is_metropolitan_district?: boolean | null
-          low_target?: number | null
-          program_type?: string | null
-          source_requirement_id?: string | null
-          source_rule?: string | null
-          total_hours: number
-          updated_at?: string
-        }
-        Update: {
-          academic_year_id?: string | null
-          active?: boolean
-          daily_coordination_max_hours?: number
-          education_unit_id?: string | null
-          eligible_teacher_count?: number
-          enterprise_days_per_week?: number | null
-          enterprise_weekly_hours?: number | null
-          field_id?: string
-          grade_level?: number | null
-          high_target?: number | null
-          high_target_teacher_count?: number | null
-          id?: string
-          institution_code?: string
-          is_metropolitan_district?: boolean | null
-          low_target?: number | null
-          program_type?: string | null
-          source_requirement_id?: string | null
-          source_rule?: string | null
-          total_hours?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "vocational_coordination_plans_education_unit_id_fkey"
-            columns: ["education_unit_id"]
-            isOneToOne: false
-            referencedRelation: "institution_education_units"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vocational_coordination_plans_field_id_fkey"
-            columns: ["field_id"]
-            isOneToOne: false
-            referencedRelation: "institution_fields"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vocational_coordination_plans_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "vocational_coordination_plans_source_requirement_id_fkey"
-            columns: ["source_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vocational_coordination_plans_source_requirement_id_fkey"
-            columns: ["source_requirement_id"]
-            isOneToOne: false
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-        ]
-      }
-      vocational_course_group_plans: {
-        Row: {
-          applied_group_count: number
-          groupable: boolean
-          id: string
-          institution_code: string
-          override_reason: string | null
-          requirement_id: string
-          source_rule: string | null
-          special_needs_student_count: number
-          student_count: number
-          suggested_group_count: number
-          updated_at: string
-          updated_by: string | null
-        }
-        Insert: {
-          applied_group_count: number
-          groupable?: boolean
-          id?: string
-          institution_code: string
-          override_reason?: string | null
-          requirement_id: string
-          source_rule?: string | null
-          special_needs_student_count?: number
-          student_count: number
-          suggested_group_count: number
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Update: {
-          applied_group_count?: number
-          groupable?: boolean
-          id?: string
-          institution_code?: string
-          override_reason?: string | null
-          requirement_id?: string
-          source_rule?: string | null
-          special_needs_student_count?: number
-          student_count?: number
-          suggested_group_count?: number
-          updated_at?: string
-          updated_by?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "vocational_course_group_plans_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "vocational_course_group_plans_requirement_id_fkey"
-            columns: ["requirement_id"]
-            isOneToOne: true
-            referencedRelation: "class_course_requirements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vocational_course_group_plans_requirement_id_fkey"
-            columns: ["requirement_id"]
-            isOneToOne: true
-            referencedRelation: "schedule_assignment_options"
-            referencedColumns: ["requirement_id"]
-          },
-        ]
-      }
-      vocational_lead_assignments: {
-        Row: {
-          active: boolean
-          duty_type: string
-          field_id: string
-          id: string
-          institution_code: string
-          teacher_id: string
-          updated_at: string
-          weekly_hours: number
-          workshop_id: string | null
-        }
-        Insert: {
-          active?: boolean
-          duty_type: string
-          field_id: string
-          id?: string
-          institution_code: string
-          teacher_id: string
-          updated_at?: string
-          weekly_hours: number
-          workshop_id?: string | null
-        }
-        Update: {
-          active?: boolean
-          duty_type?: string
-          field_id?: string
-          id?: string
-          institution_code?: string
-          teacher_id?: string
-          updated_at?: string
-          weekly_hours?: number
-          workshop_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "vocational_lead_assignments_field_id_fkey"
-            columns: ["field_id"]
-            isOneToOne: false
-            referencedRelation: "institution_fields"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vocational_lead_assignments_institution_code_fkey"
-            columns: ["institution_code"]
-            isOneToOne: false
-            referencedRelation: "institutions"
-            referencedColumns: ["institution_code"]
-          },
-          {
-            foreignKeyName: "vocational_lead_assignments_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "vocational_lead_assignments_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-          {
-            foreignKeyName: "vocational_lead_assignments_workshop_id_fkey"
-            columns: ["workshop_id"]
-            isOneToOne: false
-            referencedRelation: "classrooms"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      vocational_program_schedule_policies: {
-        Row: {
-          active: boolean
-          default_enterprise_days: number | null
-          default_school_days: number | null
-          eligible_grades: number[]
-          program_type: string
-          regular_year_enterprise_mode: string
-          source_rule: string
-          updated_at: string
-          weekly_hours_from_official_schedule: boolean
-        }
-        Insert: {
-          active?: boolean
-          default_enterprise_days?: number | null
-          default_school_days?: number | null
-          eligible_grades: number[]
-          program_type: string
-          regular_year_enterprise_mode: string
-          source_rule: string
-          updated_at?: string
-          weekly_hours_from_official_schedule?: boolean
-        }
-        Update: {
-          active?: boolean
-          default_enterprise_days?: number | null
-          default_school_days?: number | null
-          eligible_grades?: number[]
-          program_type?: string
-          regular_year_enterprise_mode?: string
-          source_rule?: string
-          updated_at?: string
-          weekly_hours_from_official_schedule?: boolean
-        }
-        Relationships: []
-      }
-    }
-    Views: {
-      class_curriculum_summary: {
-        Row: {
-          assigned_teacher_hours: number | null
-          class_id: string | null
-          class_name: string | null
-          composite_key: string | null
-          course_count: number | null
-          curriculum_status: string | null
-          expected_weekly_hours: number | null
-          planned_weekly_hours: number | null
-          program_type: string | null
-        }
-        Relationships: []
-      }
-      class_roster_summary: {
-        Row: {
-          academic_year_id: string | null
-          class_name: string | null
-          composite_key: string | null
-          grade_level: number | null
-          id: string | null
-          needs_split: boolean | null
-          program_type: string | null
-          section: string | null
-          split_threshold: number | null
-          student_count: number | null
-          suggested_group_count: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "school_classes_academic_year_id_fkey"
-            columns: ["academic_year_id"]
-            isOneToOne: false
-            referencedRelation: "academic_years"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      official_course_schedule_effective: {
-        Row: {
-          active: boolean | null
-          branch_name: string | null
-          category: string | null
-          course_id: string | null
-          effective_academic_year: string | null
-          elective_group_key: string | null
-          field_name: string | null
-          grade_level: number | null
-          hour_options: number[] | null
-          id: string | null
-          manually_overridden: boolean | null
-          max_selections: number | null
-          needs_review: boolean | null
-          parsed_constraints: Json | null
-          parser_confidence: number | null
-          program_type: string | null
-          repeat_across_years: boolean | null
-          schedule_variant: string | null
-          school_subtype: string | null
-          school_type: string | null
-          source_decision_date: string | null
-          source_decision_no: string | null
-          source_file_name: string | null
-          source_note: string | null
-          source_page: number | null
-          source_section: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "official_course_schedule_catalog_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schedule_assignment_options: {
-        Row: {
-          assigned_hours: number | null
-          class_id: string | null
-          class_name: string | null
-          composite_key: string | null
-          course_id: string | null
-          course_name: string | null
-          placed_hours: number | null
-          remaining_hours: number | null
-          requirement_id: string | null
-          teacher_assignment_id: string | null
-          teacher_id: string | null
-          teacher_name: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_course_requirements_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_course_requirements_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "course_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_course_assignments_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_publication_periods: {
-        Row: {
-          academic_year: string | null
-          effective_from: string | null
-          effective_to: string | null
-          id: string | null
-          next_effective_date: string | null
-          note: string | null
-          published_at: string | null
-          published_by: string | null
-          row_count: number | null
-          schedule_hash: string | null
-          title: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "schedule_publications_published_by_fkey"
-            columns: ["published_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "schedule_publications_published_by_fkey"
-            columns: ["published_by"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      schedule_scenario_status_v2: {
-        Row: {
-          applicable: boolean | null
-          basis_revision: number | null
-          current_revision: number | null
-          generation_group: string | null
-          hard_issue_count: number | null
-          room_issue_count: number | null
-          row_count: number | null
-          scenario_id: string | null
-          scenario_no: number | null
-          score: number | null
-          stale: boolean | null
-          status: string | null
-          unplaced_count: number | null
-        }
-        Relationships: []
-      }
-      schedules: {
-        Row: {
-          active: boolean | null
-          class_id: string | null
-          class_name: string | null
-          classroom: string | null
-          classroom_id: string | null
-          day_of_week: number | null
-          id: string | null
-          is_group_split: boolean | null
-          period_number: number | null
-          subgroup_id: string | null
-          subgroup_key: string | null
-          subject: string | null
-          teacher_id: string | null
-          updated_at: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "teacher_schedule_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_curriculum_summary"
-            referencedColumns: ["class_id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class_roster_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "school_classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_classroom_id_fkey"
-            columns: ["classroom_id"]
-            isOneToOne: false
-            referencedRelation: "classrooms"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_subgroup_id_fkey"
-            columns: ["subgroup_id"]
-            isOneToOne: false
-            referencedRelation: "class_subgroups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_schedule_teacher_id_fkey"
-            columns: ["teacher_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_course_load_summary"
-            referencedColumns: ["teacher_id"]
-          },
-        ]
-      }
-      teacher_course_load_summary: {
-        Row: {
-          assigned_weekly_hours: number | null
-          class_count: number | null
-          course_count: number | null
-          full_name: string | null
-          teacher_id: string | null
-        }
-        Relationships: []
-      }
-    }
-    Functions: {
-      accept_schedule_worker_result_v1: {
-        Args: { p_attempt_id: string }
-        Returns: string
-      }
-      apply_approved_payroll_activities: {
-        Args: { p_month: number; p_run_id: string; p_year: number }
-        Returns: number
-      }
-      apply_curriculum_template: {
-        Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
-        Returns: number
-      }
-      apply_curriculum_template_permission_core_v2: {
-        Args: { p_class_id: string; p_replace?: boolean; p_template_id: string }
-        Returns: number
-      }
-      apply_schedule_edge_slot_repairs_v1: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      apply_schedule_optimization_profile_v1: {
-        Args: { p_profile_key: string }
-        Returns: undefined
-      }
-      apply_schedule_repair_suggestion_v1: {
-        Args: { p_suggestion_id: string }
-        Returns: Json
-      }
-      apply_schedule_scenario: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      apply_schedule_scenario_permission_core_v2: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      apply_schedule_scenario_pre_phase3: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      approve_official_source_change_v1: {
-        Args: {
-          p_calendar_event_type?: string
-          p_calendar_title?: string
-          p_queue_id: string
-        }
-        Returns: string
-      }
-      approve_payroll_activity: {
-        Args: { p_activity_id: string; p_approve?: boolean }
-        Returns: boolean
-      }
-      approve_payroll_activity_permission_core_v2: {
-        Args: { p_activity_id: string; p_approve?: boolean }
-        Returns: boolean
-      }
-      approve_payroll_month: {
-        Args: { p_month: number; p_year: number }
-        Returns: number
-      }
-      approve_payroll_month_permission_core_v2: {
-        Args: { p_month: number; p_year: number }
-        Returns: number
-      }
-      assert_curriculum_ready_for_timetable: { Args: never; Returns: boolean }
-      assert_date_in_active_academic_year: {
-        Args: { p_date: string }
-        Returns: boolean
-      }
-      assert_schedule_preparation_ready: { Args: never; Returns: boolean }
-      assert_schedule_publishable: { Args: never; Returns: boolean }
-      assert_schedule_scenario_fresh_v2: {
-        Args: { p_scenario_id: string }
-        Returns: undefined
-      }
-      assert_schedule_scenario_tenant_phase3_v1: {
-        Args: { p_scenario_id: string }
-        Returns: undefined
-      }
-      assign_class_course_from_pool_v1: {
-        Args: { p_class_id: string; p_course_id: string; p_hours: number }
-        Returns: string
-      }
-      assign_classrooms_to_scenario: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          assigned_count: number
-          unassigned_count: number
-        }[]
-      }
-      assign_classrooms_to_scenario_core_v2: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          assigned_count: number
-          unassigned_count: number
-        }[]
-      }
-      assign_classrooms_to_scenario_permission_core_v2: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          assigned_count: number
-          unassigned_count: number
-        }[]
-      }
-      assign_classrooms_to_scenario_pre_phase3_tenant: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          assigned_count: number
-          unassigned_count: number
-        }[]
-      }
-      assign_quran_parallel_lesson: {
-        Args: {
-          p_academic_year: string
-          p_class_id: string
-          p_classroom_1?: string
-          p_classroom_2?: string
-          p_period: number
-          p_subject: string
-          p_weekday: number
-        }
-        Returns: number
-      }
-      assign_quran_parallel_lesson_permission_core_v2: {
-        Args: {
-          p_academic_year: string
-          p_class_id: string
-          p_classroom_1?: string
-          p_classroom_2?: string
-          p_period: number
-          p_subject: string
-          p_weekday: number
-        }
-        Returns: number
-      }
-      assign_substitutes_for_day: {
-        Args: { p_date?: string }
-        Returns: {
-          absence_lesson_id: string
-          assignment_id: string
-          class_name: string
-          period: number
-          subject: string
-          substitute_name: string
-          substitute_user_id: string
-        }[]
-      }
-      assign_substitutes_for_day_v3: {
-        Args: { p_date?: string }
-        Returns: number
-      }
-      assign_substitutes_permission_core_v2: {
-        Args: { p_date?: string }
-        Returns: {
-          absence_lesson_id: string
-          assignment_id: string
-          class_name: string
-          period: number
-          subject: string
-          substitute_name: string
-          substitute_user_id: string
-        }[]
-      }
-      assign_task_role_template: {
-        Args: {
-          p_note?: string
-          p_template_id: string
-          p_user_id: string
-          p_valid_from?: string
-          p_valid_until?: string
-        }
-        Returns: number
-      }
-      assign_teacher_to_class_course: {
-        Args: {
-          p_group?: string
-          p_hours?: number
-          p_requirement_id: string
-          p_teacher_id: string
-        }
-        Returns: string
-      }
-      assign_teacher_to_class_course_permission_core_v2: {
-        Args: {
-          p_group?: string
-          p_hours?: number
-          p_requirement_id: string
-          p_teacher_id: string
-        }
-        Returns: string
-      }
-      audit_mesem_catalog_completeness_v1: {
-        Args: never
-        Returns: {
-          branch_name: string
-          field_name: string
-          issue_type: string
-          reason: string
-        }[]
-      }
-      audit_mtal_catalog_completeness_v1: {
-        Args: never
-        Returns: {
-          branch_name: string
-          field_name: string
-          issue_type: string
-          reason: string
-        }[]
-      }
-      audit_mtal_curriculum_v1: {
-        Args: never
-        Returns: {
-          branch_name: string
-          code: string
-          detail: string
-          field_name: string
-          grade_level: number
-          program_type: string
-          schedule_variant: string
-          severity: string
-        }[]
-      }
-      calculate_norm_from_rule: {
-        Args: { p_rule_set_id: string; p_total_hours: number }
-        Returns: number
-      }
-      calculate_schedule_scenario_score_base_v3: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      calculate_schedule_scenario_score_pre_phase3: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      calculate_schedule_scenario_score_v2: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      calculate_teacher_load_limits_v1: {
-        Args: {
-          p_full_day_preschool?: boolean
-          p_role?: string
-          p_teacher_type: string
-        }
-        Returns: Json
-      }
-      can_access_institution: {
-        Args: { p_institution_code: string }
-        Returns: boolean
-      }
-      can_manage_institution_personnel: {
-        Args: { p_institution_code: string }
-        Returns: boolean
-      }
-      can_manage_permissions: { Args: never; Returns: boolean }
-      can_manage_personnel_private_data: { Args: never; Returns: boolean }
-      claim_schedule_worker_attempt_v1: {
-        Args: { p_worker_key: string }
-        Returns: {
-          attempt_id: string
-          attempt_no: number
-          config: Json
-          job_id: string
-          mode: string
-          quality_target: number
-          seed: number
-        }[]
-      }
-      claim_super_admin_profile: {
-        Args: never
-        Returns: {
-          blood_type: string | null
-          email: string | null
-          emergency_contact: string | null
-          full_name: string | null
-          institution_code: string | null
-          is_super_admin: boolean
-          permission_mode: string
-          phone: string | null
-          role: Database["public"]["Enums"]["app_role"]
-          tckn: string | null
-          teaching_area_id: string | null
-          updated_at: string
-          user_id: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "profiles"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      clone_class_curriculum: {
-        Args: {
-          p_copy_teachers?: boolean
-          p_source_class_id: string
-          p_target_class_id: string
-        }
-        Returns: number
-      }
-      clone_class_curriculum_permission_core_v2: {
-        Args: {
-          p_copy_teachers?: boolean
-          p_source_class_id: string
-          p_target_class_id: string
-        }
-        Returns: number
-      }
-      complete_schedule_worker_attempt_v1: {
-        Args: {
-          p_attempt_id: string
-          p_diagnostics?: Json
-          p_duration_ms?: number
-          p_hard_issue_count?: number
-          p_scenario_id: string
-          p_score?: number
-          p_unplaced_count?: number
-          p_worker_key: string
-        }
-        Returns: boolean
-      }
-      course_slot_allowed_v1: {
-        Args: { p_course_id: string; p_period: number; p_weekday: number }
-        Returns: boolean
-      }
-      course_slot_penalty_v1: {
-        Args: {
-          p_block: number
-          p_course_id: string
-          p_start: number
-          p_weekday: number
-        }
-        Returns: number
-      }
-      create_schedule_restore_point: {
-        Args: { p_label: string; p_reason?: string }
-        Returns: string
-      }
-      create_schedule_restore_point_permission_core_v2: {
-        Args: { p_label?: string; p_reason?: string }
-        Returns: string
-      }
-      create_telegram_link_token: { Args: never; Returns: string }
-      current_permission_context: { Args: never; Returns: string }
-      current_schedule_signature: { Args: never; Returns: string }
-      current_tenant_code: { Args: never; Returns: string }
-      disable_push_subscription: {
-        Args: { p_endpoint: string }
-        Returns: boolean
-      }
-      disable_telegram_notifications: { Args: never; Returns: undefined }
-      drop_unique_constraint_by_columns: {
-        Args: { p_columns: string[]; p_table: string }
-        Returns: undefined
-      }
-      ensure_tenant_composite_pk_v1: {
-        Args: { p_columns: string[]; p_table: string }
-        Returns: undefined
-      }
-      fail_schedule_worker_attempt_v1: {
-        Args: {
-          p_attempt_id: string
-          p_diagnostics?: Json
-          p_worker_key: string
-        }
-        Returns: string
-      }
-      finalize_my_registration: {
-        Args: { p_email: string; p_tckn: string }
-        Returns: {
-          blood_type: string | null
-          email: string | null
-          emergency_contact: string | null
-          full_name: string | null
-          institution_code: string | null
-          is_super_admin: boolean
-          permission_mode: string
-          phone: string | null
-          role: Database["public"]["Enums"]["app_role"]
-          tckn: string | null
-          teaching_area_id: string | null
-          updated_at: string
-          user_id: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "profiles"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      finalize_schedule_scenario_v2: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          applicable: boolean
-          hard_issue_count: number
-          repaired_count: number
-          score: number
-        }[]
-      }
-      generate_monthly_teacher_duties: {
-        Args: { p_month: string; p_overwrite?: boolean }
-        Returns: number
-      }
-      generate_monthly_teacher_duties_permission_core_v2: {
-        Args: { p_month: string; p_overwrite?: boolean }
-        Returns: number
-      }
-      generate_monthly_vp_rotation: {
-        Args: {
-          p_month: string
-          p_overwrite?: boolean
-          p_vice_principal_ids: string[]
-        }
-        Returns: number
-      }
-      generate_monthly_vp_rotation_permission_core_v2: {
-        Args: {
-          p_month: string
-          p_overwrite?: boolean
-          p_vice_principal_ids: string[]
-        }
-        Returns: number
-      }
-      generate_schedule_scenarios: {
-        Args: never
-        Returns: {
-          generation_group: string
-          row_count: number
-          scenario_id: string
-          scenario_no: number
-          score: number
-          unplaced_count: number
-        }[]
-      }
-      generate_schedule_scenarios_permission_core_v2: {
-        Args: never
-        Returns: {
-          generation_group: string
-          row_count: number
-          scenario_id: string
-          scenario_no: number
-          score: number
-          unplaced_count: number
-        }[]
-      }
-      generate_schedule_scenarios_pre_edge_v2: {
-        Args: never
-        Returns: {
-          generation_group: string
-          row_count: number
-          scenario_id: string
-          scenario_no: number
-          score: number
-          unplaced_count: number
-        }[]
-      }
-      generate_schedule_scenarios_pre_phase3_tenant: {
-        Args: never
-        Returns: {
-          generation_group: string
-          row_count: number
-          scenario_id: string
-          scenario_no: number
-          score: number
-          unplaced_count: number
-        }[]
-      }
-      generate_schedule_scenarios_v2: {
-        Args: never
-        Returns: {
-          generation_group: string
-          row_count: number
-          scenario_id: string
-          scenario_no: number
-          score: number
-          unplaced_count: number
-        }[]
-      }
-      get_active_academic_year: {
-        Args: never
-        Returns: {
-          active: boolean
-          code: string
-          created_at: string
-          created_by: string | null
-          ends_on: string
-          first_term_ends_on: string | null
-          id: string
-          institution_code: string | null
-          second_term_starts_on: string | null
-          source_note: string | null
-          starts_on: string
-          teacher_work_starts_on: string | null
-          teaching_ends_on: string | null
-          teaching_starts_on: string | null
-          title: string
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "academic_years"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      get_active_schedule_time_profile: {
-        Args: never
-        Returns: {
-          active: boolean
-          created_at: string
-          education_mode: string
-          id: string
-          institution_code: string | null
-          lunch_after_period: number | null
-          name: string
-          periods_per_day: number
-          session_scope: string
-          teaching_days: number[]
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "schedule_time_profiles"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      get_calendar_days: {
-        Args: { p_from: string; p_to: string }
-        Returns: {
-          day_date: string
-          event_titles: string[]
-          is_teaching_day: boolean
-          is_weekday: boolean
-          is_workday: boolean
-        }[]
-      }
-      get_class_course_pool_v1: {
-        Args: { p_class_id: string }
-        Returns: {
-          already_assigned: boolean
-          category: string
-          course_id: string
-          course_name: string
-          current_hours: number
-          elective_group_key: string
-          eligible: boolean
-          expected_hours: number
-          hour_options: number[]
-          planned_hours: number
-          reason: string
-          repeat_across_years: boolean
-          short_name: string
-        }[]
-      }
-      get_current_custom_rule_issues_v1: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-          severity: string
-        }[]
-      }
-      get_curriculum_readiness: {
-        Args: { p_class_id?: string }
-        Returns: {
-          assigned_hours: number
-          blocking_reason: string
-          class_id: string
-          composite_key: string
-          expected_hours: number
-          partially_assigned_course_count: number
-          planned_hours: number
-          ready: boolean
-          unassigned_course_count: number
-        }[]
-      }
-      get_daily_duty_book: { Args: { p_date: string }; Returns: Json }
-      get_daily_duty_book_permission_core_v2: {
-        Args: { p_date: string }
-        Returns: Json
-      }
-      get_duty_month_state: {
-        Args: { p_month: string }
-        Returns: {
-          current_schedule_signature: string
-          generated_at: string
-          locked: boolean
-          month_start: string
-          schedule_changed: boolean
-          stored_schedule_signature: string
-        }[]
-      }
-      get_effective_schedule_rule_scope_v2: {
-        Args: { p_requirement_id: string; p_teacher_assignment_id?: string }
-        Returns: string
-      }
-      get_effective_schedule_rule_v2: {
-        Args: { p_requirement_id: string; p_teacher_assignment_id?: string }
-        Returns: {
-          active: boolean
-          avoid_last_period: boolean
-          block_pattern: number[]
-          course_id: string
-          id: string
-          institution_code: string | null
-          max_per_day: number | null
-          min_distinct_days: number | null
-          note: string | null
-          preferred_days: number[]
-          preferred_periods: number[]
-          prohibited_days: number[]
-          prohibited_periods: number[]
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "course_schedule_rules"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      get_feature_access_state: { Args: { p_path: string }; Returns: Json }
-      get_formal_norm_analysis: {
-        Args: { p_on_date?: string }
-        Returns: {
-          active_teacher_count: number
-          formal_norm: number
-          operational_difference: number
-          rule_set_id: string
-          rule_set_name: string
-          status: string
-          teaching_area_id: string
-          teaching_area_name: string
-          total_weekly_hours: number
-        }[]
-      }
-      get_iho_application_options_v1: {
-        Args: { p_grade: number }
-        Returns: {
-          allowed_subjects: Json
-          approval_scope: string
-          code: string
-          configuration: Json
-          label: string
-          requires_subject: boolean
-          selection_scope: string
-          total_max: number
-          total_min: number
-        }[]
-      }
-      get_my_active_institution_code: { Args: never; Returns: string }
-      get_my_institution_code: { Args: never; Returns: string }
-      get_my_permissions: {
-        Args: never
-        Returns: {
-          action: string
-          code: string
-          dangerous: boolean
-          label: string
-          module_code: string
-          module_label: string
-          scope: Json
-        }[]
-      }
-      get_my_principal_institution_code: { Args: never; Returns: string }
-      get_my_published_schedule: {
-        Args: { p_date?: string }
-        Returns: {
-          academic_year: string
-          class_id: string
-          class_name: string
-          classroom: string
-          classroom_id: string
-          effective_from: string
-          is_group_split: boolean
-          period: number
-          publication_id: string
-          schedule_hash: string
-          subgroup_id: string
-          subgroup_key: string
-          subject: string
-          title: string
-          weekday: number
-        }[]
-      }
-      get_my_role_tags: { Args: never; Returns: string[] }
-      get_norm_missing_mappings: {
-        Args: { p_on_date?: string }
-        Returns: {
-          detail: string
-          item_id: string
-          item_name: string
-          item_type: string
-        }[]
-      }
-      get_norm_readiness: {
-        Args: { p_on_date?: string }
-        Returns: {
-          mapped_area_count: number
-          mapped_course_count: number
-          missing_area_rule_count: number
-          missing_course_area_count: number
-          ready: boolean
-        }[]
-      }
-      get_permission_admin_matrix: {
-        Args: never
-        Returns: {
-          full_name: string
-          permission_code: string
-          role: Database["public"]["Enums"]["app_role"]
-          scope: Json
-          user_id: string
-          valid_from: string
-          valid_until: string
-        }[]
-      }
-      get_personnel_admin_list: {
-        Args: never
-        Returns: {
-          email: string
-          full_name: string
-          is_super_admin: boolean
-          permission_mode: string
-          role: Database["public"]["Enums"]["app_role"]
-          teaching_area_id: string
-          updated_at: string
-          user_id: string
-        }[]
-      }
-      get_personnel_field_settings: {
-        Args: never
-        Returns: {
-          default_enabled: boolean
-          default_module_keys: string[]
-          display_name: string
-          effective_enabled: boolean
-          effective_module_keys: string[]
-          field_key: string
-          institution_code: string
-          mode: string
-          source_headers: string[]
-        }[]
-      }
-      get_personnel_module_fields: {
-        Args: { p_module_key: string; p_personnel_id: string }
-        Returns: Json
-      }
-      get_published_schedule_rows: {
-        Args: {
-          p_class_id?: string
-          p_publication_id: string
-          p_teacher_id?: string
-        }
-        Returns: {
-          class_id: string | null
-          class_name: string
-          classroom: string | null
-          classroom_id: string | null
-          id: number
-          institution_code: string | null
-          is_group_split: boolean
-          period: number
-          publication_id: string
-          snapshot: Json
-          source_schedule_id: string | null
-          subgroup_id: string | null
-          subgroup_key: string | null
-          subject: string
-          teacher_id: string
-          weekday: number
-        }[]
-        SetofOptions: {
-          from: "*"
-          to: "schedule_publication_rows"
-          isOneToOne: false
-          isSetofReturn: true
-        }
-      }
-      get_scenario_block_pattern_v1: {
-        Args: {
-          p_base: number[]
-          p_remaining: number
-          p_requirement_id: string
-          p_scenario_no: number
-        }
-        Returns: number[]
-      }
-      get_scenario_room_status: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          assigned_rows: number
-          room_issue_count: number
-          rooms_configured: boolean
-          total_rows: number
-          unassigned_rows: number
-        }[]
-      }
-      get_schedule_activity_instances_v1: {
-        Args: never
-        Returns: {
-          activity_key: string
-          class_id: string
-          component_no: number
-          course_id: string
-          duration: number
-          teacher_assignment_id: string
-          teacher_id: string
-        }[]
-      }
-      get_schedule_assignment_student_conflict_weights_v1: {
-        Args: never
-        Returns: {
-          left_assignment_id: string
-          right_assignment_id: string
-          student_weight: number
-        }[]
-      }
-      get_schedule_assignment_student_conflict_weights_v2: {
-        Args: never
-        Returns: {
-          left_assignment_id: string
-          right_assignment_id: string
-          severity_weight: number
-          student_weight: number
-        }[]
-      }
-      get_schedule_atomic_move_plan_v1: {
-        Args: {
-          p_classroom_id?: string
-          p_period: number
-          p_schedule_id: string
-          p_weekday: number
-        }
-        Returns: Json
-      }
-      get_schedule_block_integrity_report_v1: {
-        Args: never
-        Returns: {
-          actual_pattern: number[]
-          expected_pattern: number[]
-          ok: boolean
-          teacher_assignment_id: string
-        }[]
-      }
-      get_schedule_block_move_plan_v1: {
-        Args: {
-          p_classroom_id?: string
-          p_period: number
-          p_schedule_id: string
-          p_weekday: number
-        }
-        Returns: Json
-      }
-      get_schedule_building_travel_minutes_v1: {
-        Args: { p_from: string; p_to: string }
-        Returns: number
-      }
-      get_schedule_compute_capabilities_v1: {
-        Args: never
-        Returns: {
-          avg_latency_ms: number
-          current_load: number
-          display_name: string
-          health: string
-          max_parallel: number
-          recommended: boolean
-          worker_key: string
-          worker_type: string
-        }[]
-      }
-      get_schedule_configuration_issues_before_scoped_rules_v2: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_configuration_issues_v2: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_edge_slot_integrity_issues_v1: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-          severity: string
-        }[]
-      }
-      get_schedule_integrity_report: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-          severity: string
-        }[]
-      }
-      get_schedule_integrity_report_core_v2: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-          severity: string
-        }[]
-      }
-      get_schedule_integrity_report_parallel_core_v2: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-          severity: string
-        }[]
-      }
-      get_schedule_integrity_report_pre_edge_v1: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-          severity: string
-        }[]
-      }
-      get_schedule_integrity_report_pre_phase3: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-          severity: string
-        }[]
-      }
-      get_schedule_phase3_current_issues_v1: {
-        Args: never
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-          severity: string
-        }[]
-      }
-      get_schedule_phase3_preflight_issues_v1: {
-        Args: never
-        Returns: {
-          affected_count: number
-          category: string
-          code: string
-          detail: string
-          status: string
-        }[]
-      }
-      get_schedule_phase3_scenario_issues_v1: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_phase3_scoped_preference_score_v1: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      get_schedule_planning_relations_v1: {
-        Args: never
-        Returns: {
-          id: string
-          left_selector: Json
-          mode: string
-          parameters: Json
-          relation_type: string
-          right_selector: Json
-          weight: number
-        }[]
-      }
-      get_schedule_preparation_readiness: {
-        Args: never
-        Returns: {
-          affected_count: number
-          category: string
-          code: string
-          detail: string
-          status: string
-        }[]
-      }
-      get_schedule_preparation_readiness_before_assigned_educator_con: {
-        Args: never
-        Returns: {
-          affected_count: number
-          category: string
-          code: string
-          detail: string
-          status: string
-        }[]
-      }
-      get_schedule_preparation_readiness_before_flexible_blocks_v2: {
-        Args: never
-        Returns: {
-          affected_count: number
-          category: string
-          code: string
-          detail: string
-          status: string
-        }[]
-      }
-      get_schedule_preparation_readiness_before_teacher_capacity_v2: {
-        Args: never
-        Returns: {
-          affected_count: number
-          category: string
-          code: string
-          detail: string
-          status: string
-        }[]
-      }
-      get_schedule_preparation_readiness_core_v2: {
-        Args: never
-        Returns: {
-          affected_count: number
-          category: string
-          code: string
-          detail: string
-          status: string
-        }[]
-      }
-      get_schedule_preparation_readiness_pre_phase3: {
-        Args: never
-        Returns: {
-          affected_count: number
-          category: string
-          code: string
-          detail: string
-          status: string
-        }[]
-      }
-      get_schedule_publication_for_date: {
-        Args: { p_date: string }
-        Returns: string
-      }
-      get_schedule_publication_history: {
-        Args: never
-        Returns: {
-          academic_year: string
-          effective_from: string
-          effective_to: string
-          note: string
-          publication_id: string
-          published_at: string
-          published_by: string
-          row_count: number
-          same_day_revision_no: number
-          schedule_hash: string
-          title: string
-        }[]
-      }
-      get_schedule_scenario_advanced_hard_issues_v1: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_scenario_custom_rule_issues_v1: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_scenario_edge_slot_issues_v1: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_scenario_hard_issues_parallel_core_v2: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_scenario_hard_issues_pre_advanced_v2: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_scenario_hard_issues_pre_edge_v2: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_scenario_hard_issues_pre_phase3: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_scenario_hard_issues_v2: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_count: number
-          code: string
-          detail: string
-        }[]
-      }
-      get_schedule_scenario_quality_breakdown_v1: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          detail: string
-          metric: string
-          score: number
-        }[]
-      }
-      get_schedule_scenario_student_conflict_summary_v1: {
-        Args: { p_scenario_id: string }
-        Returns: {
-          affected_students: number
-          conflict_events: number
-          weighted_conflict: number
-        }[]
-      }
-      get_schedule_student_conflict_report_v1: {
-        Args: never
-        Returns: {
-          conflict_count: number
-          period: number
-          student_id: string
-          weekday: number
-        }[]
-      }
-      get_schedule_student_conflict_report_v2: {
-        Args: never
-        Returns: {
-          assignment_ids: string[]
-          conflict_count: number
-          period: number
-          student_id: string
-          student_name: string
-          subjects: string[]
-          weekday: number
-        }[]
-      }
-      get_super_admin_personnel: {
-        Args: never
-        Returns: {
-          active: boolean
-          email: string
-          full_name: string
-          id: string
-          institution_code: string
-          role: Database["public"]["Enums"]["app_role"]
-          school_name: string
-          tckn_masked: string
-          teaching_area_id: string
-        }[]
-      }
-      get_system_access_state: { Args: { p_path?: string }; Returns: Json }
-      get_system_feature_matrix: {
-        Args: never
-        Returns: {
-          enabled: boolean
-          feature_key: string
-          label: string
-          maintenance: boolean
-          maintenance_message: string
-          parent_key: string
-          route_prefix: string
-          sort_order: number
-        }[]
-      }
-      has_any_module_permission: {
-        Args: { p_module: string }
-        Returns: boolean
-      }
-      has_module_operation_permission: {
-        Args: { p_module: string }
-        Returns: boolean
-      }
-      has_permission:
-        | { Args: { p_code: string; p_scope?: Json }; Returns: boolean }
-        | {
-            Args: { p_code: string; p_scope?: Json; p_user_id: string }
-            Returns: boolean
-          }
-      heartbeat_schedule_compute_worker_v1: {
-        Args: {
-          p_avg_latency_ms?: number
-          p_current_load?: number
-          p_health?: string
-          p_worker_key: string
-        }
-        Returns: boolean
-      }
-      import_class_summaries: {
-        Args: { p_file_name: string; p_rows: Json }
-        Returns: Json
-      }
-      import_eokul_roster: {
-        Args: { p_file_name: string; p_file_type: string; p_rows: Json }
-        Returns: {
-          affected_classes: number
-          import_batch_id: string
-          imported_students: number
-        }[]
-      }
-      import_local_schedule_candidate_v1: {
-        Args: { p_rows: Json; p_title?: string }
-        Returns: string
-      }
-      import_personnel_registry: {
-        Args: { p_file_name: string; p_rows: Json }
-        Returns: Json
-      }
-      import_weekly_schedule: {
-        Args: { p_file_name: string; p_file_type: string; p_rows: Json }
-        Returns: {
-          import_batch_id: string
-          imported_rows: number
-        }[]
-      }
-      infer_school_type_for_class_v1: {
-        Args: { p_existing: string; p_grade: number; p_program: string }
-        Returns: string
-      }
-      is_admin: { Args: never; Returns: boolean }
-      is_institution_principal: { Args: never; Returns: boolean }
-      is_manager_or_admin: { Args: never; Returns: boolean }
-      is_metropolitan_province: { Args: { p_name: string }; Returns: boolean }
-      is_principal_user: { Args: never; Returns: boolean }
-      is_super_admin: { Args: never; Returns: boolean }
-      is_teaching_day: { Args: { p_date: string }; Returns: boolean }
-      is_valid_tckn: { Args: { p_tckn: string }; Returns: boolean }
-      kbs_payroll_export: {
-        Args: { p_month: number; p_year: number }
-        Returns: {
-          data_type: string
-          explanation: string
-          full_name: string
-          hours: number
-          tckn: string
-        }[]
-      }
-      kbs_payroll_export_permission_core_v2: {
-        Args: { p_month: number; p_year: number }
-        Returns: {
-          data_type: string
-          explanation: string
-          full_name: string
-          hours: number
-          tckn: string
-        }[]
-      }
-      link_class_predecessors_for_year_v1: {
-        Args: { p_academic_year_id: string }
-        Returns: number
-      }
-      mark_official_source_change_parsed_v1: {
-        Args: {
-          p_approval_required?: boolean
-          p_effective_from?: string
-          p_parser_result: Json
-          p_queue_id: string
-        }
-        Returns: undefined
-      }
-      materialize_workshop_block_rule_v1: {
-        Args: { p_course_id: string }
-        Returns: undefined
-      }
-      max_consecutive_with_candidate: {
-        Args: {
-          p_exclude_id?: string
-          p_period: number
-          p_teacher_id: string
-          p_weekday: number
-        }
-        Returns: number
-      }
-      move_schedule_block_v1: {
-        Args: {
-          p_classroom_id?: string
-          p_period: number
-          p_schedule_id: string
-          p_weekday: number
-        }
-        Returns: Json
-      }
-      move_schedule_slot_v1: {
-        Args: {
-          p_classroom_id?: string
-          p_period: number
-          p_schedule_id: string
-          p_weekday: number
-        }
-        Returns: string
-      }
-      move_schedule_slots_batch_v1: { Args: { p_moves: Json }; Returns: Json }
-      normalize_class_key: {
-        Args: { p_class_name: string; p_program_type: string }
-        Returns: string
-      }
-      normalize_schedule_block_pattern_v2: {
-        Args: { p_hours: number; p_pattern: number[] }
-        Returns: number[]
-      }
-      notify_tenant_principals: {
-        Args: {
-          p_institution_code: string
-          p_message: string
-          p_priority?: string
-          p_title: string
-        }
-        Returns: undefined
-      }
-      open_permission_context: { Args: { p_code: string }; Returns: undefined }
-      payroll_month_is_locked: {
-        Args: { p_month: number; p_year: number }
-        Returns: boolean
-      }
-      payroll_month_matrix: {
-        Args: { p_month: number; p_year: number }
-        Returns: {
-          approved: boolean
-          category: string
-          full_name: string
-          hours: number
-          kbs_data_type: string
-          role: Database["public"]["Enums"]["app_role"]
-          teacher_id: string
-          work_date: string
-        }[]
-      }
-      payroll_month_matrix_permission_core_v2: {
-        Args: { p_month: number; p_year: number }
-        Returns: {
-          approved: boolean
-          category: string
-          full_name: string
-          hours: number
-          kbs_data_type: string
-          role: Database["public"]["Enums"]["app_role"]
-          teacher_id: string
-          work_date: string
-        }[]
-      }
-      plan_schedule_solve_job_v1: {
-        Args: {
-          p_candidate_count?: number
-          p_compute_preference?: string
-          p_mode?: string
-          p_quality_target?: number
-        }
-        Returns: string
-      }
-      prepare_quran_split: {
-        Args: {
-          p_academic_year: string
-          p_class_id: string
-          p_teacher_1: string
-          p_teacher_2: string
-        }
-        Returns: {
-          academic_year: string
-          class_id: string
-          created_at: string
-          created_by: string | null
-          enabled: boolean
-          group_1_id: string | null
-          group_2_id: string | null
-          id: string
-          institution_code: string | null
-          source_note: string
-          sync_group_id: string | null
-          teacher_1_id: string | null
-          teacher_2_id: string | null
-          threshold: number
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "quran_split_plans"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      prepare_quran_split_permission_core_v2: {
-        Args: {
-          p_academic_year: string
-          p_class_id: string
-          p_teacher_1: string
-          p_teacher_2: string
-        }
-        Returns: {
-          academic_year: string
-          class_id: string
-          created_at: string
-          created_by: string | null
-          enabled: boolean
-          group_1_id: string | null
-          group_2_id: string | null
-          id: string
-          institution_code: string | null
-          source_note: string
-          sync_group_id: string | null
-          teacher_1_id: string | null
-          teacher_2_id: string | null
-          threshold: number
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "quran_split_plans"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      preserve_manual_schedule_v1: {
-        Args: { p_preserve?: boolean }
-        Returns: number
-      }
-      preview_schedule_batch_move_v1: { Args: { p_moves: Json }; Returns: Json }
-      preview_schedule_block_move_v1: {
-        Args: {
-          p_classroom_id?: string
-          p_period: number
-          p_schedule_id: string
-          p_weekday: number
-        }
-        Returns: Json
-      }
-      preview_schedule_move_v1: {
-        Args: {
-          p_classroom_id?: string
-          p_period: number
-          p_schedule_id: string
-          p_weekday: number
-        }
-        Returns: Json
-      }
-      preview_schedule_swap_v1: {
-        Args: { p_left_id: string; p_right_id: string }
-        Returns: Json
-      }
-      publish_current_schedule: {
-        Args: {
-          p_academic_year?: string
-          p_effective_from: string
-          p_note?: string
-          p_title?: string
-        }
-        Returns: string
-      }
-      publish_current_schedule_core_v2: {
-        Args: {
-          p_academic_year?: string
-          p_effective_from: string
-          p_note?: string
-          p_title?: string
-        }
-        Returns: string
-      }
-      publish_current_schedule_permission_core_v2: {
-        Args: {
-          p_academic_year?: string
-          p_effective_from: string
-          p_note?: string
-          p_title?: string
-        }
-        Returns: string
-      }
-      publish_current_schedule_pre_phase3: {
-        Args: {
-          p_academic_year?: string
-          p_effective_from: string
-          p_note?: string
-          p_title?: string
-        }
-        Returns: string
-      }
-      quran_plan_sync_status: { Args: { p_plan_id: string }; Returns: string }
-      reap_stale_schedule_worker_attempts_v1: { Args: never; Returns: number }
-      recalculate_payroll_month: {
-        Args: { p_month: number; p_year: number }
-        Returns: string
-      }
-      recalculate_payroll_month_permission_core_v2: {
-        Args: { p_month: number; p_year: number }
-        Returns: string
-      }
-      recalculate_payroll_month_v2: {
-        Args: { p_month: number; p_year: number }
-        Returns: string
-      }
-      refresh_class_curriculum_status: {
-        Args: { p_class_id: string }
-        Returns: string
-      }
-      refresh_schedule_repair_suggestions_v1: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      refresh_schedule_scenario_explanation_v1: {
-        Args: { p_scenario_id: string }
-        Returns: undefined
-      }
-      register_official_source_snapshot_v1: {
-        Args: {
-          p_authority?: string
-          p_content_hash: string
-          p_decision_no?: string
-          p_document_date?: string
-          p_effective_from?: string
-          p_effective_to?: string
-          p_http_status?: number
-          p_metadata?: Json
-          p_raw_location?: string
-          p_source_key: string
-          p_source_type: string
-          p_source_url: string
-          p_title?: string
-        }
-        Returns: {
-          changed: boolean
-          queue_id: string
-          snapshot_id: string
-          source_id: string
-        }[]
-      }
-      register_push_subscription: {
-        Args: {
-          p_auth: string
-          p_endpoint: string
-          p_p256dh: string
-          p_platform?: string
-          p_user_agent?: string
-        }
-        Returns: string
-      }
-      register_schedule_compute_worker_v1: {
-        Args: {
-          p_capabilities?: Json
-          p_cpu_threads?: number
-          p_display_name: string
-          p_gpu_memory_mb?: number
-          p_gpu_model?: string
-          p_max_parallel?: number
-          p_software_version?: string
-          p_worker_key: string
-          p_worker_type: string
-        }
-        Returns: string
-      }
-      repair_schedule_scenario_core_v2: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      repair_schedule_scenario_permission_core_v2: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      repair_schedule_scenario_pre_phase3_tenant: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      repair_schedule_scenario_v2: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      rescore_schedule_scenario_permission_core_v2: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      rescore_schedule_scenario_pre_phase3_tenant: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      rescore_schedule_scenario_score_core_v3: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      rescore_schedule_scenario_v2: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      resolve_class_iho_timetable_v1: {
-        Args: { p_class: string }
-        Returns: Json
-      }
-      resolve_iho_application_v1: {
-        Args: {
-          p_code: string
-          p_extra?: number
-          p_grade: number
-          p_subject?: string
-        }
-        Returns: Json
-      }
-      resolve_pre_registered_teacher: {
-        Args: { p_institution_code: string; p_tckn: string }
-        Returns: {
-          email: string
-          id: string
-          institution_code: string
-        }[]
-      }
-      resolve_user_institution: { Args: { p_user_id: string }; Returns: string }
-      restore_schedule_restore_point: {
-        Args: { p_restore_point_id: string }
-        Returns: number
-      }
-      revoke_task_role_template: {
-        Args: { p_template_id: string; p_user_id: string }
-        Returns: number
-      }
-      save_task_role_template: {
-        Args: {
-          p_description?: string
-          p_name: string
-          p_permission_codes?: string[]
-          p_template_id: string
-        }
-        Returns: string
-      }
-      scenario_assignment_run_lengths: {
-        Args: { p_assignment: string; p_scenario: string }
-        Returns: number[]
-      }
-      scenario_slot_diagnostic: {
-        Args: {
-          p_assignment: string
-          p_block_hours: number
-          p_scenario: string
-        }
-        Returns: Json
-      }
-      scenario_teacher_consecutive_count: {
-        Args: {
-          p_day: number
-          p_period: number
-          p_scenario: string
-          p_teacher: string
-        }
-        Returns: number
-      }
-      scenario_teacher_consecutive_count_block_v2: {
-        Args: {
-          p_block_hours: number
-          p_day: number
-          p_scenario: string
-          p_start: number
-          p_teacher: string
-        }
-        Returns: number
-      }
-      scenario_teacher_daily_count: {
-        Args: { p_day: number; p_scenario: string; p_teacher: string }
-        Returns: number
-      }
-      scenario_teacher_working_days: {
-        Args: {
-          p_candidate_day?: number
-          p_scenario: string
-          p_teacher: string
-        }
-        Returns: number
-      }
-      schedule_assignment_run_lengths: {
-        Args: { p_assignment: string }
-        Returns: number[]
-      }
-      schedule_current_block_matches_phase3_v1: {
-        Args: { p_assignment_id: string }
-        Returns: boolean
-      }
-      schedule_relation_slot_allowed_v1: {
-        Args: {
-          p_block: number
-          p_period: number
-          p_requirement_id: string
-          p_scenario_id: string
-          p_weekday: number
-        }
-        Returns: boolean
-      }
-      schedule_rule_mode_v1: { Args: { p_rule_code: string }; Returns: string }
-      schedule_rule_weight_v1: {
-        Args: {
-          p_default: number
-          p_profile_weight_key: string
-          p_rule_code: string
-        }
-        Returns: number
-      }
-      schedule_scenario_block_matches_phase3_v1: {
-        Args: { p_assignment_id: string; p_scenario_id: string }
-        Returns: boolean
-      }
-      schedule_subject_matches_edge_rule_v1: {
-        Args: { p_rule_code: string; p_subject: string }
-        Returns: boolean
-      }
-      section_students_batch_v1: {
-        Args: { p_replace_solver?: boolean }
-        Returns: Json
-      }
-      seed_timetable_defaults_for_tenant_v1: {
-        Args: { p_code: string }
-        Returns: undefined
-      }
-      set_active_academic_year: {
-        Args: { p_academic_year_id: string }
-        Returns: boolean
-      }
-      set_active_academic_year_permission_core_v2: {
-        Args: { p_academic_year_id: string }
-        Returns: boolean
-      }
-      set_class_iho_application_v1: {
-        Args: {
-          p_class: string
-          p_code: string
-          p_extra?: number
-          p_settings?: Json
-          p_subject?: string
-        }
-        Returns: Json
-      }
-      set_duty_month_lock: {
-        Args: { p_locked: boolean; p_month: string }
-        Returns: undefined
-      }
-      set_duty_month_lock_permission_core_v2: {
-        Args: { p_locked: boolean; p_month: string }
-        Returns: undefined
-      }
-      set_personnel_field_override: {
-        Args: {
-          p_enabled: boolean
-          p_field_key: string
-          p_module_keys: string[]
-        }
-        Returns: undefined
-      }
-      set_personnel_field_rule: {
-        Args: {
-          p_enabled: boolean
-          p_field_key: string
-          p_module_keys: string[]
-        }
-        Returns: undefined
-      }
-      set_personnel_teaching_area: {
-        Args: { p_teaching_area_id?: string; p_user_id: string }
-        Returns: boolean
-      }
-      set_teacher_slot_unavailable_v1: {
-        Args: {
-          p_blocked: boolean
-          p_note?: string
-          p_period: number
-          p_source?: string
-          p_teacher_id: string
-          p_weekday: number
-        }
-        Returns: boolean
-      }
-      set_user_permission: {
-        Args: {
-          p_enabled: boolean
-          p_note?: string
-          p_permission_code: string
-          p_scope?: Json
-          p_user_id: string
-          p_valid_from?: string
-          p_valid_until?: string
-        }
-        Returns: boolean
-      }
-      set_user_permission_bundle: {
-        Args: {
-          p_note?: string
-          p_permission_codes: string[]
-          p_user_id: string
-          p_valid_from?: string
-          p_valid_until?: string
-        }
-        Returns: number
-      }
-      set_user_permission_mode: {
-        Args: { p_mode: string; p_user_id: string }
-        Returns: boolean
-      }
-      student_count_for_schedule: {
-        Args: { p_class_id: string; p_subgroup_id: string }
-        Returns: number
-      }
-      suggest_schedule_ejection_chain_v1: {
-        Args: {
-          p_limit?: number
-          p_period: number
-          p_schedule_id: string
-          p_weekday: number
-        }
-        Returns: Json
-      }
-      suggest_substitutes_for_day: {
-        Args: { p_date?: string }
-        Returns: {
-          absence_lesson_id: string
-          candidate_name: string
-          candidate_role: Database["public"]["Enums"]["app_role"]
-          candidate_user_id: string
-          class_id: string
-          class_name: string
-          period: number
-          priority: number
-          reason: string
-          subject: string
-          weekly_load: number
-        }[]
-      }
-      suggest_substitutes_for_day_v3: {
-        Args: { p_date?: string }
-        Returns: {
-          absence_lesson_id: string
-          candidate_name: string
-          candidate_user_id: string
-          class_id: string
-          class_name: string
-          duty: boolean
-          monthly_load: number
-          period: number
-          qualified: boolean
-          rank_score: number
-          reason: string
-          subject: string
-          weekly_load: number
-        }[]
-      }
-      suggest_substitutes_permission_core_v2: {
-        Args: { p_date?: string }
-        Returns: {
-          absence_lesson_id: string
-          candidate_name: string
-          candidate_role: Database["public"]["Enums"]["app_role"]
-          candidate_user_id: string
-          class_id: string
-          class_name: string
-          period: number
-          priority: number
-          reason: string
-          subject: string
-          weekly_load: number
-        }[]
-      }
-      super_admin_feature_catalog_audit: {
-        Args: never
-        Returns: {
-          enabled: boolean
-          feature_key: string
-          label: string
-          maintenance: boolean
-          parent_key: string
-          route_prefix: string
-        }[]
-      }
-      super_admin_import_official_course_schedule_v1: {
-        Args: {
-          p_effective_academic_year: string
-          p_program_type: string
-          p_rows: Json
-          p_school_type: string
-          p_source_file_name: string
-        }
-        Returns: Json
-      }
-      super_admin_import_official_course_schedule_v2: {
-        Args: { p_profile: Json; p_rows: Json; p_source_file_name: string }
-        Returns: Json
-      }
-      super_admin_list_tenants: {
-        Args: never
-        Returns: {
-          approval_note: string
-          approval_status: string
-          institution_code: string
-          principal_email: string
-          principal_name: string
-          principal_phone: string
-          reviewed_at: string
-          school_name: string
-        }[]
-      }
-      super_admin_override_official_course_v1: {
-        Args: { p_catalog_id: string; p_patch: Json; p_reason: string }
-        Returns: undefined
-      }
-      super_admin_review_tenant: {
-        Args: {
-          p_decision: string
-          p_institution_code: string
-          p_note?: string
-        }
-        Returns: undefined
-      }
-      super_admin_send_tenant_message: {
-        Args: {
-          p_institution_code: string
-          p_message: string
-          p_severity?: string
-          p_title: string
-        }
-        Returns: undefined
-      }
-      super_admin_set_feature: {
-        Args: {
-          p_enabled: boolean
-          p_feature_key: string
-          p_maintenance?: boolean
-          p_message?: string
-        }
-        Returns: undefined
-      }
-      super_admin_set_profile_teaching_area: {
-        Args: { p_teaching_area_id: string; p_user_id: string }
-        Returns: boolean
-      }
-      super_admin_set_system_maintenance: {
-        Args: { p_maintenance: boolean; p_message?: string }
-        Returns: undefined
-      }
-      super_admin_tenant_isolation_audit: { Args: never; Returns: Json }
-      super_admin_tenant_key_audit: {
-        Args: never
-        Returns: {
-          columns: string[]
-          constraint_name: string
-          constraint_type: string
-          table_name: string
-        }[]
-      }
-      super_admin_upsert_curriculum_profile_v1: {
-        Args: { p_profile: Json }
-        Returns: string
-      }
-      super_admin_upsert_personnel: {
-        Args: {
-          p_email?: string
-          p_full_name: string
-          p_role?: Database["public"]["Enums"]["app_role"]
-          p_tckn: string
-          p_teaching_area_id?: string
-        }
-        Returns: string
-      }
-      super_admin_upsert_personnel_for_tenant: {
-        Args: {
-          p_email?: string
-          p_full_name: string
-          p_institution_code: string
-          p_role?: Database["public"]["Enums"]["app_role"]
-          p_tckn: string
-          p_teaching_area_id?: string
-        }
-        Returns: string
-      }
-      swap_schedule_slots_v1: {
-        Args: { p_left_id: string; p_right_id: string }
-        Returns: Json
-      }
-      sync_all_quran_plans_to_timetable: {
-        Args: never
-        Returns: {
-          failed: number
-          synced: number
-        }[]
-      }
-      sync_official_course_offerings_for_class_v1: {
-        Args: { p_class_id: string }
-        Returns: number
-      }
-      sync_official_course_offerings_for_year_v1: {
-        Args: { p_academic_year_id: string }
-        Returns: number
-      }
-      sync_payroll_calendar_from_academic_year: {
-        Args: { p_month: number; p_year: number }
-        Returns: number
-      }
-      sync_quran_plan_to_timetable: {
-        Args: { p_plan_id: string }
-        Returns: string
-      }
-      sync_schedule_duty_optimization_from_cycle: {
-        Args: never
-        Returns: number
-      }
-      teacher_course_permission_status: {
-        Args: { p_course_id: string; p_on_date?: string; p_teacher_id: string }
-        Returns: string
-      }
-      tenant_row_allowed: {
-        Args: { p_institution_code: string }
-        Returns: boolean
-      }
-      tenantize_public_table: {
-        Args: { p_legacy_code?: string; p_table: string }
-        Returns: undefined
-      }
-      try_schedule_edge_target_v1: {
-        Args: {
-          p_rule_code: string
-          p_scenario_id: string
-          p_target_period: number
-          p_target_weekday: number
-        }
-        Returns: boolean
-      }
-      update_my_profile_safe: {
-        Args: {
-          p_blood_type?: string
-          p_emergency_contact?: string
-          p_phone?: string
-        }
-        Returns: {
-          blood_type: string | null
-          email: string | null
-          emergency_contact: string | null
-          full_name: string | null
-          institution_code: string | null
-          is_super_admin: boolean
-          permission_mode: string
-          phone: string | null
-          role: Database["public"]["Enums"]["app_role"]
-          tckn: string | null
-          teaching_area_id: string | null
-          updated_at: string
-          user_id: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "profiles"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      upsert_official_vocational_catalog_batch: {
-        Args: { p_rows: Json }
-        Returns: {
-          branch_count: number
-          field_count: number
-        }[]
-      }
-      upsert_official_vocational_framework_sources_batch: {
-        Args: { p_rows: Json }
-        Returns: number
-      }
-      upsert_schedule_slot_permission_core_v2: {
-        Args: {
-          p_classroom_id?: string
-          p_locked?: boolean
-          p_period: number
-          p_schedule_id?: string
-          p_source_kind?: string
-          p_subgroup_id?: string
-          p_teacher_assignment_id: string
-          p_weekday: number
-        }
-        Returns: string
-      }
-      upsert_schedule_slot_v2: {
-        Args: {
-          p_classroom_id?: string
-          p_locked?: boolean
-          p_period: number
-          p_schedule_id?: string
-          p_source_kind?: string
-          p_subgroup_id?: string
-          p_teacher_assignment_id: string
-          p_weekday: number
-        }
-        Returns: string
-      }
-      validate_schedule_scenario_pre_phase3_tenant: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      validate_schedule_scenario_v2: {
-        Args: { p_scenario_id: string }
-        Returns: number
-      }
-      vocational_coordination_program_applicable: {
-        Args: {
-          p_grade: number
-          p_grade11_approved?: boolean
-          p_has_official_enterprise_course: boolean
-          p_program_type: string
-        }
-        Returns: boolean
-      }
-      vocational_coordination_weekly_cap: {
-        Args: { p_is_metropolitan: boolean; p_program_type: string }
-        Returns: number
-      }
-      vocational_enterprise_days_from_hours: {
-        Args: { p_weekly_hours: number }
-        Returns: number
-      }
-      vocational_suggest_group_count: {
-        Args: { p_grade: number; p_special?: number; p_students: number }
-        Returns: number
-      }
-      worker_claim_schedule_attempt_v1: {
-        Args: { p_worker_key: string }
-        Returns: Json
-      }
-      worker_complete_schedule_attempt_v1: {
-        Args: {
-          p_attempt_id: string
-          p_duration_ms?: number
-          p_error?: string
-          p_result: Json
-          p_worker_key: string
-        }
-        Returns: boolean
-      }
-      worker_heartbeat_schedule_v1: {
-        Args: { p_latency_ms?: number; p_load?: number; p_worker_key: string }
-        Returns: boolean
-      }
-      workshop_block_patterns: {
-        Args: { p_daily_capacity: number; p_total: number }
-        Returns: {
-          part_count: number
-          pattern: number[]
-        }[]
-      }
-    }
-    Enums: {
-      app_role: "admin" | "manager" | "teacher"
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
-
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
-
-export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
-    }
-    ? R
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
-    : never
-
-export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
-
-export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
-
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
-
-export const Constants = {
-  public: {
-    Enums: {
-      app_role: ["admin", "manager", "teacher"],
-    },
-  },
-} as const
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×nºÛ¤èµ©hºÚn¶X§zÍY^Ü\HœÛÛˆBˆİš[™Âˆ[X™\‚ˆ›ÛÛX[‚ˆ[ˆÈÚÙ^Nˆİš[™×NˆœÛÛˆ[™Yš[™YBˆœÛÛ–×B‚™^Ü\H]X˜\ÙHHÂˆËÈ[İÜÈÈ]]ÛX]XØ[H[œİ[X]HÜ™X]PÛY[Ú]šYÚÜ[ÛœÂˆËÈ[œİXYÙˆÜ™X]PÛY[]X˜\ÙKÈÜİÜ™\İ™\œÚ[Ûˆ	Ö	ÈOŠT“ÑVJBˆ×Ò[\›˜[İ\X˜\ÙNˆÂˆÜİÜ™\İ™\œÚ[ÛˆŒMŒMÈ‚ˆBˆX›XÎˆÂˆX›\ÎˆÂˆXœÙ[˜ÙWÛ\ÜÛÛœÎˆÂˆ›İÎˆÂˆÛ\Ü×ÚYˆİš[™È[ˆÛ\Ü×Û˜[YNˆİš[™ÂˆÜš\Ú\×Ü™\ÜÚYˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ\ÜÛÛ—Ù]Nˆİš[™Âˆ\š[Ùˆ[X™\‚ˆİXš™Xİˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆÛ\Ü×ÚYÎˆİš[™È[ˆÛ\Ü×Û˜[YNˆİš[™ÂˆÜš\Ú\×Ü™\ÜÚYˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\ÜÛÛ—Ù]Nˆİš[™Âˆ\š[Ùˆ[X™\‚ˆİXš™Xİˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆÛ\Ü×ÚYÎˆİš[™È[ˆÛ\Ü×Û˜[YOÎˆİš[™ÂˆÜš\Ú\×Ü™\ÜÚYÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\ÜÛÛ—Ù]OÎˆİš[™Âˆ\š[ÙÎˆ[X™\‚ˆİXš™XİÎˆİš[™ÂˆXXÚ\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜ÙWÛ\ÜÛÛœ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Øİ\œšXİ[[WÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ˜Û\Ü×ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜ÙWÛ\ÜÛÛœ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Ü›Üİ\—Üİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜ÙWÛ\ÜÛÛœ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚÛÛØÛ\ÜÙ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜ÙWÛ\ÜÛÛœ×ØÜš\Ú\×Ü™\ÜÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Üš\Ú\×Ü™\ÜÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Üš\Ú\×Ü™\ÜÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜ÙWÛ\ÜÛÛœ×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜ÙWÛ\ÜÛÛœ×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØXœÙ[˜ÙWÛ\ÜÛÛœ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆXœÙ[˜Ù\ÎˆÂˆ›İÎˆÂˆXœÙ[˜ÙWÙ]Nˆİš[™Âˆ\›İ˜[Üİ]\Îˆİš[™Âˆ\›İ™YØ]ˆİš[™È[ˆ\›İ™YØNˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆÜš\Ú\×Ü™\ÜÚYˆİš[™Âˆ\×ÛYYXØ[Ü™\Üˆ›ÛÛX[‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›İNˆİš[™È[ˆİ]\Îˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXœÙ[˜ÙWÙ]Nˆİš[™Âˆ\›İ˜[Üİ]\ÏÎˆİš[™Âˆ\›İ™YØ]Îˆİš[™È[ˆ\›İ™YØOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆÜš\Ú\×Ü™\ÜÚYˆİš[™Âˆ\×ÛYYXØ[Ü™\ÜÎˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆİ]\ÏÎˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆXœÙ[˜ÙWÙ]OÎˆİš[™Âˆ\›İ˜[Üİ]\ÏÎˆİš[™Âˆ\›İ™YØ]Îˆİš[™È[ˆ\›İ™YØOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆÜš\Ú\×Ü™\ÜÚYÎˆİš[™Âˆ\×ÛYYXØ[Ü™\ÜÎˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆİ]\ÏÎˆİš[™ÂˆXXÚ\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜Ù\×Ø\›İ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\›İ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜Ù\×Ø\›İ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\›İ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜Ù\×ØÜš\Ú\×Ü™\ÜÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Üš\Ú\×Ü™\ÜÚY—Bˆ\ÓÛ™UÓÛ™NˆYBˆ™Y™\™[˜ÙY™[][Ûˆ˜Üš\Ú\×Ü™\ÜÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜Ù\×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XœÙ[˜Ù\×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØXœÙ[˜Ù\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆXØY[ZX×ŞYX\œÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÙNˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆÜ™X]YØNˆİš[™È[ˆ[™×ÛÛˆİš[™Âˆš\œİİ\›WÙ[™×ÛÛˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆÙXÛÛ™İ\›WÜİ\×ÛÛˆİš[™È[ˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆİ\×ÛÛˆİš[™ÂˆXXÚ\—İÛÜš×Üİ\×ÛÛˆİš[™È[ˆXXÚ[™×Ù[™×ÛÛˆİš[™È[ˆXXÚ[™×Üİ\×ÛÛˆİš[™È[ˆ]Nˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙNˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆ[™×ÛÛˆİš[™Âˆš\œİİ\›WÙ[™×ÛÛÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆÙXÛÛ™İ\›WÜİ\×ÛÛÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆİ\×ÛÛˆİš[™ÂˆXXÚ\—İÛÜš×Üİ\×ÛÛÎˆİš[™È[ˆXXÚ[™×Ù[™×ÛÛÎˆİš[™È[ˆXXÚ[™×Üİ\×ÛÛÎˆİš[™È[ˆ]Nˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆ[™×ÛÛÎˆİš[™Âˆš\œİİ\›WÙ[™×ÛÛÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆÙXÛÛ™İ\›WÜİ\×ÛÛÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆİ\×ÛÛÎˆİš[™ÂˆXXÚ\—İÛÜš×Üİ\×ÛÛÎˆİš[™È[ˆXXÚ[™×Ù[™×ÛÛÎˆİš[™È[ˆXXÚ[™×Üİ\×ÛÛÎˆİš[™È[ˆ]OÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XØY[ZX×ŞYX\œ×ØÜ™X]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ü™X]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜XØY[ZX×ŞYX\œ×ØÜ™X]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ü™X]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØXØY[ZX×ŞYX\œ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ\™XWØÛİ\œÙWÜ\›Z\ÜÚ[ÛœÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÛ™][Û—Û›İNˆİš[™È[ˆÛİ\œÙWÚYˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÎˆİš[™È[ˆYˆİš[™Âˆš[Üš]WÛÜ™\ˆ[X™\‚ˆÛİ\˜ÙWÚYˆİš[™È[ˆXXÚ[™×Ø\™XWÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÛ™][Û—Û›İOÎˆİš[™È[ˆÛİ\œÙWÚYˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛOÎˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆš[Üš]WÛÜ™\Îˆ[X™\‚ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÛ™][Û—Û›İOÎˆİš[™È[ˆÛİ\œÙWÚYÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛOÎˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆš[Üš]WÛÜ™\Îˆ[X™\‚ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\™XWØÛİ\œÙWÜ\›Z\ÜÚ[Ûœ×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\™XWØÛİ\œÙWÜ\›Z\ÜÚ[Ûœ×ÜÛİ\˜ÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›YØ[Ü[WÜÛİ\˜Ù\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\™XWØÛİ\œÙWÜ\›Z\ÜÚ[Ûœ×İXXÚ[™×Ø\™XWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ[™×Ø\™XWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ[™×Ø\™X\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ\ÜÚYÛ›Y[Ø]Y]ÛÙÎˆÂˆ›İÎˆÂˆXœÙ[˜ÙWÛ\ÜÛÛ—ÚYˆİš[™È[ˆXİ[Ûˆİš[™ÂˆXİÜ—İ\Ù\—ÚYˆİš[™È[ˆ\ÜÚYÛ›Y[ÚYˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆYˆ[X™\‚ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆY]Y]NˆœÛÛ‚ˆ™]×ÜİXœİ]]Wİ\Ù\—ÚYˆİš[™È[ˆÛÜİXœİ]]Wİ\Ù\—ÚYˆİš[™È[ˆBˆ[œÙ\ˆÂˆXœÙ[˜ÙWÛ\ÜÛÛ—ÚYÎˆİš[™È[ˆXİ[Ûˆİš[™ÂˆXİÜ—İ\Ù\—ÚYÎˆİš[™È[ˆ\ÜÚYÛ›Y[ÚYÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆ™]™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆY]Y]OÎˆœÛÛ‚ˆ™]×ÜİXœİ]]Wİ\Ù\—ÚYÎˆİš[™È[ˆÛÜİXœİ]]Wİ\Ù\—ÚYÎˆİš[™È[ˆBˆ\]NˆÂˆXœÙ[˜ÙWÛ\ÜÛÛ—ÚYÎˆİš[™È[ˆXİ[ÛÎˆİš[™ÂˆXİÜ—İ\Ù\—ÚYÎˆİš[™È[ˆ\ÜÚYÛ›Y[ÚYÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆ™]™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆY]Y]OÎˆœÛÛ‚ˆ™]×ÜİXœİ]]Wİ\Ù\—ÚYÎˆİš[™È[ˆÛÜİXœİ]]Wİ\Ù\—ÚYÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\ÜÚYÛ›Y[Ø]Y]ÛÙ×ØXœÙ[˜ÙWÛ\ÜÛÛ—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XœÙ[˜ÙWÛ\ÜÛÛ—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜XœÙ[˜ÙWÛ\ÜÛÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\ÜÚYÛ›Y[Ø]Y]ÛÙ×ØXİÜ—İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XİÜ—İ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\ÜÚYÛ›Y[Ø]Y]ÛÙ×ØXİÜ—İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XİÜ—İ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\ÜÚYÛ›Y[Ø]Y]ÛÙ×Ø\ÜÚYÛ›Y[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\ÜÚYÛ›Y[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœİXœİ]]WØ\ÜÚYÛ›Y[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\ÜÚYÛ›Y[Ø]Y]ÛÙ×Û™]×ÜİXœİ]]Wİ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ›™]×ÜİXœİ]]Wİ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\ÜÚYÛ›Y[Ø]Y]ÛÙ×Û™]×ÜİXœİ]]Wİ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ›™]×ÜİXœİ]]Wİ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\ÜÚYÛ›Y[Ø]Y]ÛÙ×ÛÛÜİXœİ]]Wİ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ›ÛÜİXœİ]]Wİ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜\ÜÚYÛ›Y[Ø]Y]ÛÙ×ÛÛÜİXœİ]]Wİ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ›ÛÜİXœİ]]Wİ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ø\ÜÚYÛ›Y[Ø]Y]ÛÙ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆØ[[™\—Ù]™[İ\ÚÜÎˆÂˆ›İÎˆÂˆ\ÜÚYÛ™YÜ\œÛÛ›™[ÚYˆİš[™È[ˆ\ÜÚYÛ™YÜ™\ÜÛœÚXš[]WÚYˆİš[™È[ˆ\ÜÚYÛ™Yİ\Ù\—ÚYˆİš[™È[ˆØ[[™\—Ù]™[ÚYˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆYWÛÛˆİš[™È[ˆš[WÜ™\]Z\™Yˆ›ÛÛX[‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›İNˆİš[™È[ˆ™Xİ\œ™[˜ÙNˆİš[™Âˆ™\ÜÙœ™\]Y[˜ŞNˆİš[™È[ˆ™\ÜÜ™\]Z\™Yˆ›ÛÛX[‚ˆİ\×ÛÛˆİš[™È[ˆİ]\Îˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆ\ÜÚYÛ™YÜ\œÛÛ›™[ÚYÎˆİš[™È[ˆ\ÜÚYÛ™YÜ™\ÜÛœÚXš[]WÚYÎˆİš[™È[ˆ\ÜÚYÛ™Yİ\Ù\—ÚYÎˆİš[™È[ˆØ[[™\—Ù]™[ÚYˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆYWÛÛÎˆİš[™È[ˆš[WÜ™\]Z\™YÎˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆ™Xİ\œ™[˜ÙOÎˆİš[™Âˆ™\ÜÙœ™\]Y[˜ŞOÎˆİš[™È[ˆ™\ÜÜ™\]Z\™YÎˆ›ÛÛX[‚ˆİ\×ÛÛÎˆİš[™È[ˆİ]\ÏÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆ\ÜÚYÛ™YÜ\œÛÛ›™[ÚYÎˆİš[™È[ˆ\ÜÚYÛ™YÜ™\ÜÛœÚXš[]WÚYÎˆİš[™È[ˆ\ÜÚYÛ™Yİ\Ù\—ÚYÎˆİš[™È[ˆØ[[™\—Ù]™[ÚYÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆYWÛÛÎˆİš[™È[ˆš[WÜ™\]Z\™YÎˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆ™Xİ\œ™[˜ÙOÎˆİš[™Âˆ™\ÜÙœ™\]Y[˜ŞOÎˆİš[™È[ˆ™\ÜÜ™\]Z\™YÎˆ›ÛÛX[‚ˆİ\×ÛÛÎˆİš[™È[ˆİ]\ÏÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ø[[™\—Ù]™[İ\ÚÜ×Ø\ÜÚYÛ™YÜ\œÛÛ›™[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\ÜÚYÛ™YÜ\œÛÛ›™[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ\œÛÛ›™[Ü™YÚ\İH‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ø[[™\—Ù]™[İ\ÚÜ×Ø\ÜÚYÛ™YÜ™\ÜÛœÚXš[]WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\ÜÚYÛ™YÜ™\ÜÛœÚXš[]WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ™\ÜÛœÚXš[]WØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ø[[™\—Ù]™[İ\ÚÜ×ØØ[[™\—Ù]™[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ø[[™\—Ù]™[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚÛÛØØ[[™\—Ù]™[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØØ[[™\—Ù]™[İ\ÚÜ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆØ[[™\—İ\Ú×Ùš[\ÎˆÂˆ›İÎˆÂˆš[WÛ˜[YNˆİš[™È[ˆš[Wİ\›ˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ\Ú×ÚYˆİš[™Âˆ\ØYYØ]ˆİš[™Âˆ\ØYYØNˆİš[™È[ˆBˆ[œÙ\ˆÂˆš[WÛ˜[YOÎˆİš[™È[ˆš[Wİ\›ˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\Ú×ÚYˆİš[™Âˆ\ØYYØ]Îˆİš[™Âˆ\ØYYØOÎˆİš[™È[ˆBˆ\]NˆÂˆš[WÛ˜[YOÎˆİš[™È[ˆš[Wİ\›Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\Ú×ÚYÎˆİš[™Âˆ\ØYYØ]Îˆİš[™Âˆ\ØYYØOÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ø[[™\—İ\Ú×Ùš[\×İ\Ú×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\Ú×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ø[[™\—Ù]™[İ\ÚÜÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØØ[[™\—İ\Ú×Ùš[\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛ\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[ÎˆÂˆ›İÎˆÂˆXØY[ZX×ŞYX\—ÚYˆİš[™È[ˆØ]YÛÜNˆİš[™ÂˆÛ\Ü×ÚYˆİš[™ÂˆÛİ\œÙWÚYˆİš[™ÂˆÜ™X]YØ]ˆİš[™Âˆ[]™\WÛ[ÙNˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆØÚÙYˆ›ÛÛX[‚ˆ›İNˆİš[™È[ˆÙ™™\š[™×Ü[WÚYˆİš[™È[ˆÛİ\˜ÙWÚÚ[™ˆİš[™ÂˆÛİ\˜ÙWİ[\]WÚYˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆÙYZÛWÚİ\œÎˆ[X™\‚ˆÛÜšÜÚÜÜ™\]Z\™Yˆ›ÛÛX[‚ˆBˆ[œÙ\ˆÂˆXØY[ZX×ŞYX\—ÚYÎˆİš[™È[ˆØ]YÛÜOÎˆİš[™ÂˆÛ\Ü×ÚYˆİš[™ÂˆÛİ\œÙWÚYˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[]™\WÛ[ÙOÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØÚÙYÎˆ›ÛÛX[‚ˆ›İOÎˆİš[™È[ˆÙ™™\š[™×Ü[WÚYÎˆİš[™È[ˆÛİ\˜ÙWÚÚ[™Îˆİš[™ÂˆÛİ\˜ÙWİ[\]WÚYÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆÙYZÛWÚİ\œÎˆ[X™\‚ˆÛÜšÜÚÜÜ™\]Z\™YÎˆ›ÛÛX[‚ˆBˆ\]NˆÂˆXØY[ZX×ŞYX\—ÚYÎˆİš[™È[ˆØ]YÛÜOÎˆİš[™ÂˆÛ\Ü×ÚYÎˆİš[™ÂˆÛİ\œÙWÚYÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[]™\WÛ[ÙOÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØÚÙYÎˆ›ÛÛX[‚ˆ›İOÎˆİš[™È[ˆÙ™™\š[™×Ü[WÚYÎˆİš[™È[ˆÛİ\˜ÙWÚÚ[™Îˆİš[™ÂˆÛİ\˜ÙWİ[\]WÚYÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆÙYZÛWÚİ\œÏÎˆ[X™\‚ˆÛÜšÜÚÜÜ™\]Z\™YÎˆ›ÛÛX[‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[×ØXØY[ZX×ŞYX\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XØY[ZX×ŞYX\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜XØY[ZX×ŞYX\œÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Øİ\œšXİ[[WÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ˜Û\Ü×ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Ü›Üİ\—Üİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚÛÛØÛ\ÜÙ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[×ÛÙ™™\š[™×Ü[WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ›Ù™™\š[™×Ü[WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWÛÙ™™\š[™×Ü[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[×ÜÛİ\˜ÙWİ[\]WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWİ[\]WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜İ\œšXİ[[Wİ[\]\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØÛ\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛ\Ü×ØÛİ\œÙWİÛÜšÜÚÜÛÜ[ÛœÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛ\ÜÜ›ÛÛWÚYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆš[Üš]Nˆ[X™\‚ˆ™\]Z\™[Y[ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛ\ÜÜ›ÛÛWÚYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆš[Üš]OÎˆ[X™\‚ˆ™\]Z\™[Y[ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛ\ÜÜ›ÛÛWÚYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆš[Üš]OÎˆ[X™\‚ˆ™\]Z\™[Y[ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWİÛÜšÜÚÜÛÜ[Ûœ×ØÛ\ÜÜ›ÛÛWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\ÜÜ›ÛÛWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\ÜÜ›ÛÛ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWİÛÜšÜÚÜÛÜ[Ûœ×Ú[œİ]][Û—ØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWİÛÜšÜÚÜÛÜ[Ûœ×Ü™\]Z\™[Y[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ™\]Z\™[Y[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ØÛİ\œÙWİÛÜšÜÚÜÛÜ[Ûœ×Ü™\]Z\™[Y[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ™\]Z\™[Y[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[WØ\ÜÚYÛ›Y[ÛÜ[ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈœ™\]Z\™[Y[ÚY—BˆKˆBˆBˆÛ\Ü×Ù[\œš\ÙWİÙYZ×Ü]\›œÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛ\Ü×ÚYˆİš[™ÂˆÛÛœÙXİ]]™WÙ^\×Ü™\]Z\™Yˆ›ÛÛX[‚ˆ[\œš\ÙWÙ^WØÛİ[ˆ[X™\ˆ[ˆ[\œš\ÙWÚİ\œ×Ü\—Ù^Nˆ[X™\‚ˆ[\œš\ÙWİÙYZÛWÚİ\œÎˆ[X™\‚ˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ[İ˜X›WÙ^\Îˆ›ÛÛX[‚ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛ\Ü×ÚYˆİš[™ÂˆÛÛœÙXİ]]™WÙ^\×Ü™\]Z\™YÎˆ›ÛÛX[‚ˆ[\œš\ÙWÙ^WØÛİ[Îˆ[X™\ˆ[ˆ[\œš\ÙWÚİ\œ×Ü\—Ù^OÎˆ[X™\‚ˆ[\œš\ÙWİÙYZÛWÚİ\œÎˆ[X™\‚ˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ[İ˜X›WÙ^\ÏÎˆ›ÛÛX[‚ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛ\Ü×ÚYÎˆİš[™ÂˆÛÛœÙXİ]]™WÙ^\×Ü™\]Z\™YÎˆ›ÛÛX[‚ˆ[\œš\ÙWÙ^WØÛİ[Îˆ[X™\ˆ[ˆ[\œš\ÙWÚİ\œ×Ü\—Ù^OÎˆ[X™\‚ˆ[\œš\ÙWİÙYZÛWÚİ\œÏÎˆ[X™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ[İ˜X›WÙ^\ÏÎˆ›ÛÛX[‚ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×Ù[\œš\ÙWİÙYZ×Ü]\›œ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™NˆYBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Øİ\œšXİ[[WÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ˜Û\Ü×ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×Ù[\œš\ÙWİÙYZ×Ü]\›œ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™NˆYBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Ü›Üİ\—Üİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×Ù[\œš\ÙWİÙYZ×Ü]\›œ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™NˆYBˆ™Y™\™[˜ÙY™[][ÛˆœØÚÛÛØÛ\ÜÙ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×Ù[\œš\ÙWİÙYZ×Ü]\›œ×Ú[œİ]][Û—ØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛ\Ü×ÜİX™Ü›İ\ÜİY[ÎˆÂˆ›İÎˆÂˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆİY[ÚYˆİš[™ÂˆİX™Ü›İ\ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆİY[ÚYˆİš[™ÂˆİX™Ü›İ\ÚYˆİš[™ÂˆBˆ\]NˆÂˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆİY[ÚYÎˆİš[™ÂˆİX™Ü›İ\ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ÜİX™Ü›İ\ÜİY[×ÜİY[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœİY[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœİY[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ÜİX™Ü›İ\ÜİY[×ÜİX™Ü›İ\ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœİX™Ü›İ\ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×ÜİX™Ü›İ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØÛ\Ü×ÜİX™Ü›İ\ÜİY[×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛ\Ü×ÜİX™Ü›İ\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛ\Ü×ÚYˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆX™[ˆİš[™È[ˆİX™Ü›İ\ÚÙ^Nˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛ\Ü×ÚYˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆX™[Îˆİš[™È[ˆİX™Ü›İ\ÚÙ^Nˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛ\Ü×ÚYÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆX™[Îˆİš[™È[ˆİX™Ü›İ\ÚÙ^OÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ÜİX™Ü›İ\×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Øİ\œšXİ[[WÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ˜Û\Ü×ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ÜİX™Ü›İ\×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Ü›Üİ\—Üİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×ÜİX™Ü›İ\×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚÛÛØÛ\ÜÙ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØÛ\Ü×ÜİX™Ü›İ\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛ\Ü×İ[Y]X›WØ\XØ][Û—ÜÙ[Xİ[ÛœÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛ\Ü×ÚYˆİš[™ÂˆÜ™X]YØ]ˆİš[™Âˆ^˜WÚİ\œÎˆ[X™\ˆ[ˆYˆİš[™Âˆ[WÚYˆİš[™ÂˆÙ[Xİ[Û—ÜØÛÜNˆİš[™ÂˆÙ][™ÜÎˆœÛÛ‚ˆİXš™XİØÚÚXÙNˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛ\Ü×ÚYˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ^˜WÚİ\œÏÎˆ[X™\ˆ[ˆYÎˆİš[™Âˆ[WÚYˆİš[™ÂˆÙ[Xİ[Û—ÜØÛÜOÎˆİš[™ÂˆÙ][™ÜÏÎˆœÛÛ‚ˆİXš™XİØÚÚXÙOÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛ\Ü×ÚYÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ^˜WÚİ\œÏÎˆ[X™\ˆ[ˆYÎˆİš[™Âˆ[WÚYÎˆİš[™ÂˆÙ[Xİ[Û—ÜØÛÜOÎˆİš[™ÂˆÙ][™ÜÏÎˆœÛÛ‚ˆİXš™XİØÚÚXÙOÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×İ[Y]X›WØ\XØ][Û—ÜÙ[Xİ[Ûœ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Øİ\œšXİ[[WÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ˜Û\Ü×ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×İ[Y]X›WØ\XØ][Û—ÜÙ[Xİ[Ûœ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Ü›Üİ\—Üİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×İ[Y]X›WØ\XØ][Û—ÜÙ[Xİ[Ûœ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚÛÛØÛ\ÜÙ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\Ü×İ[Y]X›WØ\XØ][Û—ÜÙ[Xİ[Ûœ×Ü[WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ[WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[İ[Y]X›WØ\XØ][Û—Ü[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÛ\ÜÜ›ÛÛ\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆYÙÜ™YØ]WØØ\XÚ]WÙ[™›Ü˜ÙYˆ›ÛÛX[‚ˆœ˜[˜ÚÚYˆİš[™È[ˆZ[[™×ÚYˆİš[™È[ˆØ\XÚ]Nˆ[X™\‚ˆÜ™X]YØ]ˆİš[™Âˆ\\Y[ˆİš[™È[ˆšY[ÚYˆİš[™È[ˆ›ÛÜˆ[X™\ˆ[ˆ\™Ø\™NˆœÛÛ‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ\×İ›ØØ][Û˜[İÛÜšÜÚÜˆ›ÛÛX[‚ˆX^ÜÚ[][[™[İ\×ØXİ]š]Y\Îˆ[X™\‚ˆ˜[YNˆİš[™Âˆ›ÛÛWÜÛÛÚYˆİš[™È[ˆ›ÛÛWİ\Nˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆYÙÜ™YØ]WØØ\XÚ]WÙ[™›Ü˜ÙYÎˆ›ÛÛX[‚ˆœ˜[˜ÚÚYÎˆİš[™È[ˆZ[[™×ÚYÎˆİš[™È[ˆØ\XÚ]Nˆ[X™\‚ˆÜ™X]YØ]Îˆİš[™Âˆ\\Y[Îˆİš[™È[ˆšY[ÚYÎˆİš[™È[ˆ›ÛÜÎˆ[X™\ˆ[ˆ\™Ø\™OÎˆœÛÛ‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\×İ›ØØ][Û˜[İÛÜšÜÚÜÎˆ›ÛÛX[‚ˆX^ÜÚ[][[™[İ\×ØXİ]š]Y\ÏÎˆ[X™\‚ˆ˜[YNˆİš[™Âˆ›ÛÛWÜÛÛÚYÎˆİš[™È[ˆ›ÛÛWİ\OÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆYÙÜ™YØ]WØØ\XÚ]WÙ[™›Ü˜ÙYÎˆ›ÛÛX[‚ˆœ˜[˜ÚÚYÎˆİš[™È[ˆZ[[™×ÚYÎˆİš[™È[ˆØ\XÚ]OÎˆ[X™\‚ˆÜ™X]YØ]Îˆİš[™Âˆ\\Y[Îˆİš[™È[ˆšY[ÚYÎˆİš[™È[ˆ›ÛÜÎˆ[X™\ˆ[ˆ\™Ø\™OÎˆœÛÛ‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\×İ›ØØ][Û˜[İÛÜšÜÚÜÎˆ›ÛÛX[‚ˆX^ÜÚ[][[™[İ\×ØXİ]š]Y\ÏÎˆ[X™\‚ˆ˜[YOÎˆİš[™Âˆ›ÛÛWÜÛÛÚYÎˆİš[™È[ˆ›ÛÛWİ\OÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\ÜÜ›ÛÛ\×Øœ˜[˜ÚÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜œ˜[˜ÚÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][Û—Øœ˜[˜Ú\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\ÜÜ›ÛÛ\×ØZ[[™×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Z[[™×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[WØZ[[™ÜÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\ÜÜ›ÛÛ\×ÙšY[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ™šY[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][Û—ÙšY[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Û\ÜÜ›ÛÛ\×Ü›ÛÛWÜÛÛÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ›ÛÛWÜÛÛÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[WÜ›ÛÛWÜÛÛÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØÛ\ÜÜ›ÛÛ\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛİ\œÙWØ›ØÚ×Ü™Y™\™[˜Ù\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ›ØÚ×Ü]\›ˆ[X™\–×BˆÛ\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[ÚYˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆš[Üš]Nˆ[X™\‚ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ›ØÚ×Ü]\›ˆ[X™\–×BˆÛ\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[ÚYˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆš[Üš]Nˆ[X™\‚ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ›ØÚ×Ü]\›Îˆ[X™\–×BˆÛ\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[ÚYÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆš[Üš]OÎˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWØ›ØÚ×Ü™Y™\™[˜Ù\×ØÛ\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWØ›ØÚ×Ü™Y™\™[˜Ù\×ØÛ\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ØÛİ\œÙWÜ™\]Z\™[Y[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[WØ\ÜÚYÛ›Y[ÛÜ[ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈœ™\]Z\™[Y[ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWØ›ØÚ×Ü™Y™\™[˜Ù\×Ú[œİ]][Û—ØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛİ\œÙWØØ][ÙÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆØ]YÛÜNˆİš[™ÂˆÛÙNˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™Âˆ˜[YNˆİš[™ÂˆÚÜÛ˜[YNˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆØ]YÛÜOÎˆİš[™ÂˆÛÙOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ˜[YNˆİš[™ÂˆÚÜÛ˜[YOÎˆİš[™È[ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆØ]YÛÜOÎˆİš[™ÂˆÛÙOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ˜[YOÎˆİš[™ÂˆÚÜÛ˜[YOÎˆİš[™È[ˆBˆ™[][ÛœÚ\Îˆ×BˆBˆÛİ\œÙWÛÙ™™\š[™×Ü[\ÎˆÂˆ›İÎˆÂˆXØY[ZX×ŞYX\ˆİš[™ÂˆXİ]™Nˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YNˆİš[™È[ˆØ]YÛÜNˆİš[™ÂˆÛİ\œÙWÚYˆİš[™ÂˆÜ™X]YØ]ˆİš[™Âˆ[Xİ]™WÙÜ›İ\ÚÙ^Nˆİš[™È[ˆšY[Û˜[YNˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\‚ˆİ\—ÛÜ[ÛœÎˆ[X™\–×BˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÎˆ[X™\‚ˆ\œÙYØÛÛœİ˜Z[ÎˆœÛÛ‚ˆ›ÙÜ˜[Wİ\Nˆİš[™È[ˆ™\X]ØXÜ›ÜÜ×ŞYX\œÎˆ›ÛÛX[‚ˆØÚÛÛÛ]™[ˆİš[™È[ˆØÚÛÛÜİX\Nˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YNˆİš[™È[ˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXØY[ZX×ŞYX\ˆİš[™ÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YOÎˆİš[™È[ˆØ]YÛÜNˆİš[™ÂˆÛİ\œÙWÚYˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[Xİ]™WÙÜ›İ\ÚÙ^OÎˆİš[™È[ˆšY[Û˜[YOÎˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\‚ˆİ\—ÛÜ[ÛœÏÎˆ[X™\–×BˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÏÎˆ[X™\‚ˆ\œÙYØÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆ™\X]ØXÜ›ÜÜ×ŞYX\œÏÎˆ›ÛÛX[‚ˆØÚÛÛÛ]™[Îˆİš[™È[ˆØÚÛÛÜİX\OÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXØY[ZX×ŞYX\Îˆİš[™ÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YOÎˆİš[™È[ˆØ]YÛÜOÎˆİš[™ÂˆÛİ\œÙWÚYÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[Xİ]™WÙÜ›İ\ÚÙ^OÎˆİš[™È[ˆšY[Û˜[YOÎˆİš[™È[ˆÜ˜YWÛ]™[Îˆ[X™\‚ˆİ\—ÛÜ[ÛœÏÎˆ[X™\–×BˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÏÎˆ[X™\‚ˆ\œÙYØÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆ™\X]ØXÜ›ÜÜ×ŞYX\œÏÎˆ›ÛÛX[‚ˆØÚÛÛÛ]™[Îˆİš[™È[ˆØÚÛÛÜİX\OÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWÛÙ™™\š[™×Ü[\×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWÛÙ™™\š[™×Ü[\×Ú[œİ]][Û—ØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛİ\œÙWÜYYÛÙŞWÜ›Ùš[\ÎˆÂˆ›İÎˆÂˆXØY[ZX×ÛØYˆ[X™\‚ˆ][[Û—ÛØYˆ[X™\‚ˆ]›ÚYÙX\›Nˆ›ÛÛX[‚ˆÛİ\œÙWÚYˆİš[™ÂˆY™šXİ[Nˆ[X™\‚ˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ\×İ›ØØ][Û˜[Ü˜XİXÙNˆ›ÛÛX[‚ˆ\×İÛÜšÜÚÜˆ›ÛÛX[‚ˆ\ÜÛÛ—Ù˜[Z[Nˆİš[™È[ˆ\ÚXØ[ÛØYˆ[X™\‚ˆ˜XİXØ[ÛØYˆ[X™\‚ˆ™Y™\—ÙX\›Nˆ›ÛÛX[‚ˆ™Y™\—İÙYZÙ^\Îˆ[X™\–×Bˆ\]YØ]ˆİš[™Âˆ\]YØNˆİš[™È[ˆBˆ[œÙ\ˆÂˆXØY[ZX×ÛØYÎˆ[X™\‚ˆ][[Û—ÛØYÎˆ[X™\‚ˆ]›ÚYÙX\›OÎˆ›ÛÛX[‚ˆÛİ\œÙWÚYˆİš[™ÂˆY™šXİ[OÎˆ[X™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ\×İ›ØØ][Û˜[Ü˜XİXÙOÎˆ›ÛÛX[‚ˆ\×İÛÜšÜÚÜÎˆ›ÛÛX[‚ˆ\ÜÛÛ—Ù˜[Z[OÎˆİš[™È[ˆ\ÚXØ[ÛØYÎˆ[X™\‚ˆ˜XİXØ[ÛØYÎˆ[X™\‚ˆ™Y™\—ÙX\›OÎˆ›ÛÛX[‚ˆ™Y™\—İÙYZÙ^\ÏÎˆ[X™\–×Bˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ\]NˆÂˆXØY[ZX×ÛØYÎˆ[X™\‚ˆ][[Û—ÛØYÎˆ[X™\‚ˆ]›ÚYÙX\›OÎˆ›ÛÛX[‚ˆÛİ\œÙWÚYÎˆİš[™ÂˆY™šXİ[OÎˆ[X™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ\×İ›ØØ][Û˜[Ü˜XİXÙOÎˆ›ÛÛX[‚ˆ\×İÛÜšÜÚÜÎˆ›ÛÛX[‚ˆ\ÜÛÛ—Ù˜[Z[OÎˆİš[™È[ˆ\ÚXØ[ÛØYÎˆ[X™\‚ˆ˜XİXØ[ÛØYÎˆ[X™\‚ˆ™Y™\—ÙX\›OÎˆ›ÛÛX[‚ˆ™Y™\—İÙYZÙ^\ÏÎˆ[X™\–×Bˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWÜYYÛÙŞWÜ›Ùš[\×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWÜYYÛÙŞWÜ›Ùš[\×İ\]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ\]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWÜYYÛÙŞWÜ›Ùš[\×İ\]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ\]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØÛİ\œÙWÜYYÛÙŞWÜ›Ùš[\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛİ\œÙWÜØÚY[WÜ[\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ]›ÚYÛ\İÜ\š[Ùˆ›ÛÛX[‚ˆ›ØÚ×Ü]\›ˆ[X™\–×BˆÛİ\œÙWÚYˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆX^Ü\—Ù^Nˆ[X™\ˆ[ˆZ[—Ù\İ[˜İÙ^\Îˆ[X™\ˆ[ˆ›İNˆİš[™È[ˆ™Y™\œ™YÙ^\Îˆ[X™\–×Bˆ™Y™\œ™YÜ\š[ÙÎˆ[X™\–×Bˆ›ÚXš]YÙ^\Îˆ[X™\–×Bˆ›ÚXš]YÜ\š[ÙÎˆ[X™\–×Bˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]›ÚYÛ\İÜ\š[ÙÎˆ›ÛÛX[‚ˆ›ØÚ×Ü]\›Îˆ[X™\–×BˆÛİ\œÙWÚYˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆX^Ü\—Ù^OÎˆ[X™\ˆ[ˆZ[—Ù\İ[˜İÙ^\ÏÎˆ[X™\ˆ[ˆ›İOÎˆİš[™È[ˆ™Y™\œ™YÙ^\ÏÎˆ[X™\–×Bˆ™Y™\œ™YÜ\š[ÙÏÎˆ[X™\–×Bˆ›ÚXš]YÙ^\ÏÎˆ[X™\–×Bˆ›ÚXš]YÜ\š[ÙÏÎˆ[X™\–×Bˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]›ÚYÛ\İÜ\š[ÙÎˆ›ÛÛX[‚ˆ›ØÚ×Ü]\›Îˆ[X™\–×BˆÛİ\œÙWÚYÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆX^Ü\—Ù^OÎˆ[X™\ˆ[ˆZ[—Ù\İ[˜İÙ^\ÏÎˆ[X™\ˆ[ˆ›İOÎˆİš[™È[ˆ™Y™\œ™YÙ^\ÏÎˆ[X™\–×Bˆ™Y™\œ™YÜ\š[ÙÏÎˆ[X™\–×Bˆ›ÚXš]YÙ^\ÏÎˆ[X™\–×Bˆ›ÚXš]YÜ\š[ÙÏÎˆ[X™\–×Bˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWÜØÚY[WÜ[\×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØÛİ\œÙWÜØÚY[WÜ[\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÛİ\œÙWİ[YWÜ™Y™\™[˜Ù\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛİ\œÙWÚYˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ[ÙNˆİš[™Âˆ›İNˆİš[™È[ˆ\š[Ùˆ[X™\‚ˆ\]YØ]ˆİš[™ÂˆÙYZÙ^Nˆ[X™\‚ˆÙZYÚˆ[X™\‚ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛİ\œÙWÚYˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ[ÙNˆİš[™Âˆ›İOÎˆİš[™È[ˆ\š[Ùˆ[X™\‚ˆ\]YØ]Îˆİš[™ÂˆÙYZÙ^Nˆ[X™\‚ˆÙZYÚÎˆ[X™\‚ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛİ\œÙWÚYÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ[ÙOÎˆİš[™Âˆ›İOÎˆİš[™È[ˆ\š[ÙÎˆ[X™\‚ˆ\]YØ]Îˆİš[™ÂˆÙYZÙ^OÎˆ[X™\‚ˆÙZYÚÎˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWİ[YWÜ™Y™\™[˜Ù\×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Ûİ\œÙWİ[YWÜ™Y™\™[˜Ù\×Ú[œİ]][Û—ØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆÜš\Ú\×Ü™\ÜÎˆÂˆ›İÎˆÂˆÜ™X]YØ]ˆİš[™Âˆ\×ÛYYXØ[Ü™\Üˆ›ÛÛX[‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›İNˆİš[™È[ˆ™\ÜÙ]Nˆİš[™Âˆİ]\Îˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆÜ™X]YØ]Îˆİš[™Âˆ\×ÛYYXØ[Ü™\ÜÎˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆ™\ÜÙ]OÎˆİš[™Âˆİ]\ÏÎˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆÜ™X]YØ]Îˆİš[™Âˆ\×ÛYYXØ[Ü™\ÜÎˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆ™\ÜÙ]OÎˆİš[™Âˆİ]\ÏÎˆİš[™ÂˆXXÚ\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Üš\Ú\×Ü™\Ü×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜Üš\Ú\×Ü™\Ü×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ØÜš\Ú\×Ü™\Ü×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆİ\œšXİ[[Wİ[\]WØÛİ\œÙ\ÎˆÂˆ›İÎˆÂˆØ]YÛÜNˆİš[™ÂˆÛİ\œÙWÚYˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆÛÜÛÜ™\ˆ[X™\‚ˆ[\]WÚYˆİš[™ÂˆÙYZÛWÚİ\œÎˆ[X™\‚ˆBˆ[œÙ\ˆÂˆØ]YÛÜOÎˆİš[™ÂˆÛİ\œÙWÚYˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆÛÜÛÜ™\Îˆ[X™\‚ˆ[\]WÚYˆİš[™ÂˆÙYZÛWÚİ\œÎˆ[X™\‚ˆBˆ\]NˆÂˆØ]YÛÜOÎˆİš[™ÂˆÛİ\œÙWÚYÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆÛÜÛÜ™\Îˆ[X™\‚ˆ[\]WÚYÎˆİš[™ÂˆÙYZÛWÚİ\œÏÎˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜İ\œšXİ[[Wİ[\]WØÛİ\œÙ\×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜İ\œšXİ[[Wİ[\]WØÛİ\œÙ\×İ[\]WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ[\]WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜İ\œšXİ[[Wİ[\]\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Øİ\œšXİ[[Wİ[\]WØÛİ\œÙ\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆİ\œšXİ[[Wİ[\]\ÎˆÂˆ›İÎˆÂˆXØY[ZX×ŞYX\ˆİš[™È[ˆXİ]™Nˆ›ÛÛX[‚ˆÜ™X]YØ]ˆİš[™ÂˆÜ™X]YØNˆİš[™È[ˆ^XİYİÙYZÛWÚİ\œÎˆ[X™\ˆ[ˆÜ˜YWÛ]™[ˆ[X™\ˆ[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ˜[YNˆİš[™Âˆ›ÙÜ˜[Wİ\Nˆİš[™È[ˆØÚÛÛÛ]™[ˆİš[™È[ˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆBˆ[œÙ\ˆÂˆXØY[ZX×ŞYX\Îˆİš[™È[ˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆ^XİYİÙYZÛWÚİ\œÏÎˆ[X™\ˆ[ˆÜ˜YWÛ]™[Îˆ[X™\ˆ[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ˜[YNˆİš[™Âˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆØÚÛÛÛ]™[Îˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆBˆ\]NˆÂˆXØY[ZX×ŞYX\Îˆİš[™È[ˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆ^XİYİÙYZÛWÚİ\œÏÎˆ[X™\ˆ[ˆÜ˜YWÛ]™[Îˆ[X™\ˆ[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ˜[YOÎˆİš[™Âˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆØÚÛÛÛ]™[Îˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜İ\œšXİ[[Wİ[\]\×ØÜ™X]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ü™X]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ˜İ\œšXİ[[Wİ[\]\×ØÜ™X]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ü™X]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Øİ\œšXİ[[Wİ[\]\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ]WØ\ÜÚYÛ›Y[Ú\İÜNˆÂˆ›İÎˆÂˆ\ÜÚYÛ›Y[İ\Nˆİš[™ÂˆÚ[™ÙWÜ™X\ÛÛˆİš[™È[ˆÚ[™ÙYØ]ˆİš[™ÂˆÚ[™ÙYØNˆİš[™È[ˆ]WÙ]Nˆİš[™Âˆ]WÛØØ][Ûˆİš[™È[ˆY™™Xİ]™WÙ[™Ù]Nˆİš[™È[ˆY™™Xİ]™WÜİ\Ù]Nˆİš[™ÂˆYˆ[X™\‚ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ™]×Ü™XÛÜ™ˆœÛÛˆ[ˆ™]š[İ\×Ü™XÛÜ™ˆœÛÛˆ[ˆÛİ\˜ÙNˆİš[™ÂˆİXš™Xİİ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆ\ÜÚYÛ›Y[İ\Nˆİš[™ÂˆÚ[™ÙWÜ™X\ÛÛÎˆİš[™È[ˆÚ[™ÙYØ]Îˆİš[™ÂˆÚ[™ÙYØOÎˆİš[™È[ˆ]WÙ]Nˆİš[™Âˆ]WÛØØ][ÛÎˆİš[™È[ˆY™™Xİ]™WÙ[™Ù]OÎˆİš[™È[ˆY™™Xİ]™WÜİ\Ù]Nˆİš[™ÂˆYÎˆ™]™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ™]×Ü™XÛÜ™ÎˆœÛÛˆ[ˆ™]š[İ\×Ü™XÛÜ™ÎˆœÛÛˆ[ˆÛİ\˜ÙOÎˆİš[™ÂˆİXš™Xİİ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆ\ÜÚYÛ›Y[İ\OÎˆİš[™ÂˆÚ[™ÙWÜ™X\ÛÛÎˆİš[™È[ˆÚ[™ÙYØ]Îˆİš[™ÂˆÚ[™ÙYØOÎˆİš[™È[ˆ]WÙ]OÎˆİš[™Âˆ]WÛØØ][ÛÎˆİš[™È[ˆY™™Xİ]™WÙ[™Ù]OÎˆİš[™È[ˆY™™Xİ]™WÜİ\Ù]OÎˆİš[™ÂˆYÎˆ™]™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ™]×Ü™XÛÜ™ÎˆœÛÛˆ[ˆ™]š[İ\×Ü™XÛÜ™ÎˆœÛÛˆ[ˆÛİ\˜ÙOÎˆİš[™ÂˆİXš™Xİİ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WØ\ÜÚYÛ›Y[Ú\İÜWØÚ[™ÙYØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ú[™ÙYØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WØ\ÜÚYÛ›Y[Ú\İÜWØÚ[™ÙYØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ú[™ÙYØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WØ\ÜÚYÛ›Y[Ú\İÜWÜİXš™Xİİ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœİXš™Xİİ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WØ\ÜÚYÛ›Y[Ú\İÜWÜİXš™Xİİ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœİXš™Xİİ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù]WØ\ÜÚYÛ›Y[Ú\İÜWÚ[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ]WÙ^WÛ›İ\ÎˆÂˆ›İÎˆÂˆÛÜÙYØ]ˆİš[™È[ˆÛÜÙYØNˆİš[™È[ˆ]WÙ]Nˆİš[™Âˆ[\WÛ\ÜÛÛ—Ü™\ÛÛ][Ûˆİš[™È[ˆ[™İ[YNˆİš[™È[ˆÙ[™\˜[Û›İNˆİš[™È[ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆš[˜Ú\[Ø\›İ˜[Û›İNˆİš[™È[ˆİ\İ[YNˆİš[™È[ˆXXÚ[™×Û[ÙNˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆÛÜÙYØ]Îˆİš[™È[ˆÛÜÙYØOÎˆİš[™È[ˆ]WÙ]Nˆİš[™Âˆ[\WÛ\ÜÛÛ—Ü™\ÛÛ][ÛÎˆİš[™È[ˆ[™İ[YOÎˆİš[™È[ˆÙ[™\˜[Û›İOÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆš[˜Ú\[Ø\›İ˜[Û›İOÎˆİš[™È[ˆİ\İ[YOÎˆİš[™È[ˆXXÚ[™×Û[ÙOÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆÛÜÙYØ]Îˆİš[™È[ˆÛÜÙYØOÎˆİš[™È[ˆ]WÙ]OÎˆİš[™Âˆ[\WÛ\ÜÛÛ—Ü™\ÛÛ][ÛÎˆİš[™È[ˆ[™İ[YOÎˆİš[™È[ˆÙ[™\˜[Û›İOÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆš[˜Ú\[Ø\›İ˜[Û›İOÎˆİš[™È[ˆİ\İ[YOÎˆİš[™È[ˆXXÚ[™×Û[ÙOÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WÙ^WÛ›İ\×ØÛÜÙYØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜ÛÜÙYØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WÙ^WÛ›İ\×ØÛÜÙYØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜ÛÜÙYØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù]WÙ^WÛ›İ\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ]WÚ[˜ÚY[ÛÙÜÎˆÂˆ›İÎˆÂˆXİ[Û—İZÙ[ˆİš[™È[ˆÜ™X]YØ]ˆİš[™Âˆ\ØÜš\[Ûˆİš[™Âˆ]WÙ]Nˆİš[™Âˆ]WÛØØ][Ûˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆØØİ\œ™YØ]ˆİš[™Âˆ™\Ü\—ÚYˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ[Û—İZÙ[Îˆİš[™È[ˆÜ™X]YØ]Îˆİš[™Âˆ\ØÜš\[Ûˆİš[™Âˆ]WÙ]Nˆİš[™Âˆ]WÛØØ][ÛÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØØİ\œ™YØ]Îˆİš[™Âˆ™\Ü\—ÚYÎˆİš[™È[ˆBˆ\]NˆÂˆXİ[Û—İZÙ[Îˆİš[™È[ˆÜ™X]YØ]Îˆİš[™Âˆ\ØÜš\[ÛÎˆİš[™Âˆ]WÙ]OÎˆİš[™Âˆ]WÛØØ][ÛÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØØİ\œ™YØ]Îˆİš[™Âˆ™\Ü\—ÚYÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WÚ[˜ÚY[ÛÙÜ×Ü™\Ü\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ™\Ü\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WÚ[˜ÚY[ÛÙÜ×Ü™\Ü\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ™\Ü\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù]WÚ[˜ÚY[ÛÙÜ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ]WÛØØ][ÛœÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÜš]XØ[ˆ›ÛÛX[‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ˜[YNˆİš[™ÂˆÛÜÛÜ™\ˆ[X™\‚ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜš]XØ[Îˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ˜[YNˆİš[™ÂˆÛÜÛÜ™\Îˆ[X™\‚ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜš]XØ[Îˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ˜[YOÎˆİš[™ÂˆÛÜÛÜ™\Îˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù]WÛØØ][Ûœ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ]WÛ[ÛÛØÚÜÎˆÂˆ›İÎˆÂˆÙ[™\˜]YØ]ˆİš[™ÂˆÙ[™\˜]YØNˆİš[™È[ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆØÚÙYˆ›ÛÛX[‚ˆ[ÛÜİ\ˆİš[™Âˆ›İNˆİš[™È[ˆØÚY[WÜÚYÛ˜]\™Nˆİš[™È[ˆBˆ[œÙ\ˆÂˆÙ[™\˜]YØ]Îˆİš[™ÂˆÙ[™\˜]YØOÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØÚÙYÎˆ›ÛÛX[‚ˆ[ÛÜİ\ˆİš[™Âˆ›İOÎˆİš[™È[ˆØÚY[WÜÚYÛ˜]\™OÎˆİš[™È[ˆBˆ\]NˆÂˆÙ[™\˜]YØ]Îˆİš[™ÂˆÙ[™\˜]YØOÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØÚÙYÎˆ›ÛÛX[‚ˆ[ÛÜİ\Îˆİš[™Âˆ›İOÎˆİš[™È[ˆØÚY[WÜÚYÛ˜]\™OÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WÛ[ÛÛØÚÜ×ÙÙ[™\˜]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ™Ù[™\˜]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WÛ[ÛÛØÚÜ×ÙÙ[™\˜]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ™Ù[™\˜]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù]WÛ[ÛÛØÚÜ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ]WÜ›İ][ÛˆÂˆ›İÎˆÂˆ\ÜÚYÛ›Y[ÜÛİ\˜ÙNˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆŞXÛWÛ[Ûˆİš[™È[ˆ]WÙ]Nˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆšXÙWÜš[˜Ú\[ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆ\ÜÚYÛ›Y[ÜÛİ\˜ÙOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆŞXÛWÛ[ÛÎˆİš[™È[ˆ]WÙ]Nˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆšXÙWÜš[˜Ú\[ÚYˆİš[™ÂˆBˆ\]NˆÂˆ\ÜÚYÛ›Y[ÜÛİ\˜ÙOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆŞXÛWÛ[ÛÎˆİš[™È[ˆ]WÙ]OÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆšXÙWÜš[˜Ú\[ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]WÜ›İ][Û—İšXÙWÜš[˜Ú\[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈšXÙWÜš[˜Ú\[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆšXÙWÜš[˜Ú\[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù]WÜ›İ][Û—Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ]Wİ\™[™\Ü×ÛÙÜÎˆÂˆ›İÎˆÂˆÛ\Ü×Û˜[YNˆİš[™È[ˆÜ™X]YØ]ˆİš[™Âˆ]WÙ]Nˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆZ[]\×Û]Nˆ[X™\‚ˆ›İNˆİš[™È[ˆ\š[Ùˆ[X™\ˆ[ˆ™XÛÜ™YØNˆİš[™È[ˆXXÚ\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆÛ\Ü×Û˜[YOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™Âˆ]WÙ]Nˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆZ[]\×Û]Nˆ[X™\‚ˆ›İOÎˆİš[™È[ˆ\š[ÙÎˆ[X™\ˆ[ˆ™XÛÜ™YØOÎˆİš[™È[ˆXXÚ\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆÛ\Ü×Û˜[YOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™Âˆ]WÙ]OÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆZ[]\×Û]OÎˆ[X™\‚ˆ›İOÎˆİš[™È[ˆ\š[ÙÎˆ[X™\ˆ[ˆ™XÛÜ™YØOÎˆİš[™È[ˆXXÚ\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]Wİ\™[™\Ü×ÛÙÜ×Ü™XÛÜ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈœ™XÛÜ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]Wİ\™[™\Ü×ÛÙÜ×Ü™XÛÜ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈœ™XÛÜ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]Wİ\™[™\Ü×ÛÙÜ×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™]Wİ\™[™\Ü×ÛÙÜ×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù]Wİ\™[™\Ü×ÛÙÜ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ[Úİ[Ú[\ÜØ˜]Ú\ÎˆÂˆ›İÎˆÂˆš[WÛ˜[YNˆİš[™Âˆš[Wİ\Nˆİš[™ÂˆYˆİš[™Âˆ[\ÜYØ]ˆİš[™Âˆ[\ÜYØNˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›İ×ØÛİ[ˆ[X™\‚ˆBˆ[œÙ\ˆÂˆš[WÛ˜[YNˆİš[™Âˆš[Wİ\Nˆİš[™ÂˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™Âˆ[\ÜYØNˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İ×ØÛİ[Îˆ[X™\‚ˆBˆ\]NˆÂˆš[WÛ˜[YOÎˆİš[™Âˆš[Wİ\OÎˆİš[™ÂˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™Âˆ[\ÜYØOÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İ×ØÛİ[Îˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™[Úİ[Ú[\ÜØ˜]Ú\×Ú[\ÜYØWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[\ÜYØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™[Úİ[Ú[\ÜØ˜]Ú\×Ú[\ÜYØWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[\ÜYØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù[Úİ[Ú[\ÜØ˜]Ú\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ˜ÛWİÚÙ[œÎˆÂˆ›İÎˆÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ]›Ü›Nˆİš[™ÂˆÚÙ[ˆİš[™Âˆ\]YØ]ˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ]›Ü›OÎˆİš[™ÂˆÚÙ[ˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ]›Ü›OÎˆİš[™ÂˆÚÙ[Îˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™˜ÛWİÚÙ[œ×İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™˜ÛWİÚÙ[œ×İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ù˜ÛWİÚÙ[œ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ[œİ]][Û—Øœ˜[˜Ú\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÙNˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆšY[ÚYˆİš[™ÂˆYˆİš[™Âˆ˜[YNˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆšY[ÚYˆİš[™ÂˆYÎˆİš[™Âˆ˜[YNˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆšY[ÚYÎˆİš[™ÂˆYÎˆİš[™Âˆ˜[YOÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆš[œİ]][Û—Øœ˜[˜Ú\×ÙšY[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ™šY[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][Û—ÙšY[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ[œİ]][Û—ÙYXØ][Û—İ[š]ÎˆÂˆ›İÎˆÂˆXØY[ZX×ŞYX\—ÚYˆİš[™È[ˆXİ]™Nˆ›ÛÛX[‚ˆÜ™X]YØ]ˆİš[™ÂˆYXØ][Û—Û[ÙNˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ›ÙÜ˜[Wİ\Nˆİš[™È[ˆØÚÛÛÜİX\Nˆİš[™È[ˆØÚÛÛİ\Nˆİš[™ÂˆÙ\ÜÚ[Û—ÜØÛÜNˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXØY[ZX×ŞYX\—ÚYÎˆİš[™È[ˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆYXØ][Û—Û[ÙOÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆØÚÛÛÜİX\OÎˆİš[™È[ˆØÚÛÛİ\Nˆİš[™ÂˆÙ\ÜÚ[Û—ÜØÛÜOÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXØY[ZX×ŞYX\—ÚYÎˆİš[™È[ˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆYXØ][Û—Û[ÙOÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆØÚÛÛÜİX\OÎˆİš[™È[ˆØÚÛÛİ\OÎˆİš[™ÂˆÙ\ÜÚ[Û—ÜØÛÜOÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆš[œİ]][Û—ÙYXØ][Û—İ[š]×ØXØY[ZX×ŞYX\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XØY[ZX×ŞYX\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜XØY[ZX×ŞYX\œÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ[œİ]][Û—ÙšY[ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÙNˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™Âˆ˜[YNˆİš[™Âˆ[š]ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ˜[YNˆİš[™Âˆ[š]ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ˜[YOÎˆİš[™Âˆ[š]ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆš[œİ]][Û—ÙšY[×İ[š]ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ[š]ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][Û—ÙYXØ][Û—İ[š]È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ[œİ]][Û—ÛY[X™\œÚ\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÜ™X]YØ]ˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ\×ÛİÛ™\ˆ›ÛÛX[‚ˆY[X™\œÚ\Ü›ÛNˆİš[™Âˆ\]YØ]ˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ\×ÛİÛ™\Îˆ›ÛÛX[‚ˆY[X™\œÚ\Ü›ÛNˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ\×ÛİÛ™\Îˆ›ÛÛX[‚ˆY[X™\œÚ\Ü›ÛOÎˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆš[œİ]][Û—ÛY[X™\œÚ\×Ú[œİ]][Û—ØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ[œİ]][Û—Üš[˜Ú\[ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ\ÜÚYÛ™YØ]ˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\ÜÚYÛ™YØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\ÜÚYÛ™YØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆ[œİ]][ÛœÎˆÂˆ›İÎˆÂˆ\›İ˜[Û›İNˆİš[™È[ˆ\›İ˜[Üİ]\Îˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆÜ™X]YØNˆİš[™È[ˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ\×ÛY]›ÜÛ][—Ù\İšXİˆ›ÛÛX[ˆ[ˆ›İš[˜ÙWÛ˜[YNˆİš[™È[ˆ™]šY]ÙYØ]ˆİš[™È[ˆ™]šY]ÙYØNˆİš[™È[ˆØÚÛÛÛ˜[YNˆİš[™Âˆİ]\Îˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆ\›İ˜[Û›İOÎˆİš[™È[ˆ\›İ˜[Üİ]\ÏÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ\×ÛY]›ÜÛ][—Ù\İšXİÎˆ›ÛÛX[ˆ[ˆ›İš[˜ÙWÛ˜[YOÎˆİš[™È[ˆ™]šY]ÙYØ]Îˆİš[™È[ˆ™]šY]ÙYØOÎˆİš[™È[ˆØÚÛÛÛ˜[YNˆİš[™Âˆİ]\ÏÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆ\›İ˜[Û›İOÎˆİš[™È[ˆ\›İ˜[Üİ]\ÏÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ\×ÛY]›ÜÛ][—Ù\İšXİÎˆ›ÛÛX[ˆ[ˆ›İš[˜ÙWÛ˜[YOÎˆİš[™È[ˆ™]šY]ÙYØ]Îˆİš[™È[ˆ™]šY]ÙYØOÎˆİš[™È[ˆØÚÛÛÛ˜[YOÎˆİš[™Âˆİ]\ÏÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆYØ[Ü[WÙYš[š][ÛœÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÛ™][Û—Û›İNˆİš[™È[ˆÛXZ[ˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÎˆİš[™È[ˆYˆİš[™Âˆ\˜[Y]\œÎˆœÛÛ‚ˆ[WØÛÙNˆİš[™ÂˆÛİ\˜ÙWÚYˆİš[™È[ˆİXš™Xİİ\Nˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÛ™][Û—Û›İOÎˆİš[™È[ˆÛXZ[ˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ\˜[Y]\œÎˆœÛÛ‚ˆ[WØÛÙNˆİš[™ÂˆÛİ\˜ÙWÚYÎˆİš[™È[ˆİXš™Xİİ\Nˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÛ™][Û—Û›İOÎˆİš[™È[ˆÛXZ[Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛOÎˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ\˜[Y]\œÏÎˆœÛÛ‚ˆ[WØÛÙOÎˆİš[™ÂˆÛİ\˜ÙWÚYÎˆİš[™È[ˆİXš™Xİİ\OÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›YØ[Ü[WÙYš[š][Ûœ×ÜÛİ\˜ÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›YØ[Ü[WÜÛİ\˜Ù\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆYØ[Ü[WÜÛİ\˜Ù\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ]]Üš]Nˆİš[™ÂˆÛÙNˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆXÚ\Ú[Û—Ù]Nˆİš[™È[ˆY™™Xİ]™WÙœ›ÛNˆİš[™È[ˆY™™Xİ]™WİÎˆİš[™È[ˆYˆİš[™Âˆ›İNˆİš[™È[ˆÛİ\˜ÙWİ\›ˆİš[™È[ˆ]Nˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]]Üš]Nˆİš[™ÂˆÛÙNˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆXÚ\Ú[Û—Ù]OÎˆİš[™È[ˆY™™Xİ]™WÙœ›ÛOÎˆİš[™È[ˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ›İOÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆ]Nˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]]Üš]OÎˆİš[™ÂˆÛÙOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆXÚ\Ú[Û—Ù]OÎˆİš[™È[ˆY™™Xİ]™WÙœ›ÛOÎˆİš[™È[ˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ›İOÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆ]OÎˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆYÚ\Û][Û—ÛXœ˜\NˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÜ™X]YØ]ˆİš[™ÂˆÜ™X]YØNˆİš[™È[ˆY™™Xİ]™WÛÛˆİš[™È[ˆš[Wİ\›ˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆYÚ\Û][Û—İ\Nˆİš[™Âˆ›İ\Îˆİš[™È[ˆØÚÛÛÛ]™[Îˆİš[™Ö×BˆØÚÛÛİ\\Îˆİš[™Ö×BˆÛİ\˜ÙWİ\›ˆİš[™È[ˆYÜÎˆİš[™Ö×Bˆ]Nˆİš[™ÂˆÜXÎˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆY™™Xİ]™WÛÛÎˆİš[™È[ˆš[Wİ\›Îˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆYÚ\Û][Û—İ\OÎˆİš[™Âˆ›İ\ÏÎˆİš[™È[ˆØÚÛÛÛ]™[ÏÎˆİš[™Ö×BˆØÚÛÛİ\\ÏÎˆİš[™Ö×BˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆYÜÏÎˆİš[™Ö×Bˆ]Nˆİš[™ÂˆÜXÏÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆY™™Xİ]™WÛÛÎˆİš[™È[ˆš[Wİ\›Îˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆYÚ\Û][Û—İ\OÎˆİš[™Âˆ›İ\ÏÎˆİš[™È[ˆØÚÛÛÛ]™[ÏÎˆİš[™Ö×BˆØÚÛÛİ\\ÏÎˆİš[™Ö×BˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆYÜÏÎˆİš[™Ö×Bˆ]OÎˆİš[™ÂˆÜXÏÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ÛYÚ\Û][Û—ÛXœ˜\WÚ[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆYÚ\Û][Û—ÜÚ\™\ÎˆÂˆ›İÎˆÂˆÜ™X]YØ]ˆİš[™ÂˆÜ™X]YØNˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆYÚ\Û][Û—ÚYˆİš[™ÂˆY\ÜØYÙNˆİš[™È[ˆ™XYØ]ˆİš[™È[ˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆYÚ\Û][Û—ÚYˆİš[™ÂˆY\ÜØYÙOÎˆİš[™È[ˆ™XYØ]Îˆİš[™È[ˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆYÚ\Û][Û—ÚYÎˆİš[™ÂˆY\ÜØYÙOÎˆİš[™È[ˆ™XYØ]Îˆİš[™È[ˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ÛYÚ\Û][Û—ÜÚ\™\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›YÚ\Û][Û—ÜÚ\™\×ÛYÚ\Û][Û—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ›YÚ\Û][Û—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›YÚ\Û][Û—ÛXœ˜\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ\ÜÛÛ—Ü›ÛÛWÜ[\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ™\]Z\™YÙ\\Y[ˆİš[™È[ˆ™\]Z\™YÚ\™Ø\™NˆœÛÛ‚ˆ™\]Z\™YÜ›ÛÛWİ\Nˆİš[™È[ˆİXš™XİÜ]\›ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ™\]Z\™YÙ\\Y[Îˆİš[™È[ˆ™\]Z\™YÚ\™Ø\™OÎˆœÛÛ‚ˆ™\]Z\™YÜ›ÛÛWİ\OÎˆİš[™È[ˆİXš™XİÜ]\›ˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ™\]Z\™YÙ\\Y[Îˆİš[™È[ˆ™\]Z\™YÚ\™Ø\™OÎˆœÛÛ‚ˆ™\]Z\™YÜ›ÛÛWİ\OÎˆİš[™È[ˆİXš™XİÜ]\›Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Û\ÜÛÛ—Ü›ÛÛWÜ[\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆY]›ÜÛ][—Ü›İš[˜Ù\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ˜[YNˆİš[™ÂˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ˜[YNˆİš[™ÂˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ˜[YOÎˆİš[™ÂˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆBˆ™[][ÛœÚ\Îˆ×BˆBˆ›Ü›WØ\™XWÜ[WØ\ÜÚYÛ›Y[ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÜ™X]YØ]ˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÎˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›İNˆİš[™È[ˆ[WÜÙ]ÚYˆİš[™ÂˆÛİ\˜ÙWÚYˆİš[™È[ˆXXÚ[™×Ø\™XWÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆ[WÜÙ]ÚYˆİš[™ÂˆÛİ\˜ÙWÚYÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛOÎˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆ[WÜÙ]ÚYÎˆİš[™ÂˆÛİ\˜ÙWÚYÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Û›Ü›WØ\™XWÜ[WØ\ÜÚYÛ›Y[×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››Ü›WØ\™XWÜ[WØ\ÜÚYÛ›Y[×Ü[WÜÙ]ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ[WÜÙ]ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ››Ü›WÜ[WÜÙ]È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››Ü›WØ\™XWÜ[WØ\ÜÚYÛ›Y[×ÜÛİ\˜ÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›YØ[Ü[WÜÛİ\˜Ù\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››Ü›WØ\™XWÜ[WØ\ÜÚYÛ›Y[×İXXÚ[™×Ø\™XWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ[™×Ø\™XWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ[™×Ø\™X\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ›Ü›WØÛİ\œÙWØ\™XWÜ[\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛİ\œÙWÚYˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÎˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›İNˆİš[™È[ˆÛİ\˜ÙWÚYˆİš[™È[ˆXXÚ[™×Ø\™XWÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛİ\œÙWÚYˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛİ\œÙWÚYÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛOÎˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Û›Ü›WØÛİ\œÙWØ\™XWÜ[\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››Ü›WØÛİ\œÙWØ\™XWÜ[\×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››Ü›WØÛİ\œÙWØ\™XWÜ[\×ÜÛİ\˜ÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›YØ[Ü[WÜÛİ\˜Ù\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››Ü›WØÛİ\œÙWØ\™XWÜ[\×İXXÚ[™×Ø\™XWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ[™×Ø\™XWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ[™×Ø\™X\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ›Ü›WÜ[WØ˜[™ÎˆÂˆ›İÎˆÂˆYˆİš[™ÂˆX^Úİ\œÎˆ[X™\ˆ[ˆZ[—Úİ\œÎˆ[X™\‚ˆ›Ü›WØÛİ[ˆ[X™\‚ˆ[WÜÙ]ÚYˆİš[™ÂˆÛÜÛÜ™\ˆ[X™\‚ˆBˆ[œÙ\ˆÂˆYÎˆİš[™ÂˆX^Úİ\œÏÎˆ[X™\ˆ[ˆZ[—Úİ\œÎˆ[X™\‚ˆ›Ü›WØÛİ[ˆ[X™\‚ˆ[WÜÙ]ÚYˆİš[™ÂˆÛÜÛÜ™\Îˆ[X™\‚ˆBˆ\]NˆÂˆYÎˆİš[™ÂˆX^Úİ\œÏÎˆ[X™\ˆ[ˆZ[—Úİ\œÏÎˆ[X™\‚ˆ›Ü›WØÛİ[Îˆ[X™\‚ˆ[WÜÙ]ÚYÎˆİš[™ÂˆÛÜÛÜ™\Îˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››Ü›WÜ[WØ˜[™×Ü[WÜÙ]ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ[WÜÙ]ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ››Ü›WÜ[WÜÙ]È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ›Ü›WÜ[WÜÙ]ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÙNˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÎˆİš[™È[ˆYˆİš[™Âˆ˜[YNˆİš[™Âˆ›İNˆİš[™È[ˆ™[XZ[™\—ÛZ[—Úİ\œÎˆ[X™\ˆ[ˆ™\X][™×Ø›ØÚ×Úİ\œÎˆ[X™\ˆ[ˆÛİ\˜ÙWÚYˆİš[™È[ˆXXÚ\—ØØ]YÛÜNˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙNˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ˜[YNˆİš[™Âˆ›İOÎˆİš[™È[ˆ™[XZ[™\—ÛZ[—Úİ\œÏÎˆ[X™\ˆ[ˆ™\X][™×Ø›ØÚ×Úİ\œÏÎˆ[X™\ˆ[ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆXXÚ\—ØØ]YÛÜNˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛOÎˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ˜[YOÎˆİš[™Âˆ›İOÎˆİš[™È[ˆ™[XZ[™\—ÛZ[—Úİ\œÏÎˆ[X™\ˆ[ˆ™\X][™×Ø›ØÚ×Úİ\œÏÎˆ[X™\ˆ[ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆXXÚ\—ØØ]YÛÜOÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››Ü›WÜ[WÜÙ]×ÜÛİ\˜ÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›YØ[Ü[WÜÛİ\˜Ù\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ›İYšXØ][ÛœÎˆÂˆ›İÎˆÂˆXİ[Û—ÛX™[ˆİš[™È[ˆXİ[Û—İ\›ˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™ÂˆY\ÜØYÙNˆİš[™Âˆš[Üš]Nˆİš[™Âˆ™XYØ]ˆİš[™È[ˆ]Nˆİš[™Âˆ\Nˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ[Û—ÛX™[Îˆİš[™È[ˆXİ[Û—İ\›Îˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™ÂˆY\ÜØYÙNˆİš[™Âˆš[Üš]OÎˆİš[™Âˆ™XYØ]Îˆİš[™È[ˆ]Nˆİš[™Âˆ\Nˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ[Û—ÛX™[Îˆİš[™È[ˆXİ[Û—İ\›Îˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™ÂˆY\ÜØYÙOÎˆİš[™Âˆš[Üš]OÎˆİš[™Âˆ™XYØ]Îˆİš[™È[ˆ]OÎˆİš[™Âˆ\OÎˆİš[™Âˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››İYšXØ][Ûœ×İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ››İYšXØ][Ûœ×İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆÙ™šXÚX[ØÛİ\œÙWÜ[WØ[››İ][ÛœÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆØ][Ù×ÚYˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™Âˆ\˜[Y]\œÎˆœÛÛ‚ˆ[WØÛÙNˆİš[™Âˆ[Wİ\Nˆİš[™ÂˆÙ]™\š]Nˆİš[™ÂˆÛİ\˜ÙWÜ™Yˆİš[™È[ˆÛİ\˜ÙWİ^ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆØ][Ù×ÚYÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ\˜[Y]\œÏÎˆœÛÛ‚ˆ[WØÛÙNˆİš[™Âˆ[Wİ\Nˆİš[™ÂˆÙ]™\š]OÎˆİš[™ÂˆÛİ\˜ÙWÜ™YÎˆİš[™È[ˆÛİ\˜ÙWİ^ˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆØ][Ù×ÚYÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ\˜[Y]\œÏÎˆœÛÛ‚ˆ[WØÛÙOÎˆİš[™Âˆ[Wİ\OÎˆİš[™ÂˆÙ]™\š]OÎˆİš[™ÂˆÛİ\˜ÙWÜ™YÎˆİš[™È[ˆÛİ\˜ÙWİ^Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ØÛİ\œÙWÜ[WØ[››İ][Ûœ×ØØ][Ù×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ø][Ù×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ØÛİ\œÙWÜØÚY[WØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ØÛİ\œÙWÜ[WØ[››İ][Ûœ×ØØ][Ù×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ø][Ù×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ØÛİ\œÙWÜØÚY[WÙY™™Xİ]™H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÙ™šXÚX[ØÛİ\œÙWÜØÚY[WØØ][ÙÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YNˆİš[™È[ˆØ]YÛÜNˆİš[™ÂˆÛİ\œÙWÚYˆİš[™ÂˆY™™Xİ]™WØXØY[ZX×ŞYX\ˆİš[™Âˆ[Xİ]™WÙÜ›İ\ÚÙ^Nˆİš[™È[ˆšY[Û˜[YNˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\‚ˆİ\—ÛÜ[ÛœÎˆ[X™\–×BˆYˆİš[™Âˆ[\ÜYØ]ˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÎˆ[X™\‚ˆ™YY×Ü™]šY]Îˆ›ÛÛX[‚ˆ\œÙYØÛÛœİ˜Z[ÎˆœÛÛ‚ˆ\œÙ\—ØÛÛ™šY[˜ÙNˆ[X™\ˆ[ˆ›ÙÜ˜[Wİ\Nˆİš[™È[ˆ™\X]ØXÜ›ÜÜ×ŞYX\œÎˆ›ÛÛX[‚ˆØÚY[Wİ˜\šX[ˆİš[™ÂˆØÚÛÛÜİX\Nˆİš[™È[ˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]Nˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›Îˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YNˆİš[™È[ˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆÛİ\˜ÙWÜYÙNˆ[X™\ˆ[ˆÛİ\˜ÙWÜÙXİ[Ûˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YOÎˆİš[™È[ˆØ]YÛÜNˆİš[™ÂˆÛİ\œÙWÚYˆİš[™ÂˆY™™Xİ]™WØXØY[ZX×ŞYX\ˆİš[™Âˆ[Xİ]™WÙÜ›İ\ÚÙ^OÎˆİš[™È[ˆšY[Û˜[YOÎˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\‚ˆİ\—ÛÜ[ÛœÎˆ[X™\–×BˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÏÎˆ[X™\‚ˆ™YY×Ü™]šY]ÏÎˆ›ÛÛX[‚ˆ\œÙYØÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆ\œÙ\—ØÛÛ™šY[˜ÙOÎˆ[X™\ˆ[ˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆ™\X]ØXÜ›ÜÜ×ŞYX\œÏÎˆ›ÛÛX[‚ˆØÚY[Wİ˜\šX[Îˆİš[™ÂˆØÚÛÛÜİX\OÎˆİš[™È[ˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]OÎˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWÜYÙOÎˆ[X™\ˆ[ˆÛİ\˜ÙWÜÙXİ[ÛÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YOÎˆİš[™È[ˆØ]YÛÜOÎˆİš[™ÂˆÛİ\œÙWÚYÎˆİš[™ÂˆY™™Xİ]™WØXØY[ZX×ŞYX\Îˆİš[™Âˆ[Xİ]™WÙÜ›İ\ÚÙ^OÎˆİš[™È[ˆšY[Û˜[YOÎˆİš[™È[ˆÜ˜YWÛ]™[Îˆ[X™\‚ˆİ\—ÛÜ[ÛœÏÎˆ[X™\–×BˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÏÎˆ[X™\‚ˆ™YY×Ü™]šY]ÏÎˆ›ÛÛX[‚ˆ\œÙYØÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆ\œÙ\—ØÛÛ™šY[˜ÙOÎˆ[X™\ˆ[ˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆ™\X]ØXÜ›ÜÜ×ŞYX\œÏÎˆ›ÛÛX[‚ˆØÚY[Wİ˜\šX[Îˆİš[™ÂˆØÚÛÛÜİX\OÎˆİš[™È[ˆØÚÛÛİ\OÎˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]OÎˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWÜYÙOÎˆ[X™\ˆ[ˆÛİ\˜ÙWÜÙXİ[ÛÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ØÛİ\œÙWÜØÚY[WØØ][Ù×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÙ™šXÚX[ØÛİ\œÙWÜØÚY[WÛİ™\œšY\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YNˆİš[™È[ˆØ][Ù×ÚYˆİš[™ÂˆØ]YÛÜNˆİš[™È[ˆ[Xİ]™WÙÜ›İ\ÚÙ^Nˆİš[™È[ˆšY[Û˜[YNˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\ˆ[ˆİ\—ÛÜ[ÛœÎˆ[X™\–×H[ˆYˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÎˆ[X™\ˆ[ˆ\œÙYØÛÛœİ˜Z[ÎˆœÛÛˆ[ˆ›ÙÜ˜[Wİ\Nˆİš[™È[ˆ™X\ÛÛˆİš[™Âˆ™\X]ØXÜ›ÜÜ×ŞYX\œÎˆ›ÛÛX[ˆ[ˆØÚÛÛÜİX\Nˆİš[™È[ˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆ\]YØ]ˆİš[™Âˆ\]YØNˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YOÎˆİš[™È[ˆØ][Ù×ÚYˆİš[™ÂˆØ]YÛÜOÎˆİš[™È[ˆ[Xİ]™WÙÜ›İ\ÚÙ^OÎˆİš[™È[ˆšY[Û˜[YOÎˆİš[™È[ˆÜ˜YWÛ]™[Îˆ[X™\ˆ[ˆİ\—ÛÜ[ÛœÏÎˆ[X™\–×H[ˆYÎˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÏÎˆ[X™\ˆ[ˆ\œÙYØÛÛœİ˜Z[ÏÎˆœÛÛˆ[ˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆ™X\ÛÛˆİš[™Âˆ™\X]ØXÜ›ÜÜ×ŞYX\œÏÎˆ›ÛÛX[ˆ[ˆØÚÛÛÜİX\OÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YOÎˆİš[™È[ˆØ][Ù×ÚYÎˆİš[™ÂˆØ]YÛÜOÎˆİš[™È[ˆ[Xİ]™WÙÜ›İ\ÚÙ^OÎˆİš[™È[ˆšY[Û˜[YOÎˆİš[™È[ˆÜ˜YWÛ]™[Îˆ[X™\ˆ[ˆİ\—ÛÜ[ÛœÏÎˆ[X™\–×H[ˆYÎˆİš[™ÂˆX^ÜÙ[Xİ[ÛœÏÎˆ[X™\ˆ[ˆ\œÙYØÛÛœİ˜Z[ÏÎˆœÛÛˆ[ˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆ™X\ÛÛÎˆİš[™Âˆ™\X]ØXÜ›ÜÜ×ŞYX\œÏÎˆ›ÛÛX[ˆ[ˆØÚÛÛÜİX\OÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ØÛİ\œÙWÜØÚY[WÛİ™\œšY\×ØØ][Ù×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ø][Ù×ÚY—Bˆ\ÓÛ™UÓÛ™NˆYBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ØÛİ\œÙWÜØÚY[WØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ØÛİ\œÙWÜØÚY[WÛİ™\œšY\×ØØ][Ù×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ø][Ù×ÚY—Bˆ\ÓÛ™UÓÛ™NˆYBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ØÛİ\œÙWÜØÚY[WÙY™™Xİ]™H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÙ™šXÚX[Øİ\œšXİ[[WØØ][Ù×Üİ]\ÎˆÂˆ›İÎˆÂˆœ˜[˜ÚÛ˜[YNˆİš[™ÂˆšY[Û˜[YNˆİš[™Âˆ[œİ]][Û—İ\Nˆİš[™Âˆ™X\ÛÛˆİš[™È[ˆÛİ\˜ÙWİ\›ˆİš[™È[ˆİ]\Îˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆœ˜[˜ÚÛ˜[YNˆİš[™ÂˆšY[Û˜[YNˆİš[™Âˆ[œİ]][Û—İ\Nˆİš[™Âˆ™X\ÛÛÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆİ]\Îˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆœ˜[˜ÚÛ˜[YOÎˆİš[™ÂˆšY[Û˜[YOÎˆİš[™Âˆ[œİ]][Û—İ\OÎˆİš[™Âˆ™X\ÛÛÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆİ]\ÏÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆÙ™šXÚX[Øİ\œšXİ[[WÜ›Ùš[\ÎˆÂˆ›İÎˆÂˆXØY[ZX×Üİ\ÜÚİ\œÎˆ[X™\ˆ[ˆXİ]™Nˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\Îˆİš[™Âˆœ˜[˜ÚÛ˜[YNˆİš[™È[ˆÛÛ[[Û—Úİ\œÎˆ[X™\ˆ[ˆY™™Xİ]™WØXØY[ZX×ŞYX\ˆİš[™Âˆ[Xİ]™WØÛİ\œÙWÛX^ˆ[X™\ˆ[ˆ[Xİ]™WØÛİ\œÙWÛZ[ˆ[X™\‚ˆ[Xİ]™WÚİ\—ÛX^ˆ[X™\‚ˆ[Xİ]™WÚİ\—ÛZ[ˆ[X™\‚ˆ[Xİ]™WÚİ\œÎˆ[X™\ˆ[ˆ[Xİ]™Wİ›ØØ][Û˜[Úİ\œÎˆ[X™\ˆ[ˆ[\œš\ÙWÚİ\œÎˆ[X™\ˆ[ˆšY[Û˜[YNˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\‚ˆÜ›İ\Ü[\ÎˆœÛÛ‚ˆİZY[˜ÙWÚİ\œÎˆ[X™\ˆ[ˆYˆİš[™Âˆ\œÙYØÛÛœİ˜Z[ÎˆœÛÛ‚ˆ›ÙÜ˜[Wİ\Nˆİš[™È[ˆ™\]Z\™YØÛİ\œÙWØÛİ[ˆ[X™\‚ˆ™\]Z\™YÚİ\—İİ[ˆ[X™\‚ˆØÚY[Wİ˜\šX[ˆİš[™È[ˆØÚÛÛÜİX\Nˆİš[™È[ˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›Îˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YNˆİš[™È[ˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆÛİ\˜ÙWÜYÙNˆ[X™\ˆ[ˆİ[Úİ\—ÛX^ˆ[X™\‚ˆİ[Úİ\—ÛZ[ˆ[X™\‚ˆİ[Úİ\—İ\™Ù]ˆ[X™\ˆ[ˆ\]YØ]ˆİš[™Âˆ›ØØ][Û˜[Úİ\œÎˆ[X™\ˆ[ˆBˆ[œÙ\ˆÂˆXØY[ZX×Üİ\ÜÚİ\œÏÎˆ[X™\ˆ[ˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\ÏÎˆİš[™Âˆœ˜[˜ÚÛ˜[YOÎˆİš[™È[ˆÛÛ[[Û—Úİ\œÏÎˆ[X™\ˆ[ˆY™™Xİ]™WØXØY[ZX×ŞYX\ˆİš[™Âˆ[Xİ]™WØÛİ\œÙWÛX^Îˆ[X™\ˆ[ˆ[Xİ]™WØÛİ\œÙWÛZ[Îˆ[X™\‚ˆ[Xİ]™WÚİ\—ÛX^Îˆ[X™\‚ˆ[Xİ]™WÚİ\—ÛZ[Îˆ[X™\‚ˆ[Xİ]™WÚİ\œÏÎˆ[X™\ˆ[ˆ[Xİ]™Wİ›ØØ][Û˜[Úİ\œÏÎˆ[X™\ˆ[ˆ[\œš\ÙWÚİ\œÏÎˆ[X™\ˆ[ˆšY[Û˜[YOÎˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\‚ˆÜ›İ\Ü[\ÏÎˆœÛÛ‚ˆİZY[˜ÙWÚİ\œÏÎˆ[X™\ˆ[ˆYÎˆİš[™Âˆ\œÙYØÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆ™\]Z\™YØÛİ\œÙWØÛİ[Îˆ[X™\‚ˆ™\]Z\™YÚİ\—İİ[Îˆ[X™\‚ˆØÚY[Wİ˜\šX[Îˆİš[™È[ˆØÚÛÛÜİX\OÎˆİš[™È[ˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWÜYÙOÎˆ[X™\ˆ[ˆİ[Úİ\—ÛX^Îˆ[X™\‚ˆİ[Úİ\—ÛZ[Îˆ[X™\‚ˆİ[Úİ\—İ\™Ù]Îˆ[X™\ˆ[ˆ\]YØ]Îˆİš[™Âˆ›ØØ][Û˜[Úİ\œÏÎˆ[X™\ˆ[ˆBˆ\]NˆÂˆXØY[ZX×Üİ\ÜÚİ\œÏÎˆ[X™\ˆ[ˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\ÏÎˆİš[™Âˆœ˜[˜ÚÛ˜[YOÎˆİš[™È[ˆÛÛ[[Û—Úİ\œÏÎˆ[X™\ˆ[ˆY™™Xİ]™WØXØY[ZX×ŞYX\Îˆİš[™Âˆ[Xİ]™WØÛİ\œÙWÛX^Îˆ[X™\ˆ[ˆ[Xİ]™WØÛİ\œÙWÛZ[Îˆ[X™\‚ˆ[Xİ]™WÚİ\—ÛX^Îˆ[X™\‚ˆ[Xİ]™WÚİ\—ÛZ[Îˆ[X™\‚ˆ[Xİ]™WÚİ\œÏÎˆ[X™\ˆ[ˆ[Xİ]™Wİ›ØØ][Û˜[Úİ\œÏÎˆ[X™\ˆ[ˆ[\œš\ÙWÚİ\œÏÎˆ[X™\ˆ[ˆšY[Û˜[YOÎˆİš[™È[ˆÜ˜YWÛ]™[Îˆ[X™\‚ˆÜ›İ\Ü[\ÏÎˆœÛÛ‚ˆİZY[˜ÙWÚİ\œÏÎˆ[X™\ˆ[ˆYÎˆİš[™Âˆ\œÙYØÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆ›ÙÜ˜[Wİ\OÎˆİš[™È[ˆ™\]Z\™YØÛİ\œÙWØÛİ[Îˆ[X™\‚ˆ™\]Z\™YÚİ\—İİ[Îˆ[X™\‚ˆØÚY[Wİ˜\šX[Îˆİš[™È[ˆØÚÛÛÜİX\OÎˆİš[™È[ˆØÚÛÛİ\OÎˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWÜYÙOÎˆ[X™\ˆ[ˆİ[Úİ\—ÛX^Îˆ[X™\‚ˆİ[Úİ\—ÛZ[Îˆ[X™\‚ˆİ[Úİ\—İ\™Ù]Îˆ[X™\ˆ[ˆ\]YØ]Îˆİš[™Âˆ›ØØ][Û˜[Úİ\œÏÎˆ[X™\ˆ[ˆBˆ™[][ÛœÚ\Îˆ×BˆBˆÙ™šXÚX[ÙÙ[™\˜[İ[Y]X›WÜ›Ùš[\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\Îˆİš[™ÂˆÛÛœİ˜Z[ÎˆœÛÛ‚ˆY™™Xİ]™WØXØY[ZX×ŞYX\ˆİš[™Âˆ[Xİ]™WÚİ\œÎˆ[X™\‚ˆš^YÚİ\œÎˆ[X™\‚ˆœ™YWØXİ]š]WÚİ\œÎˆ[X™\‚ˆÜ˜YWÛ]™[ˆ[X™\‚ˆİZY[˜ÙWÚİ\œÎˆ[X™\‚ˆYˆİš[™Âˆ›ÙÜ˜[Wİ˜\šX[ˆİš[™ÂˆØÚÛÛÜİX\Nˆİš[™ÂˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]Nˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›Îˆİš[™ÂˆÛİ\˜ÙWÜYÙNˆ[X™\ˆ[ˆÛİ\˜ÙWİ\›ˆİš[™Âˆİ[Úİ\œÎˆ[X™\‚ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\ÏÎˆİš[™ÂˆÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆY™™Xİ]™WØXØY[ZX×ŞYX\ˆİš[™Âˆ[Xİ]™WÚİ\œÏÎˆ[X™\‚ˆš^YÚİ\œÎˆ[X™\‚ˆœ™YWØXİ]š]WÚİ\œÏÎˆ[X™\‚ˆÜ˜YWÛ]™[ˆ[X™\‚ˆİZY[˜ÙWÚİ\œÏÎˆ[X™\‚ˆYÎˆİš[™Âˆ›ÙÜ˜[Wİ˜\šX[Îˆİš[™ÂˆØÚÛÛÜİX\OÎˆİš[™ÂˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]OÎˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›Îˆİš[™ÂˆÛİ\˜ÙWÜYÙOÎˆ[X™\ˆ[ˆÛİ\˜ÙWİ\›ˆİš[™Âˆİ[Úİ\œÎˆ[X™\‚ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\ÏÎˆİš[™ÂˆÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆY™™Xİ]™WØXØY[ZX×ŞYX\Îˆİš[™Âˆ[Xİ]™WÚİ\œÏÎˆ[X™\‚ˆš^YÚİ\œÏÎˆ[X™\‚ˆœ™YWØXİ]š]WÚİ\œÏÎˆ[X™\‚ˆÜ˜YWÛ]™[Îˆ[X™\‚ˆİZY[˜ÙWÚİ\œÏÎˆ[X™\‚ˆYÎˆİš[™Âˆ›ÙÜ˜[Wİ˜\šX[Îˆİš[™ÂˆØÚÛÛÜİX\OÎˆİš[™ÂˆØÚÛÛİ\OÎˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]OÎˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™ÂˆÛİ\˜ÙWÜYÙOÎˆ[X™\ˆ[ˆÛİ\˜ÙWİ\›Îˆİš[™Âˆİ[Úİ\œÏÎˆ[X™\‚ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆÙ™šXÚX[ÙÙ[™\˜[İ[Y]X›WÜ›İÜÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆØ]YÛÜNˆİš[™ÂˆÛÛœİ˜Z[ÎˆœÛÛ‚ˆÛİ\œÙWÚYˆİš[™ÂˆYˆİš[™Âˆ›Ùš[WÚYˆİš[™ÂˆÛİ\˜ÙWÜYÙNˆ[X™\ˆ[ˆÙYZÛWÚİ\œÎˆ[X™\‚ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆØ]YÛÜOÎˆİš[™ÂˆÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆÛİ\œÙWÚYˆİš[™ÂˆYÎˆİš[™Âˆ›Ùš[WÚYˆİš[™ÂˆÛİ\˜ÙWÜYÙOÎˆ[X™\ˆ[ˆÙYZÛWÚİ\œÎˆ[X™\‚ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆØ]YÛÜOÎˆİš[™ÂˆÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆÛİ\œÙWÚYÎˆİš[™ÂˆYÎˆİš[™Âˆ›Ùš[WÚYÎˆİš[™ÂˆÛİ\˜ÙWÜYÙOÎˆ[X™\ˆ[ˆÙYZÛWÚİ\œÏÎˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ÙÙ[™\˜[İ[Y]X›WÜ›İÜ×ØÛİ\œÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ûİ\œÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Ûİ\œÙWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ÙÙ[™\˜[İ[Y]X›WÜ›İÜ×Ü›Ùš[WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ›Ùš[WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ÙÙ[™\˜[İ[Y]X›WÜ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÙ™šXÚX[Ú[œİ]][Û—İ[Y]X›WÛİ™\œšY\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÛœİ˜Z[ÎˆœÛÛ‚ˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÎˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆØÛÜWØÛÙNˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›Îˆİš[™È[ˆÛİ\˜ÙWİ\›ˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆØÛÜWØÛÙNˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆY™™Xİ]™WÙœ›ÛOÎˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆØÛÜWØÛÙOÎˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[Ú[œİ]][Û—İ[Y]X›WÛİ™\œšY\×ÜØÛÜWØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈœØÛÜWØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[İ[Y]X›WÜØÛÜWØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ˜ÛÙH—BˆKˆBˆBˆÙ™šXÚX[ÜÛİ\˜ÙWØÚ[™ÙWÜ]Y]YNˆÂˆ›İÎˆÂˆ\YYØ]ˆİš[™È[ˆ\›İ˜[Ü™\]Z\™Yˆ›ÛÛX[‚ˆ\›İ™YØ]ˆİš[™È[ˆÚ[™ÙWİ\Nˆİš[™Âˆ]XİYØ]ˆİš[™ÂˆY™™Xİ]™WÙœ›ÛNˆİš[™È[ˆYˆİš[™Âˆ›İNˆİš[™È[ˆ\œÙWÜ™\]Z\™Yˆ›ÛÛX[‚ˆ\œÙYØ]ˆİš[™È[ˆ\œÙ\—Ü™\İ[ˆœÛÛ‚ˆ™]š[İ\×ÜÛ˜\ÚİÚYˆİš[™È[ˆÛ˜\ÚİÚYˆİš[™ÂˆÛİ\˜ÙWÚYˆİš[™Âˆİ]\Îˆİš[™ÂˆBˆ[œÙ\ˆÂˆ\YYØ]Îˆİš[™È[ˆ\›İ˜[Ü™\]Z\™YÎˆ›ÛÛX[‚ˆ\›İ™YØ]Îˆİš[™È[ˆÚ[™ÙWİ\OÎˆİš[™Âˆ]XİYØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛOÎˆİš[™È[ˆYÎˆİš[™Âˆ›İOÎˆİš[™È[ˆ\œÙWÜ™\]Z\™YÎˆ›ÛÛX[‚ˆ\œÙYØ]Îˆİš[™È[ˆ\œÙ\—Ü™\İ[ÎˆœÛÛ‚ˆ™]š[İ\×ÜÛ˜\ÚİÚYÎˆİš[™È[ˆÛ˜\ÚİÚYˆİš[™ÂˆÛİ\˜ÙWÚYˆİš[™Âˆİ]\ÏÎˆİš[™ÂˆBˆ\]NˆÂˆ\YYØ]Îˆİš[™È[ˆ\›İ˜[Ü™\]Z\™YÎˆ›ÛÛX[‚ˆ\›İ™YØ]Îˆİš[™È[ˆÚ[™ÙWİ\OÎˆİš[™Âˆ]XİYØ]Îˆİš[™ÂˆY™™Xİ]™WÙœ›ÛOÎˆİš[™È[ˆYÎˆİš[™Âˆ›İOÎˆİš[™È[ˆ\œÙWÜ™\]Z\™YÎˆ›ÛÛX[‚ˆ\œÙYØ]Îˆİš[™È[ˆ\œÙ\—Ü™\İ[ÎˆœÛÛ‚ˆ™]š[İ\×ÜÛ˜\ÚİÚYÎˆİš[™È[ˆÛ˜\ÚİÚYÎˆİš[™ÂˆÛİ\˜ÙWÚYÎˆİš[™Âˆİ]\ÏÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ÜÛİ\˜ÙWØÚ[™ÙWÜ]Y]YWÜ™]š[İ\×ÜÛ˜\ÚİÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ™]š[İ\×ÜÛ˜\ÚİÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ÜÛİ\˜ÙWÜÛ˜\ÚİÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ÜÛİ\˜ÙWØÚ[™ÙWÜ]Y]YWÜÛ˜\ÚİÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛ˜\ÚİÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ÜÛİ\˜ÙWÜÛ˜\ÚİÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ÜÛİ\˜ÙWØÚ[™ÙWÜ]Y]YWÜÛİ\˜ÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ÜÛİ\˜ÙWÜ™YÚ\İH‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÙ™šXÚX[ÜÛİ\˜ÙWÜ™YÚ\İNˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ]]Üš]Nˆİš[™ÂˆÚXÚ×Û[ÙNˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™Âˆ\İØÚ[™ÙYØ]ˆİš[™È[ˆ\İØÚXÚÙYØ]ˆİš[™È[ˆ\İØÛÛ[Ú\Úˆİš[™È[ˆ\œÙ\—ÚÚ[™ˆİš[™ÂˆÛİ\˜ÙWÚÙ^Nˆİš[™ÂˆÛİ\˜ÙWİ\Nˆİš[™ÂˆÛİ\˜ÙWİ\›ˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]]Üš]OÎˆİš[™ÂˆÚXÚ×Û[ÙOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ\İØÚ[™ÙYØ]Îˆİš[™È[ˆ\İØÚXÚÙYØ]Îˆİš[™È[ˆ\İØÛÛ[Ú\ÚÎˆİš[™È[ˆ\œÙ\—ÚÚ[™Îˆİš[™ÂˆÛİ\˜ÙWÚÙ^Nˆİš[™ÂˆÛİ\˜ÙWİ\Nˆİš[™ÂˆÛİ\˜ÙWİ\›ˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]]Üš]OÎˆİš[™ÂˆÚXÚ×Û[ÙOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ\İØÚ[™ÙYØ]Îˆİš[™È[ˆ\İØÚXÚÙYØ]Îˆİš[™È[ˆ\İØÛÛ[Ú\ÚÎˆİš[™È[ˆ\œÙ\—ÚÚ[™Îˆİš[™ÂˆÛİ\˜ÙWÚÙ^OÎˆİš[™ÂˆÛİ\˜ÙWİ\OÎˆİš[™ÂˆÛİ\˜ÙWİ\›Îˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆÙ™šXÚX[ÜÛİ\˜ÙWÜÛ˜\ÚİÎˆÂˆ›İÎˆÂˆÛÛ[Ú\Úˆİš[™ÂˆXÚ\Ú[Û—Û›Îˆİš[™È[ˆØİ[Y[Ù]Nˆİš[™È[ˆY™™Xİ]™WÙœ›ÛNˆİš[™È[ˆY™™Xİ]™WİÎˆİš[™È[ˆÜİ]\Îˆ[X™\ˆ[ˆYˆİš[™ÂˆY]Y]NˆœÛÛ‚ˆ˜]×ÛØØ][Ûˆİš[™È[ˆ™]šY]™YØ]ˆİš[™ÂˆÛİ\˜ÙWÚYˆİš[™Âˆ]Nˆİš[™È[ˆBˆ[œÙ\ˆÂˆÛÛ[Ú\Úˆİš[™ÂˆXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆØİ[Y[Ù]OÎˆİš[™È[ˆY™™Xİ]™WÙœ›ÛOÎˆİš[™È[ˆY™™Xİ]™WİÏÎˆİš[™È[ˆÜİ]\ÏÎˆ[X™\ˆ[ˆYÎˆİš[™ÂˆY]Y]OÎˆœÛÛ‚ˆ˜]×ÛØØ][ÛÎˆİš[™È[ˆ™]šY]™YØ]Îˆİš[™ÂˆÛİ\˜ÙWÚYˆİš[™Âˆ]OÎˆİš[™È[ˆBˆ\]NˆÂˆÛÛ[Ú\ÚÎˆİš[™ÂˆXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆØİ[Y[Ù]OÎˆİš[™È[ˆY™™Xİ]™WÙœ›ÛOÎˆİš[™È[ˆY™™Xİ]™WİÏÎˆİš[™È[ˆÜİ]\ÏÎˆ[X™\ˆ[ˆYÎˆİš[™ÂˆY]Y]OÎˆœÛÛ‚ˆ˜]×ÛØØ][ÛÎˆİš[™È[ˆ™]šY]™YØ]Îˆİš[™ÂˆÛİ\˜ÙWÚYÎˆİš[™Âˆ]OÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[ÜÛİ\˜ÙWÜÛ˜\Úİ×ÜÛİ\˜ÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ÜÛİ\˜ÙWÜ™YÚ\İH‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÙ™šXÚX[İ[Y]X›WØ\XØ][Û—Ü›Ùš[\ÎˆÂˆ›İÎˆÂˆ›Ùš[WÚYˆİš[™Âˆ[WÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆ›Ùš[WÚYˆİš[™Âˆ[WÚYˆİš[™ÂˆBˆ\]NˆÂˆ›Ùš[WÚYÎˆİš[™Âˆ[WÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[İ[Y]X›WØ\XØ][Û—Ü›Ùš[\×Ü›Ùš[WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ›Ùš[WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[ÙÙ[™\˜[İ[Y]X›WÜ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[İ[Y]X›WØ\XØ][Û—Ü›Ùš[\×Ü[WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ[WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[İ[Y]X›WØ\XØ][Û—Ü[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÙ™šXÚX[İ[Y]X›WØ\XØ][Û—Ü[\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ\XØ][Û—İİ[ÛX^ˆ[X™\ˆ[ˆ\XØ][Û—İİ[ÛZ[ˆ[X™\ˆ[ˆ\›İ˜[ÜØÛÜNˆİš[™È[ˆ˜\ÙWİİ[Úİ\œÎˆ[X™\‚ˆÛÙNˆİš[™ÂˆÛÛ™šYİ\˜][ÛˆœÛÛ‚ˆÜ˜Y\Îˆ[X™\–×BˆYˆİš[™Âˆ›Ü›WØÛİ[X›WØØ\ˆ[X™\‚ˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›Îˆİš[™ÂˆÛİ\˜ÙWİ\›ˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØ][Û—İİ[ÛX^Îˆ[X™\ˆ[ˆ\XØ][Û—İİ[ÛZ[Îˆ[X™\ˆ[ˆ\›İ˜[ÜØÛÜOÎˆİš[™È[ˆ˜\ÙWİİ[Úİ\œÏÎˆ[X™\‚ˆÛÙNˆİš[™ÂˆÛÛ™šYİ\˜][ÛÎˆœÛÛ‚ˆÜ˜Y\Îˆ[X™\–×BˆYÎˆİš[™Âˆ›Ü›WØÛİ[X›WØØ\Îˆ[X™\‚ˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›Îˆİš[™ÂˆÛİ\˜ÙWİ\›ˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØ][Û—İİ[ÛX^Îˆ[X™\ˆ[ˆ\XØ][Û—İİ[ÛZ[Îˆ[X™\ˆ[ˆ\›İ˜[ÜØÛÜOÎˆİš[™È[ˆ˜\ÙWİİ[Úİ\œÏÎˆ[X™\‚ˆÛÙOÎˆİš[™ÂˆÛÛ™šYİ\˜][ÛÎˆœÛÛ‚ˆÜ˜Y\ÏÎˆ[X™\–×BˆYÎˆİš[™Âˆ›Ü›WØÛİ[X›WØØ\Îˆ[X™\‚ˆØÚÛÛİ\OÎˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™ÂˆÛİ\˜ÙWİ\›Îˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆÙ™šXÚX[İ[Y]X›WÜØÛÜWØØ][ÙÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ]]Üš]Wİ[š]ˆİš[™Âˆ˜\ÙWØÛÙNˆİš[™È[ˆÛÙNˆİš[™ÂˆÛÛœİ˜Z[ÎˆœÛÛ‚ˆY™™Xİ]™WÙœ›ÛNˆİš[™È[ˆÜ˜YWÙ[™ˆ[X™\ˆ[ˆÜ˜YWÜİ\ˆ[X™\ˆ[ˆ›ÙÜ˜[Wİ˜\šX[ˆİš[™È[ˆØÚY[WÛ[ÙNˆİš[™ÂˆØÚÛÛÜİX\Nˆİš[™È[ˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]Nˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›Îˆİš[™È[ˆÛİ\˜ÙWİ\›ˆİš[™È[ˆİ]\Îˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]]Üš]Wİ[š]ˆİš[™Âˆ˜\ÙWØÛÙOÎˆİš[™È[ˆÛÙNˆİš[™ÂˆÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆY™™Xİ]™WÙœ›ÛOÎˆİš[™È[ˆÜ˜YWÙ[™Îˆ[X™\ˆ[ˆÜ˜YWÜİ\Îˆ[X™\ˆ[ˆ›ÙÜ˜[Wİ˜\šX[Îˆİš[™È[ˆØÚY[WÛ[ÙNˆİš[™ÂˆØÚÛÛÜİX\OÎˆİš[™È[ˆØÚÛÛİ\Nˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]OÎˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆİ]\ÏÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]]Üš]Wİ[š]Îˆİš[™Âˆ˜\ÙWØÛÙOÎˆİš[™È[ˆÛÙOÎˆİš[™ÂˆÛÛœİ˜Z[ÏÎˆœÛÛ‚ˆY™™Xİ]™WÙœ›ÛOÎˆİš[™È[ˆÜ˜YWÙ[™Îˆ[X™\ˆ[ˆÜ˜YWÜİ\Îˆ[X™\ˆ[ˆ›ÙÜ˜[Wİ˜\šX[Îˆİš[™È[ˆØÚY[WÛ[ÙOÎˆİš[™ÂˆØÚÛÛÜİX\OÎˆİš[™È[ˆØÚÛÛİ\OÎˆİš[™ÂˆÛİ\˜ÙWÙXÚ\Ú[Û—Ù]OÎˆİš[™È[ˆÛİ\˜ÙWÙXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆİ]\ÏÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆÙ™šXÚX[İ›ØØ][Û˜[Øœ˜[˜Ú\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YNˆİš[™ÂˆšY[ÚYˆİš[™ÂˆYˆİš[™ÂˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆÛİ\˜ÙWİ\›ˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YNˆİš[™ÂˆšY[ÚYˆİš[™ÂˆYÎˆİš[™ÂˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ˜[˜ÚÛ˜[YOÎˆİš[™ÂˆšY[ÚYÎˆİš[™ÂˆYÎˆİš[™ÂˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[İ›ØØ][Û˜[Øœ˜[˜Ú\×ÙšY[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ™šY[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[İ›ØØ][Û˜[ÙšY[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆÙ™šXÚX[İ›ØØ][Û˜[ÙšY[ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆšY[Û˜[YNˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—İ\Nˆİš[™ÂˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆÛİ\˜ÙWÜØÛÜNˆİš[™ÂˆÛİ\˜ÙWİ\›ˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆšY[Û˜[YNˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—İ\Nˆİš[™ÂˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWÜØÛÜOÎˆİš[™ÂˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆšY[Û˜[YOÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—İ\OÎˆİš[™ÂˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWÜØÛÜOÎˆİš[™ÂˆÛİ\˜ÙWİ\›Îˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆÙ™šXÚX[İ›ØØ][Û˜[Ùœ˜[Y]ÛÜš×ÜÛİ\˜Ù\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\Îˆİš[™ÂˆXÚ\Ú[Û—Û›Îˆİš[™È[ˆšY[ÚYˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\‚ˆYˆİš[™Âˆ[œİ]][Û—İ\Nˆİš[™Âˆ™YY×Ü™]šY]Îˆ›ÛÛX[‚ˆÜ[Ü›ÙÜ˜[WÛ˜[YNˆİš[™Âˆ›ÙÜ˜[WŞYX\ˆ[X™\ˆ[ˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆÛİ\˜ÙWİ\›ˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\ÏÎˆİš[™ÂˆXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆšY[ÚYÎˆİš[™È[ˆÜ˜YWÛ]™[ˆ[X™\‚ˆYÎˆİš[™Âˆ[œİ]][Û—İ\Nˆİš[™Âˆ™YY×Ü™]šY]ÏÎˆ›ÛÛX[‚ˆÜ[Ü›ÙÜ˜[WÛ˜[YNˆİš[™Âˆ›ÙÜ˜[WŞYX\Îˆ[X™\ˆ[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWİ\›ˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØXš[]WÜİ]\ÏÎˆİš[™ÂˆXÚ\Ú[Û—Û›ÏÎˆİš[™È[ˆšY[ÚYÎˆİš[™È[ˆÜ˜YWÛ]™[Îˆ[X™\‚ˆYÎˆİš[™Âˆ[œİ]][Û—İ\OÎˆİš[™Âˆ™YY×Ü™]šY]ÏÎˆ›ÛÛX[‚ˆÜ[Ü›ÙÜ˜[WÛ˜[YOÎˆİš[™Âˆ›ÙÜ˜[WŞYX\Îˆ[X™\ˆ[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆÛİ\˜ÙWİ\›Îˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ›Ù™šXÚX[İ›ØØ][Û˜[Ùœ˜[Y]ÛÜš×ÜÛİ\˜Ù\×ÙšY[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ™šY[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›Ù™šXÚX[İ›ØØ][Û˜[ÙšY[È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ^\›ÛØXİ]š]WÙ[šY\ÎˆÂˆ›İÎˆÂˆXİ]š]WÙ]Nˆİš[™Âˆ\›İ™YØ]ˆİš[™È[ˆ\›İ™YØNˆİš[™È[ˆØ]YÛÜNˆİš[™ÂˆÜ™X]YØ]ˆİš[™Âˆ[\™YØNˆİš[™È[ˆ]šY[˜ÙWÜ™Y™\™[˜ÙNˆİš[™È[ˆ^[˜][Ûˆİš[™È[ˆİ\œÎˆ[X™\‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ[WÚYˆİš[™È[ˆİ]\Îˆİš[™ÂˆXXÚ\—ÚYˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]š]WÙ]Nˆİš[™Âˆ\›İ™YØ]Îˆİš[™È[ˆ\›İ™YØOÎˆİš[™È[ˆØ]YÛÜNˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[\™YØOÎˆİš[™È[ˆ]šY[˜ÙWÜ™Y™\™[˜ÙOÎˆİš[™È[ˆ^[˜][ÛÎˆİš[™È[ˆİ\œÎˆ[X™\‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ[WÚYÎˆİš[™È[ˆİ]\ÏÎˆİš[™ÂˆXXÚ\—ÚYˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]š]WÙ]OÎˆİš[™Âˆ\›İ™YØ]Îˆİš[™È[ˆ\›İ™YØOÎˆİš[™È[ˆØ]YÛÜOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[\™YØOÎˆİš[™È[ˆ]šY[˜ÙWÜ™Y™\™[˜ÙOÎˆİš[™È[ˆ^[˜][ÛÎˆİš[™È[ˆİ\œÏÎˆ[X™\‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ[WÚYÎˆİš[™È[ˆİ]\ÏÎˆİš[™ÂˆXXÚ\—ÚYÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü^\›ÛØXİ]š]WÙ[šY\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØXİ]š]WÙ[šY\×Ø\›İ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\›İ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØXİ]š]WÙ[šY\×Ø\›İ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\›İ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØXİ]š]WÙ[šY\×Ù[\™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ™[\™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØXİ]š]WÙ[šY\×Ù[\™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ™[\™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØXİ]š]WÙ[šY\×Ü[WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ[WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ^\›ÛÜ[WÜ™YÚ\İH‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØXİ]š]WÙ[šY\×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØXİ]š]WÙ[šY\×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆ^\›ÛØØ[İ[][Û—Ü[œÎˆÂˆ›İÎˆÂˆØ[İ[]YØNˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ\š[ÙÙ[™ˆİš[™Âˆ\š[ÙÜİ\ˆİš[™Âˆ[Wİ™\œÚ[Ûˆİš[™Âˆİ]\Îˆİš[™ÂˆBˆ[œÙ\ˆÂˆØ[İ[]YØNˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\š[ÙÙ[™ˆİš[™Âˆ\š[ÙÜİ\ˆİš[™Âˆ[Wİ™\œÚ[ÛÎˆİš[™Âˆİ]\ÏÎˆİš[™ÂˆBˆ\]NˆÂˆØ[İ[]YØOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\š[ÙÙ[™Îˆİš[™Âˆ\š[ÙÜİ\Îˆİš[™Âˆ[Wİ™\œÚ[ÛÎˆİš[™Âˆİ]\ÏÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü^\›ÛØØ[İ[][Û—Ü[œ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØØ[İ[][Û—Ü[œ×ØØ[İ[]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ø[İ[]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØØ[İ[][Û—Ü[œ×ØØ[İ[]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ø[İ[]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆ^\›ÛØØ[[™\ˆÂˆ›İÎˆÂˆ\›İ™YØ]ˆİš[™È[ˆ\›İ™YØNˆİš[™È[ˆØ[[™\—Ù]Nˆİš[™Âˆ^Wİ\Nˆİš[™ÂˆY[YYÙİZY[˜ÙWÜ\™›Ü›YYˆ›ÛÛX[‚ˆY[YYÜ™Yİ[\—Ü\™›Ü›YYˆ›ÛÛX[‚ˆ]WÜ^XX›Nˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆÛİ\˜ÙWÛ›İNˆİš[™È[ˆ]Nˆİš[™ÂˆBˆ[œÙ\ˆÂˆ\›İ™YØ]Îˆİš[™È[ˆ\›İ™YØOÎˆİš[™È[ˆØ[[™\—Ù]Nˆİš[™Âˆ^Wİ\Nˆİš[™ÂˆY[YYÙİZY[˜ÙWÜ\™›Ü›YYÎˆ›ÛÛX[‚ˆY[YYÜ™Yİ[\—Ü\™›Ü›YYÎˆ›ÛÛX[‚ˆ]WÜ^XX›OÎˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆ]Nˆİš[™ÂˆBˆ\]NˆÂˆ\›İ™YØ]Îˆİš[™È[ˆ\›İ™YØOÎˆİš[™È[ˆØ[[™\—Ù]OÎˆİš[™Âˆ^Wİ\OÎˆİš[™ÂˆY[YYÙİZY[˜ÙWÜ\™›Ü›YYÎˆ›ÛÛX[‚ˆY[YYÜ™Yİ[\—Ü\™›Ü›YYÎˆ›ÛÛX[‚ˆ]WÜ^XX›OÎˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™È[ˆ]OÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü^\›ÛØØ[[™\—Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØØ[[™\—Ø\›İ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\›İ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛØØ[[™\—Ø\›İ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\›İ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆ^\›ÛÙ^WÙ[šY\ÎˆÂˆ›İÎˆÂˆ\›İ™Yˆ›ÛÛX[‚ˆ\›İ™YØ]ˆİš[™È[ˆ\›İ™YØNˆİš[™È[ˆØ[İ[]Yˆ›ÛÛX[‚ˆØ]YÛÜNˆİš[™ÂˆÜ™X]YØ]ˆİš[™Âˆ]šY[˜ÙWÛ›İNˆİš[™È[ˆ^[˜][Ûˆİš[™È[ˆİ\œÎˆ[X™\‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆØœ×Ù]Wİ\Nˆİš[™Âˆ˜]WÛ][\Y\ˆ[X™\‚ˆ[WØÛÙNˆİš[™È[ˆÛİ\˜ÙWÚYˆİš[™È[ˆÛİ\˜ÙWİ\Nˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆÛÜš×Ù]Nˆİš[™ÂˆBˆ[œÙ\ˆÂˆ\›İ™YÎˆ›ÛÛX[‚ˆ\›İ™YØ]Îˆİš[™È[ˆ\›İ™YØOÎˆİš[™È[ˆØ[İ[]YÎˆ›ÛÛX[‚ˆØ]YÛÜNˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ]šY[˜ÙWÛ›İOÎˆİš[™È[ˆ^[˜][ÛÎˆİš[™È[ˆİ\œÏÎˆ[X™\‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØœ×Ù]Wİ\OÎˆİš[™Âˆ˜]WÛ][\Y\Îˆ[X™\‚ˆ[WØÛÙOÎˆİš[™È[ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆÛİ\˜ÙWİ\Nˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆÛÜš×Ù]Nˆİš[™ÂˆBˆ\]NˆÂˆ\›İ™YÎˆ›ÛÛX[‚ˆ\›İ™YØ]Îˆİš[™È[ˆ\›İ™YØOÎˆİš[™È[ˆØ[İ[]YÎˆ›ÛÛX[‚ˆØ]YÛÜOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ]šY[˜ÙWÛ›İOÎˆİš[™È[ˆ^[˜][ÛÎˆİš[™È[ˆİ\œÏÎˆ[X™\‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØœ×Ù]Wİ\OÎˆİš[™Âˆ˜]WÛ][\Y\Îˆ[X™\‚ˆ[WØÛÙOÎˆİš[™È[ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆÛİ\˜ÙWİ\OÎˆİš[™ÂˆXXÚ\—ÚYÎˆİš[™ÂˆÛÜš×Ù]OÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü^\›ÛÙ^WÙ[šY\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÙ^WÙ[šY\×Ø\›İ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\›İ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÙ^WÙ[šY\×Ø\›İ™YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜\›İ™YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÙ^WÙ[šY\×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÙ^WÙ[šY\×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆ^\›ÛÙ\WÜ\š[ÙÎˆÂˆ›İÎˆÂˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆX\šÙYØ]ˆİš[™Âˆ[Ûˆ[X™\‚ˆ™X\ÛÛˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆYX\ˆ[X™\‚ˆBˆ[œÙ\ˆÂˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆX\šÙYØ]Îˆİš[™Âˆ[Ûˆ[X™\‚ˆ™X\ÛÛˆİš[™ÂˆXXÚ\—ÚYˆİš[™ÂˆYX\ˆ[X™\‚ˆBˆ\]NˆÂˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆX\šÙYØ]Îˆİš[™Âˆ[ÛÎˆ[X™\‚ˆ™X\ÛÛÎˆİš[™ÂˆXXÚ\—ÚYÎˆİš[™ÂˆYX\Îˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü^\›ÛÙ\WÜ\š[Ù×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÙ\WÜ\š[Ù×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÙ\WÜ\š[Ù×İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆ^\›ÛÜ[WÜ™YÚ\İNˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆØ]YÛÜNˆİš[™ÂˆÛÙNˆİš[™ÂˆÛÛ™][Û—Û›İNˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆÜ™X]YØNˆİš[™È[ˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÎˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆØœ×Ù]Wİ\Nˆİš[™Âˆ[ÛWØØ\Úİ\œÎˆ[X™\ˆ[ˆ˜[YNˆİš[™Âˆ˜]WÛ][\Y\ˆ[X™\‚ˆ™\]Z\™\×ØXİX[Ü\™›Ü›X[˜ÙNˆ›ÛÛX[‚ˆÛİ\˜ÙWÚYˆİš[™È[ˆÙYZÛWØØ\Úİ\œÎˆ[X™\ˆ[ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆØ]YÛÜNˆİš[™ÂˆÛÙNˆİš[™ÂˆÛÛ™][Û—Û›İOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆY™™Xİ]™WÙœ›ÛNˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØœ×Ù]Wİ\Nˆİš[™Âˆ[ÛWØØ\Úİ\œÏÎˆ[X™\ˆ[ˆ˜[YNˆİš[™Âˆ˜]WÛ][\Y\Îˆ[X™\‚ˆ™\]Z\™\×ØXİX[Ü\™›Ü›X[˜ÙOÎˆ›ÛÛX[‚ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆÙYZÛWØØ\Úİ\œÏÎˆ[X™\ˆ[ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆØ]YÛÜOÎˆİš[™ÂˆÛÙOÎˆİš[™ÂˆÛÛ™][Û—Û›İOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆY™™Xİ]™WÙœ›ÛOÎˆİš[™ÂˆY™™Xİ]™WİÏÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆØœ×Ù]Wİ\OÎˆİš[™Âˆ[ÛWØØ\Úİ\œÏÎˆ[X™\ˆ[ˆ˜[YOÎˆİš[™Âˆ˜]WÛ][\Y\Îˆ[X™\‚ˆ™\]Z\™\×ØXİX[Ü\™›Ü›X[˜ÙOÎˆ›ÛÛX[‚ˆÛİ\˜ÙWÚYÎˆİš[™È[ˆÙYZÛWØØ\Úİ\œÏÎˆ[X™\ˆ[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü^\›ÛÜ[WÜ™YÚ\İWÚ[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÜ[WÜ™YÚ\İWØÜ™X]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ü™X]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÜ[WÜ™YÚ\İWØÜ™X]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ü™X]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ^\›ÛÜ[WÜ™YÚ\İWÜÛİ\˜ÙWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœÛİ\˜ÙWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ›YØ[Ü[WÜÛİ\˜Ù\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ\›Z\ÜÚ[Û—Ø]Y]ÛÙÎˆÂˆ›İÎˆÂˆXİÜ—İ\Ù\—ÚYˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›İNˆİš[™È[ˆÜ\˜][Ûˆİš[™Âˆ\›Z\ÜÚ[Û—ØÛÙNˆİš[™ÂˆØÛÜNˆœÛÛ‚ˆ\™Ù]İ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİÜ—İ\Ù\—ÚYÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆÜ\˜][Ûˆİš[™Âˆ\›Z\ÜÚ[Û—ØÛÙNˆİš[™ÂˆØÛÜOÎˆœÛÛ‚ˆ\™Ù]İ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİÜ—İ\Ù\—ÚYÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İOÎˆİš[™È[ˆÜ\˜][ÛÎˆİš[™Âˆ\›Z\ÜÚ[Û—ØÛÙOÎˆİš[™ÂˆØÛÜOÎˆœÛÛ‚ˆ\™Ù]İ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü\›Z\ÜÚ[Û—Ø]Y]ÛÙ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\›Z\ÜÚ[Û—Ø]Y]ÛÙ×ØXİÜ—İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XİÜ—İ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\›Z\ÜÚ[Û—Ø]Y]ÛÙ×ØXİÜ—İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XİÜ—İ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\›Z\ÜÚ[Û—Ø]Y]ÛÙ×İ\™Ù]İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\™Ù]İ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\›Z\ÜÚ[Û—Ø]Y]ÛÙ×İ\™Ù]İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\™Ù]İ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆ\›Z\ÜÚ[Û—ØØ][ÙÎˆÂˆ›İÎˆÂˆXİ[Ûˆİš[™ÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÙNˆİš[™ÂˆÜ™X]YØ]ˆİš[™Âˆ[™Ù\›İ\Îˆ›ÛÛX[‚ˆ\ØÜš\[Ûˆİš[™È[ˆX™[ˆİš[™Âˆ[Ù[WØÛÙNˆİš[™Âˆ[Ù[WÛX™[ˆİš[™ÂˆÛÜÛÜ™\ˆ[X™\‚ˆBˆ[œÙ\ˆÂˆXİ[Ûˆİš[™ÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙNˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[™Ù\›İ\ÏÎˆ›ÛÛX[‚ˆ\ØÜš\[ÛÎˆİš[™È[ˆX™[ˆİš[™Âˆ[Ù[WØÛÙNˆİš[™Âˆ[Ù[WÛX™[ˆİš[™ÂˆÛÜÛÜ™\Îˆ[X™\‚ˆBˆ\]NˆÂˆXİ[ÛÎˆİš[™ÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[™Ù\›İ\ÏÎˆ›ÛÛX[‚ˆ\ØÜš\[ÛÎˆİš[™È[ˆX™[Îˆİš[™Âˆ[Ù[WØÛÙOÎˆİš[™Âˆ[Ù[WÛX™[Îˆİš[™ÂˆÛÜÛÜ™\Îˆ[X™\‚ˆBˆ™[][ÛœÚ\Îˆ×BˆBˆ\œÛÛ›™[ÙšY[ØØ][ÙÎˆÂˆ›İÎˆÂˆ]WØÛ\ÜÎˆİš[™Âˆ\Ü^WÛ˜[YNˆİš[™Âˆ[˜X›Yˆ›ÛÛX[‚ˆšY[ÚÙ^Nˆİš[™Âˆš\œİÜÙY[—Ø]ˆİš[™Âˆ\İÜÙY[—Ø]ˆİš[™Âˆ[Ù[WÚÙ^\Îˆİš[™Ö×BˆÛİ\˜ÙWÚXY\œÎˆİš[™Ö×Bˆ\]YØ]ˆİš[™Âˆ\]YØNˆİš[™È[ˆBˆ[œÙ\ˆÂˆ]WØÛ\ÜÏÎˆİš[™Âˆ\Ü^WÛ˜[YNˆİš[™Âˆ[˜X›YÎˆ›ÛÛX[‚ˆšY[ÚÙ^Nˆİš[™Âˆš\œİÜÙY[—Ø]Îˆİš[™Âˆ\İÜÙY[—Ø]Îˆİš[™Âˆ[Ù[WÚÙ^\ÏÎˆİš[™Ö×BˆÛİ\˜ÙWÚXY\œÏÎˆİš[™Ö×Bˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ\]NˆÂˆ]WØÛ\ÜÏÎˆİš[™Âˆ\Ü^WÛ˜[YOÎˆİš[™Âˆ[˜X›YÎˆ›ÛÛX[‚ˆšY[ÚÙ^OÎˆİš[™Âˆš\œİÜÙY[—Ø]Îˆİš[™Âˆ\İÜÙY[—Ø]Îˆİš[™Âˆ[Ù[WÚÙ^\ÏÎˆİš[™Ö×BˆÛİ\˜ÙWÚXY\œÏÎˆİš[™Ö×Bˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ™[][ÛœÚ\Îˆ×BˆBˆ\œÛÛ›™[ÙšY[Ûİ™\œšY\ÎˆÂˆ›İÎˆÂˆ[˜X›Yˆ›ÛÛX[ˆ[ˆšY[ÚÙ^Nˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ[Ù[WÚÙ^\Îˆİš[™Ö×H[ˆ\]YØ]ˆİš[™Âˆ\]YØNˆİš[™È[ˆBˆ[œÙ\ˆÂˆ[˜X›YÎˆ›ÛÛX[ˆ[ˆšY[ÚÙ^Nˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ[Ù[WÚÙ^\ÏÎˆİš[™Ö×H[ˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ\]NˆÂˆ[˜X›YÎˆ›ÛÛX[ˆ[ˆšY[ÚÙ^OÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ[Ù[WÚÙ^\ÏÎˆİš[™Ö×H[ˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü\œÛÛ›™[ÙšY[Ûİ™\œšY\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\œÛÛ›™[ÙšY[Ûİ™\œšY\×ÙšY[ÚÙ^WÙšÙ^H‚ˆÛÛ[[œÎˆÈ™šY[ÚÙ^H—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ\œÛÛ›™[ÙšY[ØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ™šY[ÚÙ^H—BˆKˆBˆBˆ\œÛÛ›™[Ú[\ÜÜ^[ØYÎˆÂˆ›İÎˆÂˆYˆİš[™Âˆ[\ÜYØ]ˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ\×Øİ\œ™[ˆ›ÛÛX[‚ˆ\œÛÛ›™[ÚYˆİš[™Âˆ˜]×Ù]NˆœÛÛ‚ˆÛİ\˜ÙWÙš[WÛ˜[YNˆİš[™È[ˆÛİ\˜ÙWÙ›Ü›X]ˆİš[™È[ˆBˆ[œÙ\ˆÂˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\×Øİ\œ™[Îˆ›ÛÛX[‚ˆ\œÛÛ›™[ÚYˆİš[™Âˆ˜]×Ù]OÎˆœÛÛ‚ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÙ›Ü›X]Îˆİš[™È[ˆBˆ\]NˆÂˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\×Øİ\œ™[Îˆ›ÛÛX[‚ˆ\œÛÛ›™[ÚYÎˆİš[™Âˆ˜]×Ù]OÎˆœÛÛ‚ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÙ›Ü›X]Îˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü\œÛÛ›™[Ú[\ÜÜ^[ØY×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\œÛÛ›™[Ú[\ÜÜ^[ØY×Ü\œÛÛ›™[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ\œÛÛ›™[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ\œÛÛ›™[Ü™YÚ\İH‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ\œÛÛ›™[Üš]˜]WÙ]Z[ÎˆÂˆ›İÎˆÂˆ\˜Ú]™WÛ›Îˆİš[™È[ˆ˜\ÙWİ]Nˆİš[™È[ˆš\Ù]Nˆİš[™È[ˆ›ÛÙÙÜ›İ\ˆİš[™È[ˆØ\™Y\—ÜİYÙNˆİš[™È[ˆ\İšXİˆİš[™È[ˆ]Wİ]Nˆİš[™È[ˆYXØ][Û—Üİ]\Îˆİš[™È[ˆš\œİÜÙ\šXÙWÙ]Nˆİš[™È[ˆÙ[™\ˆİš[™È[ˆÜ˜YWÜİ\ˆİš[™È[ˆ[\ÜYØ]ˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ[œİ]][Û—Û˜[YNˆİš[™È[ˆ[œİ]][Û—Ü™YÚ\İWÛ›Îˆİš[™È[ˆ\œÛÛ›™[ÚYˆİš[™Âˆ\œÛÛ›™[Üİ]\Îˆİš[™È[ˆ›İš[˜ÙNˆİš[™È[ˆ˜]×Ù]NˆœÛÛ‚ˆ˜]×ÛX™[ÎˆœÛÛ‚ˆ™]\™[Y[Ü™YÚ\İWÛ›Îˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YNˆİš[™È[ˆÛİ\˜ÙWÙ›Ü›X]ˆİš[™È[ˆ×ÚY[]WÛ›Îˆİš[™È[ˆXXÚ[™×Ø\™XNˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆ\˜Ú]™WÛ›ÏÎˆİš[™È[ˆ˜\ÙWİ]OÎˆİš[™È[ˆš\Ù]OÎˆİš[™È[ˆ›ÛÙÙÜ›İ\Îˆİš[™È[ˆØ\™Y\—ÜİYÙOÎˆİš[™È[ˆ\İšXİÎˆİš[™È[ˆ]Wİ]OÎˆİš[™È[ˆYXØ][Û—Üİ]\ÏÎˆİš[™È[ˆš\œİÜÙ\šXÙWÙ]OÎˆİš[™È[ˆÙ[™\Îˆİš[™È[ˆÜ˜YWÜİ\Îˆİš[™È[ˆ[\ÜYØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ[œİ]][Û—Û˜[YOÎˆİš[™È[ˆ[œİ]][Û—Ü™YÚ\İWÛ›ÏÎˆİš[™È[ˆ\œÛÛ›™[ÚYˆİš[™Âˆ\œÛÛ›™[Üİ]\ÏÎˆİš[™È[ˆ›İš[˜ÙOÎˆİš[™È[ˆ˜]×Ù]OÎˆœÛÛ‚ˆ˜]×ÛX™[ÏÎˆœÛÛ‚ˆ™]\™[Y[Ü™YÚ\İWÛ›ÏÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÙ›Ü›X]Îˆİš[™È[ˆ×ÚY[]WÛ›ÏÎˆİš[™È[ˆXXÚ[™×Ø\™XOÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆ\˜Ú]™WÛ›ÏÎˆİš[™È[ˆ˜\ÙWİ]OÎˆİš[™È[ˆš\Ù]OÎˆİš[™È[ˆ›ÛÙÙÜ›İ\Îˆİš[™È[ˆØ\™Y\—ÜİYÙOÎˆİš[™È[ˆ\İšXİÎˆİš[™È[ˆ]Wİ]OÎˆİš[™È[ˆYXØ][Û—Üİ]\ÏÎˆİš[™È[ˆš\œİÜÙ\šXÙWÙ]OÎˆİš[™È[ˆÙ[™\Îˆİš[™È[ˆÜ˜YWÜİ\Îˆİš[™È[ˆ[\ÜYØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ[œİ]][Û—Û˜[YOÎˆİš[™È[ˆ[œİ]][Û—Ü™YÚ\İWÛ›ÏÎˆİš[™È[ˆ\œÛÛ›™[ÚYÎˆİš[™Âˆ\œÛÛ›™[Üİ]\ÏÎˆİš[™È[ˆ›İš[˜ÙOÎˆİš[™È[ˆ˜]×Ù]OÎˆœÛÛ‚ˆ˜]×ÛX™[ÏÎˆœÛÛ‚ˆ™]\™[Y[Ü™YÚ\İWÛ›ÏÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆÛİ\˜ÙWÙ›Ü›X]Îˆİš[™È[ˆ×ÚY[]WÛ›ÏÎˆİš[™È[ˆXXÚ[™×Ø\™XOÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü\œÛÛ›™[Üš]˜]WÙ]Z[×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\œÛÛ›™[Üš]˜]WÙ]Z[×Ü\œÛÛ›™[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ\œÛÛ›™[ÚY—Bˆ\ÓÛ™UÓÛ™NˆYBˆ™Y™\™[˜ÙY™[][Ûˆœ\œÛÛ›™[Ü™YÚ\İH‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ\œÛÛ›™[Ü™YÚ\İNˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ\š]™YÜ›Û\Îˆİš[™Ö×Bˆ]Wİ]Nˆİš[™È[ˆ[\Ş[Y[Üİ]\Îˆİš[™È[ˆ[Û˜[YNˆİš[™ÂˆYˆİš[™Âˆ[\ÜYØ]ˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ[šÙYİ\Ù\—ÚYˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YNˆİš[™È[ˆŞ\İ[WÜ›ÛNˆİš[™È[ˆXXÚ[™×Ø\™XWÚYˆİš[™È[ˆXXÚ[™×Ø\™XWÜ˜]Îˆİš[™È[ˆ]Nˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\š]™YÜ›Û\ÏÎˆİš[™Ö×Bˆ]Wİ]OÎˆİš[™È[ˆ[\Ş[Y[Üİ]\ÏÎˆİš[™È[ˆ[Û˜[YNˆİš[™ÂˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ[šÙYİ\Ù\—ÚYÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆŞ\İ[WÜ›ÛOÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYÎˆİš[™È[ˆXXÚ[™×Ø\™XWÜ˜]ÏÎˆİš[™È[ˆ]OÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\š]™YÜ›Û\ÏÎˆİš[™Ö×Bˆ]Wİ]OÎˆİš[™È[ˆ[\Ş[Y[Üİ]\ÏÎˆİš[™È[ˆ[Û˜[YOÎˆİš[™ÂˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ[šÙYİ\Ù\—ÚYÎˆİš[™È[ˆÛİ\˜ÙWÙš[WÛ˜[YOÎˆİš[™È[ˆŞ\İ[WÜ›ÛOÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYÎˆİš[™È[ˆXXÚ[™×Ø\™XWÜ˜]ÏÎˆİš[™È[ˆ]OÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü\œÛÛ›™[Ü™YÚ\İWÚ[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\œÛÛ›™[Ü™YÚ\İWİXXÚ[™×Ø\™XWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ[™×Ø\™XWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ[™×Ø\™X\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ\œÛÛ›™[Ü™\ÜÛœÚXš[]Y\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ\ÜÚYÛ›Y[ÙØİ[Y[İ\›ˆİš[™È[ˆÜ™X]YØ]ˆİš[™Âˆ[™×ÛÛˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆYØ[Ø˜\Ú\Îˆİš[™È[ˆ\œÛÛ›™[ÚYˆİš[™È[ˆ™\ÜÛœÚXš[]WÚYˆİš[™Âˆİ\×ÛÛˆİš[™È[ˆ\Ù\—ÚYˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\ÜÚYÛ›Y[ÙØİ[Y[İ\›Îˆİš[™È[ˆÜ™X]YØ]Îˆİš[™Âˆ[™×ÛÛÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆYØ[Ø˜\Ú\ÏÎˆİš[™È[ˆ\œÛÛ›™[ÚYÎˆİš[™È[ˆ™\ÜÛœÚXš[]WÚYˆİš[™Âˆİ\×ÛÛÎˆİš[™È[ˆ\Ù\—ÚYÎˆİš[™È[ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\ÜÚYÛ›Y[ÙØİ[Y[İ\›Îˆİš[™È[ˆÜ™X]YØ]Îˆİš[™Âˆ[™×ÛÛÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆYØ[Ø˜\Ú\ÏÎˆİš[™È[ˆ\œÛÛ›™[ÚYÎˆİš[™È[ˆ™\ÜÛœÚXš[]WÚYÎˆİš[™Âˆİ\×ÛÛÎˆİš[™È[ˆ\Ù\—ÚYÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü\œÛÛ›™[Ü™\ÜÛœÚXš[]Y\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\œÛÛ›™[Ü™\ÜÛœÚXš[]Y\×Ü\œÛÛ›™[ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ\œÛÛ›™[ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ\œÛÛ›™[Ü™YÚ\İH‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\œÛÛ›™[Ü™\ÜÛœÚXš[]Y\×Ü™\ÜÛœÚXš[]WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœ™\ÜÛœÚXš[]WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ™\ÜÛœÚXš[]WØØ][ÙÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ™WÜ™YÚ\İ\™YİXXÚ\œÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÜ™X]YØ]ˆİš[™Âˆ[XZ[ˆİš[™È[ˆ[Û˜[YNˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›ÛNˆ]X˜\ÙVÈœX›XÈ—VÈ‘[[\È—VÈ˜\Ü›ÛH—BˆÚÛˆİš[™ÂˆXXÚ[™×Ø\™XWÚYˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™Âˆ[XZ[Îˆİš[™È[ˆ[Û˜[YNˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›ÛOÎˆ]X˜\ÙVÈœX›XÈ—VÈ‘[[\È—VÈ˜\Ü›ÛH—BˆÚÛˆİš[™ÂˆXXÚ[™×Ø\™XWÚYÎˆİš[™È[ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™Âˆ[XZ[Îˆİš[™È[ˆ[Û˜[YOÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›ÛOÎˆ]X˜\ÙVÈœX›XÈ—VÈ‘[[\È—VÈ˜\Ü›ÛH—BˆÚÛÎˆİš[™ÂˆXXÚ[™×Ø\™XWÚYÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü™WÜ™YÚ\İ\™YİXXÚ\œ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ™WÜ™YÚ\İ\™YİXXÚ\œ×İXXÚ[™×Ø\™XWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ[™×Ø\™XWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ[™×Ø\™X\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆš[˜Ú\[Ü™XÛİ™\WÚY[]NˆÂˆ›İÎˆÂˆÜ™X]YØ]ˆİš[™Âˆ[XZ[ˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆÛ™Nˆİš[™ÂˆÚÛ—ÚXXÎˆİš[™ÂˆÚÛ—ÛX\ÚÙYˆİš[™Âˆ\]YØ]ˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆÜ™X]YØ]Îˆİš[™Âˆ[XZ[ˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆÛ™Nˆİš[™ÂˆÚÛ—ÚXXÎˆİš[™ÂˆÚÛ—ÛX\ÚÙYˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆÜ™X]YØ]Îˆİš[™Âˆ[XZ[Îˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆÛ™OÎˆİš[™ÂˆÚÛ—ÚXXÏÎˆİš[™ÂˆÚÛ—ÛX\ÚÙYÎˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœš[˜Ú\[Ü™XÛİ™\WÚY[]WÚ[œİ]][Û—ØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ›Ùš[WÜ›ÛWİYÜÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›ÛWİYÎˆİš[™ÂˆÛİ\˜ÙNˆİš[™Âˆ\]YØ]ˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›ÛWİYÎˆİš[™ÂˆÛİ\˜ÙOÎˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›ÛWİYÏÎˆİš[™ÂˆÛİ\˜ÙOÎˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü›Ùš[WÜ›ÛWİYÜ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆ›Ùš[\ÎˆÂˆ›İÎˆÂˆ›ÛÙİ\Nˆİš[™È[ˆ[XZ[ˆİš[™È[ˆ[Y\™Ù[˜ŞWØÛÛXİˆİš[™È[ˆ[Û˜[YNˆİš[™È[ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ\×Üİ\\—ØYZ[ˆ›ÛÛX[‚ˆ\›Z\ÜÚ[Û—Û[ÙNˆİš[™ÂˆÛ™Nˆİš[™È[ˆ›ÛNˆ]X˜\ÙVÈœX›XÈ—VÈ‘[[\È—VÈ˜\Ü›ÛH—BˆÚÛˆİš[™È[ˆXXÚ[™×Ø\™XWÚYˆİš[™È[ˆ\]YØ]ˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆ›ÛÙİ\OÎˆİš[™È[ˆ[XZ[Îˆİš[™È[ˆ[Y\™Ù[˜ŞWØÛÛXİÎˆİš[™È[ˆ[Û˜[YOÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\×Üİ\\—ØYZ[Îˆ›ÛÛX[‚ˆ\›Z\ÜÚ[Û—Û[ÙOÎˆİš[™ÂˆÛ™OÎˆİš[™È[ˆ›ÛOÎˆ]X˜\ÙVÈœX›XÈ—VÈ‘[[\È—VÈ˜\Ü›ÛH—BˆÚÛÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYÎˆİš[™È[ˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆ›ÛÙİ\OÎˆİš[™È[ˆ[XZ[Îˆİš[™È[ˆ[Y\™Ù[˜ŞWØÛÛXİÎˆİš[™È[ˆ[Û˜[YOÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ\×Üİ\\—ØYZ[Îˆ›ÛÛX[‚ˆ\›Z\ÜÚ[Û—Û[ÙOÎˆİš[™ÂˆÛ™OÎˆİš[™È[ˆ›ÛOÎˆ]X˜\ÙVÈœX›XÈ—VÈ‘[[\È—VÈ˜\Ü›ÛH—BˆÚÛÎˆİš[™È[ˆXXÚ[™×Ø\™XWÚYÎˆİš[™È[ˆ\]YØ]Îˆİš[™Âˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü›Ùš[\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ›Ùš[\×Ú[œİ]][Û—ØÛÙWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ›Ùš[\×İXXÚ[™×Ø\™XWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ[™×Ø\™XWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ[™×Ø\™X\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆ\ÚÜİXœØÜš\[ÛœÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ]]ˆİš[™ÂˆÜ™X]YØ]ˆİš[™Âˆ[™Ú[ˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆM™ˆİš[™Âˆ]›Ü›Nˆİš[™Âˆ\]YØ]ˆİš[™Âˆ\Ù\—ØYÙ[ˆİš[™È[ˆ\Ù\—ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]]ˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[™Ú[ˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆM™ˆİš[™Âˆ]›Ü›OÎˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ØYÙ[Îˆİš[™È[ˆ\Ù\—ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]]Îˆİš[™ÂˆÜ™X]YØ]Îˆİš[™Âˆ[™Ú[Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆM™Îˆİš[™Âˆ]›Ü›OÎˆİš[™Âˆ\]YØ]Îˆİš[™Âˆ\Ù\—ØYÙ[Îˆİš[™È[ˆ\Ù\—ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü\ÚÜİXœØÜš\[Ûœ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\ÚÜİXœØÜš\[Ûœ×İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ\ÚÜİXœØÜš\[Ûœ×İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆ]\˜[—ÜÜ]Ü[œÎˆÂˆ›İÎˆÂˆXØY[ZX×ŞYX\ˆİš[™ÂˆÛ\Ü×ÚYˆİš[™ÂˆÜ™X]YØ]ˆİš[™ÂˆÜ™X]YØNˆİš[™È[ˆ[˜X›Yˆ›ÛÛX[‚ˆÜ›İ\ÌWÚYˆİš[™È[ˆÜ›İ\Ì—ÚYˆİš[™È[ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆÛİ\˜ÙWÛ›İNˆİš[™ÂˆŞ[˜×ÙÜ›İ\ÚYˆİš[™È[ˆXXÚ\—ÌWÚYˆİš[™È[ˆXXÚ\—Ì—ÚYˆİš[™È[ˆ™\ÚÛˆ[X™\‚ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXØY[ZX×ŞYX\ˆİš[™ÂˆÛ\Ü×ÚYˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆ[˜X›YÎˆ›ÛÛX[‚ˆÜ›İ\ÌWÚYÎˆİš[™È[ˆÜ›İ\Ì—ÚYÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™ÂˆŞ[˜×ÙÜ›İ\ÚYÎˆİš[™È[ˆXXÚ\—ÌWÚYÎˆİš[™È[ˆXXÚ\—Ì—ÚYÎˆİš[™È[ˆ™\ÚÛÎˆ[X™\‚ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXØY[ZX×ŞYX\Îˆİš[™ÂˆÛ\Ü×ÚYÎˆİš[™ÂˆÜ™X]YØ]Îˆİš[™ÂˆÜ™X]YØOÎˆİš[™È[ˆ[˜X›YÎˆ›ÛÛX[‚ˆÜ›İ\ÌWÚYÎˆİš[™È[ˆÜ›İ\Ì—ÚYÎˆİš[™È[ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆÛİ\˜ÙWÛ›İOÎˆİš[™ÂˆŞ[˜×ÙÜ›İ\ÚYÎˆİš[™È[ˆXXÚ\—ÌWÚYÎˆİš[™È[ˆXXÚ\—Ì—ÚYÎˆİš[™È[ˆ™\ÚÛÎˆ[X™\‚ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×Ü]\˜[—ÜÜ]Ü[œ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Øİ\œšXİ[[WÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ˜Û\Ü×ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×Ü›Üİ\—Üİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×ØÛ\Ü×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Û\Ü×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚÛÛØÛ\ÜÙ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×ØÜ™X]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ü™X]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×ØÜ™X]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Ü™X]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×ÙÜ›İ\ÌWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ™Ü›İ\ÌWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×ÜİX™Ü›İ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×ÙÜ›İ\Ì—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ™Ü›İ\Ì—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆ˜Û\Ü×ÜİX™Ü›İ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×ÜŞ[˜×ÙÜ›İ\ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœŞ[˜×ÙÜ›İ\ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[WÜŞ[˜×ÙÜ›İ\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×İXXÚ\—ÌWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÌWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×İXXÚ\—ÌWÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÌWÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×İXXÚ\—Ì—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—Ì—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœ]\˜[—ÜÜ]Ü[œ×İXXÚ\—Ì—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—Ì—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆ™\ÜÛœÚXš[]WØØ][ÙÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ\XØX›WÜØÚÛÛİ\\Îˆİš[™Ö×BˆÛÙNˆİš[™ÂˆYˆİš[™ÂˆYØ[Ø˜\Ú\Îˆİš[™È[ˆ˜[YNˆİš[™Âˆ\™[İ]Nˆİš[™È[ˆÛÜÛÜ™\ˆ[X™\‚ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØX›WÜØÚÛÛİ\\ÏÎˆİš[™Ö×BˆÛÙNˆİš[™ÂˆYÎˆİš[™ÂˆYØ[Ø˜\Ú\ÏÎˆİš[™È[ˆ˜[YNˆİš[™Âˆ\™[İ]OÎˆİš[™È[ˆÛÜÛÜ™\Îˆ[X™\‚ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ\XØX›WÜØÚÛÛİ\\ÏÎˆİš[™Ö×BˆÛÙOÎˆİš[™ÂˆYÎˆİš[™ÂˆYØ[Ø˜\Ú\ÏÎˆİš[™È[ˆ˜[YOÎˆİš[™Âˆ\™[İ]OÎˆİš[™È[ˆÛÜÛÜ™\Îˆ[X™\‚ˆBˆ™[][ÛœÚ\Îˆ×BˆBˆØÚY[WØ]Y]ÛÙÎˆÂˆ›İÎˆÂˆXİ[Ûˆİš[™ÂˆXİÜ—İ\Ù\—ÚYˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆYˆ[X™\‚ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ™]×Ü›İÎˆœÛÛˆ[ˆÛÜ›İÎˆœÛÛˆ[ˆØÚY[WÚYˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ[Ûˆİš[™ÂˆXİÜ—İ\Ù\—ÚYÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆ™]™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ™]×Ü›İÏÎˆœÛÛˆ[ˆÛÜ›İÏÎˆœÛÛˆ[ˆØÚY[WÚYÎˆİš[™È[ˆBˆ\]NˆÂˆXİ[ÛÎˆİš[™ÂˆXİÜ—İ\Ù\—ÚYÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆ™]™\‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ™]×Ü›İÏÎˆœÛÛˆ[ˆÛÜ›İÏÎˆœÛÛˆ[ˆØÚY[WÚYÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ÜØÚY[WØ]Y]ÛÙ×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WØ]Y]ÛÙ×ØXİÜ—İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XİÜ—İ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WØ]Y]ÛÙ×ØXİÜ—İ\Ù\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜XİÜ—İ\Ù\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WØ]Y]ÛÙ×ÜØÚY[WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœØÚY[WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WØ]Y]ÛÙ×ÜØÚY[WÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈœØÚY[WÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ÜØÚY[H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆØÚY[WØZ[[™×İ˜]™[ˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆœ›ÛWØZ[[™×ÚYˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆZ[]\Îˆ[X™\‚ˆ×ØZ[[™×ÚYˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ›ÛWØZ[[™×ÚYˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆZ[]\Îˆ[X™\‚ˆ×ØZ[[™×ÚYˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆœ›ÛWØZ[[™×ÚYÎˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆZ[]\ÏÎˆ[X™\‚ˆ×ØZ[[™×ÚYÎˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WØZ[[™×İ˜]™[Ùœ›ÛWØZ[[™×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ™œ›ÛWØZ[[™×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[WØZ[[™ÜÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WØZ[[™×İ˜]™[İ×ØZ[[™×ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈ×ØZ[[™×ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[WØZ[[™ÜÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈšY—BˆKˆBˆBˆØÚY[WØZ[[™ÜÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÛÙNˆİš[™È[ˆÜ™X]YØ]ˆİš[™ÂˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ˜[YNˆİš[™Âˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ˜[YNˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÛÙOÎˆİš[™È[ˆÜ™X]YØ]Îˆİš[™ÂˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ˜[YOÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆØÚY[WØÛÛ\]WİÛÜšÙ\œÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆ]™×Û][˜ŞWÛ\Îˆ[X™\ˆ[ˆØ\Xš[]Y\ÎˆœÛÛ‚ˆÛÛ›™Xİ[Û—Û[ÙNˆİš[™ÂˆÜWİ™XYÎˆ[X™\ˆ[ˆÜ™X]YØ]ˆİš[™Âˆİ\œ™[ÛØYˆ[X™\‚ˆ\Ü^WÛ˜[YNˆİš[™Âˆ[™Ú[İ\›ˆİš[™È[ˆÜWÛY[[ÜWÛXˆ[X™\ˆ[ˆÜWÛ[Ù[ˆİš[™È[ˆX[ˆİš[™ÂˆYˆİš[™Âˆ\İÚX\™X]ˆİš[™È[ˆX\ÙWÜÙXÛÛ™Îˆ[X™\‚ˆX^Ü\˜[[ˆ[X™\‚ˆš[Üš]Nˆ[X™\‚ˆÛÙØ\™Wİ™\œÚ[Ûˆİš[™È[ˆ\]YØ]ˆİš[™ÂˆÛÜšÙ\—ÚÙ^Nˆİš[™ÂˆÛÜšÙ\—İ\Nˆİš[™ÂˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]™×Û][˜ŞWÛ\ÏÎˆ[X™\ˆ[ˆØ\Xš[]Y\ÏÎˆœÛÛ‚ˆÛÛ›™Xİ[Û—Û[ÙOÎˆİš[™ÂˆÜWİ™XYÏÎˆ[X™\ˆ[ˆÜ™X]YØ]Îˆİš[™Âˆİ\œ™[ÛØYÎˆ[X™\‚ˆ\Ü^WÛ˜[YNˆİš[™Âˆ[™Ú[İ\›Îˆİš[™È[ˆÜWÛY[[ÜWÛXÎˆ[X™\ˆ[ˆÜWÛ[Ù[Îˆİš[™È[ˆX[Îˆİš[™ÂˆYÎˆİš[™Âˆ\İÚX\™X]Îˆİš[™È[ˆX\ÙWÜÙXÛÛ™ÏÎˆ[X™\‚ˆX^Ü\˜[[Îˆ[X™\‚ˆš[Üš]OÎˆ[X™\‚ˆÛÙØ\™Wİ™\œÚ[ÛÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆÛÜšÙ\—ÚÙ^Nˆİš[™ÂˆÛÜšÙ\—İ\Nˆİš[™ÂˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆ]™×Û][˜ŞWÛ\ÏÎˆ[X™\ˆ[ˆØ\Xš[]Y\ÏÎˆœÛÛ‚ˆÛÛ›™Xİ[Û—Û[ÙOÎˆİš[™ÂˆÜWİ™XYÏÎˆ[X™\ˆ[ˆÜ™X]YØ]Îˆİš[™Âˆİ\œ™[ÛØYÎˆ[X™\‚ˆ\Ü^WÛ˜[YOÎˆİš[™Âˆ[™Ú[İ\›Îˆİš[™È[ˆÜWÛY[[ÜWÛXÎˆ[X™\ˆ[ˆÜWÛ[Ù[Îˆİš[™È[ˆX[Îˆİš[™ÂˆYÎˆİš[™Âˆ\İÚX\™X]Îˆİš[™È[ˆX\ÙWÜÙXÛÛ™ÏÎˆ[X™\‚ˆX^Ü\˜[[Îˆ[X™\‚ˆš[Üš]OÎˆ[X™\‚ˆÛÙØ\™Wİ™\œÚ[ÛÎˆİš[™È[ˆ\]YØ]Îˆİš[™ÂˆÛÜšÙ\—ÚÙ^OÎˆİš[™ÂˆÛÜšÙ\—İ\OÎˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆØÚY[WÙ]WÛÜ[Z^˜][ÛˆÂˆ›İÎˆÂˆY˜XÙ[İÙZYÚˆ[X™\‚ˆ[˜ÚÜ—Ü\š[Ùˆ[X™\ˆ[ˆ\™ÛX^ˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆX^Ù]WÙ^WÚİ\œÎˆ[X™\‚ˆİ™\›ØYİÙZYÚˆ[X™\‚ˆÛİ\˜ÙNˆİš[™ÂˆXXÚ\—ÚYˆİš[™Âˆ\]YØ]ˆİš[™ÂˆÙYZÙ^Nˆ[X™\‚ˆBˆ[œÙ\ˆÂˆY˜XÙ[İÙZYÚÎˆ[X™\‚ˆ[˜ÚÜ—Ü\š[ÙÎˆ[X™\ˆ[ˆ\™ÛX^Îˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆX^Ù]WÙ^WÚİ\œÏÎˆ[X™\‚ˆİ™\›ØYİÙZYÚÎˆ[X™\‚ˆÛİ\˜ÙOÎˆİš[™ÂˆXXÚ\—ÚYˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆÙYZÙ^Nˆ[X™\‚ˆBˆ\]NˆÂˆY˜XÙ[İÙZYÚÎˆ[X™\‚ˆ[˜ÚÜ—Ü\š[ÙÎˆ[X™\ˆ[ˆ\™ÛX^Îˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆX^Ù]WÙ^WÚİ\œÏÎˆ[X™\‚ˆİ™\›ØYİÙZYÚÎˆ[X™\‚ˆÛİ\˜ÙOÎˆİš[™ÂˆXXÚ\—ÚYÎˆİš[™Âˆ\]YØ]Îˆİš[™ÂˆÙYZÙ^OÎˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ÜØÚY[WÙ]WÛÜ[Z^˜][Û—Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WÙ]WÛÜ[Z^˜][Û—İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WÙ]WÛÜ[Z^˜][Û—İXXÚ\—ÚYÙšÙ^H‚ˆÛÛ[[œÎˆÈXXÚ\—ÚY—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆØÚY[WÙ[™Ú[™WÜİ]NˆÂˆ›İÎˆÂˆYˆ›ÛÛX[‚ˆ™]š\Ú[Ûˆ[X™\‚ˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆYÎˆ›ÛÛX[‚ˆ™]š\Ú[ÛÎˆ[X™\‚ˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆYÎˆ›ÛÛX[‚ˆ™]š\Ú[ÛÎˆ[X™\‚ˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\Îˆ×BˆBˆØÚY[WÙÙ[™\˜][Û—ÜÙ][™ÜÎˆÂˆ›İÎˆÂˆØ\Ü[˜[Nˆ[X™\‚ˆYˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ]WÜ\š[ÙÜ[˜[Nˆ[X™\‚ˆX^ÜØ[YWØÛİ\œÙWÜ\—Ù^Nˆ[X™\‚ˆ\š[Ù×Ü\—Ù^Nˆ[X™\‚ˆ™\X]YØÛİ\œÙWÜ[˜[Nˆ[X™\‚ˆİY[ØÛÛ™›XİÜ[˜[Nˆ[X™\‚ˆXXÚ[™×Ù^\Îˆ[X™\–×Bˆ\]YØ]ˆİš[™ÂˆBˆ[œÙ\ˆÂˆØ\Ü[˜[OÎˆ[X™\‚ˆYÎˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ]WÜ\š[ÙÜ[˜[OÎˆ[X™\‚ˆX^ÜØ[YWØÛİ\œÙWÜ\—Ù^OÎˆ[X™\‚ˆ\š[Ù×Ü\—Ù^OÎˆ[X™\‚ˆ™\X]YØÛİ\œÙWÜ[˜[OÎˆ[X™\‚ˆİY[ØÛÛ™›XİÜ[˜[OÎˆ[X™\‚ˆXXÚ[™×Ù^\ÏÎˆ[X™\–×Bˆ\]YØ]Îˆİš[™ÂˆBˆ\]NˆÂˆØ\Ü[˜[OÎˆ[X™\‚ˆYÎˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ]WÜ\š[ÙÜ[˜[OÎˆ[X™\‚ˆX^ÜØ[YWØÛİ\œÙWÜ\—Ù^OÎˆ[X™\‚ˆ\š[Ù×Ü\—Ù^OÎˆ[X™\‚ˆ™\X]YØÛİ\œÙWÜ[˜[OÎˆ[X™\‚ˆİY[ØÛÛ™›XİÜ[˜[OÎˆ[X™\‚ˆXXÚ[™×Ù^\ÏÎˆ[X™\–×Bˆ\]YØ]Îˆİš[™ÂˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ÜØÚY[WÙÙ[™\˜][Û—ÜÙ][™Ü×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆØÚY[WÚ[\ÜØ˜]Ú\ÎˆÂˆ›İÎˆÂˆš[WÛ˜[YNˆİš[™Âˆš[Wİ\Nˆİš[™ÂˆYˆİš[™Âˆ[\ÜYØ]ˆİš[™Âˆ[\ÜYØNˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ›İ×ØÛİ[ˆ[X™\‚ˆBˆ[œÙ\ˆÂˆš[WÛ˜[YNˆİš[™Âˆš[Wİ\Nˆİš[™ÂˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™Âˆ[\ÜYØNˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İ×ØÛİ[Îˆ[X™\‚ˆBˆ\]NˆÂˆš[WÛ˜[YOÎˆİš[™Âˆš[Wİ\OÎˆİš[™ÂˆYÎˆİš[™Âˆ[\ÜYØ]Îˆİš[™Âˆ[\ÜYØOÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ›İ×ØÛİ[Îˆ[X™\‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ÜØÚY[WÚ[\ÜØ˜]Ú\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WÚ[\ÜØ˜]Ú\×Ú[\ÜYØWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[\ÜYØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WÚ[\ÜØ˜]Ú\×Ú[\ÜYØWÙšÙ^H‚ˆÛÛ[[œÎˆÈš[\ÜYØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆØÚY[WÛÜ[Z^˜][Û—Ü›Ùš[\ÎˆÂˆ›İÎˆÂˆXİ]™Nˆ›ÛÛX[‚ˆÜ™X]YØ]ˆİš[™ÂˆY˜][ÎˆœÛÛ‚ˆ\ØÜš\[Ûˆİš[™È[ˆ[œİ]][Û—ØÛÙNˆİš[™È[ˆ˜[YNˆİš[™Âˆ›Ùš[WÚÙ^Nˆİš[™ÂˆŞ\İ[WÜ›Ùš[Nˆ›ÛÛX[‚ˆ\]YØ]ˆİš[™ÂˆÙZYÚÎˆœÛÛ‚ˆBˆ[œÙ\ˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆY˜][ÏÎˆœÛÛ‚ˆ\ØÜš\[ÛÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ˜[YNˆİš[™Âˆ›Ùš[WÚÙ^Nˆİš[™ÂˆŞ\İ[WÜ›Ùš[OÎˆ›ÛÛX[‚ˆ\]YØ]Îˆİš[™ÂˆÙZYÚÏÎˆœÛÛ‚ˆBˆ\]NˆÂˆXİ]™OÎˆ›ÛÛX[‚ˆÜ™X]YØ]Îˆİš[™ÂˆY˜][ÏÎˆœÛÛ‚ˆ\ØÜš\[ÛÎˆİš[™È[ˆ[œİ]][Û—ØÛÙOÎˆİš[™È[ˆ˜[YOÎˆİš[™Âˆ›Ùš[WÚÙ^OÎˆİš[™ÂˆŞ\İ[WÜ›Ùš[OÎˆ›ÛÛX[‚ˆ\]YØ]Îˆİš[™ÂˆÙZYÚÏÎˆœÛÛ‚ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ÜØÚY[WÛÜ[Z^˜][Û—Ü›Ùš[\×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆBˆBˆØÚY[WÛÜ[Z^˜][Û—ÜÙ][™ÜÎˆÂˆ›İÎˆÂˆXİ]™WÜ›Ùš[WÚÙ^Nˆİš[™Âˆ^Z[—ÜØÙ[˜\š[ÜÎˆ›ÛÛX[‚ˆYˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙNˆİš[™Âˆ™XÛÜ™Ü™\Z\œÎˆ›ÛÛX[‚ˆ\]YØ]ˆİš[™Âˆ\]YØNˆİš[™È[ˆBˆ[œÙ\ˆÂˆXİ]™WÜ›Ùš[WÚÙ^OÎˆİš[™Âˆ^Z[—ÜØÙ[˜\š[ÜÏÎˆ›ÛÛX[‚ˆYÎˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ™XÛÜ™Ü™\Z\œÏÎˆ›ÛÛX[‚ˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ\]NˆÂˆXİ]™WÜ›Ùš[WÚÙ^OÎˆİš[™Âˆ^Z[—ÜØÙ[˜\š[ÜÏÎˆ›ÛÛX[‚ˆYÎˆ›ÛÛX[‚ˆ[œİ]][Û—ØÛÙOÎˆİš[™Âˆ™XÛÜ™Ü™\Z\œÏÎˆ›ÛÛX[‚ˆ\]YØ]Îˆİš[™Âˆ\]YØOÎˆİš[™È[ˆBˆ™[][ÛœÚ\ÎˆÂˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆ™š×ÜØÚY[WÛÜ[Z^˜][Û—ÜÙ][™Ü×Ú[œİ]][Û—ØÛÙH‚ˆÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆš[œİ]][ÛœÈ‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈš[œİ]][Û—ØÛÙH—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WÛÜ[Z^˜][Û—ÜÙ][™Ü×ØXİ]™WÜ›Ùš[WÚÙ^WÙšÙ^H‚ˆÛÛ[[œÎˆÈ˜Xİ]™WÜ›Ùš[WÚÙ^H—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆœØÚY[WÛÜ[Z^˜][Û—Ü›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈœ›Ùš[WÚÙ^H—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WÛÜ[Z^˜][Û—ÜÙ][™Ü×İ\]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ\]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][Ûˆœ›Ùš[\È‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈ\Ù\—ÚY—BˆKˆÂˆ›Ü™ZYÛ’Ù^S˜[YNˆœØÚY[WÛÜ[Z^˜][Û—ÜÙ][™Ü×İ\]YØWÙšÙ^H‚ˆÛÛ[[œÎˆÈ\]YØH—Bˆ\ÓÛ™UÓÛ™Nˆ˜[ÙBˆ™Y™\™[˜ÙY™[][ÛˆXXÚ\—ØÛİ\œÙWÛØYÜİ[[X\H‚ˆ™Y™\™[˜ÙYÛÛ[[œÎˆÈXXÚ\—ÚY—BˆKˆBˆBˆØÚY[WÜ\š[ÙØœ™XZÜÎˆÂˆ›İÎˆÂˆY\—Ü\š[Ùˆ[X™\‚ˆYˆİš[™Âˆ[œİ]][Û—ØÛÙNˆİš[™ÂˆZ[]\Îˆ[X™\‚ˆ[YWÜ›Ùš[WÚYˆİš[™Âˆ˜[œÙ™\—Ø[İÙYˆ›ÛÛX[‚ˆBˆ[œÙ\ˆÂˆY\—Ü\š[Ùˆ[X™\‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆZ[]\ÏÎˆ[X™\‚ˆ[YWÜ›Ùš[WÚYˆİš[™Âˆ˜[œÙ™\—Ø[İÙYÎˆ›ÛÛX[‚ˆBˆ\]NˆÂˆY\—Ü\š[ÙÎˆ[X™\‚ˆYÎˆİš[™Âˆ[œİ]][Û—ØÛÙOÎˆİš[™ÂˆZ[]\ÏÎˆ[X™\‚ˆ[YWÜ›Ùšzën­¢G§²ÚîÆ­yÖVæ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷&ööÕ÷ööÇ3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢66—G“¢çVÖ&W ¢7&VFVEöC¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢Ö…÷6–×VÇFæV÷W5ö7F—f—F–W3¢çVÖ&W ¢æÖS¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢66—G“¢çVÖ&W ¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Ö…÷6–×VÇFæV÷W5ö7F—f—F–W3ó¢çVÖ&W ¢æÖS¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢66—G“ó¢çVÖ&W ¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Ö…÷6–×VÇFæV÷W5ö7F—f—F–W3ó¢çVÖ&W ¢æÖSó¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢66†VGVÆU÷'VÆUöÖöFW3¢°¢&÷s¢°¢6FVv÷'“¢7G&–æp¢6öæf–s¢§6öà¢–ç7F—GWF–öåö6öFS¢7G&–æp¢Æ&VÃ¢7G&–æp¢ÖöFS¢7G&–æp¢'VÆUö6öFS¢7G&–æp¢7—7FVÕ÷'VÆS¢&ööÆVà¢WFFVEöC¢7G&–æp¢WFFVEö'“¢7G&–ærÂçVÆÀ¢vV–v‡C¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢6FVv÷'“¢7G&–æp¢6öæf–só¢§6öà¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Æ&VÃ¢7G&–æp¢ÖöFSó¢7G&–æp¢'VÆUö6öFS¢7G&–æp¢7—7FVÕ÷'VÆSó¢&ööÆVà¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢vV–v‡Có¢çVÖ&W ¢Ğ¢WFFS¢°¢6FVv÷'“ó¢7G&–æp¢6öæf–só¢§6öà¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Æ&VÃó¢7G&–æp¢ÖöFSó¢7G&–æp¢'VÆUö6öFSó¢7G&–æp¢7—7FVÕ÷'VÆSó¢&ööÆVà¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢vV–v‡Có¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷'VÆUöÖöFW5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷'VÆUöÖöFW5÷WFFVEö'•öf¶W’ ¢6öÇVÖç3¢²'WFFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷'VÆUöÖöFW5÷WFFVEö'•öf¶W’ ¢6öÇVÖç3¢²'WFFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷'VÆUö÷fW'&–FW3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢fö–EöÆ7E÷W&–öC¢&ööÆVà¢&Æö6µ÷GFW&ã¢çVÖ&W%µĞ¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–C¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢Ö…÷W%öF“¢çVÖ&W"ÂçVÆÀ¢Ö–åöF—7F–æ7EöF—3¢çVÖ&W"ÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢&VfW'&VEöF—3¢çVÖ&W%µĞ¢&VfW'&VE÷W&–öG3¢çVÖ&W%µĞ¢&ö†–&—FVEöF—3¢çVÖ&W%µĞ¢&ö†–&—FVE÷W&–öG3¢çVÖ&W%µĞ¢FV6†W%ö76–væÖVçEö–C¢7G&–ærÂçVÆÀ¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢fö–EöÆ7E÷W&–öCó¢&ööÆVà¢&Æö6µ÷GFW&ãó¢çVÖ&W%µĞ¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Ö…÷W%öF“ó¢çVÖ&W"ÂçVÆÀ¢Ö–åöF—7F–æ7EöF—3ó¢çVÖ&W"ÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢&VfW'&VEöF—3ó¢çVÖ&W%µĞ¢&VfW'&VE÷W&–öG3ó¢çVÖ&W%µĞ¢&ö†–&—FVEöF—3ó¢çVÖ&W%µĞ¢&ö†–&—FVE÷W&–öG3ó¢çVÖ&W%µĞ¢FV6†W%ö76–væÖVçEö–Có¢7G&–ærÂçVÆÀ¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢fö–EöÆ7E÷W&–öCó¢&ööÆVà¢&Æö6µ÷GFW&ãó¢çVÖ&W%µĞ¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Ö…÷W%öF“ó¢çVÖ&W"ÂçVÆÀ¢Ö–åöF—7F–æ7EöF—3ó¢çVÖ&W"ÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢&VfW'&VEöF—3ó¢çVÖ&W%µĞ¢&VfW'&VE÷W&–öG3ó¢çVÖ&W%µĞ¢&ö†–&—FVEöF—3ó¢çVÖ&W%µĞ¢&ö†–&—FVE÷W&–öG3ó¢çVÖ&W%µĞ¢FV6†W%ö76–væÖVçEö–Có¢7G&–ærÂçVÆÀ¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷'VÆUö÷fW'&–FW5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷'VÆUö÷fW'&–FW5ö6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö6÷W'6U÷&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷'VÆUö÷fW'&–FW5ö6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö6÷W'6U÷&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷'VÆUö÷fW'&–FW5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷'VÆUö÷fW'&–FW5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6Uö76–væÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷66Væ&–õöW‡ÆæF–öç3¢°¢&÷s¢°¢GWG•÷66÷&S¢çVÖ&W ¢vVæW&FVEöC¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢ÖWG&–73¢§6öà¢æVvF—fW3¢§6öà¢VFvöv–5÷66÷&S¢çVÖ&W ¢÷6—F—fW3¢§6öà¢&ööÕ÷66÷&S¢çVÖ&W ¢66Væ&–õö–C¢7G&–æp¢FV6†W%÷66÷&S¢çVÖ&W ¢F÷FÅ÷66÷&S¢çVÖ&W ¢v÷&·6†÷÷66÷&S¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢GWG•÷66÷&Só¢çVÖ&W ¢vVæW&FVEöCó¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢ÖWG&–73ó¢§6öà¢æVvF—fW3ó¢§6öà¢VFvöv–5÷66÷&Só¢çVÖ&W ¢÷6—F—fW3ó¢§6öà¢&ööÕ÷66÷&Só¢çVÖ&W ¢66Væ&–õö–C¢7G&–æp¢FV6†W%÷66÷&Só¢çVÖ&W ¢F÷FÅ÷66÷&Só¢çVÖ&W ¢v÷&·6†÷÷66÷&Só¢çVÖ&W ¢Ğ¢WFFS¢°¢GWG•÷66÷&Só¢çVÖ&W ¢vVæW&FVEöCó¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢ÖWG&–73ó¢§6öà¢æVvF—fW3ó¢§6öà¢VFvöv–5÷66÷&Só¢çVÖ&W ¢÷6—F—fW3ó¢§6öà¢&ööÕ÷66÷&Só¢çVÖ&W ¢66Væ&–õö–Có¢7G&–æp¢FV6†W%÷66÷&Só¢çVÖ&W ¢F÷FÅ÷66÷&Só¢çVÖ&W ¢v÷&·6†÷÷66÷&Só¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷66Væ&–õöW‡ÆæF–öç5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õöW‡ÆæF–öç5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–õ÷7FGW5÷c" ¢&VfW&Væ6VD6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õöW‡ÆæF–öç5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–÷2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷66Væ&–õö–çFVw&—G•ö—77VW3¢°¢&÷s¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢7&VFVEöC¢7G&–æp¢FWF–Ã¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢66Væ&–õö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢ffV7FVEö6÷VçCó¢çVÖ&W ¢6öFS¢7G&–æp¢7&VFVEöCó¢7G&–æp¢FWF–Ã¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢66Væ&–õö–C¢7G&–æp¢Ğ¢WFFS¢°¢ffV7FVEö6÷VçCó¢çVÖ&W ¢6öFSó¢7G&–æp¢7&VFVEöCó¢7G&–æp¢FWF–Ãó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢66Væ&–õö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷66Væ&–õö–çFVw&—G•ö—77VW5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õö–çFVw&—G•ö—77VW5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–õ÷7FGW5÷c" ¢&VfW&Væ6VD6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õö–çFVw&—G•ö—77VW5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–÷2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷66Væ&–õ÷&÷w3¢°¢&÷s¢°¢&Æö6µö¶W“¢7G&–ærÂçVÆÀ¢6Æ75ö–C¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–æp¢6Æ77&ööÕö–C¢7G&–ærÂçVÆÀ¢6÷W'6Uö–C¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢—5öw&÷W÷7Æ—C¢&ööÆVà¢Æö6¶VC¢&ööÆVà¢W&–öC¢çVÖ&W ¢&WV—&VÖVçEö–C¢7G&–ærÂçVÆÀ¢66Væ&–õö–C¢7G&–æp¢6÷W&6U÷66†VGVÆUö–C¢7G&–ærÂçVÆÀ¢7V&w&÷Wö–C¢7G&–ærÂçVÆÀ¢7V&w&÷Wö¶W“¢7G&–ærÂçVÆÀ¢7V&¦V7C¢7G&–æp¢7–æ5öw&÷Wö–C¢7G&–ærÂçVÆÀ¢FV6†W%ö76–væÖVçEö–C¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢vVV¶F“¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢&Æö6µö¶W“ó¢7G&–ærÂçVÆÀ¢6Æ75ö–Có¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–æp¢6Æ77&ööÕö–Có¢7G&–ærÂçVÆÀ¢6÷W'6Uö–Có¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢—5öw&÷W÷7Æ—Có¢&ööÆVà¢Æö6¶VCó¢&ööÆVà¢W&–öC¢çVÖ&W ¢&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢66Væ&–õö–C¢7G&–æp¢6÷W&6U÷66†VGVÆUö–Có¢7G&–ærÂçVÆÀ¢7V&w&÷Wö–Có¢7G&–ærÂçVÆÀ¢7V&w&÷Wö¶W“ó¢7G&–ærÂçVÆÀ¢7V&¦V7C¢7G&–æp¢7–æ5öw&÷Wö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö76–væÖVçEö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢vVV¶F“¢çVÖ&W ¢Ğ¢WFFS¢°¢&Æö6µö¶W“ó¢7G&–ærÂçVÆÀ¢6Æ75ö–Có¢7G&–ærÂçVÆÀ¢6Æ75öæÖSó¢7G&–æp¢6Æ77&ööÕö–Có¢7G&–ærÂçVÆÀ¢6÷W'6Uö–Có¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢—5öw&÷W÷7Æ—Có¢&ööÆVà¢Æö6¶VCó¢&ööÆVà¢W&–öCó¢çVÖ&W ¢&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢66Væ&–õö–Có¢7G&–æp¢6÷W&6U÷66†VGVÆUö–Có¢7G&–ærÂçVÆÀ¢7V&w&÷Wö–Có¢7G&–ærÂçVÆÀ¢7V&w&÷Wö¶W“ó¢7G&–ærÂçVÆÀ¢7V&¦V7Có¢7G&–æp¢7–æ5öw&÷Wö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö76–væÖVçEö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö–Có¢7G&–æp¢vVV¶F“ó¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷66Væ&–õ÷&÷w5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&6Æ75ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷&÷7FW%÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†ööÅö6Æ76W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5ö6Æ77&ööÕö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ77&ööÕö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ77&öö×2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5ö6÷W'6Uö–Eöf¶W’ ¢6öÇVÖç3¢²&6÷W'6Uö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6÷W'6Uö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–õ÷7FGW5÷c" ¢&VfW&Væ6VD6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–÷2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷6÷W&6U÷66†VGVÆUö–Eöf¶W’ ¢6öÇVÖç3¢²'6÷W&6U÷66†VGVÆUö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷6÷W&6U÷66†VGVÆUö–Eöf¶W’ ¢6öÇVÖç3¢²'6÷W&6U÷66†VGVÆUö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%÷66†VGVÆR ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷7V&w&÷Wö–Eöf¶W’ ¢6öÇVÖç3¢²'7V&w&÷Wö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷7V&w&÷W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷7–æ5öw&÷Wö–Eöf¶W’ ¢6öÇVÖç3¢²'7–æ5öw&÷Wö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷7–æ5öw&÷W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6Uö76–væÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–õ÷&÷w5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷66Væ&–÷3¢°¢&÷s¢°¢&6—5÷&Wf—6–öã¢çVÖ&W"ÂçVÆÀ¢vVæW&FVEöC¢7G&–æp¢vVæW&FVEö'“¢7G&–ærÂçVÆÀ¢vVæW&F–öåöw&÷W¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢&÷uö6÷VçC¢çVÖ&W ¢66Væ&–õöæó¢çVÖ&W ¢66÷&S¢çVÖ&W ¢7FGW3¢7G&–æp¢F—FÆS¢7G&–æp¢VçÆ6VEö6÷VçC¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢&6—5÷&Wf—6–öãó¢çVÖ&W"ÂçVÆÀ¢vVæW&FVEöCó¢7G&–æp¢vVæW&FVEö'“ó¢7G&–ærÂçVÆÀ¢vVæW&F–öåöw&÷W¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢&÷uö6÷VçCó¢çVÖ&W ¢66Væ&–õöæó¢çVÖ&W ¢66÷&Só¢çVÖ&W ¢7FGW3ó¢7G&–æp¢F—FÆS¢7G&–æp¢VçÆ6VEö6÷VçCó¢çVÖ&W ¢Ğ¢WFFS¢°¢&6—5÷&Wf—6–öãó¢çVÖ&W"ÂçVÆÀ¢vVæW&FVEöCó¢7G&–æp¢vVæW&FVEö'“ó¢7G&–ærÂçVÆÀ¢vVæW&F–öåöw&÷Wó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢&÷uö6÷VçCó¢çVÖ&W ¢66Væ&–õöæóó¢çVÖ&W ¢66÷&Só¢çVÖ&W ¢7FGW3ó¢7G&–æp¢F—FÆSó¢7G&–æp¢VçÆ6VEö6÷VçCó¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷66Væ&–÷5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–÷5övVæW&FVEö'•öf¶W’ ¢6öÇVÖç3¢²&vVæW&FVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷66Væ&–÷5övVæW&FVEö'•öf¶W’ ¢6öÇVÖç3¢²&vVæW&FVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷6öÇfUöGFV×G3¢°¢&÷s¢°¢GFV×Eöæó¢çVÖ&W ¢6Æ–ÖVEöC¢7G&–ærÂçVÆÀ¢F–væ÷7F–73¢§6öà¢GW&F–öåö×3¢çVÖ&W"ÂçVÆÀ¢f–æ—6†VEöC¢7G&–ærÂçVÆÀ¢†&Eö—77VUö6÷VçC¢çVÖ&W"ÂçVÆÀ¢–C¢7G&–æp¢¦ö%ö–C¢7G&–æp¢ÆV6U÷VçF–Ã¢7G&–ærÂçVÆÀ¢&öf–ÆUö¶W“¢7G&–ærÂçVÆÀ¢&W7VÇE÷–ÆöC¢§6öà¢66Væ&–õö–C¢7G&–ærÂçVÆÀ¢66÷&S¢çVÖ&W"ÂçVÆÀ¢6VVC¢çVÖ&W"ÂçVÆÀ¢7F'FVEöC¢7G&–ærÂçVÆÀ¢7FGW3¢7G&–æp¢VçÆ6VEö6÷VçC¢çVÖ&W"ÂçVÆÀ¢v÷&¶W%ö–C¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢GFV×Eöæó¢çVÖ&W ¢6Æ–ÖVEöCó¢7G&–ærÂçVÆÀ¢F–væ÷7F–73ó¢§6öà¢GW&F–öåö×3ó¢çVÖ&W"ÂçVÆÀ¢f–æ—6†VEöCó¢7G&–ærÂçVÆÀ¢†&Eö—77VUö6÷VçCó¢çVÖ&W"ÂçVÆÀ¢–Có¢7G&–æp¢¦ö%ö–C¢7G&–æp¢ÆV6U÷VçF–Ãó¢7G&–ærÂçVÆÀ¢&öf–ÆUö¶W“ó¢7G&–ærÂçVÆÀ¢&W7VÇE÷–ÆöCó¢§6öà¢66Væ&–õö–Có¢7G&–ærÂçVÆÀ¢66÷&Só¢çVÖ&W"ÂçVÆÀ¢6VVCó¢çVÖ&W"ÂçVÆÀ¢7F'FVEöCó¢7G&–ærÂçVÆÀ¢7FGW3ó¢7G&–æp¢VçÆ6VEö6÷VçCó¢çVÖ&W"ÂçVÆÀ¢v÷&¶W%ö–Có¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢GFV×Eöæóó¢çVÖ&W ¢6Æ–ÖVEöCó¢7G&–ærÂçVÆÀ¢F–væ÷7F–73ó¢§6öà¢GW&F–öåö×3ó¢çVÖ&W"ÂçVÆÀ¢f–æ—6†VEöCó¢7G&–ærÂçVÆÀ¢†&Eö—77VUö6÷VçCó¢çVÖ&W"ÂçVÆÀ¢–Có¢7G&–æp¢¦ö%ö–Có¢7G&–æp¢ÆV6U÷VçF–Ãó¢7G&–ærÂçVÆÀ¢&öf–ÆUö¶W“ó¢7G&–ærÂçVÆÀ¢&W7VÇE÷–ÆöCó¢§6öà¢66Væ&–õö–Có¢7G&–ærÂçVÆÀ¢66÷&Só¢çVÖ&W"ÂçVÆÀ¢6VVCó¢çVÖ&W"ÂçVÆÀ¢7F'FVEöCó¢7G&–ærÂçVÆÀ¢7FGW3ó¢7G&–æp¢VçÆ6VEö6÷VçCó¢çVÖ&W"ÂçVÆÀ¢v÷&¶W%ö–Có¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷6öÇfUöGFV×G5ö¦ö%ö–Eöf¶W’ ¢6öÇVÖç3¢²&¦ö%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷6öÇfUö¦ö'2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷6öÇfUöGFV×G5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–õ÷7FGW5÷c" ¢&VfW&Væ6VD6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷6öÇfUöGFV×G5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–÷2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷6öÇfUöGFV×G5÷v÷&¶W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'v÷&¶W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö6ö×WFU÷v÷&¶W'2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷6öÇfUö¦ö'3¢°¢&÷s¢°¢6æF–FFUö6÷VçC¢çVÖ&W ¢6ö×WFU÷&VfW&Væ6S¢7G&–æp¢6öæf–s¢§6öà¢7&VFVEöC¢7G&–æp¢f–æ—6†VEöC¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢ÖöFS¢7G&–æp¢VÆ—G•÷F&vWC¢çVÖ&W ¢&WVW7FVEö'“¢7G&–ærÂçVÆÀ¢7F'FVEöC¢7G&–ærÂçVÆÀ¢7FGW3¢7G&–æp¢Ğ¢–ç6W'C¢°¢6æF–FFUö6÷VçCó¢çVÖ&W ¢6ö×WFU÷&VfW&Væ6Só¢7G&–æp¢6öæf–só¢§6öà¢7&VFVEöCó¢7G&–æp¢f–æ—6†VEöCó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢ÖöFSó¢7G&–æp¢VÆ—G•÷F&vWCó¢çVÖ&W ¢&WVW7FVEö'“ó¢7G&–ærÂçVÆÀ¢7F'FVEöCó¢7G&–ærÂçVÆÀ¢7FGW3ó¢7G&–æp¢Ğ¢WFFS¢°¢6æF–FFUö6÷VçCó¢çVÖ&W ¢6ö×WFU÷&VfW&Væ6Só¢7G&–æp¢6öæf–só¢§6öà¢7&VFVEöCó¢7G&–æp¢f–æ—6†VEöCó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢ÖöFSó¢7G&–æp¢VÆ—G•÷F&vWCó¢çVÖ&W ¢&WVW7FVEö'“ó¢7G&–ærÂçVÆÀ¢7F'FVEöCó¢7G&–ærÂçVÆÀ¢7FGW3ó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢66†VGVÆU÷7–æ5öw&÷WöÖVÖ&W'3¢°¢&÷s¢°¢&Æö6µö†÷W'3¢çVÖ&W ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢7V&w&÷Wö–C¢7G&–ærÂçVÆÀ¢7–æ5öw&÷Wö–C¢7G&–æp¢FV6†W%ö76–væÖVçEö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢&Æö6µö†÷W'3ó¢çVÖ&W ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢7V&w&÷Wö–Có¢7G&–ærÂçVÆÀ¢7–æ5öw&÷Wö–C¢7G&–æp¢FV6†W%ö76–væÖVçEö–C¢7G&–æp¢Ğ¢WFFS¢°¢&Æö6µö†÷W'3ó¢çVÖ&W ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢7V&w&÷Wö–Có¢7G&–ærÂçVÆÀ¢7–æ5öw&÷Wö–Có¢7G&–æp¢FV6†W%ö76–væÖVçEö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷7–æ5öw&÷WöÖVÖ&W'5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷7–æ5öw&÷WöÖVÖ&W'5÷7V&w&÷Wö–Eöf¶W’ ¢6öÇVÖç3¢²'7V&w&÷Wö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷7V&w&÷W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷7–æ5öw&÷WöÖVÖ&W'5÷7–æ5öw&÷Wö–Eöf¶W’ ¢6öÇVÖç3¢²'7–æ5öw&÷Wö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷7–æ5öw&÷W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷7–æ5öw&÷WöÖVÖ&W'5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷7–æ5öw&÷WöÖVÖ&W'5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6Uö76–væÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷7–æ5öw&÷W3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢6Æ75ö–C¢7G&–ærÂçVÆÀ¢7&VFVEöC¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æÖS¢7G&–æp¢æ÷FS¢7G&–ærÂçVÆÀ¢&WV—&VE÷6–×VÇFæV÷W3¢&ööÆVà¢6÷W&6Uö&Æö6µö–æFWƒ¢çVÖ&W"ÂçVÆÀ¢6÷W&6Uö–C¢7G&–ærÂçVÆÀ¢6÷W&6U÷G—S¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢6Æ75ö–Có¢7G&–ærÂçVÆÀ¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æÖS¢7G&–æp¢æ÷FSó¢7G&–ærÂçVÆÀ¢&WV—&VE÷6–×VÇFæV÷W3ó¢&ööÆVà¢6÷W&6Uö&Æö6µö–æFWƒó¢çVÖ&W"ÂçVÆÀ¢6÷W&6Uö–Có¢7G&–ærÂçVÆÀ¢6÷W&6U÷G—Só¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢6Æ75ö–Có¢7G&–ærÂçVÆÀ¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æÖSó¢7G&–æp¢æ÷FSó¢7G&–ærÂçVÆÀ¢&WV—&VE÷6–×VÇFæV÷W3ó¢&ööÆVà¢6÷W&6Uö&Æö6µö–æFWƒó¢çVÖ&W"ÂçVÆÀ¢6÷W&6Uö–Có¢7G&–ærÂçVÆÀ¢6÷W&6U÷G—Só¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷7–æ5öw&÷W5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷7–æ5öw&÷W5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&6Æ75ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷7–æ5öw&÷W5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷&÷7FW%÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷7–æ5öw&÷W5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†ööÅö6Æ76W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷F–ÖU÷&öf–ÆW3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢7&VFVEöC¢7G&–æp¢VGV6F–öåöÖöFS¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢ÇVæ6…ögFW%÷W&–öC¢çVÖ&W"ÂçVÆÀ¢æÖS¢7G&–æp¢W&–öG5÷W%öF“¢çVÖ&W ¢6W76–öå÷66÷S¢7G&–æp¢FV6†–æuöF—3¢çVÖ&W%µĞ¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢VGV6F–öåöÖöFSó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢ÇVæ6…ögFW%÷W&–öCó¢çVÖ&W"ÂçVÆÀ¢æÖS¢7G&–æp¢W&–öG5÷W%öF“ó¢çVÖ&W ¢6W76–öå÷66÷Só¢7G&–æp¢FV6†–æuöF—3ó¢çVÖ&W%µĞ¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢VGV6F–öåöÖöFSó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢ÇVæ6…ögFW%÷W&–öCó¢çVÖ&W"ÂçVÆÀ¢æÖSó¢7G&–æp¢W&–öG5÷W%öF“ó¢çVÖ&W ¢6W76–öå÷66÷Só¢7G&–æp¢FV6†–æuöF—3ó¢çVÖ&W%µĞ¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷F–ÖU÷&öf–ÆW5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷VçÆ6VEö—FV×3¢°¢&÷s¢°¢&Æö6µö†÷W'3¢çVÖ&W ¢6Æ75ö–C¢7G&–ærÂçVÆÀ¢7&VFVEöC¢7G&–æp¢F–væ÷7F–3¢§6öà¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢&V6öã¢7G&–æp¢&WV—&VÖVçEö–C¢7G&–ærÂçVÆÀ¢66Væ&–õö–C¢7G&–æp¢7V&¦V7C¢7G&–æp¢FV6†W%ö76–væÖVçEö–C¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢&Æö6µö†÷W'3ó¢çVÖ&W ¢6Æ75ö–Có¢7G&–ærÂçVÆÀ¢7&VFVEöCó¢7G&–æp¢F–væ÷7F–3ó¢§6öà¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢&V6öã¢7G&–æp¢&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢66Væ&–õö–C¢7G&–æp¢7V&¦V7C¢7G&–æp¢FV6†W%ö76–væÖVçEö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö–Có¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢&Æö6µö†÷W'3ó¢çVÖ&W ¢6Æ75ö–Có¢7G&–ærÂçVÆÀ¢7&VFVEöCó¢7G&–æp¢F–væ÷7F–3ó¢§6öà¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢&V6öãó¢7G&–æp¢&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢66Væ&–õö–Có¢7G&–æp¢7V&¦V7Có¢7G&–æp¢FV6†W%ö76–væÖVçEö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö–Có¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷VçÆ6VEö—FV×5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&6Æ75ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷&÷7FW%÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†ööÅö6Æ76W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–õ÷7FGW5÷c" ¢&VfW&Væ6VD6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5÷66Væ&–õö–Eöf¶W’ ¢6öÇVÖç3¢²'66Væ&–õö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷66Væ&–÷2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6Uö76–væÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷VçÆ6VEö—FV×5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷v÷&·6†÷÷öÆ–6–W3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢6÷W'6Uö–C¢7G&–æp¢f÷&&–EöÆÅ÷6ÖÆÅö&Æö6·3¢&ööÆVà¢–ç7F—GWF–öåö6öFS¢7G&–æp¢Ö…ö&Æö6³¢çVÖ&W ¢Ö–åö&Æö6³¢çVÖ&W ¢Ö–æ–Ö—¦Uög&vÖVçFF–öã¢&ööÆVà¢&VfW'&VEö&Æö6³¢çVÖ&W ¢&VfW'&VE÷GFW&ç3¢çVÖ&W%µĞ¢&W6÷W&6Uö&Ææ6U÷vV–v‡C¢çVÖ&W ¢6WGWö6ÆVçW÷vV–v‡C¢çVÖ&W ¢WFFVEöC¢7G&–æp¢WFFVEö'“¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢6÷W'6Uö–C¢7G&–æp¢f÷&&–EöÆÅ÷6ÖÆÅö&Æö6·3ó¢&ööÆVà¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Ö…ö&Æö6³ó¢çVÖ&W ¢Ö–åö&Æö6³ó¢çVÖ&W ¢Ö–æ–Ö—¦Uög&vÖVçFF–öãó¢&ööÆVà¢&VfW'&VEö&Æö6³ó¢çVÖ&W ¢&VfW'&VE÷GFW&ç3ó¢çVÖ&W%µĞ¢&W6÷W&6Uö&Ææ6U÷vV–v‡Có¢çVÖ&W ¢6WGWö6ÆVçW÷vV–v‡Có¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢6÷W'6Uö–Có¢7G&–æp¢f÷&&–EöÆÅ÷6ÖÆÅö&Æö6·3ó¢&ööÆVà¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Ö…ö&Æö6³ó¢çVÖ&W ¢Ö–åö&Æö6³ó¢çVÖ&W ¢Ö–æ–Ö—¦Uög&vÖVçFF–öãó¢&ööÆVà¢&VfW'&VEö&Æö6³ó¢çVÖ&W ¢&VfW'&VE÷GFW&ç3ó¢çVÖ&W%µĞ¢&W6÷W&6Uö&Ææ6U÷vV–v‡Có¢çVÖ&W ¢6WGWö6ÆVçW÷vV–v‡Có¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†VGVÆU÷v÷&·6†÷÷öÆ–6–W5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷v÷&·6†÷÷öÆ–6–W5ö6÷W'6Uö–Eöf¶W’ ¢6öÇVÖç3¢²&6÷W'6Uö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6÷W'6Uö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷v÷&·6†÷÷öÆ–6–W5÷WFFVEö'•öf¶W’ ¢6öÇVÖç3¢²'WFFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷v÷&·6†÷÷öÆ–6–W5÷WFFVEö'•öf¶W’ ¢6öÇVÖç3¢²'WFFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†ööÅö6ÆVæF%öWfVçG3¢°¢&÷s¢°¢6FVÖ–5÷–V%ö–C¢7G&–æp¢ÆÅöF“¢&ööÆVà¢VF–Væ6W3¢7G&–æuµĞ¢&Æö6·5÷FV6†–æs¢&ööÆVà¢6öæF—F–öæÃ¢&ööÆVà¢6÷VçG5ö5÷v÷&¶F“¢&ööÆVà¢7&VFVEöC¢7G&–æp¢7&VFVEö'“¢7G&–ærÂçVÆÀ¢VæG5ööã¢7G&–æp¢WfVçE÷G—S¢7G&–æp¢w&FUöÆWfVÇ3¢7G&–æuµĞ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢'6VEög&öÕ÷6÷W&6S¢&ööÆVà¢66†ööÅöÆWfVÇ3¢7G&–æuµĞ¢66†ööÅ÷G—W3¢7G&–æuµĞ¢6÷W&6Uöf–ÆUöæÖS¢7G&–ærÂçVÆÀ¢6÷W&6Uöæ÷FS¢7G&–ærÂçVÆÀ¢7F'G5ööã¢7G&–æp¢F—FÆS¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢6FVÖ–5÷–V%ö–C¢7G&–æp¢ÆÅöF“ó¢&ööÆVà¢VF–Væ6W3ó¢7G&–æuµĞ¢&Æö6·5÷FV6†–æsó¢&ööÆVà¢6öæF—F–öæÃó¢&ööÆVà¢6÷VçG5ö5÷v÷&¶F“ó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢7&VFVEö'“ó¢7G&–ærÂçVÆÀ¢VæG5ööã¢7G&–æp¢WfVçE÷G—S¢7G&–æp¢w&FUöÆWfVÇ3ó¢7G&–æuµĞ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢'6VEög&öÕ÷6÷W&6Só¢&ööÆVà¢66†ööÅöÆWfVÇ3ó¢7G&–æuµĞ¢66†ööÅ÷G—W3ó¢7G&–æuµĞ¢6÷W&6Uöf–ÆUöæÖSó¢7G&–ærÂçVÆÀ¢6÷W&6Uöæ÷FSó¢7G&–ærÂçVÆÀ¢7F'G5ööã¢7G&–æp¢F—FÆS¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢6FVÖ–5÷–V%ö–Có¢7G&–æp¢ÆÅöF“ó¢&ööÆVà¢VF–Væ6W3ó¢7G&–æuµĞ¢&Æö6·5÷FV6†–æsó¢&ööÆVà¢6öæF—F–öæÃó¢&ööÆVà¢6÷VçG5ö5÷v÷&¶F“ó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢7&VFVEö'“ó¢7G&–ærÂçVÆÀ¢VæG5ööãó¢7G&–æp¢WfVçE÷G—Só¢7G&–æp¢w&FUöÆWfVÇ3ó¢7G&–æuµĞ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢'6VEög&öÕ÷6÷W&6Só¢&ööÆVà¢66†ööÅöÆWfVÇ3ó¢7G&–æuµĞ¢66†ööÅ÷G—W3ó¢7G&–æuµĞ¢6÷W&6Uöf–ÆUöæÖSó¢7G&–ærÂçVÆÀ¢6÷W&6Uöæ÷FSó¢7G&–ærÂçVÆÀ¢7F'G5ööãó¢7G&–æp¢F—FÆSó¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†ööÅö6ÆVæF%öWfVçG5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6ÆVæF%öWfVçG5ö6FVÖ–5÷–V%ö–Eöf¶W’ ¢6öÇVÖç3¢²&6FVÖ–5÷–V%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6FVÖ–5÷–V'2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6ÆVæF%öWfVçG5ö7&VFVEö'•öf¶W’ ¢6öÇVÖç3¢²&7&VFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6ÆVæF%öWfVçG5ö7&VFVEö'•öf¶W’ ¢6öÇVÖç3¢²&7&VFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†ööÅö6Æ76W3¢°¢&÷s¢°¢6FVÖ–5÷–V%ö–C¢7G&–ærÂçVÆÀ¢7F—fS¢&ööÆVà¢Gf—6÷%÷FV6†W%ö–C¢7G&–ærÂçVÆÀ¢'&æ6…ö–C¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–æp¢6ö×÷6—FUö¶W“¢7G&–ærÂçVÆÀ¢7W'&–7VÇVÕ÷7FGW3¢7G&–æp¢VGV6F–öå÷Væ—Eö–C¢7G&–ærÂçVÆÀ¢W‡V7FVE÷vVV¶Ç•ö†÷W'3¢çVÖ&W"ÂçVÆÀ¢f–VÆEö–C¢7G&–ærÂçVÆÀ¢w&FUöÆWfVÃ¢çVÖ&W"ÂçVÆÀ¢–C¢7G&–æp¢–×÷'FVE÷7GVFVçEö6÷VçC¢çVÖ&W"ÂçVÆÀ¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢&VFV6W76÷%ö6Æ75ö–C¢7G&–ærÂçVÆÀ¢&öw&Õ÷G—S¢7G&–ærÂçVÆÀ¢66†ööÅ÷7V'G—S¢7G&–ærÂçVÆÀ¢66†ööÅ÷G—S¢7G&–ærÂçVÆÀ¢6V7F–öã¢7G&–ærÂçVÆÀ¢6÷W&6S¢7G&–æp¢6÷W&6Uöf–ÆUöæÖS¢7G&–ærÂçVÆÀ¢7Æ—E÷F‡&W6†öÆC¢çVÖ&W ¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢6FVÖ–5÷–V%ö–Có¢7G&–ærÂçVÆÀ¢7F—fSó¢&ööÆVà¢Gf—6÷%÷FV6†W%ö–Có¢7G&–ærÂçVÆÀ¢'&æ6…ö–Có¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–æp¢6ö×÷6—FUö¶W“ó¢7G&–ærÂçVÆÀ¢7W'&–7VÇVÕ÷7FGW3ó¢7G&–æp¢VGV6F–öå÷Væ—Eö–Có¢7G&–ærÂçVÆÀ¢W‡V7FVE÷vVV¶Ç•ö†÷W'3ó¢çVÖ&W"ÂçVÆÀ¢f–VÆEö–Có¢7G&–ærÂçVÆÀ¢w&FUöÆWfVÃó¢çVÖ&W"ÂçVÆÀ¢–Có¢7G&–æp¢–×÷'FVE÷7GVFVçEö6÷VçCó¢çVÖ&W"ÂçVÆÀ¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢&VFV6W76÷%ö6Æ75ö–Có¢7G&–ærÂçVÆÀ¢&öw&Õ÷G—Só¢7G&–ærÂçVÆÀ¢66†ööÅ÷7V'G—Só¢7G&–ærÂçVÆÀ¢66†ööÅ÷G—Só¢7G&–ærÂçVÆÀ¢6V7F–öãó¢7G&–ærÂçVÆÀ¢6÷W&6Só¢7G&–æp¢6÷W&6Uöf–ÆUöæÖSó¢7G&–ærÂçVÆÀ¢7Æ—E÷F‡&W6†öÆCó¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢6FVÖ–5÷–V%ö–Có¢7G&–ærÂçVÆÀ¢7F—fSó¢&ööÆVà¢Gf—6÷%÷FV6†W%ö–Có¢7G&–ærÂçVÆÀ¢'&æ6…ö–Có¢7G&–ærÂçVÆÀ¢6Æ75öæÖSó¢7G&–æp¢6ö×÷6—FUö¶W“ó¢7G&–ærÂçVÆÀ¢7W'&–7VÇVÕ÷7FGW3ó¢7G&–æp¢VGV6F–öå÷Væ—Eö–Có¢7G&–ærÂçVÆÀ¢W‡V7FVE÷vVV¶Ç•ö†÷W'3ó¢çVÖ&W"ÂçVÆÀ¢f–VÆEö–Có¢7G&–ærÂçVÆÀ¢w&FUöÆWfVÃó¢çVÖ&W"ÂçVÆÀ¢–Có¢7G&–æp¢–×÷'FVE÷7GVFVçEö6÷VçCó¢çVÖ&W"ÂçVÆÀ¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢&VFV6W76÷%ö6Æ75ö–Có¢7G&–ærÂçVÆÀ¢&öw&Õ÷G—Só¢7G&–ærÂçVÆÀ¢66†ööÅ÷7V'G—Só¢7G&–ærÂçVÆÀ¢66†ööÅ÷G—Só¢7G&–ærÂçVÆÀ¢6V7F–öãó¢7G&–ærÂçVÆÀ¢6÷W&6Só¢7G&–æp¢6÷W&6Uöf–ÆUöæÖSó¢7G&–ærÂçVÆÀ¢7Æ—E÷F‡&W6†öÆCó¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷66†ööÅö6Æ76W5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6Æ76W5ö6FVÖ–5÷–V%ö–Eöf¶W’ ¢6öÇVÖç3¢²&6FVÖ–5÷–V%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6FVÖ–5÷–V'2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6Æ76W5ö'&æ6…ö–Eöf¶W’ ¢6öÇVÖç3¢²&'&æ6…ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öåö'&æ6†W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6Æ76W5öVGV6F–öå÷Væ—Eö–Eöf¶W’ ¢6öÇVÖç3¢²&VGV6F–öå÷Væ—Eö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öåöVGV6F–öå÷Væ—G2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6Æ76W5öf–VÆEö–Eöf¶W’ ¢6öÇVÖç3¢²&f–VÆEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öåöf–VÆG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6Æ76W5÷&VFV6W76÷%ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²'&VFV6W76÷%ö6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&6Æ75ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6Æ76W5÷&VFV6W76÷%ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²'&VFV6W76÷%ö6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷&÷7FW%÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6Æ76W5÷&VFV6W76÷%ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²'&VFV6W76÷%ö6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†ööÅö6Æ76W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢7GVFVçEö6÷W'6U÷&WVW7G3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢ÆÆ÷uö÷fW&Æ¢&ööÆVà¢ÇFW&æF—fUöw&÷W¢7G&–ærÂçVÆÀ¢6÷W'6Uö–C¢7G&–æp¢7&VFVEöC¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢&–÷&—G“¢çVÖ&W ¢&WVW7Eö¶–æC¢7G&–æp¢6÷W&6S¢7G&–ærÂçVÆÀ¢7GVFVçEö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢ÆÆ÷uö÷fW&Æó¢&ööÆVà¢ÇFW&æF—fUöw&÷Wó¢7G&–ærÂçVÆÀ¢6÷W'6Uö–C¢7G&–æp¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢&–÷&—G“ó¢çVÖ&W ¢&WVW7Eö¶–æCó¢7G&–æp¢6÷W&6Só¢7G&–ærÂçVÆÀ¢7GVFVçEö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢ÆÆ÷uö÷fW&Æó¢&ööÆVà¢ÇFW&æF—fUöw&÷Wó¢7G&–ærÂçVÆÀ¢6÷W'6Uö–Có¢7G&–æp¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢&–÷&—G“ó¢çVÖ&W ¢&WVW7Eö¶–æCó¢7G&–æp¢6÷W&6Só¢7G&–ærÂçVÆÀ¢7GVFVçEö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçEö6÷W'6U÷&WVW7G5ö6÷W'6Uö–Eöf¶W’ ¢6öÇVÖç3¢²&6÷W'6Uö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6÷W'6Uö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçEö6÷W'6U÷&WVW7G5÷7GVFVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'7GVFVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'7GVFVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢7GVFVçEög&VU÷F–ÖU÷&WVW7G3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢7&VFVEöC¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢ÖöFS¢7G&–æp¢W&–öG3¢çVÖ&W%µĞ¢7GVFVçEö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢vVV¶F“¢çVÖ&W ¢vV–v‡C¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢ÖöFSó¢7G&–æp¢W&–öG3¢çVÖ&W%µĞ¢7GVFVçEö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶F“¢çVÖ&W ¢vV–v‡Có¢çVÖ&W ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢ÖöFSó¢7G&–æp¢W&–öG3ó¢çVÖ&W%µĞ¢7GVFVçEö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶F“ó¢çVÖ&W ¢vV–v‡Có¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçEög&VU÷F–ÖU÷&WVW7G5÷7GVFVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'7GVFVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'7GVFVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢7GVFVçE÷66†VGVÆUöVç&öÆÆÖVçG3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢7&VFVEöC¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢Æö6¶VC¢&ööÆVà¢6÷W&6S¢7G&–æp¢7GVFVçEö–C¢7G&–æp¢FV6†W%ö76–væÖVçEö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Æö6¶VCó¢&ööÆVà¢6÷W&6Só¢7G&–æp¢7GVFVçEö–C¢7G&–æp¢FV6†W%ö76–væÖVçEö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Æö6¶VCó¢&ööÆVà¢6÷W&6Só¢7G&–æp¢7GVFVçEö–Có¢7G&–æp¢FV6†W%ö76–væÖVçEö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçE÷66†VGVÆUöVç&öÆÆÖVçG5÷7GVFVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'7GVFVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'7GVFVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçE÷66†VGVÆUöVç&öÆÆÖVçG5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçE÷66†VGVÆUöVç&öÆÆÖVçG5÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6Uö76–væÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢7GVFVçE÷6V7F–öæ–æuö—77VW3¢°¢&÷s¢°¢6öFS¢7G&–æp¢7&VFVEöC¢7G&–æp¢FWF–Ã¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢&WVW7Eö–C¢7G&–ærÂçVÆÀ¢7GVFVçEö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢6öFS¢7G&–æp¢7&VFVEöCó¢7G&–æp¢FWF–Ãó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢&WVW7Eö–Có¢7G&–ærÂçVÆÀ¢7GVFVçEö–C¢7G&–æp¢Ğ¢WFFS¢°¢6öFSó¢7G&–æp¢7&VFVEöCó¢7G&–æp¢FWF–Ãó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢&WVW7Eö–Có¢7G&–ærÂçVÆÀ¢7GVFVçEö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçE÷6V7F–öæ–æuö—77VW5÷&WVW7Eö–Eöf¶W’ ¢6öÇVÖç3¢²'&WVW7Eö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'7GVFVçEö6÷W'6U÷&WVW7G2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçE÷6V7F–öæ–æuö—77VW5÷7GVFVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'7GVFVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'7GVFVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢7GVFVçG3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢6Æ75ö–C¢7G&–æp¢7&VFVEöC¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢–C¢7G&–æp¢–×÷'Eö&F6…ö–C¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢66†ööÅöçVÖ&W#¢7G&–æp¢6÷W&6S¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢6Æ75ö–C¢7G&–æp¢7&VFVEöCó¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢–Có¢7G&–æp¢–×÷'Eö&F6…ö–Có¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢66†ööÅöçVÖ&W#¢7G&–æp¢6÷W&6Só¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢6Æ75ö–Có¢7G&–æp¢7&VFVEöCó¢7G&–æp¢gVÆÅöæÖSó¢7G&–æp¢–Có¢7G&–æp¢–×÷'Eö&F6…ö–Có¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢66†ööÅöçVÖ&W#ó¢7G&–æp¢6÷W&6Só¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷7GVFVçG5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçG5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&6Æ75ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçG5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷&÷7FW%÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçG5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†ööÅö6Æ76W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7GVFVçG5ö–×÷'Eö&F6…ö–Eöf¶W’ ¢6öÇVÖç3¢²&–×÷'Eö&F6…ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&Vö·VÅö–×÷'Eö&F6†W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢7V'7F—GWFUö76–væÖVçG3¢°¢&÷s¢°¢'6Væ6UöÆW76öåö–C¢7G&–æp¢&÷fÅ÷7FGW3¢7G&–æp¢&÷fVEöC¢7G&–ærÂçVÆÀ¢&÷fVEö'“¢7G&–ærÂçVÆÀ¢76–væVEöC¢7G&–æp¢76–væVEö'“¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æ÷F–f–VEöC¢7G&–ærÂçVÆÀ¢7V'7F—GWFU÷W6W%ö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢'6Væ6UöÆW76öåö–C¢7G&–æp¢&÷fÅ÷7FGW3ó¢7G&–æp¢&÷fVEöCó¢7G&–ærÂçVÆÀ¢&÷fVEö'“ó¢7G&–ærÂçVÆÀ¢76–væVEöCó¢7G&–æp¢76–væVEö'“¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷F–f–VEöCó¢7G&–ærÂçVÆÀ¢7V'7F—GWFU÷W6W%ö–C¢7G&–æp¢Ğ¢WFFS¢°¢'6Væ6UöÆW76öåö–Có¢7G&–æp¢&÷fÅ÷7FGW3ó¢7G&–æp¢&÷fVEöCó¢7G&–ærÂçVÆÀ¢&÷fVEö'“ó¢7G&–ærÂçVÆÀ¢76–væVEöCó¢7G&–æp¢76–væVEö'“ó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷F–f–VEöCó¢7G&–ærÂçVÆÀ¢7V'7F—GWFU÷W6W%ö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷7V'7F—GWFUö76–væÖVçG5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7V'7F—GWFUö76–væÖVçG5ö'6Væ6UöÆW76öåö–Eöf¶W’ ¢6öÇVÖç3¢²&'6Væ6UöÆW76öåö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢&'6Væ6UöÆW76öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7V'7F—GWFUö76–væÖVçG5ö&÷fVEö'•öf¶W’ ¢6öÇVÖç3¢²&&÷fVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7V'7F—GWFUö76–væÖVçG5ö&÷fVEö'•öf¶W’ ¢6öÇVÖç3¢²&&÷fVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7V'7F—GWFUö76–væÖVçG5ö76–væVEö'•öf¶W’ ¢6öÇVÖç3¢²&76–væVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7V'7F—GWFUö76–væÖVçG5ö76–væVEö'•öf¶W’ ¢6öÇVÖç3¢²&76–væVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7V'7F—GWFUö76–væÖVçG5÷7V'7F—GWFU÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'7V'7F—GWFU÷W6W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'7V'7F—GWFUö76–væÖVçG5÷7V'7F—GWFU÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'7V'7F—GWFU÷W6W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢7WW%öFÖ–åö&ö÷G7G&¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢6Æ–ÖVEöC¢7G&–ærÂçVÆÀ¢6Æ–ÖVEö'“¢7G&–ærÂçVÆÀ¢7&VFVEöC¢7G&–æp¢VÖ–Ã¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢6Æ–ÖVEöCó¢7G&–ærÂçVÆÀ¢6Æ–ÖVEö'“ó¢7G&–ærÂçVÆÀ¢7&VFVEöCó¢7G&–æp¢VÖ–Ã¢7G&–æp¢gVÆÅöæÖSó¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢6Æ–ÖVEöCó¢7G&–ærÂçVÆÀ¢6Æ–ÖVEö'“ó¢7G&–ærÂçVÆÀ¢7&VFVEöCó¢7G&–æp¢VÖ–Ãó¢7G&–æp¢gVÆÅöæÖSó¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷7WW%öFÖ–åö&ö÷G7G&ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢Ğ¢Ğ¢7—7FVÕöfVGW&Uö6FÆös¢°¢&÷s¢°¢Væ&ÆVC¢&ööÆVà¢fVGW&Uö¶W“¢7G&–æp¢Æ&VÃ¢7G&–æp¢Ö–çFVææ6S¢&ööÆVà¢Ö–çFVææ6UöÖW76vS¢7G&–ærÂçVÆÀ¢&VçEö¶W“¢7G&–ærÂçVÆÀ¢&÷WFU÷&Vf—ƒ¢7G&–ærÂçVÆÀ¢6÷'Eö÷&FW#¢çVÖ&W ¢WFFVEöC¢7G&–æp¢WFFVEö'“¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢Væ&ÆVCó¢&ööÆVà¢fVGW&Uö¶W“¢7G&–æp¢Æ&VÃ¢7G&–æp¢Ö–çFVææ6Só¢&ööÆVà¢Ö–çFVææ6UöÖW76vSó¢7G&–ærÂçVÆÀ¢&VçEö¶W“ó¢7G&–ærÂçVÆÀ¢&÷WFU÷&Vf—ƒó¢7G&–ærÂçVÆÀ¢6÷'Eö÷&FW#ó¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢Væ&ÆVCó¢&ööÆVà¢fVGW&Uö¶W“ó¢7G&–æp¢Æ&VÃó¢7G&–æp¢Ö–çFVææ6Só¢&ööÆVà¢Ö–çFVææ6UöÖW76vSó¢7G&–ærÂçVÆÀ¢&VçEö¶W“ó¢7G&–ærÂçVÆÀ¢&÷WFU÷&Vf—ƒó¢7G&–ærÂçVÆÀ¢6÷'Eö÷&FW#ó¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'7—7FVÕöfVGW&Uö6FÆöu÷&VçEö¶W•öf¶W’ ¢6öÇVÖç3¢²'&VçEö¶W’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'7—7FVÕöfVGW&Uö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&fVGW&Uö¶W’%Ğ¢ÒÀ¢Ğ¢Ğ¢7—7FVÕ÷'VçF–ÖU÷6WGF–æw3¢°¢&÷s¢°¢Ö–çFVææ6S¢&ööÆVà¢Ö–çFVææ6UöÖW76vS¢7G&–æp¢6–ævÆWFöã¢&ööÆVà¢WFFVEöC¢7G&–æp¢WFFVEö'“¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢Ö–çFVææ6Só¢&ööÆVà¢Ö–çFVææ6UöÖW76vSó¢7G&–æp¢6–ævÆWFöãó¢&ööÆVà¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢Ö–çFVææ6Só¢&ööÆVà¢Ö–çFVææ6UöÖW76vSó¢7G&–æp¢6–ævÆWFöãó¢&ööÆVà¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢F6µ÷&öÆU÷FV×ÆFU÷W&Ö—76–öç3¢°¢&÷s¢°¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢W&Ö—76–öåö6öFS¢7G&–æp¢66÷S¢§6öà¢FV×ÆFUö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢W&Ö—76–öåö6öFS¢7G&–æp¢66÷Só¢§6öà¢FV×ÆFUö–C¢7G&–æp¢Ğ¢WFFS¢°¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢W&Ö—76–öåö6öFSó¢7G&–æp¢66÷Só¢§6öà¢FV×ÆFUö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷F6µ÷&öÆU÷FV×ÆFU÷W&Ö—76–öç5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'F6µ÷&öÆU÷FV×ÆFU÷W&Ö—76–öç5÷W&Ö—76–öåö6öFUöf¶W’ ¢6öÇVÖç3¢²'W&Ö—76–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'W&Ö—76–öåö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'F6µ÷&öÆU÷FV×ÆFU÷W&Ö—76–öç5÷FV×ÆFUö–Eöf¶W’ ¢6öÇVÖç3¢²'FV×ÆFUö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'F6µ÷&öÆU÷FV×ÆFW2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢F6µ÷&öÆU÷FV×ÆFW3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢7&VFVEöC¢7G&–æp¢7&VFVEö'“¢7G&–ærÂçVÆÀ¢FW67&—F–öã¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æÖS¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢7&VFVEö'“ó¢7G&–ærÂçVÆÀ¢FW67&—F–öãó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æÖS¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢7&VFVEö'“ó¢7G&–ærÂçVÆÀ¢FW67&—F–öãó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æÖSó¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷F6µ÷&öÆU÷FV×ÆFW5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'F6µ÷&öÆU÷FV×ÆFW5ö7&VFVEö'•öf¶W’ ¢6öÇVÖç3¢²&7&VFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'F6µ÷&öÆU÷FV×ÆFW5ö7&VFVEö'•öf¶W’ ¢6öÇVÖç3¢²&7&VFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%ö6÷W'6Uö76–væÖVçG3¢°¢&÷s¢°¢76–væVEö†÷W'3¢çVÖ&W ¢76–væÖVçEöw&÷W¢7G&–æp¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–C¢7G&–æp¢7&VFVEöC¢7G&–æp¢7&VFVEö'“¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢6V7F–öåö66—G“¢çVÖ&W"ÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢76–væVEö†÷W'3¢çVÖ&W ¢76–væÖVçEöw&÷Wó¢7G&–æp¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–C¢7G&–æp¢7&VFVEöCó¢7G&–æp¢7&VFVEö'“ó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢6V7F–öåö66—G“ó¢çVÖ&W"ÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢76–væVEö†÷W'3ó¢çVÖ&W ¢76–væÖVçEöw&÷Wó¢7G&–æp¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Có¢7G&–æp¢7&VFVEöCó¢7G&–æp¢7&VFVEö'“ó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢6V7F–öåö66—G“ó¢çVÖ&W"ÂçVÆÀ¢FV6†W%ö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷FV6†W%ö6÷W'6Uö76–væÖVçG5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%ö6÷W'6Uö76–væÖVçG5ö6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö6÷W'6U÷&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%ö6÷W'6Uö76–væÖVçG5ö6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö6÷W'6U÷&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%ö6÷W'6Uö76–væÖVçG5ö7&VFVEö'•öf¶W’ ¢6öÇVÖç3¢²&7&VFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%ö6÷W'6Uö76–væÖVçG5ö7&VFVEö'•öf¶W’ ¢6öÇVÖç3¢²&7&VFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%ö6÷W'6Uö76–væÖVçG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%ö6÷W'6Uö76–væÖVçG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%öGWG•ö76–væÖVçG3¢°¢&÷s¢°¢76–væÖVçE÷6÷W&6S¢7G&–æp¢7&VFVEöC¢7G&–æp¢GWG•öFFS¢7G&–æp¢GWG•öÆö6F–öã¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢76–væÖVçE÷6÷W&6Só¢7G&–æp¢7&VFVEöCó¢7G&–æp¢GWG•öFFS¢7G&–æp¢GWG•öÆö6F–öãó¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢Ğ¢WFFS¢°¢76–væÖVçE÷6÷W&6Só¢7G&–æp¢7&VFVEöCó¢7G&–æp¢GWG•öFFSó¢7G&–æp¢GWG•öÆö6F–öãó¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢FV6†W%ö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷FV6†W%öGWG•ö76–væÖVçG5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%öGWG•ö76–væÖVçG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%öGWG•ö76–væÖVçG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%öGWG•ö7–6ÆUöÖVÖ&W'3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢&÷FF–öåööfg6WC¢çVÖ&W ¢FV6†W%ö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢vVV¶F“¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢&÷FF–öåööfg6WCó¢çVÖ&W ¢FV6†W%ö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶F“¢çVÖ&W ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢&÷FF–öåööfg6WCó¢çVÖ&W ¢FV6†W%ö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶F“ó¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷FV6†W%öGWG•ö7–6ÆUöÖVÖ&W'5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%öGWG•ö7–6ÆUöÖVÖ&W'5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%öGWG•ö7–6ÆUöÖVÖ&W'5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%öfÆW†–&ÆU÷66†VGVÆUöGWF–W3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢GWG•÷G—S¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢Æö6¶VC¢&ööÆVà¢Ö–åö&Æö6µö†÷W'3¢çVÖ&W ¢Ö÷f&ÆS¢&ööÆVà¢Æ6VÖVçE÷†6S¢7G&–æp¢Æ6VÖVçE÷7G&FVw“¢7G&–æp¢6÷W&6Uö–C¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢F÷FÅö†÷W'3¢çVÖ&W ¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢GWG•÷G—S¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢Æö6¶VCó¢&ööÆVà¢Ö–åö&Æö6µö†÷W'3ó¢çVÖ&W ¢Ö÷f&ÆSó¢&ööÆVà¢Æ6VÖVçE÷†6S¢7G&–æp¢Æ6VÖVçE÷7G&FVw“ó¢7G&–æp¢6÷W&6Uö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢F÷FÅö†÷W'3¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢GWG•÷G—Só¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢Æö6¶VCó¢&ööÆVà¢Ö–åö&Æö6µö†÷W'3ó¢çVÖ&W ¢Ö÷f&ÆSó¢&ööÆVà¢Æ6VÖVçE÷†6Só¢7G&–æp¢Æ6VÖVçE÷7G&FVw“ó¢7G&–æp¢6÷W&6Uö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö–Có¢7G&–æp¢F÷FÅö†÷W'3ó¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%öfÆW†–&ÆU÷66†VGVÆUöGWF–W5ö–ç7F—GWF–öåö6öFUöf¶W’ ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%öfÆW†–&ÆU÷66†VGVÆUöGWF–W5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%öfÆW†–&ÆU÷66†VGVÆUöGWF–W5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%÷—&öÆÅö6öæf–s¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢wVæGW¥ö¶'5öFF÷G—S¢7G&–æp¢†5ö6Æ75öwV–Fæ6S¢&ööÆVà¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æö&WEö¶'5öFF÷G—S¢7G&–æp¢&V†&W&Æ–µö¶'5öFF÷G—S¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢vVV¶Ç•÷6Æ'•öö&Æ–vF–öã¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢wVæGW¥ö¶'5öFF÷G—Só¢7G&–æp¢†5ö6Æ75öwV–Fæ6Só¢&ööÆVà¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æö&WEö¶'5öFF÷G—Só¢7G&–æp¢&V†&W&Æ–µö¶'5öFF÷G—Só¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶Ç•÷6Æ'•öö&Æ–vF–öãó¢çVÖ&W ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢wVæGW¥ö¶'5öFF÷G—Só¢7G&–æp¢†5ö6Æ75öwV–Fæ6Só¢&ööÆVà¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æö&WEö¶'5öFF÷G—Só¢7G&–æp¢&V†&W&Æ–µö¶'5öFF÷G—Só¢7G&–æp¢FV6†W%ö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶Ç•÷6Æ'•öö&Æ–vF–öãó¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷FV6†W%÷—&öÆÅö6öæf–uö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷—&öÆÅö6öæf–u÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷—&öÆÅö6öæf–u÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%÷66†VGVÆS¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢&Æö6µö¶W“¢7G&–ærÂçVÆÀ¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–C¢7G&–ærÂçVÆÀ¢6Æ75ö–C¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–æp¢6Æ77&ööÓ¢7G&–ærÂçVÆÀ¢6Æ77&ööÕö–C¢7G&–ærÂçVÆÀ¢6÷W'6Uö–C¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢—5öw&÷W÷7Æ—C¢&ööÆVà¢Æö6¶VC¢&ööÆVà¢W&–öC¢çVÖ&W ¢6÷W&6Uö¶–æC¢7G&–æp¢7V&w&÷Wö–C¢7G&–ærÂçVÆÀ¢7V&w&÷Wö¶W“¢7G&–ærÂçVÆÀ¢7V&¦V7C¢7G&–æp¢7–æ5öw&÷Wö–C¢7G&–ærÂçVÆÀ¢FV6†W%ö76–væÖVçEö–C¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢vVV¶F“¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢&Æö6µö¶W“ó¢7G&–ærÂçVÆÀ¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢6Æ75ö–Có¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–æp¢6Æ77&ööÓó¢7G&–ærÂçVÆÀ¢6Æ77&ööÕö–Có¢7G&–ærÂçVÆÀ¢6÷W'6Uö–Có¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢—5öw&÷W÷7Æ—Có¢&ööÆVà¢Æö6¶VCó¢&ööÆVà¢W&–öC¢çVÖ&W ¢6÷W&6Uö¶–æCó¢7G&–æp¢7V&w&÷Wö–Có¢7G&–ærÂçVÆÀ¢7V&w&÷Wö¶W“ó¢7G&–ærÂçVÆÀ¢7V&¦V7C¢7G&–æp¢7–æ5öw&÷Wö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö76–væÖVçEö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶F“¢çVÖ&W ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢&Æö6µö¶W“ó¢7G&–ærÂçVÆÀ¢6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢6Æ75ö–Có¢7G&–ærÂçVÆÀ¢6Æ75öæÖSó¢7G&–æp¢6Æ77&ööÓó¢7G&–ærÂçVÆÀ¢6Æ77&ööÕö–Có¢7G&–ærÂçVÆÀ¢6÷W'6Uö–Có¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢—5öw&÷W÷7Æ—Có¢&ööÆVà¢Æö6¶VCó¢&ööÆVà¢W&–öCó¢çVÖ&W ¢6÷W&6Uö¶–æCó¢7G&–æp¢7V&w&÷Wö–Có¢7G&–ærÂçVÆÀ¢7V&w&÷Wö¶W“ó¢7G&–ærÂçVÆÀ¢7V&¦V7Có¢7G&–æp¢7–æ5öw&÷Wö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö76–væÖVçEö–Có¢7G&–ærÂçVÆÀ¢FV6†W%ö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶F“ó¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷FV6†W%÷66†VGVÆUö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö6÷W'6U÷&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ75ö6÷W'6U÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö6÷W'6U÷&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&6Æ75ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷&÷7FW%÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†ööÅö6Æ76W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ77&ööÕö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ77&ööÕö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ77&öö×2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6÷W'6Uö–Eöf¶W’ ¢6öÇVÖç3¢²&6÷W'6Uö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6÷W'6Uö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷7V&w&÷Wö–Eöf¶W’ ¢6öÇVÖç3¢²'7V&w&÷Wö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷7V&w&÷W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷7–æ5öw&÷Wö–Eöf¶W’ ¢6öÇVÖç3¢²'7–æ5öw&÷Wö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆU÷7–æ5öw&÷W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷FV6†W%ö76–væÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö76–væÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6Uö76–væÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%÷66†VGVÆUö6öç7G&–çG3¢°¢&÷s¢°¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢Ö…ö6öç6V7WF—fUö†÷W'3¢çVÖ&W ¢Ö…öF–Ç•ö†÷W'3¢çVÖ&W"ÂçVÆÀ¢Ö…÷vVV¶Ç•ö†÷W'3¢çVÖ&W"ÂçVÆÀ¢Ö…÷v÷&¶–æuöF—3¢çVÖ&W"ÂçVÆÀ¢Ö–å÷v÷&¶–æuöF—3¢çVÖ&W"ÂçVÆÀ¢&VfW'&VEög&VUöF“¢çVÖ&W"ÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢Ö…ö6öç6V7WF—fUö†÷W'3ó¢çVÖ&W ¢Ö…öF–Ç•ö†÷W'3ó¢çVÖ&W"ÂçVÆÀ¢Ö…÷vVV¶Ç•ö†÷W'3ó¢çVÖ&W"ÂçVÆÀ¢Ö…÷v÷&¶–æuöF—3ó¢çVÖ&W"ÂçVÆÀ¢Ö–å÷v÷&¶–æuöF—3ó¢çVÖ&W"ÂçVÆÀ¢&VfW'&VEög&VUöF“ó¢çVÖ&W"ÂçVÆÀ¢FV6†W%ö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢Ö…ö6öç6V7WF—fUö†÷W'3ó¢çVÖ&W ¢Ö…öF–Ç•ö†÷W'3ó¢çVÖ&W"ÂçVÆÀ¢Ö…÷vVV¶Ç•ö†÷W'3ó¢çVÖ&W"ÂçVÆÀ¢Ö…÷v÷&¶–æuöF—3ó¢çVÖ&W"ÂçVÆÀ¢Ö–å÷v÷&¶–æuöF—3ó¢çVÖ&W"ÂçVÆÀ¢&VfW'&VEög&VUöF“ó¢çVÖ&W"ÂçVÆÀ¢FV6†W%ö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷FV6†W%÷66†VGVÆUö6öç7G&–çG5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6öç7G&–çG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6öç7G&–çG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%÷66†VGVÆU÷&VfW&Væ6W3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢W&–öC¢çVÖ&W ¢&VfW&Væ6S¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢vVV¶F“¢çVÖ&W ¢vV–v‡C¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢W&–öC¢çVÖ&W ¢&VfW&Væ6S¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢vVV¶F“¢çVÖ&W ¢vV–v‡Có¢çVÖ&W ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢W&–öCó¢çVÖ&W ¢&VfW&Væ6Só¢7G&–æp¢FV6†W%ö–Có¢7G&–æp¢vVV¶F“ó¢çVÖ&W ¢vV–v‡Có¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷FV6†W%÷66†VGVÆU÷&VfW&Væ6W5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷&VfW&Væ6W5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷&VfW&Væ6W5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%÷Væf–Æ&–Æ—G“¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢&÷fVEöC¢7G&–ærÂçVÆÀ¢&÷fVEö'“¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢W&–öC¢çVÖ&W ¢&V6öã¢7G&–æp¢6÷W&6S¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢vVV¶F“¢çVÖ&W ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢&÷fVEöCó¢7G&–ærÂçVÆÀ¢&÷fVEö'“ó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢W&–öC¢çVÖ&W ¢&V6öãó¢7G&–æp¢6÷W&6Só¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢vVV¶F“¢çVÖ&W ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢&÷fVEöCó¢7G&–ærÂçVÆÀ¢&÷fVEö'“ó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢W&–öCó¢çVÖ&W ¢&V6öãó¢7G&–æp¢6÷W&6Só¢7G&–æp¢FV6†W%ö–Có¢7G&–æp¢vVV¶F“ó¢çVÖ&W ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷FV6†W%÷Væf–Æ&–Æ—G•ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷Væf–Æ&–Æ—G•ö&÷fVEö'•öf¶W’ ¢6öÇVÖç3¢²&&÷fVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷Væf–Æ&–Æ—G•ö&÷fVEö'•öf¶W’ ¢6öÇVÖç3¢²&&÷fVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷Væf–Æ&–Æ—G•÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷Væf–Æ&–Æ—G•÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†–æuö&V3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢6öFS¢7G&–æp¢7&VFVEöC¢7G&–æp¢–C¢7G&–æp¢æÖS¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢6öFS¢7G&–æp¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢æÖS¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢6öFSó¢7G&–æp¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢æÖSó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢FVÆVw&Õö–çFVw&F–öç3¢°¢&÷s¢°¢Væ&ÆVC¢&ööÆVà¢Æ–æ¶VEöC¢7G&–ærÂçVÆÀ¢FVÆVw&Õö6†Eö–C¢çVÖ&W"ÂçVÆÀ¢WFFVEöC¢7G&–æp¢W6W%ö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢Væ&ÆVCó¢&ööÆVà¢Æ–æ¶VEöCó¢7G&–ærÂçVÆÀ¢FVÆVw&Õö6†Eö–Có¢çVÖ&W"ÂçVÆÀ¢WFFVEöCó¢7G&–æp¢W6W%ö–C¢7G&–æp¢Ğ¢WFFS¢°¢Væ&ÆVCó¢&ööÆVà¢Æ–æ¶VEöCó¢7G&–ærÂçVÆÀ¢FVÆVw&Õö6†Eö–Có¢çVÖ&W"ÂçVÆÀ¢WFFVEöCó¢7G&–æp¢W6W%ö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'FVÆVw&Õö–çFVw&F–öç5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FVÆVw&Õö–çFVw&F–öç5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FVÆVw&ÕöÆ–æµ÷Fö¶Vç3¢°¢&÷s¢°¢7&VFVEöC¢7G&–æp¢W‡—&W5öC¢7G&–æp¢–C¢7G&–æp¢Fö¶Våö†6ƒ¢7G&–æp¢W6VEöC¢7G&–ærÂçVÆÀ¢W6W%ö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢7&VFVEöCó¢7G&–æp¢W‡—&W5öC¢7G&–æp¢–Có¢7G&–æp¢Fö¶Våö†6ƒ¢7G&–æp¢W6VEöCó¢7G&–ærÂçVÆÀ¢W6W%ö–C¢7G&–æp¢Ğ¢WFFS¢°¢7&VFVEöCó¢7G&–æp¢W‡—&W5öCó¢7G&–æp¢–Có¢7G&–æp¢Fö¶Våö†6ƒó¢7G&–æp¢W6VEöCó¢7G&–ærÂçVÆÀ¢W6W%ö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'FVÆVw&ÕöÆ–æµ÷Fö¶Vç5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FVÆVw&ÕöÆ–æµ÷Fö¶Vç5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FVæçEöÖW76vW3¢°¢&÷s¢°¢7&VFVEöC¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢ÖW76vS¢7G&–æp¢6VæFW%÷W6W%ö–C¢7G&–ærÂçVÆÀ¢6WfW&—G“¢7G&–æp¢F—FÆS¢7G&–æp¢Ğ¢–ç6W'C¢°¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢ÖW76vS¢7G&–æp¢6VæFW%÷W6W%ö–Có¢7G&–ærÂçVÆÀ¢6WfW&—G“ó¢7G&–æp¢F—FÆS¢7G&–æp¢Ğ¢WFFS¢°¢7&VFVEöCó¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢ÖW76vSó¢7G&–æp¢6VæFW%÷W6W%ö–Có¢7G&–ærÂçVÆÀ¢6WfW&—G“ó¢7G&–æp¢F—FÆSó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'FVæçEöÖW76vW5ö–ç7F—GWF–öåö6öFUöf¶W’ ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢Ğ¢Ğ¢FVæçE÷66÷U÷&Vv—7G'“¢°¢&÷s¢°¢æ÷FS¢7G&–ærÂçVÆÀ¢66÷S¢7G&–æp¢F&ÆUöæÖS¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢æ÷FSó¢7G&–ærÂçVÆÀ¢66÷S¢7G&–æp¢F&ÆUöæÖS¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢æ÷FSó¢7G&–ærÂçVÆÀ¢66÷Só¢7G&–æp¢F&ÆUöæÖSó¢7G&–æp¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢W6W%÷W&Ö—76–öåöw&çG3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢7&VFVEöC¢7G&–æp¢w&çFVEö'“¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢W&Ö—76–öåö6öFS¢7G&–æp¢66÷S¢§6öà¢WFFVEöC¢7G&–æp¢W6W%ö–C¢7G&–æp¢fÆ–Eög&öÓ¢7G&–ærÂçVÆÀ¢fÆ–E÷VçF–Ã¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢w&çFVEö'“ó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢W&Ö—76–öåö6öFS¢7G&–æp¢66÷Só¢§6öà¢WFFVEöCó¢7G&–æp¢W6W%ö–C¢7G&–æp¢fÆ–Eög&öÓó¢7G&–ærÂçVÆÀ¢fÆ–E÷VçF–Ãó¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢7&VFVEöCó¢7G&–æp¢w&çFVEö'“ó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢W&Ö—76–öåö6öFSó¢7G&–æp¢66÷Só¢§6öà¢WFFVEöCó¢7G&–æp¢W6W%ö–Có¢7G&–æp¢fÆ–Eög&öÓó¢7G&–ærÂçVÆÀ¢fÆ–E÷VçF–Ãó¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷W6W%÷W&Ö—76–öåöw&çG5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷W&Ö—76–öåöw&çG5öw&çFVEö'•öf¶W’ ¢6öÇVÖç3¢²&w&çFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷W&Ö—76–öåöw&çG5öw&çFVEö'•öf¶W’ ¢6öÇVÖç3¢²&w&çFVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷W&Ö—76–öåöw&çG5÷W&Ö—76–öåö6öFUöf¶W’ ¢6öÇVÖç3¢²'W&Ö—76–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'W&Ö—76–öåö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷W&Ö—76–öåöw&çG5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷W&Ö—76–öåöw&çG5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢W6W%÷F6µ÷&öÆUö76–væÖVçG3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢76–væVEöC¢7G&–æp¢76–væVEö'“¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢FV×ÆFUö–C¢7G&–æp¢W6W%ö–C¢7G&–æp¢fÆ–Eög&öÓ¢7G&–ærÂçVÆÀ¢fÆ–E÷VçF–Ã¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢76–væVEöCó¢7G&–æp¢76–væVEö'“ó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢FV×ÆFUö–C¢7G&–æp¢W6W%ö–C¢7G&–æp¢fÆ–Eög&öÓó¢7G&–ærÂçVÆÀ¢fÆ–E÷VçF–Ãó¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢76–væVEöCó¢7G&–æp¢76–væVEö'“ó¢7G&–ærÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢æ÷FSó¢7G&–ærÂçVÆÀ¢FV×ÆFUö–Có¢7G&–æp¢W6W%ö–Có¢7G&–æp¢fÆ–Eög&öÓó¢7G&–ærÂçVÆÀ¢fÆ–E÷VçF–Ãó¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷W6W%÷F6µ÷&öÆUö76–væÖVçG5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷F6µ÷&öÆUö76–væÖVçG5ö76–væVEö'•öf¶W’ ¢6öÇVÖç3¢²&76–væVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷F6µ÷&öÆUö76–væÖVçG5ö76–væVEö'•öf¶W’ ¢6öÇVÖç3¢²&76–væVEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷F6µ÷&öÆUö76–væÖVçG5÷FV×ÆFUö–Eöf¶W’ ¢6öÇVÖç3¢²'FV×ÆFUö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'F6µ÷&öÆU÷FV×ÆFW2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷F6µ÷&öÆUö76–væÖVçG5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'W6W%÷F6µ÷&öÆUö76–væÖVçG5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢f–6U÷&–æ6—Ç3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢W6W%ö–C¢7G&–æp¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢W6W%ö–C¢7G&–æp¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢–ç7F—GWF–öåö6öFSó¢7G&–ærÂçVÆÀ¢W6W%ö–Có¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&fµ÷f–6U÷&–æ6—Ç5ö–ç7F—GWF–öåö6öFR ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'f–6U÷&–æ6—Ç5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'f–6U÷&–æ6—Ç5÷W6W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'W6W%ö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢fö6F–öæÅö6ö÷&F–æF–öå÷Æç3¢°¢&÷s¢°¢6FVÖ–5÷–V%ö–C¢7G&–ærÂçVÆÀ¢7F—fS¢&ööÆVà¢F–Ç•ö6ö÷&F–æF–öåöÖ…ö†÷W'3¢çVÖ&W ¢VGV6F–öå÷Væ—Eö–C¢7G&–ærÂçVÆÀ¢VÆ–v–&ÆU÷FV6†W%ö6÷VçC¢çVÖ&W ¢VçFW'&—6UöF—5÷W%÷vVV³¢çVÖ&W"ÂçVÆÀ¢VçFW'&—6U÷vVV¶Ç•ö†÷W'3¢çVÖ&W"ÂçVÆÀ¢f–VÆEö–C¢7G&–æp¢w&FUöÆWfVÃ¢çVÖ&W"ÂçVÆÀ¢†–v…÷F&vWC¢çVÖ&W"ÂçVÆÀ¢†–v…÷F&vWE÷FV6†W%ö6÷VçC¢çVÖ&W"ÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢—5öÖWG&÷öÆ—FåöF—7G&–7C¢&ööÆVâÂçVÆÀ¢Æ÷u÷F&vWC¢çVÖ&W"ÂçVÆÀ¢&öw&Õ÷G—S¢7G&–ærÂçVÆÀ¢6÷W&6U÷&WV—&VÖVçEö–C¢7G&–ærÂçVÆÀ¢6÷W&6U÷'VÆS¢7G&–ærÂçVÆÀ¢F÷FÅö†÷W'3¢çVÖ&W ¢WFFVEöC¢7G&–æp¢Ğ¢–ç6W'C¢°¢6FVÖ–5÷–V%ö–Có¢7G&–ærÂçVÆÀ¢7F—fSó¢&ööÆVà¢F–Ç•ö6ö÷&F–æF–öåöÖ…ö†÷W'3ó¢çVÖ&W ¢VGV6F–öå÷Væ—Eö–Có¢7G&–ærÂçVÆÀ¢VÆ–v–&ÆU÷FV6†W%ö6÷VçC¢çVÖ&W ¢VçFW'&—6UöF—5÷W%÷vVV³ó¢çVÖ&W"ÂçVÆÀ¢VçFW'&—6U÷vVV¶Ç•ö†÷W'3ó¢çVÖ&W"ÂçVÆÀ¢f–VÆEö–C¢7G&–æp¢w&FUöÆWfVÃó¢çVÖ&W"ÂçVÆÀ¢†–v…÷F&vWCó¢çVÖ&W"ÂçVÆÀ¢†–v…÷F&vWE÷FV6†W%ö6÷VçCó¢çVÖ&W"ÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢—5öÖWG&÷öÆ—FåöF—7G&–7Có¢&ööÆVâÂçVÆÀ¢Æ÷u÷F&vWCó¢çVÖ&W"ÂçVÆÀ¢&öw&Õ÷G—Só¢7G&–ærÂçVÆÀ¢6÷W&6U÷&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢6÷W&6U÷'VÆSó¢7G&–ærÂçVÆÀ¢F÷FÅö†÷W'3¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢Ğ¢WFFS¢°¢6FVÖ–5÷–V%ö–Có¢7G&–ærÂçVÆÀ¢7F—fSó¢&ööÆVà¢F–Ç•ö6ö÷&F–æF–öåöÖ…ö†÷W'3ó¢çVÖ&W ¢VGV6F–öå÷Væ—Eö–Có¢7G&–ærÂçVÆÀ¢VÆ–v–&ÆU÷FV6†W%ö6÷VçCó¢çVÖ&W ¢VçFW'&—6UöF—5÷W%÷vVV³ó¢çVÖ&W"ÂçVÆÀ¢VçFW'&—6U÷vVV¶Ç•ö†÷W'3ó¢çVÖ&W"ÂçVÆÀ¢f–VÆEö–Có¢7G&–æp¢w&FUöÆWfVÃó¢çVÖ&W"ÂçVÆÀ¢†–v…÷F&vWCó¢çVÖ&W"ÂçVÆÀ¢†–v…÷F&vWE÷FV6†W%ö6÷VçCó¢çVÖ&W"ÂçVÆÀ¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢—5öÖWG&÷öÆ—FåöF—7G&–7Có¢&ööÆVâÂçVÆÀ¢Æ÷u÷F&vWCó¢çVÖ&W"ÂçVÆÀ¢&öw&Õ÷G—Só¢7G&–ærÂçVÆÀ¢6÷W&6U÷&WV—&VÖVçEö–Có¢7G&–ærÂçVÆÀ¢6÷W&6U÷'VÆSó¢7G&–ærÂçVÆÀ¢F÷FÅö†÷W'3ó¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅö6ö÷&F–æF–öå÷Æç5öVGV6F–öå÷Væ—Eö–Eöf¶W’ ¢6öÇVÖç3¢²&VGV6F–öå÷Væ—Eö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öåöVGV6F–öå÷Væ—G2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅö6ö÷&F–æF–öå÷Æç5öf–VÆEö–Eöf¶W’ ¢6öÇVÖç3¢²&f–VÆEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öåöf–VÆG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅö6ö÷&F–æF–öå÷Æç5ö–ç7F—GWF–öåö6öFUöf¶W’ ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅö6ö÷&F–æF–öå÷Æç5÷6÷W&6U÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'6÷W&6U÷&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅö6ö÷&F–æF–öå÷Æç5÷6÷W&6U÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'6÷W&6U÷&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢fö6F–öæÅö6÷W'6Uöw&÷W÷Æç3¢°¢&÷s¢°¢Æ–VEöw&÷Wö6÷VçC¢çVÖ&W ¢w&÷W&ÆS¢&ööÆVà¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢÷fW'&–FU÷&V6öã¢7G&–ærÂçVÆÀ¢&WV—&VÖVçEö–C¢7G&–æp¢6÷W&6U÷'VÆS¢7G&–ærÂçVÆÀ¢7V6–ÅöæVVG5÷7GVFVçEö6÷VçC¢çVÖ&W ¢7GVFVçEö6÷VçC¢çVÖ&W ¢7VvvW7FVEöw&÷Wö6÷VçC¢çVÖ&W ¢WFFVEöC¢7G&–æp¢WFFVEö'“¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢Æ–VEöw&÷Wö6÷VçC¢çVÖ&W ¢w&÷W&ÆSó¢&ööÆVà¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢÷fW'&–FU÷&V6öãó¢7G&–ærÂçVÆÀ¢&WV—&VÖVçEö–C¢7G&–æp¢6÷W&6U÷'VÆSó¢7G&–ærÂçVÆÀ¢7V6–ÅöæVVG5÷7GVFVçEö6÷VçCó¢çVÖ&W ¢7GVFVçEö6÷VçC¢çVÖ&W ¢7VvvW7FVEöw&÷Wö6÷VçC¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢Æ–VEöw&÷Wö6÷VçCó¢çVÖ&W ¢w&÷W&ÆSó¢&ööÆVà¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢÷fW'&–FU÷&V6öãó¢7G&–ærÂçVÆÀ¢&WV—&VÖVçEö–Có¢7G&–æp¢6÷W&6U÷'VÆSó¢7G&–ærÂçVÆÀ¢7V6–ÅöæVVG5÷7GVFVçEö6÷VçCó¢çVÖ&W ¢7GVFVçEö6÷VçCó¢çVÖ&W ¢7VvvW7FVEöw&÷Wö6÷VçCó¢çVÖ&W ¢WFFVEöCó¢7G&–æp¢WFFVEö'“ó¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅö6÷W'6Uöw&÷W÷Æç5ö–ç7F—GWF–öåö6öFUöf¶W’ ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅö6÷W'6Uöw&÷W÷Æç5÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅö6÷W'6Uöw&÷W÷Æç5÷&WV—&VÖVçEö–Eöf¶W’ ¢6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢—4öæUFôöæS¢G'VP¢&VfW&Væ6VE&VÆF–öã¢'66†VGVÆUö76–væÖVçEö÷F–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²'&WV—&VÖVçEö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢fö6F–öæÅöÆVEö76–væÖVçG3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢GWG•÷G—S¢7G&–æp¢f–VÆEö–C¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢vVV¶Ç•ö†÷W'3¢çVÖ&W ¢v÷&·6†÷ö–C¢7G&–ærÂçVÆÀ¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢GWG•÷G—S¢7G&–æp¢f–VÆEö–C¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶Ç•ö†÷W'3¢çVÖ&W ¢v÷&·6†÷ö–Có¢7G&–ærÂçVÆÀ¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢GWG•÷G—Só¢7G&–æp¢f–VÆEö–Có¢7G&–æp¢–Có¢7G&–æp¢–ç7F—GWF–öåö6öFSó¢7G&–æp¢FV6†W%ö–Có¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶Ç•ö†÷W'3ó¢çVÖ&W ¢v÷&·6†÷ö–Có¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅöÆVEö76–væÖVçG5öf–VÆEö–Eöf¶W’ ¢6öÇVÖç3¢²&f–VÆEö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öåöf–VÆG2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅöÆVEö76–væÖVçG5ö–ç7F—GWF–öåö6öFUöf¶W’ ¢6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&–ç7F—GWF–öç2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–ç7F—GWF–öåö6öFR%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅöÆVEö76–væÖVçG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅöÆVEö76–væÖVçG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'fö6F–öæÅöÆVEö76–væÖVçG5÷v÷&·6†÷ö–Eöf¶W’ ¢6öÇVÖç3¢²'v÷&·6†÷ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ77&öö×2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢fö6F–öæÅ÷&öw&Õ÷66†VGVÆU÷öÆ–6–W3¢°¢&÷s¢°¢7F—fS¢&ööÆVà¢FVfVÇEöVçFW'&—6UöF—3¢çVÖ&W"ÂçVÆÀ¢FVfVÇE÷66†ööÅöF—3¢çVÖ&W"ÂçVÆÀ¢VÆ–v–&ÆUöw&FW3¢çVÖ&W%µĞ¢&öw&Õ÷G—S¢7G&–æp¢&VwVÆ%÷–V%öVçFW'&—6UöÖöFS¢7G&–æp¢6÷W&6U÷'VÆS¢7G&–æp¢WFFVEöC¢7G&–æp¢vVV¶Ç•ö†÷W'5ög&öÕööff–6–Å÷66†VGVÆS¢&ööÆVà¢Ğ¢–ç6W'C¢°¢7F—fSó¢&ööÆVà¢FVfVÇEöVçFW'&—6UöF—3ó¢çVÖ&W"ÂçVÆÀ¢FVfVÇE÷66†ööÅöF—3ó¢çVÖ&W"ÂçVÆÀ¢VÆ–v–&ÆUöw&FW3¢çVÖ&W%µĞ¢&öw&Õ÷G—S¢7G&–æp¢&VwVÆ%÷–V%öVçFW'&—6UöÖöFS¢7G&–æp¢6÷W&6U÷'VÆS¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶Ç•ö†÷W'5ög&öÕööff–6–Å÷66†VGVÆSó¢&ööÆVà¢Ğ¢WFFS¢°¢7F—fSó¢&ööÆVà¢FVfVÇEöVçFW'&—6UöF—3ó¢çVÖ&W"ÂçVÆÀ¢FVfVÇE÷66†ööÅöF—3ó¢çVÖ&W"ÂçVÆÀ¢VÆ–v–&ÆUöw&FW3ó¢çVÖ&W%µĞ¢&öw&Õ÷G—Só¢7G&–æp¢&VwVÆ%÷–V%öVçFW'&—6UöÖöFSó¢7G&–æp¢6÷W&6U÷'VÆSó¢7G&–æp¢WFFVEöCó¢7G&–æp¢vVV¶Ç•ö†÷W'5ög&öÕööff–6–Å÷66†VGVÆSó¢&ööÆVà¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢Ğ¢f–Ww3¢°¢6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'“¢°¢&÷s¢°¢76–væVE÷FV6†W%ö†÷W'3¢çVÖ&W"ÂçVÆÀ¢6Æ75ö–C¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–ærÂçVÆÀ¢6ö×÷6—FUö¶W“¢7G&–ærÂçVÆÀ¢6÷W'6Uö6÷VçC¢çVÖ&W"ÂçVÆÀ¢7W'&–7VÇVÕ÷7FGW3¢7G&–ærÂçVÆÀ¢W‡V7FVE÷vVV¶Ç•ö†÷W'3¢çVÖ&W"ÂçVÆÀ¢ÆææVE÷vVV¶Ç•ö†÷W'3¢çVÖ&W"ÂçVÆÀ¢&öw&Õ÷G—S¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢6Æ75÷&÷7FW%÷7VÖÖ'“¢°¢&÷s¢°¢6FVÖ–5÷–V%ö–C¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–ærÂçVÆÀ¢6ö×÷6—FUö¶W“¢7G&–ærÂçVÆÀ¢w&FUöÆWfVÃ¢çVÖ&W"ÂçVÆÀ¢–C¢7G&–ærÂçVÆÀ¢æVVG5÷7Æ—C¢&ööÆVâÂçVÆÀ¢&öw&Õ÷G—S¢7G&–ærÂçVÆÀ¢6V7F–öã¢7G&–ærÂçVÆÀ¢7Æ—E÷F‡&W6†öÆC¢çVÖ&W"ÂçVÆÀ¢7GVFVçEö6÷VçC¢çVÖ&W"ÂçVÆÀ¢7VvvW7FVEöw&÷Wö6÷VçC¢çVÖ&W"ÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'66†ööÅö6Æ76W5ö6FVÖ–5÷–V%ö–Eöf¶W’ ¢6öÇVÖç3¢²&6FVÖ–5÷–V%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6FVÖ–5÷–V'2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢öff–6–Åö6÷W'6U÷66†VGVÆUöVffV7F—fS¢°¢&÷s¢°¢7F—fS¢&ööÆVâÂçVÆÀ¢'&æ6…öæÖS¢7G&–ærÂçVÆÀ¢6FVv÷'“¢7G&–ærÂçVÆÀ¢6÷W'6Uö–C¢7G&–ærÂçVÆÀ¢VffV7F—fUö6FVÖ–5÷–V#¢7G&–ærÂçVÆÀ¢VÆV7F—fUöw&÷Wö¶W“¢7G&–ærÂçVÆÀ¢f–VÆEöæÖS¢7G&–ærÂçVÆÀ¢w&FUöÆWfVÃ¢çVÖ&W"ÂçVÆÀ¢†÷W%ö÷F–öç3¢çVÖ&W%µÒÂçVÆÀ¢–C¢7G&–ærÂçVÆÀ¢ÖçVÆÇ•ö÷fW'&–FFVã¢&ööÆVâÂçVÆÀ¢Ö…÷6VÆV7F–öç3¢çVÖ&W"ÂçVÆÀ¢æVVG5÷&Wf–Ws¢&ööÆVâÂçVÆÀ¢'6VEö6öç7G&–çG3¢§6öâÂçVÆÀ¢'6W%ö6öæf–FVæ6S¢çVÖ&W"ÂçVÆÀ¢&öw&Õ÷G—S¢7G&–ærÂçVÆÀ¢&WVEö7&÷75÷–V'3¢&ööÆVâÂçVÆÀ¢66†VGVÆU÷f&–çC¢7G&–ærÂçVÆÀ¢66†ööÅ÷7V'G—S¢7G&–ærÂçVÆÀ¢66†ööÅ÷G—S¢7G&–ærÂçVÆÀ¢6÷W&6UöFV6—6–öåöFFS¢7G&–ærÂçVÆÀ¢6÷W&6UöFV6—6–öåöæó¢7G&–ærÂçVÆÀ¢6÷W&6Uöf–ÆUöæÖS¢7G&–ærÂçVÆÀ¢6÷W&6Uöæ÷FS¢7G&–ærÂçVÆÀ¢6÷W&6U÷vS¢çVÖ&W"ÂçVÆÀ¢6÷W&6U÷6V7F–öã¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&öff–6–Åö6÷W'6U÷66†VGVÆUö6FÆöuö6÷W'6Uö–Eöf¶W’ ¢6öÇVÖç3¢²&6÷W'6Uö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6÷W'6Uö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆUö76–væÖVçEö÷F–öç3¢°¢&÷s¢°¢76–væVEö†÷W'3¢çVÖ&W"ÂçVÆÀ¢6Æ75ö–C¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–ærÂçVÆÀ¢6ö×÷6—FUö¶W“¢7G&–ærÂçVÆÀ¢6÷W'6Uö–C¢7G&–ærÂçVÆÀ¢6÷W'6UöæÖS¢7G&–ærÂçVÆÀ¢Æ6VEö†÷W'3¢çVÖ&W"ÂçVÆÀ¢&VÖ–æ–æuö†÷W'3¢çVÖ&W"ÂçVÆÀ¢&WV—&VÖVçEö–C¢7G&–ærÂçVÆÀ¢FV6†W%ö76–væÖVçEö–C¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–ærÂçVÆÀ¢FV6†W%öæÖS¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&6Æ75ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷&÷7FW%÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG5ö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†ööÅö6Æ76W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢&6Æ75ö6÷W'6U÷&WV—&VÖVçG5ö6÷W'6Uö–Eöf¶W’ ¢6öÇVÖç3¢²&6÷W'6Uö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6÷W'6Uö6FÆör ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%ö6÷W'6Uö76–væÖVçG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%ö6÷W'6Uö76–væÖVçG5÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷V&Æ–6F–öå÷W&–öG3¢°¢&÷s¢°¢6FVÖ–5÷–V#¢7G&–ærÂçVÆÀ¢VffV7F—fUög&öÓ¢7G&–ærÂçVÆÀ¢VffV7F—fU÷Fó¢7G&–ærÂçVÆÀ¢–C¢7G&–ærÂçVÆÀ¢æW‡EöVffV7F—fUöFFS¢7G&–ærÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢V&Æ—6†VEöC¢7G&–ærÂçVÆÀ¢V&Æ—6†VEö'“¢7G&–ærÂçVÆÀ¢&÷uö6÷VçC¢çVÖ&W"ÂçVÆÀ¢66†VGVÆUö†6ƒ¢7G&–ærÂçVÆÀ¢F—FÆS¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷V&Æ–6F–öç5÷V&Æ—6†VEö'•öf¶W’ ¢6öÇVÖç3¢²'V&Æ—6†VEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'66†VGVÆU÷V&Æ–6F–öç5÷V&Æ—6†VEö'•öf¶W’ ¢6öÇVÖç3¢²'V&Æ—6†VEö'’%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢66†VGVÆU÷66Væ&–õ÷7FGW5÷c#¢°¢&÷s¢°¢Æ–6&ÆS¢&ööÆVâÂçVÆÀ¢&6—5÷&Wf—6–öã¢çVÖ&W"ÂçVÆÀ¢7W'&VçE÷&Wf—6–öã¢çVÖ&W"ÂçVÆÀ¢vVæW&F–öåöw&÷W¢7G&–ærÂçVÆÀ¢†&Eö—77VUö6÷VçC¢çVÖ&W"ÂçVÆÀ¢&ööÕö—77VUö6÷VçC¢çVÖ&W"ÂçVÆÀ¢&÷uö6÷VçC¢çVÖ&W"ÂçVÆÀ¢66Væ&–õö–C¢7G&–ærÂçVÆÀ¢66Væ&–õöæó¢çVÖ&W"ÂçVÆÀ¢66÷&S¢çVÖ&W"ÂçVÆÀ¢7FÆS¢&ööÆVâÂçVÆÀ¢7FGW3¢7G&–ærÂçVÆÀ¢VçÆ6VEö6÷VçC¢çVÖ&W"ÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢66†VGVÆW3¢°¢&÷s¢°¢7F—fS¢&ööÆVâÂçVÆÀ¢6Æ75ö–C¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–ærÂçVÆÀ¢6Æ77&ööÓ¢7G&–ærÂçVÆÀ¢6Æ77&ööÕö–C¢7G&–ærÂçVÆÀ¢F•ööe÷vVV³¢çVÖ&W"ÂçVÆÀ¢–C¢7G&–ærÂçVÆÀ¢—5öw&÷W÷7Æ—C¢&ööÆVâÂçVÆÀ¢W&–öEöçVÖ&W#¢çVÖ&W"ÂçVÆÀ¢7V&w&÷Wö–C¢7G&–ærÂçVÆÀ¢7V&w&÷Wö¶W“¢7G&–ærÂçVÆÀ¢7V&¦V7C¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–ærÂçVÆÀ¢WFFVEöC¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢°¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75ö7W'&–7VÇVÕ÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&6Æ75ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷&÷7FW%÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ75ö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ75ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'66†ööÅö6Æ76W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆUö6Æ77&ööÕö–Eöf¶W’ ¢6öÇVÖç3¢²&6Æ77&ööÕö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ77&öö×2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷7V&w&÷Wö–Eöf¶W’ ¢6öÇVÖç3¢²'7V&w&÷Wö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢&6Æ75÷7V&w&÷W2 ¢&VfW&Væ6VD6öÇVÖç3¢²&–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'&öf–ÆW2 ¢&VfW&Væ6VD6öÇVÖç3¢²'W6W%ö–B%Ğ¢ÒÀ¢°¢f÷&V–vä¶W”æÖS¢'FV6†W%÷66†VGVÆU÷FV6†W%ö–Eöf¶W’ ¢6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢—4öæUFôöæS¢fÇ6P¢&VfW&Væ6VE&VÆF–öã¢'FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'’ ¢&VfW&Væ6VD6öÇVÖç3¢²'FV6†W%ö–B%Ğ¢ÒÀ¢Ğ¢Ğ¢FV6†W%ö6÷W'6UöÆöE÷7VÖÖ'“¢°¢&÷s¢°¢76–væVE÷vVV¶Ç•ö†÷W'3¢çVÖ&W"ÂçVÆÀ¢6Æ75ö6÷VçC¢çVÖ&W"ÂçVÆÀ¢6÷W'6Uö6÷VçC¢çVÖ&W"ÂçVÆÀ¢gVÆÅöæÖS¢7G&–ærÂçVÆÀ¢FV6†W%ö–C¢7G&–ærÂçVÆÀ¢Ğ¢&VÆF–öç6†—3¢µĞ¢Ğ¢Ğ¢gVæ7F–öç3¢°¢66WE÷66†VGVÆU÷v÷&¶W%÷&W7VÇE÷c¢°¢&w3¢²öGFV×Eö–C¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢Ç•ö&÷fVE÷—&öÆÅö7F—f—F–W3¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷'Våö–C¢7G&–æs²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢Ç•ö7W'&–7VÇVÕ÷FV×ÆFS¢°¢&w3¢²ö6Æ75ö–C¢7G&–æs²÷&WÆ6Só¢&ööÆVã²÷FV×ÆFUö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢Ç•ö7W'&–7VÇVÕ÷FV×ÆFU÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²ö6Æ75ö–C¢7G&–æs²÷&WÆ6Só¢&ööÆVã²÷FV×ÆFUö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢Ç•÷66†VGVÆUöVFvU÷6Æ÷E÷&W—'5÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢Ç•÷66†VGVÆUö÷F–Ö—¦F–öå÷&öf–ÆU÷c¢°¢&w3¢²÷&öf–ÆUö¶W“¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢Ç•÷66†VGVÆU÷&W—%÷7VvvW7F–öå÷c¢°¢&w3¢²÷7VvvW7F–öåö–C¢7G&–ærĞ¢&WGW&ç3¢§6öà¢Ğ¢Ç•÷66†VGVÆU÷66Væ&–ó¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢Ç•÷66†VGVÆU÷66Væ&–õ÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢Ç•÷66†VGVÆU÷66Væ&–õ÷&U÷†6S3¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&÷fUööff–6–Å÷6÷W&6Uö6†ævU÷c¢°¢&w3¢°¢ö6ÆVæF%öWfVçE÷G—Só¢7G&–æp¢ö6ÆVæF%÷F—FÆSó¢7G&–æp¢÷VWVUö–C¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢&÷fU÷—&öÆÅö7F—f—G“¢°¢&w3¢²ö7F—f—G•ö–C¢7G&–æs²ö&÷fSó¢&ööÆVâĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢&÷fU÷—&öÆÅö7F—f—G•÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²ö7F—f—G•ö–C¢7G&–æs²ö&÷fSó¢&ööÆVâĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢&÷fU÷—&öÆÅöÖöçFƒ¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&÷fU÷—&öÆÅöÖöçF…÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢76W'Eö7W'&–7VÇVÕ÷&VG•öf÷%÷F–ÖWF&ÆS¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢76W'EöFFUö–åö7F—fUö6FVÖ–5÷–V#¢°¢&w3¢²öFFS¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢76W'E÷66†VGVÆU÷&W&F–öå÷&VG“¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢76W'E÷66†VGVÆU÷V&Æ—6†&ÆS¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢76W'E÷66†VGVÆU÷66Væ&–õög&W6…÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢76W'E÷66†VGVÆU÷66Væ&–õ÷FVæçE÷†6S5÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢76–våö6Æ75ö6÷W'6Uög&öÕ÷ööÅ÷c¢°¢&w3¢²ö6Æ75ö–C¢7G&–æs²ö6÷W'6Uö–C¢7G&–æs²ö†÷W'3¢çVÖ&W"Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢76–våö6Æ77&öö×5÷Fõ÷66Væ&–ó¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢76–væVEö6÷VçC¢çVÖ&W ¢Væ76–væVEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢76–våö6Æ77&öö×5÷Fõ÷66Væ&–õö6÷&U÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢76–væVEö6÷VçC¢çVÖ&W ¢Væ76–væVEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢76–våö6Æ77&öö×5÷Fõ÷66Væ&–õ÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢76–væVEö6÷VçC¢çVÖ&W ¢Væ76–væVEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢76–våö6Æ77&öö×5÷Fõ÷66Væ&–õ÷&U÷†6S5÷FVæçC¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢76–væVEö6÷VçC¢çVÖ&W ¢Væ76–væVEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢76–vå÷W&å÷&ÆÆVÅöÆW76öã¢°¢&w3¢°¢ö6FVÖ–5÷–V#¢7G&–æp¢ö6Æ75ö–C¢7G&–æp¢ö6Æ77&ööÕóó¢7G&–æp¢ö6Æ77&ööÕó#ó¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷7V&¦V7C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢76–vå÷W&å÷&ÆÆVÅöÆW76öå÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢°¢ö6FVÖ–5÷–V#¢7G&–æp¢ö6Æ75ö–C¢7G&–æp¢ö6Æ77&ööÕóó¢7G&–æp¢ö6Æ77&ööÕó#ó¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷7V&¦V7C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢76–vå÷7V'7F—GWFW5öf÷%öF“¢°¢&w3¢²öFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢'6Væ6UöÆW76öåö–C¢7G&–æp¢76–væÖVçEö–C¢7G&–æp¢6Æ75öæÖS¢7G&–æp¢W&–öC¢çVÖ&W ¢7V&¦V7C¢7G&–æp¢7V'7F—GWFUöæÖS¢7G&–æp¢7V'7F—GWFU÷W6W%ö–C¢7G&–æp¢ÕµĞ¢Ğ¢76–vå÷7V'7F—GWFW5öf÷%öF•÷c3¢°¢&w3¢²öFFSó¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢76–vå÷7V'7F—GWFW5÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢'6Væ6UöÆW76öåö–C¢7G&–æp¢76–væÖVçEö–C¢7G&–æp¢6Æ75öæÖS¢7G&–æp¢W&–öC¢çVÖ&W ¢7V&¦V7C¢7G&–æp¢7V'7F—GWFUöæÖS¢7G&–æp¢7V'7F—GWFU÷W6W%ö–C¢7G&–æp¢ÕµĞ¢Ğ¢76–vå÷F6µ÷&öÆU÷FV×ÆFS¢°¢&w3¢°¢öæ÷FSó¢7G&–æp¢÷FV×ÆFUö–C¢7G&–æp¢÷W6W%ö–C¢7G&–æp¢÷fÆ–Eög&öÓó¢7G&–æp¢÷fÆ–E÷VçF–Ãó¢7G&–æp¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢76–vå÷FV6†W%÷Fõö6Æ75ö6÷W'6S¢°¢&w3¢°¢öw&÷Wó¢7G&–æp¢ö†÷W'3ó¢çVÖ&W ¢÷&WV—&VÖVçEö–C¢7G&–æp¢÷FV6†W%ö–C¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢76–vå÷FV6†W%÷Fõö6Æ75ö6÷W'6U÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢°¢öw&÷Wó¢7G&–æp¢ö†÷W'3ó¢çVÖ&W ¢÷&WV—&VÖVçEö–C¢7G&–æp¢÷FV6†W%ö–C¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢VF—EöÖW6VÕö6FÆöuö6ö×ÆWFVæW75÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢'&æ6…öæÖS¢7G&–æp¢f–VÆEöæÖS¢7G&–æp¢—77VU÷G—S¢7G&–æp¢&V6öã¢7G&–æp¢ÕµĞ¢Ğ¢VF—Eö×FÅö6FÆöuö6ö×ÆWFVæW75÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢'&æ6…öæÖS¢7G&–æp¢f–VÆEöæÖS¢7G&–æp¢—77VU÷G—S¢7G&–æp¢&V6öã¢7G&–æp¢ÕµĞ¢Ğ¢VF—Eö×FÅö7W'&–7VÇVÕ÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢'&æ6…öæÖS¢7G&–æp¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢f–VÆEöæÖS¢7G&–æp¢w&FUöÆWfVÃ¢çVÖ&W ¢&öw&Õ÷G—S¢7G&–æp¢66†VGVÆU÷f&–çC¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢6Æ7VÆFUöæ÷&Õög&öÕ÷'VÆS¢°¢&w3¢²÷'VÆU÷6WEö–C¢7G&–æs²÷F÷FÅö†÷W'3¢çVÖ&W"Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢6Æ7VÆFU÷66†VGVÆU÷66Væ&–õ÷66÷&Uö&6U÷c3¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢6Æ7VÆFU÷66†VGVÆU÷66Væ&–õ÷66÷&U÷&U÷†6S3¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢6Æ7VÆFU÷66†VGVÆU÷66Væ&–õ÷66÷&U÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢6Æ7VÆFU÷FV6†W%öÆöEöÆ–Ö—G5÷c¢°¢&w3¢°¢ögVÆÅöF•÷&W66†ööÃó¢&ööÆVà¢÷&öÆSó¢7G&–æp¢÷FV6†W%÷G—S¢7G&–æp¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢6åö66W75ö–ç7F—GWF–öã¢°¢&w3¢²ö–ç7F—GWF–öåö6öFS¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢6åöÖævUö–ç7F—GWF–öå÷W'6öææVÃ¢°¢&w3¢²ö–ç7F—GWF–öåö6öFS¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢6åöÖævU÷W&Ö—76–öç3¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢6åöÖævU÷W'6öææVÅ÷&—fFUöFF¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢6Æ–Õ÷66†VGVÆU÷v÷&¶W%öGFV×E÷c¢°¢&w3¢²÷v÷&¶W%ö¶W“¢7G&–ærĞ¢&WGW&ç3¢°¢GFV×Eö–C¢7G&–æp¢GFV×Eöæó¢çVÖ&W ¢6öæf–s¢§6öà¢¦ö%ö–C¢7G&–æp¢ÖöFS¢7G&–æp¢VÆ—G•÷F&vWC¢çVÖ&W ¢6VVC¢çVÖ&W ¢ÕµĞ¢Ğ¢6Æ–Õ÷7WW%öFÖ–å÷&öf–ÆS¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢&ÆööE÷G—S¢7G&–ærÂçVÆÀ¢VÖ–Ã¢7G&–ærÂçVÆÀ¢VÖW&vVæ7•ö6öçF7C¢7G&–ærÂçVÆÀ¢gVÆÅöæÖS¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢—5÷7WW%öFÖ–ã¢&ööÆVà¢W&Ö—76–öåöÖöFS¢7G&–æp¢†öæS¢7G&–ærÂçVÆÀ¢&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢F6¶ã¢7G&–ærÂçVÆÀ¢FV6†–æuö&Vö–C¢7G&–ærÂçVÆÀ¢WFFVEöC¢7G&–æp¢W6W%ö–C¢7G&–æp¢Ğ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢'&öf–ÆW2 ¢—4öæUFôöæS¢G'VP¢—56WFöe&WGW&ã¢fÇ6P¢Ğ¢Ğ¢6ÆöæUö6Æ75ö7W'&–7VÇVÓ¢°¢&w3¢°¢ö6÷•÷FV6†W'3ó¢&ööÆVà¢÷6÷W&6Uö6Æ75ö–C¢7G&–æp¢÷F&vWEö6Æ75ö–C¢7G&–æp¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢6ÆöæUö6Æ75ö7W'&–7VÇVÕ÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢°¢ö6÷•÷FV6†W'3ó¢&ööÆVà¢÷6÷W&6Uö6Æ75ö–C¢7G&–æp¢÷F&vWEö6Æ75ö–C¢7G&–æp¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢6ö×ÆWFU÷66†VGVÆU÷v÷&¶W%öGFV×E÷c¢°¢&w3¢°¢öGFV×Eö–C¢7G&–æp¢öF–væ÷7F–73ó¢§6öà¢öGW&F–öåö×3ó¢çVÖ&W ¢ö†&Eö—77VUö6÷VçCó¢çVÖ&W ¢÷66Væ&–õö–C¢7G&–æp¢÷66÷&Só¢çVÖ&W ¢÷VçÆ6VEö6÷VçCó¢çVÖ&W ¢÷v÷&¶W%ö¶W“¢7G&–æp¢Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢6÷W'6U÷6Æ÷EöÆÆ÷vVE÷c¢°¢&w3¢²ö6÷W'6Uö–C¢7G&–æs²÷W&–öC¢çVÖ&W#²÷vVV¶F“¢çVÖ&W"Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢6÷W'6U÷6Æ÷E÷VæÇG•÷c¢°¢&w3¢°¢ö&Æö6³¢çVÖ&W ¢ö6÷W'6Uö–C¢7G&–æp¢÷7F'C¢çVÖ&W ¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢7&VFU÷66†VGVÆU÷&W7F÷&U÷ö–çC¢°¢&w3¢²öÆ&VÃ¢7G&–æs²÷&V6öãó¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢7&VFU÷66†VGVÆU÷&W7F÷&U÷ö–çE÷c#¢°¢&w3¢²öÆ&VÃó¢7G&–æs²÷&V6öãó¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢7&VFU÷66†VGVÆU÷&W7F÷&U÷ö–çE÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öÆ&VÃó¢7G&–æs²÷&V6öãó¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢7&VFU÷FVÆVw&ÕöÆ–æµ÷Fö¶Vã¢²&w3¢æWfW#²&WGW&ç3¢7G&–ærĞ¢7W'&VçE÷W&Ö—76–öåö6öçFW‡C¢²&w3¢æWfW#²&WGW&ç3¢7G&–ærĞ¢7W'&VçE÷66†VGVÆU÷6–væGW&S¢²&w3¢æWfW#²&WGW&ç3¢7G&–ærĞ¢7W'&VçE÷FVæçEö6öFS¢²&w3¢æWfW#²&WGW&ç3¢7G&–ærĞ¢F—6&ÆU÷W6…÷7V'67&—F–öã¢°¢&w3¢²öVæGö–çC¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢F—6&ÆU÷FVÆVw&Õöæ÷F–f–6F–öç3¢²&w3¢æWfW#²&WGW&ç3¢VæFVf–æVBĞ¢G&÷÷Væ—VUö6öç7G&–çEö'•ö6öÇVÖç3¢°¢&w3¢²ö6öÇVÖç3¢7G&–æuµÓ²÷F&ÆS¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢Vç7W&U÷FVæçEö6ö×÷6—FU÷µ÷c¢°¢&w3¢²ö6öÇVÖç3¢7G&–æuµÓ²÷F&ÆS¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢f–Å÷66†VGVÆU÷v÷&¶W%öGFV×E÷c¢°¢&w3¢°¢öGFV×Eö–C¢7G&–æp¢öF–væ÷7F–73ó¢§6öà¢÷v÷&¶W%ö¶W“¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢f–æÆ—¦Uö×•÷&Vv—7G&F–öã¢°¢&w3¢²öVÖ–Ã¢7G&–æs²÷F6¶ã¢7G&–ærĞ¢&WGW&ç3¢°¢&ÆööE÷G—S¢7G&–ærÂçVÆÀ¢VÖ–Ã¢7G&–ærÂçVÆÀ¢VÖW&vVæ7•ö6öçF7C¢7G&–ærÂçVÆÀ¢gVÆÅöæÖS¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢—5÷7WW%öFÖ–ã¢&ööÆVà¢W&Ö—76–öåöÖöFS¢7G&–æp¢†öæS¢7G&–ærÂçVÆÀ¢&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢F6¶ã¢7G&–ærÂçVÆÀ¢FV6†–æuö&Vö–C¢7G&–ærÂçVÆÀ¢WFFVEöC¢7G&–æp¢W6W%ö–C¢7G&–æp¢Ğ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢'&öf–ÆW2 ¢—4öæUFôöæS¢G'VP¢—56WFöe&WGW&ã¢fÇ6P¢Ğ¢Ğ¢f–æÆ—¦U÷66†VGVÆU÷66Væ&–õ÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢Æ–6&ÆS¢&ööÆVà¢†&Eö—77VUö6÷VçC¢çVÖ&W ¢&W—&VEö6÷VçC¢çVÖ&W ¢66÷&S¢çVÖ&W ¢ÕµĞ¢Ğ¢vVæW&FUöÖöçF†Ç•÷FV6†W%öGWF–W3¢°¢&w3¢²öÖöçFƒ¢7G&–æs²ö÷fW'w&—FSó¢&ööÆVâĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢vVæW&FUöÖöçF†Ç•÷FV6†W%öGWF–W5÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öÖöçFƒ¢7G&–æs²ö÷fW'w&—FSó¢&ööÆVâĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢vVæW&FUöÖöçF†Ç•÷g÷&÷FF–öã¢°¢&w3¢°¢öÖöçFƒ¢7G&–æp¢ö÷fW'w&—FSó¢&ööÆVà¢÷f–6U÷&–æ6—Åö–G3¢7G&–æuµĞ¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢vVæW&FUöÖöçF†Ç•÷g÷&÷FF–öå÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢°¢öÖöçFƒ¢7G&–æp¢ö÷fW'w&—FSó¢&ööÆVà¢÷f–6U÷&–æ6—Åö–G3¢7G&–æuµĞ¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢vVæW&FU÷66†VGVÆU÷66Væ&–÷3¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢vVæW&F–öåöw&÷W¢7G&–æp¢&÷uö6÷VçC¢çVÖ&W ¢66Væ&–õö–C¢7G&–æp¢66Væ&–õöæó¢çVÖ&W ¢66÷&S¢çVÖ&W ¢VçÆ6VEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢vVæW&FU÷66†VGVÆU÷66Væ&–÷5÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢vVæW&F–öåöw&÷W¢7G&–æp¢&÷uö6÷VçC¢çVÖ&W ¢66Væ&–õö–C¢7G&–æp¢66Væ&–õöæó¢çVÖ&W ¢66÷&S¢çVÖ&W ¢VçÆ6VEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢vVæW&FU÷66†VGVÆU÷66Væ&–÷5÷&UöVFvU÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢vVæW&F–öåöw&÷W¢7G&–æp¢&÷uö6÷VçC¢çVÖ&W ¢66Væ&–õö–C¢7G&–æp¢66Væ&–õöæó¢çVÖ&W ¢66÷&S¢çVÖ&W ¢VçÆ6VEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢vVæW&FU÷66†VGVÆU÷66Væ&–÷5÷&U÷†6S5÷FVæçC¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢vVæW&F–öåöw&÷W¢7G&–æp¢&÷uö6÷VçC¢çVÖ&W ¢66Væ&–õö–C¢7G&–æp¢66Væ&–õöæó¢çVÖ&W ¢66÷&S¢çVÖ&W ¢VçÆ6VEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢vVæW&FU÷66†VGVÆU÷66Væ&–÷5÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢vVæW&F–öåöw&÷W¢7G&–æp¢&÷uö6÷VçC¢çVÖ&W ¢66Væ&–õö–C¢7G&–æp¢66Væ&–õöæó¢çVÖ&W ¢66÷&S¢çVÖ&W ¢VçÆ6VEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢vWEö7F—fUö6FVÖ–5÷–V#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢7F—fS¢&ööÆVà¢6öFS¢7G&–æp¢7&VFVEöC¢7G&–æp¢7&VFVEö'“¢7G&–ærÂçVÆÀ¢VæG5ööã¢7G&–æp¢f—'7E÷FW&ÕöVæG5ööã¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢6V6öæE÷FW&Õ÷7F'G5ööã¢7G&–ærÂçVÆÀ¢6÷W&6Uöæ÷FS¢7G&–ærÂçVÆÀ¢7F'G5ööã¢7G&–æp¢FV6†W%÷v÷&µ÷7F'G5ööã¢7G&–ærÂçVÆÀ¢FV6†–æuöVæG5ööã¢7G&–ærÂçVÆÀ¢FV6†–æu÷7F'G5ööã¢7G&–ærÂçVÆÀ¢F—FÆS¢7G&–æp¢WFFVEöC¢7G&–æp¢Ğ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢&6FVÖ–5÷–V'2 ¢—4öæUFôöæS¢G'VP¢—56WFöe&WGW&ã¢fÇ6P¢Ğ¢Ğ¢vWEö7F—fU÷66†VGVÆU÷F–ÖU÷&öf–ÆS¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢7F—fS¢&ööÆVà¢7&VFVEöC¢7G&–æp¢VGV6F–öåöÖöFS¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢ÇVæ6…ögFW%÷W&–öC¢çVÖ&W"ÂçVÆÀ¢æÖS¢7G&–æp¢W&–öG5÷W%öF“¢çVÖ&W ¢6W76–öå÷66÷S¢7G&–æp¢FV6†–æuöF—3¢çVÖ&W%µĞ¢WFFVEöC¢7G&–æp¢Ğ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢'66†VGVÆU÷F–ÖU÷&öf–ÆW2 ¢—4öæUFôöæS¢G'VP¢—56WFöe&WGW&ã¢fÇ6P¢Ğ¢Ğ¢vWEö6ÆVæF%öF—3¢°¢&w3¢²ög&öÓ¢7G&–æs²÷Fó¢7G&–ærĞ¢&WGW&ç3¢°¢F•öFFS¢7G&–æp¢WfVçE÷F—FÆW3¢7G&–æuµĞ¢—5÷FV6†–æuöF“¢&ööÆVà¢—5÷vVV¶F“¢&ööÆVà¢—5÷v÷&¶F“¢&ööÆVà¢ÕµĞ¢Ğ¢vWEö6Æ75ö6÷W'6U÷ööÅ÷c¢°¢&w3¢²ö6Æ75ö–C¢7G&–ærĞ¢&WGW&ç3¢°¢Ç&VG•ö76–væVC¢&ööÆVà¢6FVv÷'“¢7G&–æp¢6÷W'6Uö–C¢7G&–æp¢6÷W'6UöæÖS¢7G&–æp¢7W'&VçEö†÷W'3¢çVÖ&W ¢VÆV7F—fUöw&÷Wö¶W“¢7G&–æp¢VÆ–v–&ÆS¢&ööÆVà¢W‡V7FVEö†÷W'3¢çVÖ&W ¢†÷W%ö÷F–öç3¢çVÖ&W%µĞ¢ÆææVEö†÷W'3¢çVÖ&W ¢&V6öã¢7G&–æp¢&WVEö7&÷75÷–V'3¢&ööÆVà¢6†÷'EöæÖS¢7G&–æp¢ÕµĞ¢Ğ¢vWEö7W'&VçEö7W7FöÕ÷'VÆUö—77VW5÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢vWEö7W'&–7VÇVÕ÷&VF–æW73¢°¢&w3¢²ö6Æ75ö–Có¢7G&–ærĞ¢&WGW&ç3¢°¢76–væVEö†÷W'3¢çVÖ&W ¢&Æö6¶–æu÷&V6öã¢7G&–æp¢6Æ75ö–C¢7G&–æp¢6ö×÷6—FUö¶W“¢7G&–æp¢W‡V7FVEö†÷W'3¢çVÖ&W ¢'F–ÆÇ•ö76–væVEö6÷W'6Uö6÷VçC¢çVÖ&W ¢ÆææVEö†÷W'3¢çVÖ&W ¢&VG“¢&ööÆVà¢Væ76–væVEö6÷W'6Uö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢vWEöF–Ç•öGWG•ö&öö³¢²&w3¢²öFFS¢7G&–ærÓ²&WGW&ç3¢§6öâĞ¢vWEöF–Ç•öGWG•ö&ööµ÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öFFS¢7G&–ærĞ¢&WGW&ç3¢§6öà¢Ğ¢vWEöGWG•öÖöçF…÷7FFS¢°¢&w3¢²öÖöçFƒ¢7G&–ærĞ¢&WGW&ç3¢°¢7W'&VçE÷66†VGVÆU÷6–væGW&S¢7G&–æp¢vVæW&FVEöC¢7G&–æp¢Æö6¶VC¢&ööÆVà¢ÖöçF…÷7F'C¢7G&–æp¢66†VGVÆUö6†ævVC¢&ööÆVà¢7F÷&VE÷66†VGVÆU÷6–væGW&S¢7G&–æp¢ÕµĞ¢Ğ¢vWEöVffV7F—fU÷66†VGVÆU÷'VÆU÷66÷U÷c#¢°¢&w3¢²÷&WV—&VÖVçEö–C¢7G&–æs²÷FV6†W%ö76–væÖVçEö–Có¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢vWEöVffV7F—fU÷66†VGVÆU÷'VÆU÷c#¢°¢&w3¢²÷&WV—&VÖVçEö–C¢7G&–æs²÷FV6†W%ö76–væÖVçEö–Có¢7G&–ærĞ¢&WGW&ç3¢°¢7F—fS¢&ööÆVà¢fö–EöÆ7E÷W&–öC¢&ööÆVà¢&Æö6µ÷GFW&ã¢çVÖ&W%µĞ¢6÷W'6Uö–C¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢Ö…÷W%öF“¢çVÖ&W"ÂçVÆÀ¢Ö–åöF—7F–æ7EöF—3¢çVÖ&W"ÂçVÆÀ¢æ÷FS¢7G&–ærÂçVÆÀ¢&VfW'&VEöF—3¢çVÖ&W%µĞ¢&VfW'&VE÷W&–öG3¢çVÖ&W%µĞ¢&ö†–&—FVEöF—3¢çVÖ&W%µĞ¢&ö†–&—FVE÷W&–öG3¢çVÖ&W%µĞ¢WFFVEöC¢7G&–æp¢Ğ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢&6÷W'6U÷66†VGVÆU÷'VÆW2 ¢—4öæUFôöæS¢G'VP¢—56WFöe&WGW&ã¢fÇ6P¢Ğ¢Ğ¢vWEöfVGW&Uö66W75÷7FFS¢²&w3¢²÷Fƒ¢7G&–ærÓ²&WGW&ç3¢§6öâĞ¢vWEöf÷&ÖÅöæ÷&ÕöæÇ—6—3¢°¢&w3¢²ööåöFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢7F—fU÷FV6†W%ö6÷VçC¢çVÖ&W ¢f÷&ÖÅöæ÷&Ó¢çVÖ&W ¢÷W&F–öæÅöF–ffW&Væ6S¢çVÖ&W ¢'VÆU÷6WEö–C¢7G&–æp¢'VÆU÷6WEöæÖS¢7G&–æp¢7FGW3¢7G&–æp¢FV6†–æuö&Vö–C¢7G&–æp¢FV6†–æuö&VöæÖS¢7G&–æp¢F÷FÅ÷vVV¶Ç•ö†÷W'3¢çVÖ&W ¢ÕµĞ¢Ğ¢vWEö–†õöÆ–6F–öåö÷F–öç5÷c¢°¢&w3¢²öw&FS¢çVÖ&W"Ğ¢&WGW&ç3¢°¢ÆÆ÷vVE÷7V&¦V7G3¢§6öà¢&÷fÅ÷66÷S¢7G&–æp¢6öFS¢7G&–æp¢6öæf–wW&F–öã¢§6öà¢Æ&VÃ¢7G&–æp¢&WV—&W5÷7V&¦V7C¢&ööÆVà¢6VÆV7F–öå÷66÷S¢7G&–æp¢F÷FÅöÖƒ¢çVÖ&W ¢F÷FÅöÖ–ã¢çVÖ&W ¢ÕµĞ¢Ğ¢vWEö×•ö7F—fUö–ç7F—GWF–öåö6öFS¢²&w3¢æWfW#²&WGW&ç3¢7G&–ærĞ¢vWEö×•ö–ç7F—GWF–öåö6öFS¢²&w3¢æWfW#²&WGW&ç3¢7G&–ærĞ¢vWEö×•÷W&Ö—76–öç3¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢7F–öã¢7G&–æp¢6öFS¢7G&–æp¢FævW&÷W3¢&ööÆVà¢Æ&VÃ¢7G&–æp¢ÖöGVÆUö6öFS¢7G&–æp¢ÖöGVÆUöÆ&VÃ¢7G&–æp¢66÷S¢§6öà¢ÕµĞ¢Ğ¢vWEö×•÷&–æ6—Åö–ç7F—GWF–öåö6öFS¢²&w3¢æWfW#²&WGW&ç3¢7G&–ærĞ¢vWEö×•÷V&Æ—6†VE÷66†VGVÆS¢°¢&w3¢²öFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢6FVÖ–5÷–V#¢7G&–æp¢6Æ75ö–C¢7G&–æp¢6Æ75öæÖS¢7G&–æp¢6Æ77&ööÓ¢7G&–æp¢6Æ77&ööÕö–C¢7G&–æp¢VffV7F—fUög&öÓ¢7G&–æp¢—5öw&÷W÷7Æ—C¢&ööÆVà¢W&–öC¢çVÖ&W ¢V&Æ–6F–öåö–C¢7G&–æp¢66†VGVÆUö†6ƒ¢7G&–æp¢7V&w&÷Wö–C¢7G&–æp¢7V&w&÷Wö¶W“¢7G&–æp¢7V&¦V7C¢7G&–æp¢F—FÆS¢7G&–æp¢vVV¶F“¢çVÖ&W ¢ÕµĞ¢Ğ¢vWEö×•÷&öÆU÷Fw3¢²&w3¢æWfW#²&WGW&ç3¢7G&–æuµÒĞ¢vWEöæ÷&ÕöÖ—76–æuöÖ–æw3¢°¢&w3¢²ööåöFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢FWF–Ã¢7G&–æp¢—FVÕö–C¢7G&–æp¢—FVÕöæÖS¢7G&–æp¢—FVÕ÷G—S¢7G&–æp¢ÕµĞ¢Ğ¢vWEöæ÷&Õ÷&VF–æW73¢°¢&w3¢²ööåöFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢ÖVEö&Vö6÷VçC¢çVÖ&W ¢ÖVEö6÷W'6Uö6÷VçC¢çVÖ&W ¢Ö—76–æuö&V÷'VÆUö6÷VçC¢çVÖ&W ¢Ö—76–æuö6÷W'6Uö&Vö6÷VçC¢çVÖ&W ¢&VG“¢&ööÆVà¢ÕµĞ¢Ğ¢vWE÷W&Ö—76–öåöFÖ–åöÖG&—ƒ¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢gVÆÅöæÖS¢7G&–æp¢W&Ö—76–öåö6öFS¢7G&–æp¢&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢66÷S¢§6öà¢W6W%ö–C¢7G&–æp¢fÆ–Eög&öÓ¢7G&–æp¢fÆ–E÷VçF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷W'6öææVÅöFÖ–åöÆ—7C¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢VÖ–Ã¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢—5÷7WW%öFÖ–ã¢&ööÆVà¢W&Ö—76–öåöÖöFS¢7G&–æp¢&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢FV6†–æuö&Vö–C¢7G&–æp¢WFFVEöC¢7G&–æp¢W6W%ö–C¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷W'6öææVÅöf–VÆE÷6WGF–æw3¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢FVfVÇEöVæ&ÆVC¢&ööÆVà¢FVfVÇEöÖöGVÆUö¶W—3¢7G&–æuµĞ¢F—7Æ•öæÖS¢7G&–æp¢VffV7F—fUöVæ&ÆVC¢&ööÆVà¢VffV7F—fUöÖöGVÆUö¶W—3¢7G&–æuµĞ¢f–VÆEö¶W“¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢ÖöFS¢7G&–æp¢6÷W&6Uö†VFW'3¢7G&–æuµĞ¢ÕµĞ¢Ğ¢vWE÷W'6öææVÅöÖöGVÆUöf–VÆG3¢°¢&w3¢²öÖöGVÆUö¶W“¢7G&–æs²÷W'6öææVÅö–C¢7G&–ærĞ¢&WGW&ç3¢§6öà¢Ğ¢vWE÷V&Æ—6†VE÷66†VGVÆU÷&÷w3¢°¢&w3¢°¢ö6Æ75ö–Có¢7G&–æp¢÷V&Æ–6F–öåö–C¢7G&–æp¢÷FV6†W%ö–Có¢7G&–æp¢Ğ¢&WGW&ç3¢°¢6Æ75ö–C¢7G&–ærÂçVÆÀ¢6Æ75öæÖS¢7G&–æp¢6Æ77&ööÓ¢7G&–ærÂçVÆÀ¢6Æ77&ööÕö–C¢7G&–ærÂçVÆÀ¢–C¢çVÖ&W ¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢—5öw&÷W÷7Æ—C¢&ööÆVà¢W&–öC¢çVÖ&W ¢V&Æ–6F–öåö–C¢7G&–æp¢6æ6†÷C¢§6öà¢6÷W&6U÷66†VGVÆUö–C¢7G&–ærÂçVÆÀ¢7V&w&÷Wö–C¢7G&–ærÂçVÆÀ¢7V&w&÷Wö¶W“¢7G&–ærÂçVÆÀ¢7V&¦V7C¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢vVV¶F“¢çVÖ&W ¢ÕµĞ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢'66†VGVÆU÷V&Æ–6F–öå÷&÷w2 ¢—4öæUFôöæS¢fÇ6P¢—56WFöe&WGW&ã¢G'VP¢Ğ¢Ğ¢vWE÷66Væ&–õö&Æö6µ÷GFW&å÷c¢°¢&w3¢°¢ö&6S¢çVÖ&W%µĞ¢÷&VÖ–æ–æs¢çVÖ&W ¢÷&WV—&VÖVçEö–C¢7G&–æp¢÷66Væ&–õöæó¢çVÖ&W ¢Ğ¢&WGW&ç3¢çVÖ&W%µĞ¢Ğ¢vWE÷66Væ&–õ÷&ööÕ÷7FGW3¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢76–væVE÷&÷w3¢çVÖ&W ¢&ööÕö—77VUö6÷VçC¢çVÖ&W ¢&öö×5ö6öæf–wW&VC¢&ööÆVà¢F÷FÅ÷&÷w3¢çVÖ&W ¢Væ76–væVE÷&÷w3¢çVÖ&W ¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö7F—f—G•ö–ç7Fæ6W5÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢7F—f—G•ö¶W“¢7G&–æp¢6Æ75ö–C¢7G&–æp¢6ö×öæVçEöæó¢çVÖ&W ¢6÷W'6Uö–C¢7G&–æp¢GW&F–öã¢çVÖ&W ¢FV6†W%ö76–væÖVçEö–C¢7G&–æp¢FV6†W%ö–C¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö76–væÖVçE÷7GVFVçEö6öæfÆ–7E÷vV–v‡G5÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ÆVgEö76–væÖVçEö–C¢7G&–æp¢&–v‡Eö76–væÖVçEö–C¢7G&–æp¢7GVFVçE÷vV–v‡C¢çVÖ&W ¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö76–væÖVçE÷7GVFVçEö6öæfÆ–7E÷vV–v‡G5÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ÆVgEö76–væÖVçEö–C¢7G&–æp¢&–v‡Eö76–væÖVçEö–C¢7G&–æp¢6WfW&—G•÷vV–v‡C¢çVÖ&W ¢7GVFVçE÷vV–v‡C¢çVÖ&W ¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUöFöÖ–5öÖ÷fU÷Æå÷c¢°¢&w3¢°¢ö6Æ77&ööÕö–Có¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢vWE÷66†VGVÆUö&Æö6µö–çFVw&—G•÷&W÷'E÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢7GVÅ÷GFW&ã¢çVÖ&W%µĞ¢W‡V7FVE÷GFW&ã¢çVÖ&W%µĞ¢ö³¢&ööÆVà¢FV6†W%ö76–væÖVçEö–C¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö&Æö6µöÖ÷fU÷Æå÷c¢°¢&w3¢°¢ö6Æ77&ööÕö–Có¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢vWE÷66†VGVÆUö'V–ÆF–æu÷G&fVÅöÖ–çWFW5÷c¢°¢&w3¢²ög&öÓ¢7G&–æs²÷Fó¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢vWE÷66†VGVÆUö6ö×WFUö6&–Æ—F–W5÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢fuöÆFVæ7•ö×3¢çVÖ&W ¢7W'&VçEöÆöC¢çVÖ&W ¢F—7Æ•öæÖS¢7G&–æp¢†VÇFƒ¢7G&–æp¢Ö…÷&ÆÆVÃ¢çVÖ&W ¢&V6öÖÖVæFVC¢&ööÆVà¢v÷&¶W%ö¶W“¢7G&–æp¢v÷&¶W%÷G—S¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö6öæf–wW&F–öåö—77VW5ö&Vf÷&U÷66÷VE÷'VÆW5÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö6öæf–wW&F–öåö—77VW5÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUöVFvU÷6Æ÷Eö–çFVw&—G•ö—77VW5÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö–çFVw&—G•÷&W÷'C¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö–çFVw&—G•÷&W÷'Eö6÷&U÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö–çFVw&—G•÷&W÷'E÷&ÆÆVÅö6÷&U÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö–çFVw&—G•÷&W÷'E÷&UöVFvU÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆUö–çFVw&—G•÷&W÷'E÷&U÷†6S3¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷†6S5ö7W'&VçEö—77VW5÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢6WfW&—G“¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷†6S5÷&VfÆ–v‡Eö—77VW5÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6FVv÷'“¢7G&–æp¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢7FGW3¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷†6S5÷66Væ&–õö—77VW5÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷†6S5÷66÷VE÷&VfW&Væ6U÷66÷&U÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢vWE÷66†VGVÆU÷Æææ–æu÷&VÆF–öç5÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢–C¢7G&–æp¢ÆVgE÷6VÆV7F÷#¢§6öà¢ÖöFS¢7G&–æp¢&ÖWFW'3¢§6öà¢&VÆF–öå÷G—S¢7G&–æp¢&–v‡E÷6VÆV7F÷#¢§6öà¢vV–v‡C¢çVÖ&W ¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷&W&F–öå÷&VF–æW73¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6FVv÷'“¢7G&–æp¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢7FGW3¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷&W&F–öå÷&VF–æW75ö&Vf÷&Uö76–væVEöVGV6F÷%ö6öã¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6FVv÷'“¢7G&–æp¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢7FGW3¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷&W&F–öå÷&VF–æW75ö&Vf÷&UöfÆW†–&ÆUö&Æö6·5÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6FVv÷'“¢7G&–æp¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢7FGW3¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷&W&F–öå÷&VF–æW75ö&Vf÷&U÷FV6†W%ö66—G•÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6FVv÷'“¢7G&–æp¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢7FGW3¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷&W&F–öå÷&VF–æW75ö6÷&U÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6FVv÷'“¢7G&–æp¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢7FGW3¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷&W&F–öå÷&VF–æW75÷&U÷†6S3¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6FVv÷'“¢7G&–æp¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢7FGW3¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷V&Æ–6F–öåöf÷%öFFS¢°¢&w3¢²öFFS¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢vWE÷66†VGVÆU÷V&Æ–6F–öåö†—7F÷'“¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢6FVÖ–5÷–V#¢7G&–æp¢VffV7F—fUög&öÓ¢7G&–æp¢VffV7F—fU÷Fó¢7G&–æp¢æ÷FS¢7G&–æp¢V&Æ–6F–öåö–C¢7G&–æp¢V&Æ—6†VEöC¢7G&–æp¢V&Æ—6†VEö'“¢7G&–æp¢&÷uö6÷VçC¢çVÖ&W ¢6ÖUöF•÷&Wf—6–öåöæó¢çVÖ&W ¢66†VGVÆUö†6ƒ¢7G&–æp¢F—FÆS¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õöGfæ6VEö†&Eö—77VW5÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õö7W7FöÕ÷'VÆUö—77VW5÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õöVFvU÷6Æ÷Eö—77VW5÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õö†&Eö—77VW5÷&ÆÆVÅö6÷&U÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õö†&Eö—77VW5÷&UöGfæ6VE÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õö†&Eö—77VW5÷&UöVFvU÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õö†&Eö—77VW5÷&U÷†6S3¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õö†&Eö—77VW5÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVEö6÷VçC¢çVÖ&W ¢6öFS¢7G&–æp¢FWF–Ã¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õ÷VÆ—G•ö'&V¶F÷vå÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢FWF–Ã¢7G&–æp¢ÖWG&–3¢7G&–æp¢66÷&S¢çVÖ&W ¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷66Væ&–õ÷7GVFVçEö6öæfÆ–7E÷7VÖÖ'•÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢°¢ffV7FVE÷7GVFVçG3¢çVÖ&W ¢6öæfÆ–7EöWfVçG3¢çVÖ&W ¢vV–v‡FVEö6öæfÆ–7C¢çVÖ&W ¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷7GVFVçEö6öæfÆ–7E÷&W÷'E÷c¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢6öæfÆ–7Eö6÷VçC¢çVÖ&W ¢W&–öC¢çVÖ&W ¢7GVFVçEö–C¢7G&–æp¢vVV¶F“¢çVÖ&W ¢ÕµĞ¢Ğ¢vWE÷66†VGVÆU÷7GVFVçEö6öæfÆ–7E÷&W÷'E÷c#¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢76–væÖVçEö–G3¢7G&–æuµĞ¢6öæfÆ–7Eö6÷VçC¢çVÖ&W ¢W&–öC¢çVÖ&W ¢7GVFVçEö–C¢7G&–æp¢7GVFVçEöæÖS¢7G&–æp¢7V&¦V7G3¢7G&–æuµĞ¢vVV¶F“¢çVÖ&W ¢ÕµĞ¢Ğ¢vWE÷7WW%öFÖ–å÷W'6öææVÃ¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢7F—fS¢&ööÆVà¢VÖ–Ã¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢66†ööÅöæÖS¢7G&–æp¢F6¶åöÖ6¶VC¢7G&–æp¢FV6†–æuö&Vö–C¢7G&–æp¢ÕµĞ¢Ğ¢vWE÷7—7FVÕö66W75÷7FFS¢²&w3¢²÷Fƒó¢7G&–ærÓ²&WGW&ç3¢§6öâĞ¢vWE÷7—7FVÕöfVGW&UöÖG&—ƒ¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢Væ&ÆVC¢&ööÆVà¢fVGW&Uö¶W“¢7G&–æp¢Æ&VÃ¢7G&–æp¢Ö–çFVææ6S¢&ööÆVà¢Ö–çFVææ6UöÖW76vS¢7G&–æp¢&VçEö¶W“¢7G&–æp¢&÷WFU÷&Vf—ƒ¢7G&–æp¢6÷'Eö÷&FW#¢çVÖ&W ¢ÕµĞ¢Ğ¢†5öç•öÖöGVÆU÷W&Ö—76–öã¢°¢&w3¢²öÖöGVÆS¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢†5öÖöGVÆUö÷W&F–öå÷W&Ö—76–öã¢°¢&w3¢²öÖöGVÆS¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢†5÷W&Ö—76–öã ¢Â²&w3¢²ö6öFS¢7G&–æs²÷66÷Só¢§6öâÓ²&WGW&ç3¢&ööÆVâĞ¢Â°¢&w3¢²ö6öFS¢7G&–æs²÷66÷Só¢§6öã²÷W6W%ö–C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢†V'F&VE÷66†VGVÆUö6ö×WFU÷v÷&¶W%÷c¢°¢&w3¢°¢öfuöÆFVæ7•ö×3ó¢çVÖ&W ¢ö7W'&VçEöÆöCó¢çVÖ&W ¢ö†VÇFƒó¢7G&–æp¢÷v÷&¶W%ö¶W“¢7G&–æp¢Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢–×÷'Eö6Æ75÷7VÖÖ&–W3¢°¢&w3¢²öf–ÆUöæÖS¢7G&–æs²÷&÷w3¢§6öâĞ¢&WGW&ç3¢§6öà¢Ğ¢–×÷'EöVö·VÅ÷&÷7FW#¢°¢&w3¢²öf–ÆUöæÖS¢7G&–æs²öf–ÆU÷G—S¢7G&–æs²÷&÷w3¢§6öâĞ¢&WGW&ç3¢°¢ffV7FVEö6Æ76W3¢çVÖ&W ¢–×÷'Eö&F6…ö–C¢7G&–æp¢–×÷'FVE÷7GVFVçG3¢çVÖ&W ¢ÕµĞ¢Ğ¢–×÷'EöÆö6Å÷66†VGVÆUö6æF–FFU÷c¢°¢&w3¢²÷&÷w3¢§6öã²÷F—FÆSó¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢–×÷'E÷W'6öææVÅ÷&Vv—7G'“¢°¢&w3¢²öf–ÆUöæÖS¢7G&–æs²÷&÷w3¢§6öâĞ¢&WGW&ç3¢§6öà¢Ğ¢–×÷'E÷vVV¶Ç•÷66†VGVÆS¢°¢&w3¢²öf–ÆUöæÖS¢7G&–æs²öf–ÆU÷G—S¢7G&–æs²÷&÷w3¢§6öâĞ¢&WGW&ç3¢°¢–×÷'Eö&F6…ö–C¢7G&–æp¢–×÷'FVE÷&÷w3¢çVÖ&W ¢ÕµĞ¢Ğ¢–æfW%÷66†ööÅ÷G—Uöf÷%ö6Æ75÷c¢°¢&w3¢²öW†—7F–æs¢7G&–æs²öw&FS¢çVÖ&W#²÷&öw&Ó¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢—5öFÖ–ã¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢—5ö–ç7F—GWF–öå÷&–æ6—Ã¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢—5öÖævW%ö÷%öFÖ–ã¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢—5öÖWG&÷öÆ—Få÷&÷f–æ6S¢²&w3¢²öæÖS¢7G&–ærÓ²&WGW&ç3¢&ööÆVâĞ¢—5÷&–æ6—Å÷W6W#¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢—5÷7WW%öFÖ–ã¢²&w3¢æWfW#²&WGW&ç3¢&ööÆVâĞ¢—5÷FV6†–æuöF“¢²&w3¢²öFFS¢7G&–ærÓ²&WGW&ç3¢&ööÆVâĞ¢—5÷fÆ–E÷F6¶ã¢²&w3¢²÷F6¶ã¢7G&–ærÓ²&WGW&ç3¢&ööÆVâĞ¢¶'5÷—&öÆÅöW‡÷'C¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢°¢FF÷G—S¢7G&–æp¢W‡ÆæF–öã¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢†÷W'3¢çVÖ&W ¢F6¶ã¢7G&–æp¢ÕµĞ¢Ğ¢¶'5÷—&öÆÅöW‡÷'E÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢°¢FF÷G—S¢7G&–æp¢W‡ÆæF–öã¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢†÷W'3¢çVÖ&W ¢F6¶ã¢7G&–æp¢ÕµĞ¢Ğ¢Æ–æµö6Æ75÷&VFV6W76÷'5öf÷%÷–V%÷c¢°¢&w3¢²ö6FVÖ–5÷–V%ö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢Ö&µööff–6–Å÷6÷W&6Uö6†ævU÷'6VE÷c¢°¢&w3¢°¢ö&÷fÅ÷&WV—&VCó¢&ööÆVà¢öVffV7F—fUög&öÓó¢7G&–æp¢÷'6W%÷&W7VÇC¢§6öà¢÷VWVUö–C¢7G&–æp¢Ğ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢ÖFW&–Æ—¦U÷v÷&·6†÷ö&Æö6µ÷'VÆU÷c¢°¢&w3¢²ö6÷W'6Uö–C¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢Ö…ö6öç6V7WF—fU÷v—F…ö6æF–FFS¢°¢&w3¢°¢öW†6ÇVFUö–Có¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷FV6†W%ö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢Ö÷fU÷66†VGVÆUö&Æö6µ÷c¢°¢&w3¢°¢ö6Æ77&ööÕö–Có¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢Ö÷fU÷66†VGVÆU÷6Æ÷E÷c¢°¢&w3¢°¢ö6Æ77&ööÕö–Có¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢Ö÷fU÷66†VGVÆU÷6Æ÷G5ö&F6…÷c¢²&w3¢²öÖ÷fW3¢§6öâÓ²&WGW&ç3¢§6öâĞ¢æ÷&ÖÆ—¦Uö6Æ75ö¶W“¢°¢&w3¢²ö6Æ75öæÖS¢7G&–æs²÷&öw&Õ÷G—S¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢æ÷&ÖÆ—¦U÷66†VGVÆUö&Æö6µ÷GFW&å÷c#¢°¢&w3¢²ö†÷W'3¢çVÖ&W#²÷GFW&ã¢çVÖ&W%µÒĞ¢&WGW&ç3¢çVÖ&W%µĞ¢Ğ¢æ÷F–g•÷FVæçE÷&–æ6—Ç3¢°¢&w3¢°¢ö–ç7F—GWF–öåö6öFS¢7G&–æp¢öÖW76vS¢7G&–æp¢÷&–÷&—G“ó¢7G&–æp¢÷F—FÆS¢7G&–æp¢Ğ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢÷Vå÷W&Ö—76–öåö6öçFW‡C¢²&w3¢²ö6öFS¢7G&–ærÓ²&WGW&ç3¢VæFVf–æVBĞ¢—&öÆÅöÖöçF…ö—5öÆö6¶VC¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢—&öÆÅöÖöçF…öÖG&—ƒ¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢°¢&÷fVC¢&ööÆVà¢6FVv÷'“¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢†÷W'3¢çVÖ&W ¢¶'5öFF÷G—S¢7G&–æp¢&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢FV6†W%ö–C¢7G&–æp¢v÷&µöFFS¢7G&–æp¢ÕµĞ¢Ğ¢—&öÆÅöÖöçF…öÖG&—…÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢°¢&÷fVC¢&ööÆVà¢6FVv÷'“¢7G&–æp¢gVÆÅöæÖS¢7G&–æp¢†÷W'3¢çVÖ&W ¢¶'5öFF÷G—S¢7G&–æp¢&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢FV6†W%ö–C¢7G&–æp¢v÷&µöFFS¢7G&–æp¢ÕµĞ¢Ğ¢Æå÷66†VGVÆU÷6öÇfUö¦ö%÷c¢°¢&w3¢°¢ö6æF–FFUö6÷VçCó¢çVÖ&W ¢ö6ö×WFU÷&VfW&Væ6Só¢7G&–æp¢öÖöFSó¢7G&–æp¢÷VÆ—G•÷F&vWCó¢çVÖ&W ¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢&W&U÷W&å÷7Æ—C¢°¢&w3¢°¢ö6FVÖ–5÷–V#¢7G&–æp¢ö6Æ75ö–C¢7G&–æp¢÷FV6†W%ó¢7G&–æp¢÷FV6†W%ó#¢7G&–æp¢Ğ¢&WGW&ç3¢°¢6FVÖ–5÷–V#¢7G&–æp¢6Æ75ö–C¢7G&–æp¢7&VFVEöC¢7G&–æp¢7&VFVEö'“¢7G&–ærÂçVÆÀ¢Væ&ÆVC¢&ööÆVà¢w&÷Wóö–C¢7G&–ærÂçVÆÀ¢w&÷Wó%ö–C¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢6÷W&6Uöæ÷FS¢7G&–æp¢7–æ5öw&÷Wö–C¢7G&–ærÂçVÆÀ¢FV6†W%óö–C¢7G&–ærÂçVÆÀ¢FV6†W%ó%ö–C¢7G&–ærÂçVÆÀ¢F‡&W6†öÆC¢çVÖ&W ¢WFFVEöC¢7G&–æp¢Ğ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢'W&å÷7Æ—E÷Æç2 ¢—4öæUFôöæS¢G'VP¢—56WFöe&WGW&ã¢fÇ6P¢Ğ¢Ğ¢&W&U÷W&å÷7Æ—E÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢°¢ö6FVÖ–5÷–V#¢7G&–æp¢ö6Æ75ö–C¢7G&–æp¢÷FV6†W%ó¢7G&–æp¢÷FV6†W%ó#¢7G&–æp¢Ğ¢&WGW&ç3¢°¢6FVÖ–5÷–V#¢7G&–æp¢6Æ75ö–C¢7G&–æp¢7&VFVEöC¢7G&–æp¢7&VFVEö'“¢7G&–ærÂçVÆÀ¢Væ&ÆVC¢&ööÆVà¢w&÷Wóö–C¢7G&–ærÂçVÆÀ¢w&÷Wó%ö–C¢7G&–ærÂçVÆÀ¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢6÷W&6Uöæ÷FS¢7G&–æp¢7–æ5öw&÷Wö–C¢7G&–ærÂçVÆÀ¢FV6†W%óö–C¢7G&–ærÂçVÆÀ¢FV6†W%ó%ö–C¢7G&–ærÂçVÆÀ¢F‡&W6†öÆC¢çVÖ&W ¢WFFVEöC¢7G&–æp¢Ğ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢'W&å÷7Æ—E÷Æç2 ¢—4öæUFôöæS¢G'VP¢—56WFöe&WGW&ã¢fÇ6P¢Ğ¢Ğ¢&W6W'fUöÖçVÅ÷66†VGVÆU÷c¢°¢&w3¢²÷&W6W'fSó¢&ööÆVâĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&Wf–Wu÷66†VGVÆUö&F6…öÖ÷fU÷c¢²&w3¢²öÖ÷fW3¢§6öâÓ²&WGW&ç3¢§6öâĞ¢&Wf–Wu÷66†VGVÆUö&Æö6µöÖ÷fU÷c¢°¢&w3¢°¢ö6Æ77&ööÕö–Có¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢&Wf–Wu÷66†VGVÆUöÖ÷fU÷c¢°¢&w3¢°¢ö6Æ77&ööÕö–Có¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢&Wf–Wu÷66†VGVÆU÷7v÷c¢°¢&w3¢²öÆVgEö–C¢7G&–æs²÷&–v‡Eö–C¢7G&–ærĞ¢&WGW&ç3¢§6öà¢Ğ¢V&Æ—6…ö7W'&VçE÷66†VGVÆS¢°¢&w3¢°¢ö6FVÖ–5÷–V#ó¢7G&–æp¢öVffV7F—fUög&öÓ¢7G&–æp¢öæ÷FSó¢7G&–æp¢÷F—FÆSó¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢V&Æ—6…ö7W'&VçE÷66†VGVÆUö6÷&U÷c#¢°¢&w3¢°¢ö6FVÖ–5÷–V#ó¢7G&–æp¢öVffV7F—fUög&öÓ¢7G&–æp¢öæ÷FSó¢7G&–æp¢÷F—FÆSó¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢V&Æ—6…ö7W'&VçE÷66†VGVÆU÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢°¢ö6FVÖ–5÷–V#ó¢7G&–æp¢öVffV7F—fUög&öÓ¢7G&–æp¢öæ÷FSó¢7G&–æp¢÷F—FÆSó¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢V&Æ—6…ö7W'&VçE÷66†VGVÆU÷&U÷†6S3¢°¢&w3¢°¢ö6FVÖ–5÷–V#ó¢7G&–æp¢öVffV7F—fUög&öÓ¢7G&–æp¢öæ÷FSó¢7G&–æp¢÷F—FÆSó¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢W&å÷Æå÷7–æ5÷7FGW3¢²&w3¢²÷Æåö–C¢7G&–ærÓ²&WGW&ç3¢7G&–ærĞ¢&V÷7FÆU÷66†VGVÆU÷v÷&¶W%öGFV×G5÷c¢²&w3¢æWfW#²&WGW&ç3¢çVÖ&W"Ğ¢&V6Æ7VÆFU÷—&öÆÅöÖöçFƒ¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢&V6Æ7VÆFU÷—&öÆÅöÖöçF…÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢&V6Æ7VÆFU÷—&öÆÅöÖöçF…÷c#¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢&Vg&W6…ö6Æ75ö7W'&–7VÇVÕ÷7FGW3¢°¢&w3¢²ö6Æ75ö–C¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢&Vg&W6…÷66†VGVÆU÷&W—%÷7VvvW7F–öç5÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&Vg&W6…÷66†VGVÆU÷66Væ&–õöW‡ÆæF–öå÷c¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢&Vv—7FW%ööff–6–Å÷6÷W&6U÷6æ6†÷E÷c¢°¢&w3¢°¢öWF†÷&—G“ó¢7G&–æp¢ö6öçFVçEö†6ƒ¢7G&–æp¢öFV6—6–öåöæóó¢7G&–æp¢öFö7VÖVçEöFFSó¢7G&–æp¢öVffV7F—fUög&öÓó¢7G&–æp¢öVffV7F—fU÷Fóó¢7G&–æp¢ö‡GG÷7FGW3ó¢çVÖ&W ¢öÖWFFFó¢§6öà¢÷&uöÆö6F–öãó¢7G&–æp¢÷6÷W&6Uö¶W“¢7G&–æp¢÷6÷W&6U÷G—S¢7G&–æp¢÷6÷W&6U÷W&Ã¢7G&–æp¢÷F—FÆSó¢7G&–æp¢Ğ¢&WGW&ç3¢°¢6†ævVC¢&ööÆVà¢VWVUö–C¢7G&–æp¢6æ6†÷Eö–C¢7G&–æp¢6÷W&6Uö–C¢7G&–æp¢ÕµĞ¢Ğ¢&Vv—7FW%÷W6…÷7V'67&—F–öã¢°¢&w3¢°¢öWFƒ¢7G&–æp¢öVæGö–çC¢7G&–æp¢÷#SfFƒ¢7G&–æp¢÷ÆFf÷&Óó¢7G&–æp¢÷W6W%övVçCó¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢&Vv—7FW%÷66†VGVÆUö6ö×WFU÷v÷&¶W%÷c¢°¢&w3¢°¢ö6&–Æ—F–W3ó¢§6öà¢ö7U÷F‡&VG3ó¢çVÖ&W ¢öF—7Æ•öæÖS¢7G&–æp¢öwUöÖVÖ÷'•öÖ#ó¢çVÖ&W ¢öwUöÖöFVÃó¢7G&–æp¢öÖ…÷&ÆÆVÃó¢çVÖ&W ¢÷6ögGv&U÷fW'6–öãó¢7G&–æp¢÷v÷&¶W%ö¶W“¢7G&–æp¢÷v÷&¶W%÷G—S¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢&W—%÷66†VGVÆU÷66Væ&–õö6÷&U÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W—%÷66†VGVÆU÷66Væ&–õ÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W—%÷66†VGVÆU÷66Væ&–õ÷&U÷†6S5÷FVæçC¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W—%÷66†VGVÆU÷66Væ&–õ÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W66÷&U÷66†VGVÆU÷66Væ&–õ÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W66÷&U÷66†VGVÆU÷66Væ&–õ÷&U÷†6S5÷FVæçC¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W66÷&U÷66†VGVÆU÷66Væ&–õ÷66÷&Uö6÷&U÷c3¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W66÷&U÷66†VGVÆU÷66Væ&–õ÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W6öÇfUö6Æ75ö–†õ÷F–ÖWF&ÆU÷c¢°¢&w3¢²ö6Æ73¢7G&–ærĞ¢&WGW&ç3¢§6öà¢Ğ¢&W6öÇfUö–†õöÆ–6F–öå÷c¢°¢&w3¢°¢ö6öFS¢7G&–æp¢öW‡G&ó¢çVÖ&W ¢öw&FS¢çVÖ&W ¢÷7V&¦V7Có¢7G&–æp¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢&W6öÇfU÷&U÷&Vv—7FW&VE÷FV6†W#¢°¢&w3¢²ö–ç7F—GWF–öåö6öFS¢7G&–æs²÷F6¶ã¢7G&–ærĞ¢&WGW&ç3¢°¢VÖ–Ã¢7G&–æp¢–C¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢ÕµĞ¢Ğ¢&W6öÇfU÷W6W%ö–ç7F—GWF–öã¢²&w3¢²÷W6W%ö–C¢7G&–ærÓ²&WGW&ç3¢7G&–ærĞ¢&W7F÷&U÷66†VGVÆU÷&W7F÷&U÷ö–çC¢°¢&w3¢²÷&W7F÷&U÷ö–çEö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&W7F÷&U÷66†VGVÆU÷&W7F÷&U÷ö–çE÷c#¢°¢&w3¢²÷&W7F÷&U÷ö–çEö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢&Wfö¶U÷F6µ÷&öÆU÷FV×ÆFS¢°¢&w3¢²÷FV×ÆFUö–C¢7G&–æs²÷W6W%ö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢6fU÷F6µ÷&öÆU÷FV×ÆFS¢°¢&w3¢°¢öFW67&—F–öãó¢7G&–æp¢öæÖS¢7G&–æp¢÷W&Ö—76–öåö6öFW3ó¢7G&–æuµĞ¢÷FV×ÆFUö–C¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢66Væ&–õö76–væÖVçE÷'VåöÆVæwF‡3¢°¢&w3¢²ö76–væÖVçC¢7G&–æs²÷66Væ&–ó¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W%µĞ¢Ğ¢66Væ&–õ÷6Æ÷EöF–væ÷7F–3¢°¢&w3¢°¢ö76–væÖVçC¢7G&–æp¢ö&Æö6µö†÷W'3¢çVÖ&W ¢÷66Væ&–ó¢7G&–æp¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢66Væ&–õ÷FV6†W%ö6öç6V7WF—fUö6÷VçC¢°¢&w3¢°¢öF“¢çVÖ&W ¢÷W&–öC¢çVÖ&W ¢÷66Væ&–ó¢7G&–æp¢÷FV6†W#¢7G&–æp¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢66Væ&–õ÷FV6†W%ö6öç6V7WF—fUö6÷VçEö&Æö6µ÷c#¢°¢&w3¢°¢ö&Æö6µö†÷W'3¢çVÖ&W ¢öF“¢çVÖ&W ¢÷66Væ&–ó¢7G&–æp¢÷7F'C¢çVÖ&W ¢÷FV6†W#¢7G&–æp¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢66Væ&–õ÷FV6†W%öF–Ç•ö6÷VçC¢°¢&w3¢²öF“¢çVÖ&W#²÷66Væ&–ó¢7G&–æs²÷FV6†W#¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢66Væ&–õ÷FV6†W%÷v÷&¶–æuöF—3¢°¢&w3¢°¢ö6æF–FFUöF“ó¢çVÖ&W ¢÷66Væ&–ó¢7G&–æp¢÷FV6†W#¢7G&–æp¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢66†VGVÆUö76–væÖVçE÷'VåöÆVæwF‡3¢°¢&w3¢²ö76–væÖVçC¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W%µĞ¢Ğ¢66†VGVÆUö7W'&VçEö&Æö6µöÖF6†W5÷†6S5÷c¢°¢&w3¢²ö76–væÖVçEö–C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢66†VGVÆU÷&VÆF–öå÷6Æ÷EöÆÆ÷vVE÷c¢°¢&w3¢°¢ö&Æö6³¢çVÖ&W ¢÷W&–öC¢çVÖ&W ¢÷&WV—&VÖVçEö–C¢7G&–æp¢÷66Væ&–õö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢66†VGVÆU÷'VÆUöÖöFU÷c¢²&w3¢²÷'VÆUö6öFS¢7G&–ærÓ²&WGW&ç3¢7G&–ærĞ¢66†VGVÆU÷'VÆU÷vV–v‡E÷c¢°¢&w3¢°¢öFVfVÇC¢çVÖ&W ¢÷&öf–ÆU÷vV–v‡Eö¶W“¢7G&–æp¢÷'VÆUö6öFS¢7G&–æp¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢66†VGVÆU÷66Væ&–õö&Æö6µöÖF6†W5÷†6S5÷c¢°¢&w3¢²ö76–væÖVçEö–C¢7G&–æs²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢66†VGVÆU÷7V&¦V7EöÖF6†W5öVFvU÷'VÆU÷c¢°¢&w3¢²÷'VÆUö6öFS¢7G&–æs²÷7V&¦V7C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢6V7F–öå÷7GVFVçG5ö&F6…÷c¢°¢&w3¢²÷&WÆ6U÷6öÇfW#ó¢&ööÆVâĞ¢&WGW&ç3¢§6öà¢Ğ¢6VVE÷F–ÖWF&ÆUöFVfVÇG5öf÷%÷FVæçE÷c¢°¢&w3¢²ö6öFS¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢6WEö7F—fUö6FVÖ–5÷–V#¢°¢&w3¢²ö6FVÖ–5÷–V%ö–C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢6WEö7F—fUö6FVÖ–5÷–V%÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²ö6FVÖ–5÷–V%ö–C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢6WEö6Æ75ö–†õöÆ–6F–öå÷c¢°¢&w3¢°¢ö6Æ73¢7G&–æp¢ö6öFS¢7G&–æp¢öW‡G&ó¢çVÖ&W ¢÷6WGF–æw3ó¢§6öà¢÷7V&¦V7Có¢7G&–æp¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢6WEöGWG•öÖöçF…öÆö6³¢°¢&w3¢²öÆö6¶VC¢&ööÆVã²öÖöçFƒ¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢6WEöGWG•öÖöçF…öÆö6µ÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öÆö6¶VC¢&ööÆVã²öÖöçFƒ¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢6WE÷W'6öææVÅöf–VÆEö÷fW'&–FS¢°¢&w3¢°¢öVæ&ÆVC¢&ööÆVà¢öf–VÆEö¶W“¢7G&–æp¢öÖöGVÆUö¶W—3¢7G&–æuµĞ¢Ğ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢6WE÷W'6öææVÅöf–VÆE÷'VÆS¢°¢&w3¢°¢öVæ&ÆVC¢&ööÆVà¢öf–VÆEö¶W“¢7G&–æp¢öÖöGVÆUö¶W—3¢7G&–æuµĞ¢Ğ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢6WE÷W'6öææVÅ÷FV6†–æuö&V¢°¢&w3¢²÷FV6†–æuö&Vö–Có¢7G&–æs²÷W6W%ö–C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢6WE÷FV6†W%÷6Æ÷E÷Væf–Æ&ÆU÷c¢°¢&w3¢°¢ö&Æö6¶VC¢&ööÆVà¢öæ÷FSó¢7G&–æp¢÷W&–öC¢çVÖ&W ¢÷6÷W&6Só¢7G&–æp¢÷FV6†W%ö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢6WE÷W6W%÷W&Ö—76–öã¢°¢&w3¢°¢öVæ&ÆVC¢&ööÆVà¢öæ÷FSó¢7G&–æp¢÷W&Ö—76–öåö6öFS¢7G&–æp¢÷66÷Só¢§6öà¢÷W6W%ö–C¢7G&–æp¢÷fÆ–Eög&öÓó¢7G&–æp¢÷fÆ–E÷VçF–Ãó¢7G&–æp¢Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢6WE÷W6W%÷W&Ö—76–öåö'VæFÆS¢°¢&w3¢°¢öæ÷FSó¢7G&–æp¢÷W&Ö—76–öåö6öFW3¢7G&–æuµĞ¢÷W6W%ö–C¢7G&–æp¢÷fÆ–Eög&öÓó¢7G&–æp¢÷fÆ–E÷VçF–Ãó¢7G&–æp¢Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢6WE÷W6W%÷W&Ö—76–öåöÖöFS¢°¢&w3¢²öÖöFS¢7G&–æs²÷W6W%ö–C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢7GVFVçEö6÷VçEöf÷%÷66†VGVÆS¢°¢&w3¢²ö6Æ75ö–C¢7G&–æs²÷7V&w&÷Wö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢7VvvW7E÷66†VGVÆUöV¦V7F–öåö6†–å÷c¢°¢&w3¢°¢öÆ–Ö—Có¢çVÖ&W ¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢7VvvW7E÷7V'7F—GWFW5öf÷%öF“¢°¢&w3¢²öFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢'6Væ6UöÆW76öåö–C¢7G&–æp¢6æF–FFUöæÖS¢7G&–æp¢6æF–FFU÷&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢6æF–FFU÷W6W%ö–C¢7G&–æp¢6Æ75ö–C¢7G&–æp¢6Æ75öæÖS¢7G&–æp¢W&–öC¢çVÖ&W ¢&–÷&—G“¢çVÖ&W ¢&V6öã¢7G&–æp¢7V&¦V7C¢7G&–æp¢vVV¶Ç•öÆöC¢çVÖ&W ¢ÕµĞ¢Ğ¢7VvvW7E÷7V'7F—GWFW5öf÷%öF•÷c3¢°¢&w3¢²öFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢'6Væ6UöÆW76öåö–C¢7G&–æp¢6æF–FFUöæÖS¢7G&–æp¢6æF–FFU÷W6W%ö–C¢7G&–æp¢6Æ75ö–C¢7G&–æp¢6Æ75öæÖS¢7G&–æp¢GWG“¢&ööÆVà¢ÖöçF†Ç•öÆöC¢çVÖ&W ¢W&–öC¢çVÖ&W ¢VÆ–f–VC¢&ööÆVà¢&æµ÷66÷&S¢çVÖ&W ¢&V6öã¢7G&–æp¢7V&¦V7C¢7G&–æp¢vVV¶Ç•öÆöC¢çVÖ&W ¢ÕµĞ¢Ğ¢7VvvW7E÷7V'7F—GWFW5÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢²öFFSó¢7G&–ærĞ¢&WGW&ç3¢°¢'6Væ6UöÆW76öåö–C¢7G&–æp¢6æF–FFUöæÖS¢7G&–æp¢6æF–FFU÷&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢6æF–FFU÷W6W%ö–C¢7G&–æp¢6Æ75ö–C¢7G&–æp¢6Æ75öæÖS¢7G&–æp¢W&–öC¢çVÖ&W ¢&–÷&—G“¢çVÖ&W ¢&V6öã¢7G&–æp¢7V&¦V7C¢7G&–æp¢vVV¶Ç•öÆöC¢çVÖ&W ¢ÕµĞ¢Ğ¢7WW%öFÖ–åöfVGW&Uö6FÆöuöVF—C¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢Væ&ÆVC¢&ööÆVà¢fVGW&Uö¶W“¢7G&–æp¢Æ&VÃ¢7G&–æp¢Ö–çFVææ6S¢&ööÆVà¢&VçEö¶W“¢7G&–æp¢&÷WFU÷&Vf—ƒ¢7G&–æp¢ÕµĞ¢Ğ¢7WW%öFÖ–åö–×÷'Eööff–6–Åö6÷W'6U÷66†VGVÆU÷c¢°¢&w3¢°¢öVffV7F—fUö6FVÖ–5÷–V#¢7G&–æp¢÷&öw&Õ÷G—S¢7G&–æp¢÷&÷w3¢§6öà¢÷66†ööÅ÷G—S¢7G&–æp¢÷6÷W&6Uöf–ÆUöæÖS¢7G&–æp¢Ğ¢&WGW&ç3¢§6öà¢Ğ¢7WW%öFÖ–åö–×÷'Eööff–6–Åö6÷W'6U÷66†VGVÆU÷c#¢°¢&w3¢²÷&öf–ÆS¢§6öã²÷&÷w3¢§6öã²÷6÷W&6Uöf–ÆUöæÖS¢7G&–ærĞ¢&WGW&ç3¢§6öà¢Ğ¢7WW%öFÖ–åöÆ—7E÷FVæçG3¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢&÷fÅöæ÷FS¢7G&–æp¢&÷fÅ÷7FGW3¢7G&–æp¢–ç7F—GWF–öåö6öFS¢7G&–æp¢&–æ6—ÅöVÖ–Ã¢7G&–æp¢&–æ6—ÅöæÖS¢7G&–æp¢&–æ6—Å÷†öæS¢7G&–æp¢&Wf–WvVEöC¢7G&–æp¢66†ööÅöæÖS¢7G&–æp¢ÕµĞ¢Ğ¢7WW%öFÖ–åö÷fW'&–FUööff–6–Åö6÷W'6U÷c¢°¢&w3¢²ö6FÆöuö–C¢7G&–æs²÷F6ƒ¢§6öã²÷&V6öã¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢7WW%öFÖ–å÷&Wf–Wu÷FVæçC¢°¢&w3¢°¢öFV6—6–öã¢7G&–æp¢ö–ç7F—GWF–öåö6öFS¢7G&–æp¢öæ÷FSó¢7G&–æp¢Ğ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢7WW%öFÖ–å÷6VæE÷FVæçEöÖW76vS¢°¢&w3¢°¢ö–ç7F—GWF–öåö6öFS¢7G&–æp¢öÖW76vS¢7G&–æp¢÷6WfW&—G“ó¢7G&–æp¢÷F—FÆS¢7G&–æp¢Ğ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢7WW%öFÖ–å÷6WEöfVGW&S¢°¢&w3¢°¢öVæ&ÆVC¢&ööÆVà¢öfVGW&Uö¶W“¢7G&–æp¢öÖ–çFVææ6Só¢&ööÆVà¢öÖW76vSó¢7G&–æp¢Ğ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢7WW%öFÖ–å÷6WE÷&öf–ÆU÷FV6†–æuö&V¢°¢&w3¢²÷FV6†–æuö&Vö–C¢7G&–æs²÷W6W%ö–C¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢7WW%öFÖ–å÷6WE÷7—7FVÕöÖ–çFVææ6S¢°¢&w3¢²öÖ–çFVææ6S¢&ööÆVã²öÖW76vSó¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢7WW%öFÖ–å÷FVæçEö—6öÆF–öåöVF—C¢²&w3¢æWfW#²&WGW&ç3¢§6öâĞ¢7WW%öFÖ–å÷FVæçEö¶W•öVF—C¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢6öÇVÖç3¢7G&–æuµĞ¢6öç7G&–çEöæÖS¢7G&–æp¢6öç7G&–çE÷G—S¢7G&–æp¢F&ÆUöæÖS¢7G&–æp¢ÕµĞ¢Ğ¢7WW%öFÖ–å÷W6W'Eö7W'&–7VÇVÕ÷&öf–ÆU÷c¢°¢&w3¢²÷&öf–ÆS¢§6öâĞ¢&WGW&ç3¢7G&–æp¢Ğ¢7WW%öFÖ–å÷W6W'E÷W'6öææVÃ¢°¢&w3¢°¢öVÖ–Ãó¢7G&–æp¢ögVÆÅöæÖS¢7G&–æp¢÷&öÆSó¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢÷F6¶ã¢7G&–æp¢÷FV6†–æuö&Vö–Có¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢7WW%öFÖ–å÷W6W'E÷W'6öææVÅöf÷%÷FVæçC¢°¢&w3¢°¢öVÖ–Ãó¢7G&–æp¢ögVÆÅöæÖS¢7G&–æp¢ö–ç7F—GWF–öåö6öFS¢7G&–æp¢÷&öÆSó¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢÷F6¶ã¢7G&–æp¢÷FV6†–æuö&Vö–Có¢7G&–æp¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢7v÷66†VGVÆU÷6Æ÷G5÷c¢°¢&w3¢²öÆVgEö–C¢7G&–æs²÷&–v‡Eö–C¢7G&–ærĞ¢&WGW&ç3¢§6öà¢Ğ¢7–æ5öÆÅ÷W&å÷Æç5÷Fõ÷F–ÖWF&ÆS¢°¢&w3¢æWfW ¢&WGW&ç3¢°¢f–ÆVC¢çVÖ&W ¢7–æ6VC¢çVÖ&W ¢ÕµĞ¢Ğ¢7–æ5ööff–6–Åö6÷W'6UööffW&–æw5öf÷%ö6Æ75÷c¢°¢&w3¢²ö6Æ75ö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢7–æ5ööff–6–Åö6÷W'6UööffW&–æw5öf÷%÷–V%÷c¢°¢&w3¢²ö6FVÖ–5÷–V%ö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢7–æ5÷—&öÆÅö6ÆVæF%ög&öÕö6FVÖ–5÷–V#¢°¢&w3¢²öÖöçFƒ¢çVÖ&W#²÷–V#¢çVÖ&W"Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢7–æ5÷W&å÷Æå÷Fõ÷F–ÖWF&ÆS¢°¢&w3¢²÷Æåö–C¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢7–æ5÷66†VGVÆUöGWG•ö÷F–Ö—¦F–öåög&öÕö7–6ÆS¢°¢&w3¢æWfW ¢&WGW&ç3¢çVÖ&W ¢Ğ¢FV6†W%ö6÷W'6U÷W&Ö—76–öå÷7FGW3¢°¢&w3¢²ö6÷W'6Uö–C¢7G&–æs²ööåöFFSó¢7G&–æs²÷FV6†W%ö–C¢7G&–ærĞ¢&WGW&ç3¢7G&–æp¢Ğ¢FVæçE÷&÷uöÆÆ÷vVC¢°¢&w3¢²ö–ç7F—GWF–öåö6öFS¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢FVæçF—¦U÷V&Æ–5÷F&ÆS¢°¢&w3¢²öÆVv7•ö6öFSó¢7G&–æs²÷F&ÆS¢7G&–ærĞ¢&WGW&ç3¢VæFVf–æV@¢Ğ¢G'•÷66†VGVÆUöVFvU÷F&vWE÷c¢°¢&w3¢°¢÷'VÆUö6öFS¢7G&–æp¢÷66Væ&–õö–C¢7G&–æp¢÷F&vWE÷W&–öC¢çVÖ&W ¢÷F&vWE÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢WFFUö×•÷&öf–ÆU÷6fS¢°¢&w3¢°¢ö&ÆööE÷G—Só¢7G&–æp¢öVÖW&vVæ7•ö6öçF7Có¢7G&–æp¢÷†öæSó¢7G&–æp¢Ğ¢&WGW&ç3¢°¢&ÆööE÷G—S¢7G&–ærÂçVÆÀ¢VÖ–Ã¢7G&–ærÂçVÆÀ¢VÖW&vVæ7•ö6öçF7C¢7G&–ærÂçVÆÀ¢gVÆÅöæÖS¢7G&–ærÂçVÆÀ¢–ç7F—GWF–öåö6öFS¢7G&–ærÂçVÆÀ¢—5÷7WW%öFÖ–ã¢&ööÆVà¢W&Ö—76–öåöÖöFS¢7G&–æp¢†öæS¢7G&–ærÂçVÆÀ¢&öÆS¢FF&6U²'V&Æ–2%Õ²$VçV×2%Õ²&÷&öÆR%Ğ¢F6¶ã¢7G&–ærÂçVÆÀ¢FV6†–æuö&Vö–C¢7G&–ærÂçVÆÀ¢WFFVEöC¢7G&–æp¢W6W%ö–C¢7G&–æp¢Ğ¢6WFöd÷F–öç3¢°¢g&öÓ¢"¢ ¢Fó¢'&öf–ÆW2 ¢—4öæUFôöæS¢G'VP¢—56WFöe&WGW&ã¢fÇ6P¢Ğ¢Ğ¢W6W'Eööff–6–Å÷fö6F–öæÅö6FÆöuö&F6ƒ¢°¢&w3¢²÷&÷w3¢§6öâĞ¢&WGW&ç3¢°¢'&æ6…ö6÷VçC¢çVÖ&W ¢f–VÆEö6÷VçC¢çVÖ&W ¢ÕµĞ¢Ğ¢W6W'Eööff–6–Å÷fö6F–öæÅög&ÖWv÷&µ÷6÷W&6W5ö&F6ƒ¢°¢&w3¢²÷&÷w3¢§6öâĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢W6W'E÷66†VGVÆU÷6Æ÷E÷W&Ö—76–öåö6÷&U÷c#¢°¢&w3¢°¢ö6Æ77&ööÕö–Có¢7G&–æp¢öÆö6¶VCó¢&ööÆVà¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–Có¢7G&–æp¢÷6÷W&6Uö¶–æCó¢7G&–æp¢÷7V&w&÷Wö–Có¢7G&–æp¢÷FV6†W%ö76–væÖVçEö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢W6W'E÷66†VGVÆU÷6Æ÷E÷c#¢°¢&w3¢°¢ö6Æ77&ööÕö–Có¢7G&–æp¢öÆö6¶VCó¢&ööÆVà¢÷W&–öC¢çVÖ&W ¢÷66†VGVÆUö–Có¢7G&–æp¢÷6÷W&6Uö¶–æCó¢7G&–æp¢÷7V&w&÷Wö–Có¢7G&–æp¢÷FV6†W%ö76–væÖVçEö–C¢7G&–æp¢÷vVV¶F“¢çVÖ&W ¢Ğ¢&WGW&ç3¢7G&–æp¢Ğ¢fÆ–FFU÷66†VGVÆU÷66Væ&–õ÷&U÷†6S5÷FVæçC¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢fÆ–FFU÷66†VGVÆU÷66Væ&–õ÷c#¢°¢&w3¢²÷66Væ&–õö–C¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢fö6F–öæÅö6ö÷&F–æF–öå÷&öw&ÕöÆ–6&ÆS¢°¢&w3¢°¢öw&FS¢çVÖ&W ¢öw&FSö&÷fVCó¢&ööÆVà¢ö†5ööff–6–ÅöVçFW'&—6Uö6÷W'6S¢&ööÆVà¢÷&öw&Õ÷G—S¢7G&–æp¢Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢fö6F–öæÅö6ö÷&F–æF–öå÷vVV¶Ç•ö6¢°¢&w3¢²ö—5öÖWG&÷öÆ—Fã¢&ööÆVã²÷&öw&Õ÷G—S¢7G&–ærĞ¢&WGW&ç3¢çVÖ&W ¢Ğ¢fö6F–öæÅöVçFW'&—6UöF—5ög&öÕö†÷W'3¢°¢&w3¢²÷vVV¶Ç•ö†÷W'3¢çVÖ&W"Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢fö6F–öæÅ÷7VvvW7Eöw&÷Wö6÷VçC¢°¢&w3¢²öw&FS¢çVÖ&W#²÷7V6–Ãó¢çVÖ&W#²÷7GVFVçG3¢çVÖ&W"Ğ¢&WGW&ç3¢çVÖ&W ¢Ğ¢v÷&¶W%ö6Æ–Õ÷66†VGVÆUöGFV×E÷c¢°¢&w3¢²÷v÷&¶W%ö¶W“¢7G&–ærĞ¢&WGW&ç3¢§6öà¢Ğ¢v÷&¶W%ö6ö×ÆWFU÷66†VGVÆUöGFV×E÷c¢°¢&w3¢°¢öGFV×Eö–C¢7G&–æp¢öGW&F–öåö×3ó¢çVÖ&W ¢öW'&÷#ó¢7G&–æp¢÷&W7VÇC¢§6öà¢÷v÷&¶W%ö¶W“¢7G&–æp¢Ğ¢&WGW&ç3¢&ööÆVà¢Ğ¢v÷&¶W%ö†V'F&VE÷66†VGVÆU÷c¢°¢&w3¢²öÆFVæ7•ö×3ó¢çVÖ&W#²öÆöCó¢çVÖ&W#²÷v÷&¶W%ö¶W“¢7G&–ærĞ¢&WGW&ç3¢&ööÆVà¢Ğ¢v÷&·6†÷ö&Æö6µ÷GFW&ç3¢°¢&w3¢²öF–Ç•ö66—G“¢çVÖ&W#²÷F÷FÃ¢çVÖ&W"Ğ¢&WGW&ç3¢°¢'Eö6÷VçC¢çVÖ&W ¢GFW&ã¢çVÖ&W%µĞ¢ÕµĞ¢Ğ¢Ğ¢VçV×3¢°¢÷&öÆS¢&FÖ–â"Â&ÖævW""Â'FV6†W" ¢Ğ¢6ö×÷6—FUG—W3¢°¢µò–âæWfW%Ó¢æWfW ¢Ğ¢Ğ§Ğ §G—RFF&6Uv—F†÷WD–çFW&æÇ2ÒöÖ—CÄFF&6RÂ%õô–çFW&æÅ7W&6R#à §G—RFVfVÇE66†VÖÒFF&6Uv—F†÷WD–çFW&æÇ5´W‡G&7CÆ¶W–öbFF&6RÂ'V&Æ–2#åĞ ¦W‡÷'BG—RF&ÆW3À¢FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG0¢Â¶W–öb„FVfVÇE66†VÖ²%F&ÆW2%ÒbFVfVÇE66†VÖ²%f–Ww2%Ò¢Â²66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ2ÒÀ¢F&ÆTæÖRW‡FVæG2FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0¢Ğ¢ò¶W–öb„FF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²%F&ÆW2%Ò`¢FF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²%f–Ww2%Ò¢¢æWfW"ÒæWfW"À£âÒFVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0§Ğ¢ò„FF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²%F&ÆW2%Ò`¢FF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²%f–Ww2%Ò•µF&ÆTæÖUÒW‡FVæG2°¢&÷s¢–æfW" ¢Ğ¢ò ¢¢æWfW ¢¢FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2¶W–öb„FVfVÇE66†VÖ²%F&ÆW2%Ò`¢FVfVÇE66†VÖ²%f–Ww2%Ò¢ò„FVfVÇE66†VÖ²%F&ÆW2%Ò`¢FVfVÇE66†VÖ²%f–Ww2%Ò•´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5ÒW‡FVæG2°¢&÷s¢–æfW" ¢Ğ¢ò ¢¢æWfW ¢¢æWfW  ¦W‡÷'BG—RF&ÆW4–ç6W'CÀ¢FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG0¢Â¶W–öbFVfVÇE66†VÖ²%F&ÆW2%Ğ¢Â²66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ2ÒÀ¢F&ÆTæÖRW‡FVæG2FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0¢Ğ¢ò¶W–öbFF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²%F&ÆW2%Ğ¢¢æWfW"ÒæWfW"À£âÒFVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0§Ğ¢òFF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²%F&ÆW2%ÕµF&ÆTæÖUÒW‡FVæG2°¢–ç6W'C¢–æfW"¢Ğ¢ò¢¢æWfW ¢¢FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2¶W–öbFVfVÇE66†VÖ²%F&ÆW2%Ğ¢òFVfVÇE66†VÖ²%F&ÆW2%Õ´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5ÒW‡FVæG2°¢–ç6W'C¢–æfW"¢Ğ¢ò¢¢æWfW ¢¢æWfW  ¦W‡÷'BG—RF&ÆW5WFFSÀ¢FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG0¢Â¶W–öbFVfVÇE66†VÖ²%F&ÆW2%Ğ¢Â²66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ2ÒÀ¢F&ÆTæÖRW‡FVæG2FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0¢Ğ¢ò¶W–öbFF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²%F&ÆW2%Ğ¢¢æWfW"ÒæWfW"À£âÒFVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0§Ğ¢òFF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²%F&ÆW2%ÕµF&ÆTæÖUÒW‡FVæG2°¢WFFS¢–æfW"P¢Ğ¢òP¢¢æWfW ¢¢FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç2W‡FVæG2¶W–öbFVfVÇE66†VÖ²%F&ÆW2%Ğ¢òFVfVÇE66†VÖ²%F&ÆW2%Õ´FVfVÇE66†VÖF&ÆTæÖT÷$÷F–öç5ÒW‡FVæG2°¢WFFS¢–æfW"P¢Ğ¢òP¢¢æWfW ¢¢æWfW  ¦W‡÷'BG—RVçV×3À¢FVfVÇE66†VÖVçVÔæÖT÷$÷F–öç2W‡FVæG0¢Â¶W–öbFVfVÇE66†VÖ²$VçV×2%Ğ¢Â²66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ2ÒÀ¢VçVÔæÖRW‡FVæG2FVfVÇE66†VÖVçVÔæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0¢Ğ¢ò¶W–öbFF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖVçVÔæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²$VçV×2%Ğ¢¢æWfW"ÒæWfW"À£âÒFVfVÇE66†VÖVçVÔæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0§Ğ¢òFF&6Uv—F†÷WD–çFW&æÇ5´FVfVÇE66†VÖVçVÔæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²$VçV×2%Õ´VçVÔæÖUĞ¢¢FVfVÇE66†VÖVçVÔæÖT÷$÷F–öç2W‡FVæG2¶W–öbFVfVÇE66†VÖ²$VçV×2%Ğ¢òFVfVÇE66†VÖ²$VçV×2%Õ´FVfVÇE66†VÖVçVÔæÖT÷$÷F–öç5Ğ¢¢æWfW  ¦W‡÷'BG—R6ö×÷6—FUG—W3À¢V&Æ–46ö×÷6—FUG—TæÖT÷$÷F–öç2W‡FVæG0¢Â¶W–öbFVfVÇE66†VÖ²$6ö×÷6—FUG—W2%Ğ¢Â²66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ2ÒÀ¢6ö×÷6—FUG—TæÖRW‡FVæG2V&Æ–46ö×÷6—FUG—TæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0¢Ğ¢ò¶W–öbFF&6Uv—F†÷WD–çFW&æÇ5µV&Æ–46ö×÷6—FUG—TæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²$6ö×÷6—FUG—W2%Ğ¢¢æWfW"ÒæWfW"À£âÒV&Æ–46ö×÷6—FUG—TæÖT÷$÷F–öç2W‡FVæG2°¢66†VÖ¢¶W–öbFF&6Uv—F†÷WD–çFW&æÇ0§Ğ¢òFF&6Uv—F†÷WD–çFW&æÇ5µV&Æ–46ö×÷6—FUG—TæÖT÷$÷F–öç5²'66†VÖ%ÕÕ²$6ö×÷6—FUG—W2%Õ´6ö×÷6—FUG—TæÖUĞ¢¢V&Æ–46ö×÷6—FUG—TæÖT÷$÷F–öç2W‡FVæG2¶W–öbFVfVÇE66†VÖ²$6ö×÷6—FUG—W2%Ğ¢òFVfVÇE66†VÖ²$6ö×÷6—FUG—W2%ÕµV&Æ–46ö×÷6—FUG—TæÖT÷$÷F–öç5Ğ¢¢æWfW  ¦W‡÷'B6öç7B6öç7FçG2Ò°¢V&Æ–3¢°¢VçV×3¢°¢÷&öÆS¢²&FÖ–â"Â&ÖævW""Â'FV6†W"%ÒÀ¢ÒÀ¢ÒÀ§Ò26öç7@
