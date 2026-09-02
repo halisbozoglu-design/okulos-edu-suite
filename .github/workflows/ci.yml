@@ -77,6 +77,16 @@ jobs:
           path: /tmp/schedule-world-benchmark.json
           retention-days: 30
 
+      - name: Audit canonical schedule schema references
+        run: node scripts/report-schedule-schema-references.mjs --ci --out /tmp/schedule-schema-reference-audit.json
+
+      - name: Upload canonical schema reference evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: schedule-schema-reference-${{ github.sha }}
+          path: /tmp/schedule-schema-reference-audit.json
+          retention-days: 30
+
       - name: Check Supabase migrations
         run: node scripts/check-migrations.mjs
 

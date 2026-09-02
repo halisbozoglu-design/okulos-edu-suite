@@ -7,7 +7,7 @@ Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-c
 ## Güncel doğrulanmış durum
 
 - PR #25 açık ve merge edilebilir.
-- Önceki doğrulanmış head için CI #1395 tamamen başarılıdır: unit/parser, CP-SAT oracle, 30-seed benchmark, migration/replay, tenant/auth/route guard, timetable authority, production build ve TypeScript. Impossible, MESEM, MTAL, room-building ve vocational-max corpus workflow'ları da aynı head üzerinde başarılıdır. P0.2 commitinin yeni CI sonucu ayrıca doğrulanacaktır.
+- P0.4 head `ed816cd` için CI #1405 tamamen başarılıdır: unit/parser, CP-SAT oracle, 30-seed benchmark, migration/replay, tenant/auth/route guard, timetable authority, production build ve TypeScript. Impossible, MESEM, MTAL, room-building ve vocational-max corpus workflow'ları da aynı head üzerinde başarılıdır.
 - MTAL, MESEM, oda/bina extreme ve maksimum mesleki corpus workflow'ları aynı head üzerinde başarılıdır.
 - Lovable AI/chat/agent kullanılmaz; Lovable token tüketimi sıfırdır. Lovable Cloud yalnız mevcut çalışma ortamıdır.
 - HARD kurallar sessiz gevşetilmez; canonical server validator son otoritedir.
@@ -34,7 +34,6 @@ Coverage manifestinde açık `GAP` kalmadı. Bu yalnız manifestteki tanımlı H
 
 | ID | Eksik | Bugünkü gerçek durum | Kapanış ölçütü |
 |---|---|---|---|
-| P0.5 | Son canonical şema-diff auditi | Model geniş; kullanılmayan/duplicate alanların sıfır olduğu kanıtlanmadı | Otomatik schema/reference raporu |
 | P0.6 | Birleşik edge-case suite | Güçlü ayrı corpus'lar var | Sectioning + composite room + co-teacher + multi-week birlikte stress |
 | P0.7 | DB/Web/native score-vector eşitliği | Web/DB kanıtları parçalı; native binding açık | Aynı fixture için aynı lexicographic skor |
 | P0.8 | Tekrarlı determinism ve performans eşiği | Bazı corpus'larda determinism var | Tüm release corpus'larında tekrar + regresyon threshold |
@@ -135,6 +134,6 @@ Eski master tree'de 99 adet işaretlenmemiş kutu vardır. Bu, 99 bağımsız ç
 Bugünkü en net özet:
 
 - Coverage manifestinde **0 açık GAP**.
-- Web/Cloud release yolunda **4 açık P0 kapanış işi**; P0.1 joint optimization, P0.2 virtual/composite shared room, P0.3 yardımcı/eş öğretmen ve P0.4 gözetim/nöbet ürün entegrasyonu 2026-09-02'de kapandı.
+- Web/Cloud release yolunda **3 açık P0 kapanış işi**; P0.1–P0.4'e ek olarak P0.5 canonical şema/reference denetimi de 2026-09-02'de kapandı. CI her head için baseline + forward migrationlardan otomatik JSON kanıtı üretir ve duplicate/unreferenced alanlarda fail eder.
 - Windows'ta **9**, macOS'ta **11** açık hedef.
 - Self-host geçişi mevcut Lovable Cloud kullanımı için **gelecek hedef**.
