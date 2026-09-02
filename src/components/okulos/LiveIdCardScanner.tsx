@@ -63,7 +63,7 @@ export function LiveIdCardScanner({ onStableReading, onClose }: { onStableReadin
         await video.play();
         setStatus("Kartı çerçeveye yerleştirin; fotoğraf çekilmez.");
         const { createWorker } = await import("tesseract.js");
-        workerRef.current = (await createWorker("eng")) as unknown as OcrWorker;
+        workerRef.current = (await createWorker(["tur", "eng"])) as unknown as OcrWorker;
         if (!activeRef.current) return;
         initializing = false;
         timerRef.current = window.setInterval(() => { void inspectFrame(); }, 1000);

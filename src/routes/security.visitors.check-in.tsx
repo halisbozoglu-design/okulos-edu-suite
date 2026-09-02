@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { Camera, CheckCircle2, CreditCard, LoaderCircle, Phone, Search, ShieldAlert, UserPlus, Users } from "lucide-react";
+import { Camera, CheckCircle2, CreditCard, LoaderCircle, Phone, ShieldAlert, UserPlus, Users } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { LiveIdCardScanner } from "@/components/okulos/LiveIdCardScanner";
 import { Button } from "@/components/ui/button";
@@ -63,9 +63,21 @@ function VisitorCheckIn() {
     const { data: userData } = await supabase.auth.getUser();
     const userId = userData.user?.id;
     if (!userId) { setBusy(false); setMessage({ tone: "error", text: "Oturum doğrulanamadı. Tekrar giriş yapın." }); return; }
-    const personResponse = await supabase.from("visitor_people").insert({ full_name: visitorName.trim(), phone: phone.trim() || null, tc_last4: tcLast4 || null, source: identity ? "camera_live" : student ? "student_lookup" : phone ? "phone_lookup" : "manual" }).select("id").single();
-    if (personResponse.error || !personResponse.data) { setBusy(false); setMessage({ tone: "error", text: "Ziyaretçi kaydı oluşturulamadı." }); return; }
-    const visitResponse = await supabase.from("visitor_visits").insert({ visitor_person_id: personResponse.data.id, entry_location_id: locationId, related_student_id: student?.id ?? null, visit_reason: reason.trim() || null, card_no: cardNo.trim() || null, status: "inside", physical_id_seen: physicalSeen, identity_method: identity ? "camera_live" : "manual", identity_verified_at: new Date().toISOString(), identity_verified_by: userId, entered_by: userId, phone_used: phone.trim() || null }).select("id").single();
+    let personId: string | null = null;
+    if (phone.trim()) {
+      const existingPerson = await supabase.from("visitor_people").select("id").eq("phone", phone.trim()).order("updated_at", { ascending: false }).limit(1).maybeSingle();
+      personId = (existingPerson.data as { id: string } | null)?.id ?? null;
+    }
+    if (!personId) {
+      const personResponse = await supabase.from("visitor_people").insert({ full_name: visitorName.trim(), phone: phone.trim() || null, tc_last4: tcLast4 || null, source: identity ? "camera_live" : student ? "student_lookup" : phone ? "phone_lookup" : "manual" }).select("id").single();
+      if (personResponse.error || !personResponse.data) { setBusy(false); setMessage({ tone: "error", text: "Ziyaretçi kaydı oluşturulamadı." }); return; }
+      personId = personResponse.data.id as string;
+    }
+    const restrictionResponse = await supabase.from("visitor_access_restrictions").select("decision").eq("is_active", true).or(`visitor_person_id.eq.${personId},related_student_id.eq.${student?.id ?? "00000000-0000-0000-0000-000000000000"}`);
+    const decisions = (restrictionResponse.data ?? []) as { decision: "allow" | "deny" | "approval_required" }[];
+    if (restrictionResponse.error || decisions.some((item) => item.decision === "deny")) { setBusy(false); setMessage({ tone: "error", text: "Bu ziyaretçi/öğrenci için aktif erişim kısıtlaması var; giriş reddedildi." }); return; }
+    if (decisions.some((item) => item.decision === "approval_required")) { setBusy(false); setMessage({ tone: "info", text: "Bu ziyaret için kurum onayı gerekiyor; içeride kaydı oluşturulmadı." }); return; }
+    const visitResponse = await supabase.from("visitor_visits").insert({ visitor_person_id: personId, entry_location_id: locationId, related_student_id: student?.id ?? null, visit_reason: reason.trim() || null, card_no: cardNo.trim() || null, status: "inside", physical_id_seen: physicalSeen, identity_method: identity ? "camera_live" : "manual", identity_verified_at: new Date().toISOString(), identity_verified_by: userId, entered_by: userId, phone_used: phone.trim() || null }).select("id").single();
     setBusy(false);
     if (visitResponse.error) { setMessage({ tone: "error", text: visitResponse.error.message.includes("physical") ? "Fiziksel kimlik doğrulaması olmadan giriş tamamlanamaz." : "Ziyaret girişi kaydedilemedi." }); return; }
     setMessage({ tone: "success", text: `${visitorName.trim()} için giriş kaydı tamamlandı. Kimlik: ${identity?.maskedTckn ?? maskTckn(`0000000${tcLast4}`)}` });
