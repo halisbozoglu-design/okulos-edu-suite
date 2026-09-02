@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { isValidTckn } from "@/lib/auth-validation";
-import { canCompleteCheckIn, createIdentityReading, extractIdentityReading, isStableIdentityReadings, maskTckn, resolveRestriction } from "@/lib/visitor-security";
+import { canCompleteCheckIn, canExitVisit, createIdentityReading, extractIdentityReading, isStableIdentityReadings, maskTckn, resolveRestriction } from "@/lib/visitor-security";
 
 describe("visitor security identity rules", () => {
   it("validates Turkish ID checksum and masks stored display", () => {
@@ -28,5 +28,10 @@ describe("visitor security identity rules", () => {
   it("resolves restrictive decisions conservatively", () => {
     expect(resolveRestriction(["allow", "approval_required"])).toBe("approval_required");
     expect(resolveRestriction(["allow", "deny"])).toBe("deny");
+  });
+  it("only allows exits from inside visits", () => {
+    expect(canExitVisit("inside")).toBe(true);
+    expect(canExitVisit("exited")).toBe(false);
+    expect(canExitVisit("cancelled")).toBe(false);
   });
 });

@@ -26,6 +26,7 @@ const managementCodes = [
   "payroll.view", "payroll.calculate", "payroll.edit", "payroll.approve", "payroll.publish",
   "substitutes.view", "substitutes.manage", "classes.manage", "personnel.view", "personnel.manage",
   "norm.view", "norm.manage", "quran.manage", "notifications.manage",
+  "security.view", "security.checkin", "security.manage", "security.student_duty",
 ] as const;
 
 const TELEGRAM_BOT_USERNAME = "okulos_bildirim_botu";
