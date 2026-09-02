@@ -1,5 +1,0 @@
-- [ ] Add visitor identity/OCR helpers and reusable LiveIdCardScanner
-- [ ] Add visitor check-in, inside, ledger, locations, and student-duty routes
-- [ ] Add student-duty engine and tests for visitor/security workflows
-- [ ] Add security navigation and verify PWA/installability messaging
-- [ ] Run targeted tests, typecheck, and build; resolve related errors
