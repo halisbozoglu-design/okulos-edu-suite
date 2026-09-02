@@ -2,12 +2,12 @@
 
 Tarih: 2026-09-01  
 Kapsam: Okulos ders programı sistemi (Web/Lovable Cloud, solver, veri katmanı, Windows/macOS hedefleri ve release kapıları)  
-Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-coverage/manifest.json`, PR #25, son yeşil CI #1392 ve yeni head doğrulaması CI #1393.
+Kaynaklar: `docs/SCHEDULE_FINAL_MASTER_TREE_20260828.md`, `benchmarks/schedule-coverage/manifest.json`, PR #25 ve CI #1394.
 
 ## Güncel doğrulanmış durum
 
 - PR #25 açık ve merge edilebilir.
-- Önceki head için CI #1392 tamamen başarılıdır. Joint timetable-sectioning head'i `bb8530d` için CI #1393 ve ayrı corpus workflow'ları çalışmaktadır; tamamlanmadan yeşil sayılmaz.
+- Joint timetable-sectioning head'i için CI #1394 tamamen başarılıdır: unit/parser, CP-SAT oracle, 30-seed benchmark, migration/replay, tenant/auth/route guard, timetable authority, production build ve TypeScript. Impossible, MESEM, MTAL, room-building ve vocational-max corpus workflow'ları da aynı head üzerinde başarılıdır.
 - MTAL, MESEM, oda/bina extreme ve maksimum mesleki corpus workflow'ları aynı head üzerinde başarılıdır.
 - Lovable AI/chat/agent kullanılmaz; Lovable token tüketimi sıfırdır. Lovable Cloud yalnız mevcut çalışma ortamıdır.
 - HARD kurallar sessiz gevşetilmez; canonical server validator son otoritedir.
