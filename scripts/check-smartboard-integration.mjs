@@ -4,6 +4,8 @@ const requiredFiles = [
   'supabase/migrations/20260903013000_smartboard_room_section_resolution.sql',
   'supabase/migrations/20260903084500_smartboard_daily_lifecycle.sql',
   'supabase/migrations/20260903090000_smartboard_device_credentials.sql',
+  'supabase/migrations/20260903102000_smartboard_barcode_unlock_permissions.sql',
+  'supabase/migrations/20260903103000_smartboard_unlock_command_delivery.sql',
   'supabase/functions/smartboard-daily-plan/index.ts',
   'docs/SMARTBOARD_INTEGRATION_CANONICAL.md',
 ];
@@ -15,8 +17,10 @@ for (const file of requiredFiles) {
 const placement = fs.readFileSync(requiredFiles[0], 'utf8');
 const lifecycle = fs.readFileSync(requiredFiles[1], 'utf8');
 const creds = fs.readFileSync(requiredFiles[2], 'utf8');
-const edge = fs.readFileSync(requiredFiles[3], 'utf8');
-const docs = fs.readFileSync(requiredFiles[4], 'utf8');
+const unlock = fs.readFileSync(requiredFiles[3], 'utf8');
+const commands = fs.readFileSync(requiredFiles[4], 'utf8');
+const edge = fs.readFileSync(requiredFiles[5], 'utf8');
+const docs = fs.readFileSync(requiredFiles[6], 'utf8');
 
 const mustContain = (name, text, needles) => {
   for (const needle of needles) {
@@ -53,6 +57,27 @@ mustContain('device credential migration', creds, [
   'expires_at',
 ]);
 
+mustContain('barcode authorization migration', unlock, [
+  'barcode_public_id',
+  'smartboard_unlock_events',
+  'request_smartboard_barcode_unlock',
+  'SCHEDULED_TEACHER_CURRENT_LESSON',
+  'PRINCIPAL_ANYTIME',
+  'VICE_PRINCIPAL_ANYTIME',
+  'GUIDANCE_REASON_REQUIRED',
+  'GUIDANCE_OVERRIDE_WITH_REASON',
+  'DUTY_TEACHER_RECORDED_SUBSTITUTE',
+]);
+
+mustContain('unlock delivery migration', commands, [
+  'smartboard_device_commands',
+  'UNLOCK_LESSON',
+  'UNLOCK_ADMIN',
+  'UNLOCK_GUIDANCE',
+  'UNLOCK_DUTY_SUBSTITUTE',
+  'enqueue_smartboard_unlock_command',
+]);
+
 mustContain('daily plan edge function', edge, [
   'x-smartboard-device-key',
   'x-smartboard-secret',
@@ -68,6 +93,9 @@ if (/LOVABLE_(TOKEN|API_KEY)|x-lovable|lovable\.dev\/api/i.test(edge)) {
 
 if (!docs.includes('Lovable token bu akışların hiçbirinde')) {
   throw new Error('Canonical documentation must preserve the Lovable-token prohibition.');
+}
+if (!docs.includes('Barkodla tahta açma ve izin motoru')) {
+  throw new Error('Canonical documentation must preserve barcode unlock authorization rules.');
 }
 
 console.log('SmartBoard integration contract guard: OK');
