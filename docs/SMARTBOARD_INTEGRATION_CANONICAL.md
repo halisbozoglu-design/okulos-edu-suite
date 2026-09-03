@@ -62,7 +62,7 @@ schedule slot
 
 Her SmartBoard fiziksel cihaz kaydında benzersiz bir `barcode_public_id` bulunur. Fiziksel olarak tahtaya yapıştırılan barkod/QR bu kimliği taşır. Öğretmen OkulOS öğretmen arayüzünden kamerayı açar, barkodu okutur ve sunucu o anda **kim + hangi tahta + hangi ders + hangi yetki** olduğunu yeniden çözer. Barkod tek başına yetki vermez.
 
-Her tarama `smartboard_unlock_events` tablosuna sunucu zamanı ile kaydedilir. Başarılı ve reddedilmiş denemeler birlikte audit edilir. Başarılı karar ayrıca `smartboard_device_commands` tablosuna kısa ömürlü bir unlock komutu üretir; Local Hub/tahta yalnız bu komutu tüketerek gerçekten açılır.
+Her tarama `smartboard_unlock_events` tablosuna **sunucu zamanı** ile kaydedilir. Başarılı ve reddedilmiş denemeler birlikte audit edilir. Başarılı karar ayrıca `smartboard_device_commands` tablosuna kısa ömürlü bir unlock komutu üretir; Local Hub/tahta yalnız bu komutu tüketerek gerçekten açılır. Kullanıcının telefon saati karar verici değildir.
 
 Kanonik izin matrisi:
 
@@ -92,7 +92,11 @@ Nöbetçi öğretmen
   -> ancak o zaman GRANTED / DUTY_TEACHER_RECORDED_SUBSTITUTE
 ```
 
-Rehber öğretmenin gerekçeli açması normal ders öğretmeninin yerine görevlendirilmesi anlamına gelmez; audit üzerinde `GUIDANCE_OVERRIDE_WITH_REASON` olarak ayrı kalır. Nöbetçi öğretmen için ise “nöbetçi” rolü + **o ders için kayıtlı substitute görevi** birlikte aranır. Hiçbir genel nöbet yetkisi ders öğretmeninin yokluğunu otomatik aşmaz.
+Rehber öğretmenin gerekçeli açması **normal ders öğretmeninin yerine görevlendirilmesi değildir** ve dersin öğretmen kaydını değiştirmez. Audit üzerinde `GUIDANCE_OVERRIDE_WITH_REASON` olarak ayrı kalır. Rehber öğretmen neden alanı boş geçemez; neden metni açma olayına bağlanır.
+
+Nöbetçi öğretmende ise iki koşul birlikte aranır: kişinin o anda geçerli `DUTY_TEACHER` yetkisi ve **o ders için aynı kişiye yapılmış açık substitute assignment**. “Bugün nöbetçi” olmak tek başına hiçbir sınıf tahtasını açma hakkı vermez.
+
+Ders öğretmeni daha önce tahtayı açmışsa rehber öğretmenin sonraki barkod taraması yeni bir öğretmen-ders oturumu üretmek zorunda değildir; sistem mevcut geçerli oturuma rehberlik erişimi verir ve bunu ayrı bir unlock event olarak loglar.
 
 Açma logunda en az şunlar bulunur:
 
@@ -111,7 +115,7 @@ occurred_at
 client_context
 ```
 
-Bu sayede müdürlük ekranında “hangi tahta kim tarafından, hangi saatte, hangi ders için ve hangi yetki sebebiyle açıldı?” eksiksiz raporlanabilir.
+Bu sayede müdürlük ekranında “hangi tahta kim tarafından, hangi saatte, hangi ders için ve hangi yetki sebebiyle açıldı?” eksiksiz raporlanabilir. Reddedilmiş denemeler de silinmez; güvenlik/audit amacıyla görünür kalır.
 
 ## Günlük kullanım planı
 
