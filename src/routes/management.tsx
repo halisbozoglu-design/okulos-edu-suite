@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, CalendarRange, Calculator, Crown, DoorOpen, FileClock, GraduationCap, KeyRound, Scale, Settings, ShieldCheck, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
+import { BookOpen, BookOpenCheck, BriefcaseBusiness, Building2, CalendarDays, CalendarRange, Calculator, Crown, DoorOpen, FileClock, FileText, GraduationCap, KeyRound, Scale, Settings, ShieldCheck, Table2, UserCog, Users, type LucideIcon } from "lucide-react";
 import { AppShell } from "@/components/okulos/AppShell";
 import { supabase } from "@/lib/supabase";
 
@@ -26,6 +26,7 @@ const items:readonly ManagementItem[]=[
  {group:"schedule",to:'/timetable',title:'Ders Programı Çalışma Alanı',desc:'Yıl, veri hazırlığı, kurallar, program üretimi, senaryolar, kontrol, geçmiş ve yayın tek yerde',icon:GraduationCap,permissions:['schedule.view','schedule.edit','schedule.rules','schedule.generate','schedule.apply','schedule.publish','schedule.restore'],featured:true},
  {group:"schedule",to:'/schedule-reports',title:'Raporlar & Çıktılar',desc:'Öğretmen, sınıf, derslik ve ders/branş özetleri; Excel, CSV, yazdırma ve PDF',icon:Table2,permissions:['schedule.view']},
 
+ {group:"operations",to:'/corporate-briefing',title:'Kurumsal Brifing Dosyası',desc:'Okul verilerinden otomatik beslenen, manuel düzenlenebilen ve resmî PDF/yazdırma çıktısı veren brifing oluşturucu',icon:FileText,permissions:['settings.manage'],featured:true},
  {group:"operations",to:'/norm-analysis',title:'Norm Kadro Analizi',desc:'Ders yükü, norm, mevcut öğretmen ve açık/fazla analizi',icon:Scale,permissions:['norm.view','norm.manage']},
  {group:"operations",to:'/norm-settings',title:'Norm Eşleştirmeleri',desc:'Ders → norm alanı ve yürürlükteki norm kuralı',icon:Settings,permissions:['norm.manage']},
  {group:"operations",to:'/payroll',title:'Ek Ders',desc:'Puantaj, faaliyetler, onay ve KBS çıktısı',icon:Table2,permissions:['payroll.view','payroll.calculate','payroll.edit','payroll.approve','payroll.publish']},
