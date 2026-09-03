@@ -7,7 +7,9 @@ const requiredFiles = [
   'supabase/migrations/20260903102000_smartboard_barcode_unlock_permissions.sql',
   'supabase/migrations/20260903103000_smartboard_unlock_command_delivery.sql',
   'supabase/migrations/20260903113000_guidance_calendar_smartboard_access.sql',
+  'supabase/migrations/20260903115000_guidance_due_reminder_dispatch.sql',
   'supabase/functions/smartboard-daily-plan/index.ts',
+  'src/routes/guidance-calendar.tsx',
   'docs/SMARTBOARD_INTEGRATION_CANONICAL.md',
   'docs/SMARTBOARD_GUIDANCE_CALENDAR_ACCESS.md',
 ];
@@ -22,9 +24,11 @@ const creds = fs.readFileSync(requiredFiles[2], 'utf8');
 const unlock = fs.readFileSync(requiredFiles[3], 'utf8');
 const commands = fs.readFileSync(requiredFiles[4], 'utf8');
 const guidance = fs.readFileSync(requiredFiles[5], 'utf8');
-const edge = fs.readFileSync(requiredFiles[6], 'utf8');
-const docs = fs.readFileSync(requiredFiles[7], 'utf8');
-const guidanceDocs = fs.readFileSync(requiredFiles[8], 'utf8');
+const reminderDispatch = fs.readFileSync(requiredFiles[6], 'utf8');
+const edge = fs.readFileSync(requiredFiles[7], 'utf8');
+const guidanceUi = fs.readFileSync(requiredFiles[8], 'utf8');
+const docs = fs.readFileSync(requiredFiles[9], 'utf8');
+const guidanceDocs = fs.readFileSync(requiredFiles[10], 'utf8');
 
 const mustContain = (name, text, needles) => {
   for (const needle of needles) {
@@ -94,6 +98,25 @@ mustContain('guidance calendar integration', guidance, [
   'PRINCIPAL_RECORDED_LESSON_SUBSTITUTE',
   'VICE_PRINCIPAL_RECORDED_LESSON_SUBSTITUTE',
   'log_smartboard_admin_device_access',
+]);
+
+mustContain('guidance reminder dispatch', reminderDispatch, [
+  'dispatch_my_due_guidance_reminders',
+  'guidance_activity_reminders',
+  "'PENDING'",
+  "'SENT'",
+  "'/guidance-calendar'",
+]);
+
+mustContain('guidance calendar UI', guidanceUi, [
+  'createFileRoute("/guidance-calendar")',
+  'guidance_calendar_v',
+  'guidance_class_activities',
+  'BarcodeDetector',
+  'request_smartboard_barcode_unlock',
+  'GUIDANCE_REASON_REQUIRED',
+  'GUIDANCE_CALENDAR_ACTIVITY',
+  'dispatch_my_due_guidance_reminders',
 ]);
 
 mustContain('daily plan edge function', edge, [
