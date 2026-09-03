@@ -58,19 +58,44 @@ schedule slot
 
 Öğretmen raporlu/izinli/görevli ve yerine görevlendirme yoksa ders normal öğretmen oturumu olarak açılmaz. Yerine görevlendirme yapılırsa hedef tahta aynı oda çözümünden bulunur ve yetkili aktör replacement öğretmen olur.
 
-## Güç yaşam döngüsü
+## Günlük kullanım planı
 
-SmartBoard günlük kullanım planı yalnız sabit okul açılış/kapanış saatine göre üretilmez. O cihazın fiziksel odasına çözülen bütün kullanım blokları birleştirilir:
+`smartboard_day_activities(institution_code, device_key, date)` ilgili fiziksel tahta için o gün gerçekten kullanılacak blokları üretir.
 
-- normal dersler
+Kaynaklar:
+
+- haftalık `teacher_schedule` + `institution_period_times`
 - DYK/kurs
 - etüt
 - sınav
 - özel rezervasyon/etkinlik
-- tatil/istisna takvimi
-- öğretmen devamsızlığı ve replacement durumu
+- tatil/özel gün baskılama kaydı
+- öğretmen devamsızlığı
+- substitute assignment
 
-Günün ilk geçerli kullanımından önce lobby/wake zamanı; günün son geçerli kullanımından sonra kapanış sayacı hesaplanır.
+`institution_schedule_events` normal haftalık ders dışında kalan DYK/kurs/etüt/sınav/etkinlik kullanımının ortak OkulOS zamanlama projeksiyonudur. SmartBoard üzerinde yeniden kullanıcı girişi yapılmaz.
+
+`smartboard_daily_plan(...)` cihazın Local Hub/board üzerinde cache edebileceği tek günlük payload üretir. Payload içinde en az şunlar bulunur:
+
+```text
+wakeAt
+lobbyAt
+wolFallbackAt
+activities[]
+lastUsageEndsAt
+shutdownWarningAt
+shutdownAt
+breakDisplayMode
+shortBreakMaxMinutes
+longGapShutdownMinutes
+afterDayAction
+```
+
+Bu payload internet kesilse dahi Local Hub ve tahta tarafından kullanılabilir.
+
+## Güç yaşam döngüsü
+
+SmartBoard günlük kullanım planı yalnız sabit okul açılış/kapanış saatine göre üretilmez. O cihazın fiziksel odasına çözülen bütün kullanım blokları birleştirilir.
 
 Örnek:
 
@@ -85,7 +110,34 @@ Günün ilk geçerli kullanımından önce lobby/wake zamanı; günün son geçe
 18:35 güvenli shutdown
 ```
 
-Teneffüslerde masaüstü açık bırakılmak zorunda değildir; SmartBoard Okul TV/Akıllı Pano döngüsüne geçebilir. Sonraki dersin lobby zamanı geldiğinde yayın kesilir.
+Teneffüslerde masaüstü açık bırakılmaz; politika `SIGNAGE`, `SCHOOL_TV`, `CLOCK` veya `SLEEP` olabilir. Sonraki dersin lobby zamanı geldiğinde yayın kesilir.
+
+Boşluk davranışı:
+
+```text
+kısa boşluk -> pano/Okul TV
+uzun boşluk -> enerji tasarrufu
+çok uzun boşluk -> politika izin veriyorsa suspend/shutdown
+son kullanım -> kapanış uyarısı + shutdown
+```
+
+Aktif ders oturumu, acil yayın veya kritik OTA işlemi varsa çalışma katmanı planlanan kapanışı güvenli biçimde erteleyebilir; fakat bu erteleme audit olayına dönüşmelidir.
+
+## Sabah açılış güvenlik zinciri
+
+Kanonik sıra:
+
+1. cihaz kapanırken ertesi gün `wakeAt` RTC alarmına yazılır;
+2. Local Hub `wolFallbackAt` itibarıyla WOL tekrarları yapar;
+3. BIOS/UEFI `Restore on AC Power Loss` destekleniyorsa elektrik kesintisi sonrası ek fallback sağlar;
+4. cihaz hedef lobby saatinde online değilse yönetim alarmı oluşur;
+5. fiziksel elektrik tamamen kesilmiş G3 durumda yazılımın cihazı açamayacağı açıkça raporlanır.
+
+RTC/WOL/AC restore gerçek donanım davranışı model/BIOS bazında saha doğrulamasına tabidir.
+
+## Tatil ve DYK önceliği
+
+`institution_calendar_days.suppress_weekly_lessons=true` normal haftalık dersleri kapatır. Bu, tatil gününde açıkça tanımlanmış DYK/sınav/etkinliği otomatik silmez. Böylece örneğin pazar günü yalnız dört odada DYK varsa yalnız o dört odanın SmartBoard günlük planı kullanım içerir.
 
 ## Yeni eğitim yılı readiness gate
 
@@ -99,8 +151,10 @@ Yeni yıl yayına alınmadan önce en az şu kontroller sıfır hata vermelidir:
 
 `smartboard_academic_year_readiness(academic_year_id)` eksikleri döndürür. Eksik kayıt varsa SmartBoard otomasyonu tahmin yapmaz.
 
-## Runtime kimlik ilkesi
+## Runtime kimlik ve cihaz kimliği
 
 Öğretmen SmartBoard için ikinci hesap açmaz. Web/mobil öğretmen yüzeyi OkulOS hesabı/kimliği ile ilişkilendirilir. Board ve Local Hub cihaz kimliği ayrı cihaz güvenlik kimliğidir; kullanıcı hesabının yerine geçmez.
+
+Board/Local Hub üzerinde `SUPABASE_SERVICE_ROLE_KEY` bulunmaz. `smartboard_integration_devices` cihaz bazlı, döndürülebilir ve son kullanma tarihli secret hash'i tutar. `smartboard-daily-plan` Edge Function gelen cihaz secret'ını SHA-256 ile doğrulayıp yalnız ilgili kurum+cihaz günlük planını döndürür.
 
 Lovable token bu akışların hiçbirinde güven kökü, kullanıcı token'ı, servis credential'ı veya cihaz credential'ı değildir.
