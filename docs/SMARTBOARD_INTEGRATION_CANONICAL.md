@@ -58,6 +58,61 @@ schedule slot
 
 Öğretmen raporlu/izinli/görevli ve yerine görevlendirme yoksa ders normal öğretmen oturumu olarak açılmaz. Yerine görevlendirme yapılırsa hedef tahta aynı oda çözümünden bulunur ve yetkili aktör replacement öğretmen olur.
 
+## Barkodla tahta açma ve izin motoru
+
+Her SmartBoard fiziksel cihaz kaydında benzersiz bir `barcode_public_id` bulunur. Fiziksel olarak tahtaya yapıştırılan barkod/QR bu kimliği taşır. Öğretmen OkulOS öğretmen arayüzünden kamerayı açar, barkodu okutur ve sunucu o anda **kim + hangi tahta + hangi ders + hangi yetki** olduğunu yeniden çözer. Barkod tek başına yetki vermez.
+
+Her tarama `smartboard_unlock_events` tablosuna sunucu zamanı ile kaydedilir. Başarılı ve reddedilmiş denemeler birlikte audit edilir. Başarılı karar ayrıca `smartboard_device_commands` tablosuna kısa ömürlü bir unlock komutu üretir; Local Hub/tahta yalnız bu komutu tüketerek gerçekten açılır.
+
+Kanonik izin matrisi:
+
+```text
+Dersin programlı öğretmeni
+  -> yalnız o anda dersinin bulunduğu fiziksel oda/tahtayı açabilir
+  -> GRANTED / SCHEDULED_TEACHER_CURRENT_LESSON
+
+Müdür
+  -> kurumundaki herhangi bir tahtayı istediği zaman açabilir
+  -> GRANTED / PRINCIPAL_ANYTIME
+
+Müdür yardımcısı
+  -> kurumundaki herhangi bir tahtayı istediği zaman açabilir
+  -> GRANTED / VICE_PRINCIPAL_ANYTIME
+
+Rehber öğretmen
+  -> aynı ders oturumunda ders öğretmeni veya kayıtlı substitute daha önce tahtayı açtıysa açabilir
+  -> öğretmen daha önce açmadıysa kendi ekranında gerekçe girmek ZORUNDADIR
+  -> gerekçe yoksa DENIED / GUIDANCE_REASON_REQUIRED
+  -> gerekçe varsa GRANTED / GUIDANCE_OVERRIDE_WITH_REASON
+
+Nöbetçi öğretmen
+  -> nöbetçi olması tek başına yetki vermez
+  -> o dersin asıl öğretmeni sistemde devamsız/izinli/raporlu/görevli olarak kayıtlı olmalı
+  -> aynı absence lesson için substitute_assignments kaydında bu nöbetçi öğretmen açıkça görevlendirilmiş olmalı
+  -> ancak o zaman GRANTED / DUTY_TEACHER_RECORDED_SUBSTITUTE
+```
+
+Rehber öğretmenin gerekçeli açması normal ders öğretmeninin yerine görevlendirilmesi anlamına gelmez; audit üzerinde `GUIDANCE_OVERRIDE_WITH_REASON` olarak ayrı kalır. Nöbetçi öğretmen için ise “nöbetçi” rolü + **o ders için kayıtlı substitute görevi** birlikte aranır. Hiçbir genel nöbet yetkisi ders öğretmeninin yokluğunu otomatik aşmaz.
+
+Açma logunda en az şunlar bulunur:
+
+```text
+smartboard_device_key
+physical_room_id
+barcode_public_id
+actor_user_id
+actor_kind
+decision / decision_code
+reason
+schedule_id
+lesson_date / period
+class_name / subject
+occurred_at
+client_context
+```
+
+Bu sayede müdürlük ekranında “hangi tahta kim tarafından, hangi saatte, hangi ders için ve hangi yetki sebebiyle açıldı?” eksiksiz raporlanabilir.
+
 ## Günlük kullanım planı
 
 `smartboard_day_activities(institution_code, device_key, date)` ilgili fiziksel tahta için o gün gerçekten kullanılacak blokları üretir.
