@@ -71,16 +71,18 @@ Dersin programlı öğretmeni
   -> yalnız o anda dersinin bulunduğu fiziksel oda/tahtayı açabilir
   -> GRANTED / SCHEDULED_TEACHER_CURRENT_LESSON
 
-Müdür
-  -> kurumundaki herhangi bir tahtayı istediği zaman açabilir
-  -> GRANTED / PRINCIPAL_ANYTIME
-
-Müdür yardımcısı
-  -> kurumundaki herhangi bir tahtayı istediği zaman açabilir
-  -> GRANTED / VICE_PRINCIPAL_ANYTIME
+Müdür / Müdür yardımcısı
+  -> kurumundaki herhangi bir tahtayı uzaktan veya yerinde istediği zaman yönetebilir/açabilir
+  -> bu işlem DEVICE_ACCESS olarak loglanır ve ders açılışı sayılmaz
+  -> ancak kendi programındaki derse giriyorsa barkod taraması INSTRUCTIONAL sayılır
+  -> kayıtlı substitute olarak boş dersi dolduruyorsa yine INSTRUCTIONAL sayılır
+  -> böylece yöneticinin fiilen girdiği ders ayrı, cihaz yönetimi ayrı tutulur
 
 Rehber öğretmen
-  -> aynı ders oturumunda ders öğretmeni veya kayıtlı substitute daha önce tahtayı açtıysa açabilir
+  -> yıllık/aylık rehberlik akışında kendisine tanımlı sınıf etkinliği varsa, etkinliğin tarih-saat-oda eşleşmesi barkodla otomatik çözülür
+  -> gerekçe otomatik olarak `Takvim: <sınıf> — <etkinlik>` biçiminde doldurulur
+  -> karar GUIDANCE_CALENDAR_ACTIVITY olur
+  -> takvim etkinliği yoksa, aynı ders oturumunda ders öğretmeni/kayıtlı substitute daha önce açtıysa erişebilir
   -> öğretmen daha önce açmadıysa kendi ekranında gerekçe girmek ZORUNDADIR
   -> gerekçe yoksa DENIED / GUIDANCE_REASON_REQUIRED
   -> gerekçe varsa GRANTED / GUIDANCE_OVERRIDE_WITH_REASON
@@ -92,11 +94,11 @@ Nöbetçi öğretmen
   -> ancak o zaman GRANTED / DUTY_TEACHER_RECORDED_SUBSTITUTE
 ```
 
-Rehber öğretmenin gerekçeli açması **normal ders öğretmeninin yerine görevlendirilmesi değildir** ve dersin öğretmen kaydını değiştirmez. Audit üzerinde `GUIDANCE_OVERRIDE_WITH_REASON` olarak ayrı kalır. Rehber öğretmen neden alanı boş geçemez; neden metni açma olayına bağlanır.
+Rehberlik takvim kaydı `guidance_class_activities`, hatırlatma kaydı `guidance_activity_reminders` üzerinden yürür. Etkinlik; eğitim yılı, rehber öğretmen, şube, fiziksel oda, tarih, saat ve etkinlik başlığı ile bağlanır. Rehber öğretmenin mobil/öğretmen ekranında yaklaşan etkinlik gösterilebilir ve varsayılan olarak etkinlikten önce hatırlatma üretilebilir.
 
-Nöbetçi öğretmende ise iki koşul birlikte aranır: kişinin o anda geçerli `DUTY_TEACHER` yetkisi ve **o ders için aynı kişiye yapılmış açık substitute assignment**. “Bugün nöbetçi” olmak tek başına hiçbir sınıf tahtasını açma hakkı vermez.
+Rehber öğretmenin gerekçeli açması **normal ders öğretmeninin yerine görevlendirilmesi değildir** ve dersin öğretmen kaydını değiştirmez. Audit üzerinde takvimli erişim `GUIDANCE_CALENDAR_ACTIVITY`, takvim dışı zorunlu gerekçeli erişim `GUIDANCE_OVERRIDE_WITH_REASON` olarak ayrı kalır.
 
-Ders öğretmeni daha önce tahtayı açmışsa rehber öğretmenin sonraki barkod taraması yeni bir öğretmen-ders oturumu üretmek zorunda değildir; sistem mevcut geçerli oturuma rehberlik erişimi verir ve bunu ayrı bir unlock event olarak loglar.
+Müdür/müdür yardımcısının normal cihaz yönetimi de ders logunu kirletmez. `access_purpose=DEVICE_ACCESS` ve `counts_as_lesson_open=false` tutulur. Yöneticinin kendi dersi veya kayıtlı boş-ders görevlendirmesi için yaptığı barkod taraması ise `access_purpose=INSTRUCTIONAL` ve `counts_as_lesson_open=true` olur.
 
 Açma logunda en az şunlar bulunur:
 
@@ -111,11 +113,15 @@ reason
 schedule_id
 lesson_date / period
 class_name / subject
+access_purpose
+administrative_role
+counts_as_lesson_open
+guidance_activity_id
 occurred_at
 client_context
 ```
 
-Bu sayede müdürlük ekranında “hangi tahta kim tarafından, hangi saatte, hangi ders için ve hangi yetki sebebiyle açıldı?” eksiksiz raporlanabilir. Reddedilmiş denemeler de silinmez; güvenlik/audit amacıyla görünür kalır.
+Bu sayede müdürlük ekranında “hangi tahta kim tarafından, hangi saatte, hangi ders/etkinlik için ve hangi yetki sebebiyle açıldı?” eksiksiz raporlanabilir. Reddedilmiş denemeler de silinmez; güvenlik/audit amacıyla görünür kalır.
 
 ## Günlük kullanım planı
 
@@ -128,6 +134,7 @@ Kaynaklar:
 - etüt
 - sınav
 - özel rezervasyon/etkinlik
+- rehberlik sınıf etkinlikleri
 - tatil/özel gün baskılama kaydı
 - öğretmen devamsızlığı
 - substitute assignment
