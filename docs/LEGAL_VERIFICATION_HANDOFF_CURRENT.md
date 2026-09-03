@@ -1,101 +1,90 @@
 # Okulos Mevzuat Doğrulama — Kanonik Handoff
 
 Güncelleme: 2026-09-03
-Durum: AKTİF — V91 CLOSED / V92 NEXT
+Durum: AKTİF — V92 CLOSED / V93 NEXT
 Repo: `halisbozoglu-design/okulos-edu-suite`
 Mode: `ARTICLE_VERIFIED_PRIORITY`
 Migration: **0**
 Lovable usage: **0**
 
-## Kaynak politikası
-ARTICLE_VERIFIED yalnız exact master claim + güncel/uygulanabilir resmî otorite + exact article/paragraph/guide/protocol clause + actor/action/scope + row-ledger/dedupe ile değişir. Official sources: `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `meb.gov.tr` birimleri, `resmigazete.gov.tr`, ilgili resmî Sağlık Bakanlığı kaynakları; arşiv/file-plan için Devlet Arşivleri Başkanlığı. Current authority chain stale handbook/checklist üstündedir. Broad `ALL`, `YESIL`, `GUNCEL` metadata legal proof değildir. Rollback yalnız row-level material mismatch + historical count proof ile ve bir kez yapılır.
+## Kanonik politika
+ARTICLE_VERIFIED yalnız exact master claim + güncel/uygulanabilir resmî otorite + exact article/paragraph/guide/protocol clause + actor/action/scope + row-ledger/dedupe ile değişir. Current authority chain stale handbook/checklist üstündedir. Broad `ALL`, `YESIL`, `GUNCEL` metadata legal proof değildir. Rollback yalnız row-level material mismatch + historical count proof ile ve bir kez yapılır. Historical completed instances immutable; legal changes prospective.
 
 ## Güncel kesin durum
 - Master workflow: **2,229**
 - ARTICLE_VERIFIED: **460 / 2,229 = 20.6371%**
 - Remaining exact: **1,769**
-- Closed support-atom pool: **24,305**
-- Last closed batch: **V91**
-- Next batch: **V92**
+- Closed support-atom pool: **24,605**
+- Last closed batch: **V92**
+- Next batch: **V93**
 - Migration: **0**
 - Lovable: **0**
 
-## Locked carry-forward
-- V86: HB-1771/1772/1773 yanlış `ALL + OÖİKY Md5/A` eşleşmeleri bir kez rollback; 463 -> 460. MTAL 2026-2027 grade/cohort resolver versioned.
-- V87: evrak/EBYS/dilekçe/bilgi edinme/gizlilik; SSDP, CB2646, 3071, 4982, CB5529 ve conditional ASLI GİBİDİR ayrımları kilitli.
-- V88: HB-1787..1794 Öğretmenlik Uygulaması; Md28 family locked, detailed directive queue open.
-- V89: HB-1795..1802; öğretmen izleme minimumu school-year bazlı, Gelişim Planı rapor alındıktan sonra bir ay.
-- V90: HB-1803..1825 şeflikler; chiefship existence precedes assignment, 2025 shared-workshop exception hard override, Md85 role matrices separate.
+## Carry-forward locks
+- V86: HB-1771/1772/1773 wrong `ALL + OÖİKY Md5/A` mappings rolled back once; MTAL 2026-2027 grade/cohort resolver versioned.
+- V87: SSDP, CB2646 official correspondence, 3071, 4982, CB5529, conditional certified-copy guards.
+- V88: teacher-practice family; Md28 current family locked, detailed directive exact queue open.
+- V89: teacher monitoring minimum is once per school year; development plan = inspection report receipt -> one month -> relevant MEM.
+- V90: chiefship existence precedes assignment; 2025 shared-workshop exception hard override; Md85 role matrices separate.
+- V91: school-health protocol/guide versioned; HB-1826 incomplete team composition; health data separated; Covid task requires current public-health trigger.
 
-## V91 CLOSED — HB-1826..HB-1831 OKUL SAĞLIĞI
-Canonical files:
-- `docs/legal-article-verified-focused-deepening-batch-v91-phase1.md` — 160 atoms
-- `docs/legal-article-verified-focused-deepening-batch-v91-phase2.md` — 140 atoms
-- `docs/legal-article-verified-batch-v91.md`
-- `docs/legal-verification-progress-v91-delta.json`
+## V92 CLOSED — HB-1832..HB-1837 OKUL/KURUM ÇEVRE İLİŞKİSİ
+Canonical:
+- `docs/legal-article-verified-focused-deepening-batch-v92-phase1.md` — 160 atoms
+- `docs/legal-article-verified-focused-deepening-batch-v92-phase2.md` — 140 atoms
+- `docs/legal-article-verified-batch-v92.md`
+- `docs/legal-verification-progress-v92-delta.json`
 
-V91 total **300** support atoms. Promotions **0**, rollbacks **0**. ARTICLE_VERIFIED remains **460**. Closed pool **24,005 -> 24,305**.
+Accounting: V92 total **300 atoms**; promotions **0**; rollbacks **0**; ARTICLE_VERIFIED **460**; pool **24,305 -> 24,605**.
 
-### Exact boundary
-- HB-1826 Okul Sağlığı Yönetim Ekibi legacy composition.
-- HB-1827 school-specific Okul Sağlığı Planı.
-- HB-1828 annual family-physician periodic examination/follow-up.
-- HB-1829 numerical examination/vaccination/screening data.
-- HB-1830 school-health file.
-- HB-1831 generic Covid-19 measures.
-- HB-1832 starts `2.17 OKUL/KURUM ÇEVRE İLİŞKİSİ`.
+### V92 exact locks
+1. HB-1832 strongly/directly maps to current OÖKY Md19/1: school-family-environment relations/cooperation.
+2. HB-1833 strongly/directly maps to current OÖKY Md19/2: school administrators promote activities and inform stakeholders.
+3. HB-1834 `at least one parent meeting per term` remains WITHHELD. Current general OÖKY/2026 inspection authority does not establish that exact universal frequency; handbook repetition is not standalone legal authority.
+4. HB-1835 splits general community cooperation from vocational sector/industry/trade cooperation.
+5. HB-1836 is vocational/workplace conditional; not ALL-school scope.
+6. HB-1837 is vocational program/field/version-bound external guidance/cooperation; current/officially hosted vocational framework text uses the university/NGO/chamber/sector/professional cooperation pattern.
+7. Targeted repository searches did not recover direct historical ARTICLE_VERIFIED rows for HB-1832/HB-1833; no inferred count change.
 
-### V91 current locks
-1. Current official school-health material describes the team as **1 administrator + 1 teacher + 1 student + 1 OAB member**; where present, guidance counselor and health worker are natural members. HB-1826 omits the student and health-worker condition, so parent is materially incomplete and WITHHELD.
-2. School-specific annual health plan is a strong applicable-guide rule, but the **18.04.2025 MEB–Sağlık Bakanlığı Sağlıklı Çocuk, Sağlıklı Gelecek protocol** creates a version-transition state and states the older implementation guide will be updated. Protocol + guide versions are therefore explicit resolver dimensions.
-3. 2025 Aile Hekimliği Rehberi continues annual periodic examination/follow-up for school-age children. Medical action belongs to family-physician/health-service actors; school workflow is coordination/facilitation where required.
-4. HB-1829 must split individual clinical records, authorized health reporting and school-level aggregate statistics. Aggregate monitoring does not authorize raw health-record storage.
-5. HB-1830 school-health file is a program document set, not a medical chart. Privacy/minimization/retention rules apply.
-6. HB-1831 legacy Covid task is not a universal always-on 2026 duty. Pandemic/infectious-disease tasks require a current competent public-health trigger; historical completed instances remain immutable.
-7. Targeted repository searches did not recover direct historical ARTICLE_VERIFIED ledger entries for HB-1826..1828. No inferred rollback.
-
-### V91 guards
-- SCHOOL_HEALTH_PROTOCOL_AND_GUIDE_ARE_VERSIONED
-- 2025_SCHOOL_HEALTH_PROTOCOL_CREATES_TRANSITION_STATE
-- SCHOOL_HEALTH_TEAM_REQUIRES_STUDENT_MEMBER
-- HEALTH_WORKER_AND_GUIDANCE_NATURAL_MEMBERS_ARE_CONDITIONAL
-- SCHOOL_HEALTH_PLAN_IS_ANNUAL_AND_TEAM_PREPARED
-- FAMILY_PHYSICIAN_FOLLOWUP_IS_HEALTH_SERVICE_ACTION
-- SCHOOL_ROLE_IS_COORDINATION_NOT_MEDICAL_PRACTICE
-- HEALTH_DATA_IS_SPECIAL_CATEGORY_AND_REQUIRES_SEPARATE_AUTHORITY
-- SCHOOL_HEALTH_STATISTICS_DO_NOT_AUTHORIZE_RAW_MEDICAL_RECORD_STORAGE
-- SCHOOL_HEALTH_FILE_IS_NOT_A_MEDICAL_CHART
-- PANDEMIC_TASK_REQUIRES_CURRENT_PUBLIC_HEALTH_TRIGGER
-- HISTORICAL_PANDEMIC_TASKS_REMAIN_IMMUTABLE
+### V92 guards
+- OOKY_MD19_SUPPORTS_GENERAL_SCHOOL_FAMILY_ENVIRONMENT_COOPERATION
+- OOKY_MD19_2_SUPPORTS_SCHOOL_ACTIVITY_PROMOTION
+- PARENT_MEETING_FREQUENCY_REQUIRES_EXACT_CURRENT_AUTHORITY
+- HANDBOOK_CHECKLIST_FREQUENCY_IS_NOT_AUTOMATIC_STATUTORY_DEADLINE
+- INDUSTRY_TRADE_COOPERATION_IS_NOT_INFERRED_FROM_GENERIC_MD19
+- WORKPLACE_RELATION_REQUIRES_ENTERPRISE_EDUCATION_APPLICABILITY
+- VOCATIONAL_EXTERNAL_GUIDANCE_REQUIRES_PROGRAM_FIELD_VERSION
+- ALL_SCOPE_CANNOT_INHERIT_VOCATIONAL_PROGRAM_RULES
 - ROW_LEVEL_LEDGER_REQUIRED_BEFORE_COUNT_CHANGE
 
 ## Open exact-source recovery queue
 - HB-1787..1794 current Teacher Practice Directive exact clauses.
-- V90 direct OÖKY 84/85 rows: live consolidated clause/version + row dedupe.
+- V90 direct OÖKY 84/85 rows live consolidated clause/version + dedupe.
 - HB-1825 workload/report identity.
-- V91 replacement/current school-health implementation guide after 2025 protocol transition; HB-1828 exact live clause/dedupe.
+- V91 post-2025 school-health implementation guide transition; HB-1828 exact live clause/dedupe.
+- HB-1832/HB-1833 strict live consolidated current clause + row dedupe before later promotion.
+- HB-1834 parent-meeting frequency exact-source recovery.
 
-## V92 boundary — 2.17 OKUL/KURUM ÇEVRE İLİŞKİSİ
-Canonical master confirms exactly **HB-1832..HB-1837 (6 rows)**; HB-1838 starts `3.1 ÖĞRETMENLER KURULU`.
+## V93 — 3.1 ÖĞRETMENLER KURULU
+Canonical master begins:
+- HB-1838: board composition = principal chair + deputy/head deputy + teachers + specialist/training personnel.
+- HB-1839: conditional invitees for relevant agenda items include sector representatives, trainer/instructor, master trainer, project staff, technician, OSH specialist, school-health nurse, boarding student representative and OAB president according to institution characteristics.
+- HB-1840: meetings before school year, at start of second term and at end of school year.
+- HB-1841 starts notice/date/place/agenda rule; exact sentence/boundary must be recovered next.
 
-- HB-1832 family/environment cooperation in education activities.
-- HB-1833 school administrators promote school activities.
-- HB-1834 at least one parent meeting per term for informing parents about work.
-- HB-1835 cooperation with nearby public/private/industry/trade organizations.
-- HB-1836 institution-workplace relations developed/reflected in practice.
-- HB-1837 student guidance via cooperation with universities, NGOs, sector businesses, professional chambers and professionals for instruction/employment/planning.
+Important integrity warning: derivative master currently contains broad/generic legal-family mappings around HB-1838+; these are not proof. File Library confirms exact source text and shows candidate mappings still require article verification.
 
-## V92 priority
-1. Exact current authority for family/community cooperation and parent-meeting frequency; do not infer `per term >=1` from generic parent cooperation.
-2. Separate universal school duties from MTAL/MESEM sector/workplace duties in HB-1835..1837.
-3. Actor/scope split for school promotion vs guidance/career/sector cooperation.
-4. Audit broad `ALL/GENEL_YONETIM` derivative mappings.
+## V93 priority
+1. Recover full exact HB-1838+ Teacher Board boundary from canonical master.
+2. Lock current applicable authority and amendments for board composition, conditional invitees, meeting calendar, notice lead time, meeting outside lesson hours, quorum/decision/minutes and extraordinary meetings.
+3. Separate OÖKY vs İlköğretim/HEM/Yönerge school-type differences; no blind ALL inheritance.
+4. Audit 2026 changes and current MEB Education Boards/Zümre directive where applicable.
 5. Historical ARTICLE_VERIFIED ledger audit before count change.
-6. Build V92 >=300 support atoms; if needed continue into HB-1838+ Teacher Board only after 2.17 closes.
+6. Build >=300 support atoms.
 7. Migration **0**, Lovable **0**.
 
 ## Tenant requirement
 **Sosyal Sorumluluk Kulübü** remains active tenant requirement; ARTICLE_VERIFIED sayacına eklenmez.
 
 ## Repo / execution boundary
-Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` => immediately execute **V92 / HB-1832..HB-1837 OKUL/KURUM ÇEVRE İLİŞKİSİ**. Work mode remains deferred until all legal verification is complete, then it is used for implementation/operation arrangement.
+Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` => immediately execute **V93 / HB-1838+ ÖĞRETMENLER KURULU**. Work mode remains deferred until all legal verification is complete.
