@@ -1,0 +1,22 @@
+{
+  "batch": "V88",
+  "date": "2026-09-03",
+  "status": "CLOSED",
+  "mode": "ARTICLE_VERIFIED_PRIORITY",
+  "master_workflow_count": 2229,
+  "article_verified_before": 460,
+  "promotions": 0,
+  "rollbacks": 0,
+  "article_verified_after": 460,
+  "article_verified_percent": 20.6371,
+  "remaining_exact": 1769,
+  "support_atoms_phase1": 160,
+  "support_atoms_phase2": 140,
+  "support_atoms_total": 300,
+  "closed_support_pool_before": 23105,
+  "closed_support_pool_after": 23405,
+  "workflow_boundary": ["HB-1787", "HB-1794"],
+  "next_workflow": "HB-1795",
+  "migration_count": 0,
+  "lovable_usage": 0
+}
