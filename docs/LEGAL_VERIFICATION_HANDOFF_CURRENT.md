@@ -1,7 +1,7 @@
 # Okulos Mevzuat Doğrulama — Kanonik Handoff
 
 Güncelleme: 2026-09-03
-Durum: AKTİF — V88 PHASE 1 COMPLETE / PHASE 2 NEXT
+Durum: AKTİF — V88 CLOSED / V89 NEXT
 Repo: `halisbozoglu-design/okulos-edu-suite`
 Mode: `ARTICLE_VERIFIED_PRIORITY`
 Migration: **0**
@@ -14,60 +14,49 @@ ARTICLE_VERIFIED yalnız exact master claim + güncel/uygulanabilir resmî otori
 - Master workflow: **2.229**
 - ARTICLE_VERIFIED: **460 / 2.229 = %20,6371**
 - Kalan exact: **1.769**
-- Kapanmış support-atom pool: **23.105**
-- Son kapanmış batch: **V87**
-- Aktif batch: **V88**
-- V88 Phase 1 active support atoms: **160**
+- Kapanmış support-atom pool: **23.405**
+- Son kapanmış batch: **V88**
+- Sıradaki batch: **V89**
 - Migration: **0**
 - Lovable: **0**
 
 ## V86 lock
-V86 300 atomla kapandı. HB-1771/1772/1773 eski `ALL + OÖİKY Md5/A` yanlış otorite eşleşmeleri birer kez rollback edildi; ARTICLE_VERIFIED 463 -> 460.
-MTAL 2026-2027 resolver: 12 -> TTKB 2023-40; 10-11 -> TTKB 2024-41; hazırlık/9 -> TTKB 2026-62; framework authority ayrıca versioned ve `latest decision wins` yasak.
+V86 300 atomla kapandı. HB-1771/1772/1773 eski `ALL + OÖİKY Md5/A` yanlış otorite eşleşmeleri birer kez rollback edildi; ARTICLE_VERIFIED 463 -> 460. MTAL 2026-2027 resolver: 12 -> TTKB 2023-40; 10-11 -> TTKB 2024-41; hazırlık/9 -> TTKB 2026-62; framework authority versioned ve `latest decision wins` yasak.
 
-## V87 CLOSED — HB-1774..HB-1786
-Canonical: `docs/legal-article-verified-focused-deepening-batch-v87-phase1.md`, `docs/legal-article-verified-focused-deepening-batch-v87-phase2.md`, `docs/legal-article-verified-batch-v87.md`, `docs/legal-verification-progress-v87-delta.json`.
-V87 total **300** atom; ARTICLE_VERIFIED delta **0**, rollback **0**; closed pool **23.105**.
+## V87 lock
+V87 HB-1774..1786'yı 300 atomla kapattı; delta 0. Current SSDP 02.01.2024, official-correspondence CB2646, petition 3071 Art7, information-access 4982 Art11, classified documents CB5529, conditional certified-copy Art29/2, product-vs-authority and row-ledger guards locked. Closed pool V87 sonunda 23.105.
 
-V87 locks: current SSDP 02.01.2024; Belgenet product not authority; official correspondence CB 2646; Art29/2 conditional ASLI GİBİDİR; Art33 document 5 business days / information-opinion 15 business days; 3071 Art7 petition 30 days; 4982 Art11 15/conditional 30 business days; classified-document authority CB 5529; generic physical zimmet and three-copy output withheld; MEBBİS/module names alone do not prove actor duties; row-level ledger required before promotion/rollback.
-
-## V88 Phase 1 — HB-1787..HB-1794 Öğretmenlik Uygulaması
+## V88 CLOSED — HB-1787..HB-1794 Öğretmenlik Uygulaması
 Canonical:
-- `docs/legal-article-verified-focused-deepening-batch-v88-phase1.md`
+- `docs/legal-article-verified-focused-deepening-batch-v88-phase1.md` — 160 atoms
 - `docs/legal-verification-progress-v88-phase1.json`
+- `docs/legal-article-verified-focused-deepening-batch-v88-phase2.md` — 140 atoms
+- `docs/legal-article-verified-batch-v88.md`
+- `docs/legal-verification-progress-v88-delta.json`
 
-Accounting: **160 active support atoms**, promotions **0**, rollbacks **0**, ARTICLE_VERIFIED **460**, closed pool remains **23.105** until V88 closes.
+V88 total **300** support atoms. Promotions **0**, rollbacks **0**. ARTICLE_VERIFIED **460**. Closed pool **23.105 -> 23.405**.
 
 ### Exact boundary
-- HB-1787: application-school coordinator appointed.
-- HB-1788: application teachers selected with max 6 students/teacher and max 2 students/lesson, in cooperation with application faculty members.
-- HB-1789: application-school coordinator introduces school units and informs candidates about activities.
-- HB-1790: meeting with application teachers and candidates; duties/responsibilities notified.
-- HB-1791: candidate application activities planned jointly with application faculty member and application teacher.
-- HB-1792: applications monitored/evaluated/guided and necessary measures taken.
-- HB-1793: application teacher enters work in system, evaluates, delivers results to school coordinator.
-- HB-1794: candidate attendance/daily schedule/curriculum compliance + disciplinary notification to faculty/higher school.
-- HB-1795 begins `2.14 DENETİM, İZLEME VE DEĞERLENDİRME`.
+- HB-1787: uygulama okulu koordinatörü belirlenmesi.
+- HB-1788: uygulama öğretmeni başına max 6, ders başına max 2 öğrenci + uygulama öğretim elemanıyla iş birliği.
+- HB-1789: okul birimlerinin tanıtılması + etkinlik bilgisi.
+- HB-1790: uygulama öğretmenleri/adaylarla toplantı + görev/sorumluluk bildirimi.
+- HB-1791: uygulama öğretim elemanı + uygulama öğretmeniyle ortak etkinlik planlama.
+- HB-1792: izleme + değerlendirme + rehberlik + önlem.
+- HB-1793: sisteme işleme + değerlendirme + sonucu okul koordinatörüne teslim.
+- HB-1794: devam + günlük ders programı + öğretim programı uyumu + disiplinsizlikte fakülte/yüksekokul bildirimi.
 
-### Current authority-family lock
-Current 2026 text of `Millî Eğitim Bakanlığı Yönetici ve Öğretmenlerinin Ders ve Ek Ders Saatlerine İlişkin Karar` Md.28 was recovered from canonical project legal-source artifacts. Md.28 explicitly points to the MEB–YÖK coordination/cooperation protocol and teacher-practice directive.
-
-- Md28/1 establishes teacher-practice assignment authority family.
-- Md28/2 explicitly recognizes implementation + Uygulama Öğrencisi Değerlendirme Sistemi entry and communication/coordination/guidance/consultancy duties; weekly extra-course parameters: MEM application coordinator 4, application-school principal 2, application-school coordinator 2 hours.
-- Md28/3 governs application-teacher extra-course hours and aggregate weekly 10-hour cap.
-- Md28/4: separate MEM coordinator per university; in participating schools one of the deputy principals is appointed application-school coordinator; schools and assigned administrator/teacher counts are redetermined each academic year by province/district/school/branch under the directive.
-
-### V88 Phase 1 legal decisions
-1. **HB-1787 STRONG CANDIDATE / WITHHELD.** Md28/4 strongly supports coordinator appointment and adds the exact actor qualification `müdür yardımcılarından biri`; strict promotion deferred until live-current official source + row-ledger/dedupe lock.
-2. **HB-1788 WITHHELD.** Numeric 6/2 limits are not proven by Md28; exact current directive clause required.
-3. **HB-1789 WITHHELD.** Generic guidance does not prove school-unit orientation + activities information event.
-4. **HB-1790 WITHHELD.** Generic communication/coordination does not prove a mandated meeting + duty notification.
-5. **HB-1791 WITHHELD.** Exact joint-planning actor/action clause required.
-6. **HB-1792 WITHHELD.** Compound action; monitoring/evaluation/guidance/measure children need actor binding.
-7. **HB-1793 WITHHELD / SPLIT.** System entry, evaluation and result delivery are distinct children; Md28/2 supports system/evaluation family but not entire compound parent.
-8. **HB-1794 WITHHELD / SPLIT.** Attendance, daily schedule, teaching-program compliance and disciplinary notification require separate exact clauses.
-9. Current Md28 is an assignment/payment/coordination authority; it does **not** replace the operational directive.
-10. Teacher-practice rules are conditional on the institution actually being a participating application school for the relevant academic year; legacy `ALL` mappings cannot survive exact review.
+### V88 current-text / exactness locks
+1. Current 2026 `Millî Eğitim Bakanlığı Yönetici ve Öğretmenlerinin Ders ve Ek Ders Saatlerine İlişkin Karar` Md28 teacher-practice authority family is locked from canonical legal-source artifacts.
+2. Md28/4: each university gets a separate MEM application coordinator; participating application schools appoint **one of the deputy principals** as application-school coordinator; school/administrator/teacher counts are re-determined each academic year by province/district/school/branch under the directive.
+3. Md28/2 recognizes implementation + Uygulama Öğrencisi Değerlendirme Sistemi entry and communication/coordination/guidance/consultancy duties; Md28/3 is extra-course/payment layer.
+4. Md28 does not replace the detailed operational directive.
+5. HB-1787 is a strong candidate but remains uncounted until strict live-current official-source + row-ledger/dedupe lock.
+6. HB-1788..1794 require exact current directive clauses; no semantic promotion.
+7. HB-1792/1793/1794 are compound and require child-action decomposition.
+8. Targeted historical ARTICLE_VERIFIED searches recovered no direct row-level ledger entry for HB-1787..1794; no inferred rollback.
+9. Derivative mappings in this range contain unsafe generic/wrong families (`GENEL_YONETIM`, `REHBERLIK`, `SOSYAL_ETKINLIK`, broad `ALL`); these are not legal evidence and cannot propagate.
+10. Teacher-practice workflow requires application-school + university/arrangement + academic-year context; application status is snapshot/version bound.
 
 ### V88 guards
 - TEACHER_PRACTICE_RULE_REQUIRES_APPLICATION_SCHOOL_CONDITION
@@ -75,27 +64,50 @@ Current 2026 text of `Millî Eğitim Bakanlığı Yönetici ve Öğretmenlerinin
 - TEACHER_PRACTICE_ASSIGNMENTS_ARE_ACADEMIC_YEAR_VERSIONED
 - EXTRA_COURSE_MD28_DOES_NOT_REPLACE_OPERATIONAL_DIRECTIVE
 - GENERIC_1739_FAMILY_DOES_NOT_VERIFY_TEACHER_PRACTICE_RULE
-- LEGACY_OGRETMEN_ADAYI_TERM_REQUIRES_CURRENT_UYGULAMA_OGRENCISI_NORMALIZATION
+- DERIVATIVE_LEGAL_FAMILY_IS_NOT_ARTICLE_VERIFIED_EVIDENCE
+- APPLICATION_STUDENT_IS_NOT_SCHOOL_ENROLLED_STUDENT_BY_DEFAULT
 - SYSTEM_ENTRY_EVALUATION_AND_RESULT_DELIVERY_ARE_DISTINCT_ACTIONS
-- COMMUNICATION_AUTHORITY_DOES_NOT_PROVE_MANDATED_MEETING
-- PAYMENT_AUTHORITY_DOES_NOT_PROVE_OPERATIONAL_EVENT
-- APPLICATION_SCHOOL_STATUS_IS_YEAR_BOUND
-- CURRENT_TEXT_LOCKED_IS_NOT_LIVE_OFFICIAL_SOURCE_LOCK
+- CURRENT_DIRECTIVE_REQUIRED_BEFORE_ENFORCEMENT_AUTOMATION
+- NUMERIC_SIMILARITY_IS_NOT_LEGAL_PROOF
+- ROW_LEVEL_LEDGER_REQUIRED_BEFORE_ROLLBACK_OR_PROMOTION
 
-## V88 Phase 2 priority
-1. Lock current teacher-practice directive from official MEB/RG source with exact version/date.
-2. Resolve HB-1788 `6 / 2` limits.
-3. Resolve HB-1789 orientation and HB-1790 meeting/duty-notification clauses.
-4. Resolve HB-1791 joint planning.
-5. Atomize/resolve HB-1792.
-6. Atomize HB-1793 system entry/evaluation/result delivery.
-7. Atomize HB-1794 attendance/schedule/program/discipline-notification routes.
-8. Audit historical ARTICLE_VERIFIED ledger for HB-1787..1794 before any promotion or rollback.
-9. Bring V88 to a meaningful large-batch closure (target >=300 active support atoms) without inflating ARTICLE_VERIFIED.
-10. Only after teacher-practice closure continue HB-1795+ inspection/monitoring family.
+## Open exact-source recovery queue
+HB-1787..1794 stay on the current teacher-practice directive recovery queue. They may be promoted later only after official current directive/version + exact clause + actor/action/scope + row-ledger/dedupe. V88 accounting stays closed.
+
+## V89 boundary — 2.14 DENETİM, İZLEME VE DEĞERLENDİRME
+Exact master boundary recovered as **HB-1795..HB-1802 (8 rows)**. HB-1803 starts `2.15 ALAN/DAL/LABORATUVAR ŞEFLERİNİN ÇALIŞMALARI`.
+
+- HB-1795: okulun teftiş/denetim defteri bulunması.
+- HB-1796: denetim raporlarıyla ilgili yazıların özel dosyada saklanması.
+- HB-1797: denetim raporu/tebliğindeki sorunlar için `Gelişim Planı` hazırlanması ve uygulanması.
+- HB-1798: okul müdürünün her eğitim-öğretim döneminde öğretmenlerin dersini en az bir kez izlemesi ve kaydetmesi.
+- HB-1799: okul müdürünün tüm personel çalışmalarını denetlemesi ve eksikliklerin giderilmesini izlemesi.
+- HB-1800: brifing dosyasının hazırlanması ve her yıl güncellenmesi.
+- HB-1801: stratejik plan doğrultusunda İzleme ve Değerlendirme Ekipleri kurulması ve sistem oluşturulması.
+- HB-1802: okul müdürünün elektronik ortamda yürütülen iş/işlemleri takip ve denetlemesi.
+
+### V89 preliminary integrity findings
+- The handbook itself is a self-evaluation/checklist source; each item must be separately proven as a current binding duty.
+- HB-1798 derivative metadata currently carries only generic `1739 + school regulation + annual circular` style authority and therefore is not exact proof of the unusually specific `each semester at least once + record` requirement.
+- HB-1800 derivative metadata points broadly to MEB 2024-2028 Strategic Plan + inspection guides; that does not yet prove a universal annual briefing-file obligation.
+- HB-1801 strategic-plan linkage is plausible but an exact requirement to establish an `İzleme ve Değerlendirme Ekibi` must be verified against current institutional strategic-planning authority; plan-level thematic relevance alone is insufficient.
+- HB-1795/1796/1797 may depend on inspection/denetim process authority and record-retention rules rather than a universal school management provision.
+- HB-1802 generic electronic-process supervision must be tied to exact school-principal actor authority and must not become an authority merely because a module exists.
+
+## V89 priority
+1. Lock current MEB inspection/education-inspector regulation and 2026 official inspection guides applicable to school/institution management.
+2. Test HB-1795 `teftiş/denetim defteri` for current universal requirement vs legacy practice.
+3. Test HB-1796 retention/file requirement against inspection + archive/SSDP authority.
+4. Resolve HB-1797 `Gelişim Planı` trigger, actor and required output.
+5. Resolve HB-1798 exact `each semester >=1 lesson observation + record` wording; no generic principal-duty inference.
+6. Resolve HB-1799 staff-supervision/follow-up actor/action scope.
+7. Resolve HB-1800 annual briefing-file requirement; do not convert institutional custom into statute.
+8. Resolve HB-1801 strategic monitoring-team requirement and distinguish plan governance from statute.
+9. Resolve HB-1802 electronic-process supervision.
+10. Audit historical ARTICLE_VERIFIED ledger row-by-row and build V89 as a large >=300 support-atom batch without count inflation.
 
 ## Tenant requirement
 **Sosyal Sorumluluk Kulübü** tenant requirement remains active; ARTICLE_VERIFIED sayacına eklenmez.
 
 ## Repo / execution boundary
-Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` dediğinde soru sormadan **V88 Phase 2 / HB-1787..HB-1794 current directive exact-clause lock** ile devam et. Work mode all mevzuat verification tamamlandıktan sonra işleyiş/uygulama düzenleme aşamasında kullanılacak. Migration **0**, Lovable **0**.
+Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` dediğinde soru sormadan **V89 / HB-1795..HB-1802 DENETİM, İZLEME VE DEĞERLENDİRME** ile devam et. Work mode tüm mevzuat doğrulaması tamamlandıktan sonra işleyiş/uygulama düzenleme aşamasında kullanılacak. Migration **0**, Lovable **0**.
