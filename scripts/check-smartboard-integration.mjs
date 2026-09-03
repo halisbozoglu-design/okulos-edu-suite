@@ -6,8 +6,10 @@ const requiredFiles = [
   'supabase/migrations/20260903090000_smartboard_device_credentials.sql',
   'supabase/migrations/20260903102000_smartboard_barcode_unlock_permissions.sql',
   'supabase/migrations/20260903103000_smartboard_unlock_command_delivery.sql',
+  'supabase/migrations/20260903113000_guidance_calendar_smartboard_access.sql',
   'supabase/functions/smartboard-daily-plan/index.ts',
   'docs/SMARTBOARD_INTEGRATION_CANONICAL.md',
+  'docs/SMARTBOARD_GUIDANCE_CALENDAR_ACCESS.md',
 ];
 
 for (const file of requiredFiles) {
@@ -19,8 +21,10 @@ const lifecycle = fs.readFileSync(requiredFiles[1], 'utf8');
 const creds = fs.readFileSync(requiredFiles[2], 'utf8');
 const unlock = fs.readFileSync(requiredFiles[3], 'utf8');
 const commands = fs.readFileSync(requiredFiles[4], 'utf8');
-const edge = fs.readFileSync(requiredFiles[5], 'utf8');
-const docs = fs.readFileSync(requiredFiles[6], 'utf8');
+const guidance = fs.readFileSync(requiredFiles[5], 'utf8');
+const edge = fs.readFileSync(requiredFiles[6], 'utf8');
+const docs = fs.readFileSync(requiredFiles[7], 'utf8');
+const guidanceDocs = fs.readFileSync(requiredFiles[8], 'utf8');
 
 const mustContain = (name, text, needles) => {
   for (const needle of needles) {
@@ -78,6 +82,20 @@ mustContain('unlock delivery migration', commands, [
   'enqueue_smartboard_unlock_command',
 ]);
 
+mustContain('guidance calendar integration', guidance, [
+  'guidance_class_activities',
+  'guidance_activity_reminders',
+  'guidance_calendar_v',
+  'GUIDANCE_CALENDAR_ACTIVITY',
+  'guidance_activity_id',
+  'counts_as_lesson_open',
+  'PRINCIPAL_SCHEDULED_TEACHING',
+  'VICE_PRINCIPAL_SCHEDULED_TEACHING',
+  'PRINCIPAL_RECORDED_LESSON_SUBSTITUTE',
+  'VICE_PRINCIPAL_RECORDED_LESSON_SUBSTITUTE',
+  'log_smartboard_admin_device_access',
+]);
+
 mustContain('daily plan edge function', edge, [
   'x-smartboard-device-key',
   'x-smartboard-secret',
@@ -96,6 +114,9 @@ if (!docs.includes('Lovable token bu akışların hiçbirinde')) {
 }
 if (!docs.includes('Barkodla tahta açma ve izin motoru')) {
   throw new Error('Canonical documentation must preserve barcode unlock authorization rules.');
+}
+if (!guidanceDocs.includes('Takvim: 7/B') || !guidanceDocs.includes('GUIDANCE_CALENDAR_ACTIVITY')) {
+  throw new Error('Guidance calendar documentation must preserve auto-reason barcode linkage.');
 }
 
 console.log('SmartBoard integration contract guard: OK');
