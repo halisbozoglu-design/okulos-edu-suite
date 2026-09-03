@@ -76,7 +76,7 @@ before update on public.institution_briefings
 for each row execute function public.touch_institution_briefing();
 
 insert into public.tenant_scope_registry(table_name, scope, note, updated_at)
-values ('institution_briefings','institution_code','Kurumsal brifing taslakları ve bölüm düzeni tenant bazında izole edilir.',now())
+values ('institution_briefings','tenant','Kurumsal brifing taslakları ve bölüm düzeni institution_code ile tenant bazında izole edilir.',now())
 on conflict (table_name) do update
 set scope=excluded.scope, note=excluded.note, updated_at=excluded.updated_at;
 
