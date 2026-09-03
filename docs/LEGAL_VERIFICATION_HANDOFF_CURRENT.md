@@ -1,113 +1,116 @@
 # Okulos Mevzuat Doğrulama — Kanonik Handoff
 
 Güncelleme: 2026-09-03
-Durum: AKTİF — V88 CLOSED / V89 NEXT
+Durum: AKTİF — V89 CLOSED / V90 NEXT
 Repo: `halisbozoglu-design/okulos-edu-suite`
 Mode: `ARTICLE_VERIFIED_PRIORITY`
 Migration: **0**
 Lovable usage: **0**
 
 ## Kaynak politikası
-ARTICLE_VERIFIED yalnız exact master claim + güncel/uygulanabilir resmî otorite + exact article/paragraph + actor/action/scope + row-ledger/dedupe ile değişir. Kaynaklar: `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `meb.gov.tr` birimleri, `resmigazete.gov.tr`; arşiv/dosya planında Devlet Arşivleri Başkanlığı. Current RG chain stale consolidation/handbook üstündedir. Broad `ALL` metadata school/program/system-specific hükümleri miras alamaz. Thematic/adjacent hüküm exact proof değildir. Rollback yalnız row-level material mismatch kanıtlandığında ve bir kez yapılır.
+ARTICLE_VERIFIED yalnız exact master claim + güncel/uygulanabilir resmî otorite + exact article/paragraph/guide clause + actor/action/scope + row-ledger/dedupe ile değişir. Official sources: `mevzuat.gov.tr`, `mevzuat.meb.gov.tr`, resmî `meb.gov.tr` units, `resmigazete.gov.tr`; archive/file-plan rules additionally use Devlet Arşivleri Başkanlığı. Current RG/current directive chain stale consolidation/handbook üstündedir. Handbook/checklist provenance is not automatically legal authority. Rollback only once after row-level material mismatch + historical count proof.
 
 ## Güncel kesin durum
-- Master workflow: **2.229**
-- ARTICLE_VERIFIED: **460 / 2.229 = %20,6371**
-- Kalan exact: **1.769**
-- Kapanmış support-atom pool: **23.405**
-- Son kapanmış batch: **V88**
-- Sıradaki batch: **V89**
+- Master workflow: **2,229**
+- ARTICLE_VERIFIED: **460 / 2,229 = 20.6371%**
+- Remaining exact: **1,769**
+- Closed support-atom pool: **23,705**
+- Last closed batch: **V89**
+- Next batch: **V90**
 - Migration: **0**
 - Lovable: **0**
 
-## V86 lock
-V86 300 atomla kapandı. HB-1771/1772/1773 eski `ALL + OÖİKY Md5/A` yanlış otorite eşleşmeleri birer kez rollback edildi; ARTICLE_VERIFIED 463 -> 460. MTAL 2026-2027 resolver: 12 -> TTKB 2023-40; 10-11 -> TTKB 2024-41; hazırlık/9 -> TTKB 2026-62; framework authority versioned ve `latest decision wins` yasak.
+## Locked carry-forward
+### V86
+HB-1771/1772/1773 broad `ALL + OÖİKY Md5/A` incorrect authority mappings rolled back once; 463 -> 460. MTAL 2026-2027 resolver: grade12 -> TTKB 2023-40; grades10-11 -> 2024-41; prep/grade9 -> 2026-62; framework authority separately versioned; `latest decision wins` prohibited.
 
-## V87 lock
-V87 HB-1774..1786'yı 300 atomla kapattı; delta 0. Current SSDP 02.01.2024, official-correspondence CB2646, petition 3071 Art7, information-access 4982 Art11, classified documents CB5529, conditional certified-copy Art29/2, product-vs-authority and row-ledger guards locked. Closed pool V87 sonunda 23.105.
+### V87
+HB-1774..1786 closed with 300 atoms. Current SSDP 02.01.2024, official-correspondence CB2646, 3071 Art7, 4982 Art11, classified-documents CB5529, conditional certified-copy Art29/2 and product-vs-authority guards locked.
 
-## V88 CLOSED — HB-1787..HB-1794 Öğretmenlik Uygulaması
-Canonical:
-- `docs/legal-article-verified-focused-deepening-batch-v88-phase1.md` — 160 atoms
-- `docs/legal-verification-progress-v88-phase1.json`
-- `docs/legal-article-verified-focused-deepening-batch-v88-phase2.md` — 140 atoms
-- `docs/legal-article-verified-batch-v88.md`
-- `docs/legal-verification-progress-v88-delta.json`
+### V88
+HB-1787..1794 Öğretmenlik Uygulaması closed with 300 atoms. Current Md28 teacher-practice authority family locked; detailed operational rows remain on current-directive recovery queue. Application-school status and assignments are academic-year/version bound. Closed pool became 23,405.
 
-V88 total **300** support atoms. Promotions **0**, rollbacks **0**. ARTICLE_VERIFIED **460**. Closed pool **23.105 -> 23.405**.
+## V89 CLOSED — HB-1795..HB-1802 Denetim, İzleme ve Değerlendirme
+Canonical files:
+- `docs/legal-article-verified-focused-deepening-batch-v89-phase1.md` — 150 atoms
+- `docs/legal-article-verified-focused-deepening-batch-v89-phase2.md` — 150 atoms
+- `docs/legal-article-verified-batch-v89.md`
+- `docs/legal-verification-progress-v89-delta.json`
 
-### Exact boundary
-- HB-1787: uygulama okulu koordinatörü belirlenmesi.
-- HB-1788: uygulama öğretmeni başına max 6, ders başına max 2 öğrenci + uygulama öğretim elemanıyla iş birliği.
-- HB-1789: okul birimlerinin tanıtılması + etkinlik bilgisi.
-- HB-1790: uygulama öğretmenleri/adaylarla toplantı + görev/sorumluluk bildirimi.
-- HB-1791: uygulama öğretim elemanı + uygulama öğretmeniyle ortak etkinlik planlama.
-- HB-1792: izleme + değerlendirme + rehberlik + önlem.
-- HB-1793: sisteme işleme + değerlendirme + sonucu okul koordinatörüne teslim.
-- HB-1794: devam + günlük ders programı + öğretim programı uyumu + disiplinsizlikte fakülte/yüksekokul bildirimi.
+V89 total **300** support atoms. Promotions **0**, rollbacks **0**. ARTICLE_VERIFIED remains **460**. Closed pool **23,405 -> 23,705**.
 
-### V88 current-text / exactness locks
-1. Current 2026 `Millî Eğitim Bakanlığı Yönetici ve Öğretmenlerinin Ders ve Ek Ders Saatlerine İlişkin Karar` Md28 teacher-practice authority family is locked from canonical legal-source artifacts.
-2. Md28/4: each university gets a separate MEM application coordinator; participating application schools appoint **one of the deputy principals** as application-school coordinator; school/administrator/teacher counts are re-determined each academic year by province/district/school/branch under the directive.
-3. Md28/2 recognizes implementation + Uygulama Öğrencisi Değerlendirme Sistemi entry and communication/coordination/guidance/consultancy duties; Md28/3 is extra-course/payment layer.
-4. Md28 does not replace the detailed operational directive.
-5. HB-1787 is a strong candidate but remains uncounted until strict live-current official-source + row-ledger/dedupe lock.
-6. HB-1788..1794 require exact current directive clauses; no semantic promotion.
-7. HB-1792/1793/1794 are compound and require child-action decomposition.
-8. Targeted historical ARTICLE_VERIFIED searches recovered no direct row-level ledger entry for HB-1787..1794; no inferred rollback.
-9. Derivative mappings in this range contain unsafe generic/wrong families (`GENEL_YONETIM`, `REHBERLIK`, `SOSYAL_ETKINLIK`, broad `ALL`); these are not legal evidence and cannot propagate.
-10. Teacher-practice workflow requires application-school + university/arrangement + academic-year context; application status is snapshot/version bound.
+### Exact V89 boundary
+- HB-1795 teftiş/denetim defteri.
+- HB-1796 denetim raporu yazılarının özel dosyada saklanması.
+- HB-1797 denetim sorunları için Gelişim Planı.
+- HB-1798 every education term >=1 teacher lesson observation + record.
+- HB-1799 all personnel supervision + deficiency follow-up.
+- HB-1800 annual briefing-file update.
+- HB-1801 strategic-plan monitoring/evaluation teams.
+- HB-1802 generic electronic-process supervision.
+- HB-1803 starts `2.15 Alan/Dal/Laboratuvar Şeflerinin Çalışmaları`.
 
-### V88 guards
-- TEACHER_PRACTICE_RULE_REQUIRES_APPLICATION_SCHOOL_CONDITION
-- APPLICATION_SCHOOL_COORDINATOR_ROLE_REQUIRES_DEPUTY_PRINCIPAL
-- TEACHER_PRACTICE_ASSIGNMENTS_ARE_ACADEMIC_YEAR_VERSIONED
-- EXTRA_COURSE_MD28_DOES_NOT_REPLACE_OPERATIONAL_DIRECTIVE
-- GENERIC_1739_FAMILY_DOES_NOT_VERIFY_TEACHER_PRACTICE_RULE
-- DERIVATIVE_LEGAL_FAMILY_IS_NOT_ARTICLE_VERIFIED_EVIDENCE
-- APPLICATION_STUDENT_IS_NOT_SCHOOL_ENROLLED_STUDENT_BY_DEFAULT
-- SYSTEM_ENTRY_EVALUATION_AND_RESULT_DELIVERY_ARE_DISTINCT_ACTIONS
-- CURRENT_DIRECTIVE_REQUIRED_BEFORE_ENFORCEMENT_AUTOMATION
-- NUMERIC_SIMILARITY_IS_NOT_LEGAL_PROOF
-- ROW_LEVEL_LEDGER_REQUIRED_BEFORE_ROLLBACK_OR_PROMOTION
+### V89 current-source locks
+1. Current official MEB `Öğretmenlerin Sınıf İçi Etkinlikleri ve Öğretim Faaliyetlerinin İzlenmesi, Değerlendirilmesi ve Geliştirilmesine İlişkin Yönerge`: `https://mevzuat.meb.gov.tr/dosyalar/2264.pdf`.
+2. Md5/1-b + Md8/1: internal teacher monitoring/evaluation minimum is **once within a school year**, not once every term/semester.
+3. Internal evaluator actor composition is contextual: principal alone or principal + zümre president/advisor teacher depending on teacher count/role.
+4. Current monitoring/evaluation uses MEBBİS EK-1/EK-2/EK-3 forms/reports; generic paper-record assumptions do not override this.
+5. Therefore HB-1798 is a **material stale master mismatch** and remains withheld. No rollback because direct historical ARTICLE_VERIFIED ledger proof was not recovered.
+6. Current TKB `Denetim Rehberleri ve Denetim Esasları`: `https://tkb.meb.gov.tr/meb_iys_dosyalar/2024_01/01225115_genelesaslar.pdf`.
+7. TKB §5.2.3 exact conditional lifecycle: inspection report reaches institution -> **within one month** development plan based on findings/solution proposals -> send to relevant il/ilçe MEM -> MEM follows implementation.
+8. HB-1797 therefore has an exact conditional child but the broad parent remains withheld because it omits trigger/deadline/delivery/follow-up actor.
+9. HB-1795 teftiş/denetim defteri has historical/handbook provenance but no current universal exact-duty lock.
+10. HB-1796 `special file` is not a current universal retention category; SSDP/EBYS classification rules govern.
+11. HB-1800 annual brifing file remains a current handbook checklist expectation, not ARTICLE_VERIFIED without a separate current exact authority.
+12. HB-1801 strategic monitoring/evaluation is current, but named-team formation is version-bound to applicable school strategic-plan guide/approved plan and is not inferred from 5018 alone.
+13. HB-1802 must split by actual system/module/authority.
 
-## Open exact-source recovery queue
-HB-1787..1794 stay on the current teacher-practice directive recovery queue. They may be promoted later only after official current directive/version + exact clause + actor/action/scope + row-ledger/dedupe. V88 accounting stays closed.
+### V89 guards
+- CURRENT_TEACHER_MONITORING_FREQUENCY_IS_SCHOOL_YEAR_NOT_EACH_TERM
+- INTERNAL_EVALUATOR_ACTOR_COMPOSITION_IS_CONTEXT_DEPENDENT
+- DEVELOPMENT_PLAN_TRIGGER_IS_REPORT_RECEIPT
+- DEVELOPMENT_PLAN_DEADLINE_IS_ONE_MONTH_AFTER_RECEIPT
+- DEVELOPMENT_PLAN_IS_SENT_TO_RELEVANT_MEM
+- TEFTIS_DEFTERI_HISTORICAL_PROVENANCE_IS_NOT_CURRENT_UNIVERSAL_DUTY
+- BRIEFING_FILE_HANDBOOK_CHECKLIST_IS_NOT_AUTOMATIC_LEGAL_AUTHORITY
+- SSDP_EBYS_CLASSIFICATION_PREVAILS_OVER_GENERIC_SPECIAL_FILE_LABEL
+- STRATEGIC_PLAN_MONITORING_TEAM_IS_VERSION_BOUND
+- GENERIC_DIGITAL_OVERSIGHT_MUST_SPLIT_BY_SYSTEM
+- MATERIAL_MISMATCH_WITHOUT_LEDGER_PROOF_DOES_NOT_AUTO_ROLLBACK
+- ROW_LEVEL_LEDGER_REQUIRED_BEFORE_PROMOTION_OR_ROLLBACK
 
-## V89 boundary — 2.14 DENETİM, İZLEME VE DEĞERLENDİRME
-Exact master boundary recovered as **HB-1795..HB-1802 (8 rows)**. HB-1803 starts `2.15 ALAN/DAL/LABORATUVAR ŞEFLERİNİN ÇALIŞMALARI`.
+## V90 boundary — 2.15 Alan/Dal/Laboratuvar Şeflerinin Çalışmaları
+Current handbook shows **23 checklist rows** in section 2.15. Provisional sequential mapping is **HB-1803..HB-1825**; HB-1826 begins `2.16 OKUL SAĞLIĞI`. Exact master-ID recovery must confirm before count changes.
 
-- HB-1795: okulun teftiş/denetim defteri bulunması.
-- HB-1796: denetim raporlarıyla ilgili yazıların özel dosyada saklanması.
-- HB-1797: denetim raporu/tebliğindeki sorunlar için `Gelişim Planı` hazırlanması ve uygulanması.
-- HB-1798: okul müdürünün her eğitim-öğretim döneminde öğretmenlerin dersini en az bir kez izlemesi ve kaydetmesi.
-- HB-1799: okul müdürünün tüm personel çalışmalarını denetlemesi ve eksikliklerin giderilmesini izlemesi.
-- HB-1800: brifing dosyasının hazırlanması ve her yıl güncellenmesi.
-- HB-1801: stratejik plan doğrultusunda İzleme ve Değerlendirme Ekipleri kurulması ve sistem oluşturulması.
-- HB-1802: okul müdürünün elektronik ortamda yürütülen iş/işlemleri takip ve denetlemesi.
+Visible 2.15 themes include:
+- area/department and workshop/laboratory chief assignments;
+- physical space/equipment condition for chiefship formation;
+- movable assets, e-Taşınır consumption entries;
+- workshop materials/preparation/records;
+- occupational safety and special-needs students;
+- machine cards/manuals/warning signs;
+- annual work division and school-principal approval;
+- equipment/donatım needs and proposals;
+- revolving-fund production;
+- zümre chairmanship/meetings;
+- scientific/technological materials;
+- graduate/employer and sector collaboration;
+- applied-training quality;
+- shared equipment responsibility/protocol use;
+- monthly planning-maintenance-repair report to school principal.
 
-### V89 preliminary integrity findings
-- The handbook itself is a self-evaluation/checklist source; each item must be separately proven as a current binding duty.
-- HB-1798 derivative metadata currently carries only generic `1739 + school regulation + annual circular` style authority and therefore is not exact proof of the unusually specific `each semester at least once + record` requirement.
-- HB-1800 derivative metadata points broadly to MEB 2024-2028 Strategic Plan + inspection guides; that does not yet prove a universal annual briefing-file obligation.
-- HB-1801 strategic-plan linkage is plausible but an exact requirement to establish an `İzleme ve Değerlendirme Ekibi` must be verified against current institutional strategic-planning authority; plan-level thematic relevance alone is insufficient.
-- HB-1795/1796/1797 may depend on inspection/denetim process authority and record-retention rules rather than a universal school management provision.
-- HB-1802 generic electronic-process supervision must be tied to exact school-principal actor authority and must not become an authority merely because a module exists.
-
-## V89 priority
-1. Lock current MEB inspection/education-inspector regulation and 2026 official inspection guides applicable to school/institution management.
-2. Test HB-1795 `teftiş/denetim defteri` for current universal requirement vs legacy practice.
-3. Test HB-1796 retention/file requirement against inspection + archive/SSDP authority.
-4. Resolve HB-1797 `Gelişim Planı` trigger, actor and required output.
-5. Resolve HB-1798 exact `each semester >=1 lesson observation + record` wording; no generic principal-duty inference.
-6. Resolve HB-1799 staff-supervision/follow-up actor/action scope.
-7. Resolve HB-1800 annual briefing-file requirement; do not convert institutional custom into statute.
-8. Resolve HB-1801 strategic monitoring-team requirement and distinguish plan governance from statute.
-9. Resolve HB-1802 electronic-process supervision.
-10. Audit historical ARTICLE_VERIFIED ledger row-by-row and build V89 as a large >=300 support-atom batch without count inflation.
+## V90 priority
+1. Confirm exact HB-1803..HB-1825 master sentences and boundary.
+2. Bind each row to current OÖKY Md84/B, Md84/C, Md85 and other exact current MTAL/asset/OSH authorities.
+3. Detect stale chiefship-count/assignment rules and distinguish field chief vs workshop/lab chief duties.
+4. Separate OÖKY exact duties from handbook wording expansions.
+5. Audit `e-Taşınır`, revolving fund, occupational-safety and protocol-specific rows against their own authority families.
+6. Historical ARTICLE_VERIFIED row-ledger audit before any promotion/rollback.
+7. Build V90 as a large >=300 support-atom batch; do not inflate ARTICLE_VERIFIED.
+8. Migration **0**, Lovable **0**.
 
 ## Tenant requirement
-**Sosyal Sorumluluk Kulübü** tenant requirement remains active; ARTICLE_VERIFIED sayacına eklenmez.
+**Sosyal Sorumluluk Kulübü** remains an active tenant requirement; it does not increment ARTICLE_VERIFIED.
 
 ## Repo / execution boundary
-Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` dediğinde soru sormadan **V89 / HB-1795..HB-1802 DENETİM, İZLEME VE DEĞERLENDİRME** ile devam et. Work mode tüm mevzuat doğrulaması tamamlandıktan sonra işleyiş/uygulama düzenleme aşamasında kullanılacak. Migration **0**, Lovable **0**.
+Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` => immediately execute **V90 / HB-1803..HB-1825 Alan/Dal/Laboratuvar Şeflerinin Çalışmaları**. Work mode is deferred until all legal verification is complete, then used to arrange implementation/operation.
