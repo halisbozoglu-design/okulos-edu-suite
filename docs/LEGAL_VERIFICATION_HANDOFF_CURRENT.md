@@ -1,7 +1,7 @@
 # Okulos Mevzuat Doğrulama — Kanonik Handoff
 
 Güncelleme: 2026-09-04
-Durum: AKTİF — V94 CLOSED / V95 NEXT
+Durum: AKTİF — V95 CLOSED / V96 NEXT
 Repo: `halisbozoglu-design/okulos-edu-suite`
 Mode: `ARTICLE_VERIFIED_PRIORITY`
 Migration: **0**
@@ -14,116 +14,124 @@ ARTICLE_VERIFIED yalnız exact master claim + güncel/uygulanabilir resmî otori
 - Master workflow: **2,229**
 - ARTICLE_VERIFIED: **460 / 2,229 = 20.6371%**
 - Remaining exact: **1,769**
-- Closed support-atom pool: **25,205**
-- Last closed batch: **V94**
-- Next batch: **V95**
+- Closed support-atom pool: **25,505**
+- Last closed batch: **V95**
+- Next batch: **V96**
 - Migration: **0**
 - Lovable: **0**
 
 ## Carry-forward locks
-- V86: HB-1771/1772/1773 wrong `ALL + OÖİKY Md5/A` mappings rolled back once; MTAL grade/cohort resolver versioned.
+- V86: HB-1771/1772/1773 wrong ALL mappings rolled back once; MTAL grade/cohort resolver versioned.
 - V87: SSDP, CB2646, 3071, 4982, CB5529, conditional certified-copy guards.
 - V88: Teacher Practice Md28 family; detailed directive queue open.
-- V89: teacher monitoring minimum once per school year; development plan = report receipt -> one month -> relevant MEM.
+- V89: teacher monitoring once per school year; development plan report receipt -> one month -> relevant MEM.
 - V90: chiefship existence precedes assignment; 2025 shared-workshop exception; Md85 role matrices separate.
 - V91: school-health protocol/guide versioned; health data separated; pandemic tasks trigger-based.
 - V92: OÖKY Md19 general school-family-environment cooperation; vocational sector/workplace rules not ALL.
-- V93: Teacher Board = non-contiguous source-clause identity; current 2025 Art9; notice/invitee/lesson-hours/vote/minutes guards locked.
+- V93: Teacher Board source-clause identity; current Art9 locks.
+- V94: Class/Branch Teacher Board source-clause identity; current Art10 locks; Art9 lesson-hour exception does not leak.
 
-## V94 CLOSED — 3.2 SINIF/ŞUBE ÖĞRETMENLER KURULU
+## V95 CLOSED — 3.3 EĞİTİM KURUMU SINIF/ALAN ZÜMRELERİ
 Canonical:
-- `docs/legal-article-verified-focused-deepening-batch-v94-phase1.md` — 160 atoms
-- `docs/legal-article-verified-focused-deepening-batch-v94-phase2.md` — 140 atoms
-- `docs/legal-article-verified-batch-v94.md`
-- `docs/legal-verification-progress-v94-delta.json`
+- `docs/legal-article-verified-focused-deepening-batch-v95-phase1.md` — 160 atoms
+- `docs/legal-article-verified-focused-deepening-batch-v95-phase2.md` — 140 atoms
+- `docs/legal-article-verified-batch-v95.md`
+- `docs/legal-verification-progress-v95-delta.json`
 
-Accounting: **300 atoms**; promotions **0**; rollbacks **0**; ARTICLE_VERIFIED **460**; pool **24,905 -> 25,205**.
+Accounting: **300 atoms**; promotions **0**; rollbacks **0**; ARTICLE_VERIFIED **460**; pool **25,205 -> 25,505**.
 
-### Canonical 3.2 identity
-- HB-1848 = 3.2.1 composition/applicability
-- HB-1849 = 3.2.2 chair
-- HB-1850 = 3.2.3 schedule
-- HB-1842 = 3.2.4 notice
-- HB-1844 = 3.2.5 outside lesson hours
-- HB-1851 = 3.2.6 optional invitees
-- HB-1846 = 3.2.7 decision/principal approval
-- HB-1852 = 3.2.8 minutes/signature/retention
-HB-1853 starts 3.3.
+### Canonical 3.3 identity
+The source section is non-contiguous in workflow IDs:
+- HB-1853 = 3.3.1
+- HB-1854 = 3.3.2
+- HB-1855 = 3.3.3
+- HB-1856 = 3.3.4
+- HB-1857 = 3.3.5
+- HB-1858 = 3.3.6
+- HB-1859 = 3.3.7
+- HB-1860 = 3.3.8
+- HB-1862 = 3.3.9
+- HB-1863 = 3.3.10
+- HB-1864 = 3.3.11
+- HB-1865 = 3.3.12
+- HB-1866 = 3.3.13
+- HB-1867 = 3.3.14
+- HB-1861 is **3.4.6** and is excluded from 3.3.
 
 ### Current authority lock
-Current `Millî Eğitim Bakanlığı Eğitim Kurulları ve Zümreleri Yönergesi`, 12.02.2025 chain, official PDF `https://mevzuat.meb.gov.tr/dosyalar/2260.pdf`, Art.10 + Art.7/EK-1.
+Current official `Millî Eğitim Bakanlığı Eğitim Kurulları ve Zümreleri Yönergesi`, current 12.02.2025 consolidated chain, Art.11-12 + EK-2; official PDF `https://mevzuat.meb.gov.tr/dosyalar/2260.pdf`.
 
-### V94 exact locks
-1. Art10/1 current composition = same-class-level teachers / same-branch teachers + guidance teachers.
-2. HB-1848 parenthetical `preschool/primary not formed` cannot be treated as universal Art10/1 text; current Art10/1 explicitly has HEM/olgunlaşma studentless-division exception while current OÖİKY Md36 separately governs middle/IH-middle/preschool/primary scope. Applicability must be school-type resolved.
-3. HB-1849 chair = principal or designated deputy principal.
-4. HB-1850 calendar exact split: middle/IH-middle October-February-June; secondary November-April.
-5. Art10/2 also has needs-based meeting triggers (principal/relevant deputy/guidance/class-branch guidance request + principal approval), separate/combined meetings by need, and year-end prior-decision/result evaluation.
-6. HB-2142 overlaps the same schedule family and must be child-deduped against HB-1850 without losing provenance.
-7. HB-1842 five-day notice retains Art7 extraordinary exception. Communication channel is not a deadline waiver.
-8. HB-1844 outside-lesson-hours is Art10/6 board-specific. Teacher Board Art9/5 MEM-approved lesson-hours exception MUST NOT auto-inherit into this board.
-9. HB-1851 parent/trainer invitees are optional/topic-conditional, not standing members; data access is agenda-minimized.
-10. HB-1846 = majority vote + chair-side tie + principal approval before implementation.
-11. HB-1852 = relevant members including absentees sign; administration retains. SSDP controls retention duration separately.
-12. Wrong derivative `SOSYAL_ETKINLIK` mapping around HB-1849 is prohibited from propagation.
-13. Targeted repo searches recovered no direct historical ARTICLE_VERIFIED ledger proof for HB-1848/HB-1850; no inferred count change.
+### V95 exact locks
+1. HB-1853 composition is Art12/1 direct/strong, with primary-school special composition preserved.
+2. HB-1854 single-teacher area meeting with principal/designated deputy is exact Art12/1.
+3. HB-1855 `2 years` is **current, not stale**: chair selected in June, effective from September for two years.
+4. 02.01.2024 amendment adds chair selection hierarchy: willing candidates first; otherwise doctorate -> head teacher -> master's -> expert teacher -> previous chair -> senior teacher.
+5. Selected chair is entered in **MEBBİS**; substitute chair and forced mid-year replacement route are explicit children.
+6. HB-1856 and HB-1858 were already historical ARTICLE_VERIFIED and were live-current retested. Both remain exact under Art12/4 and Art12/5; **no rollback**.
+7. HB-1857 secondary schools: November and April, administration-planned date, one business day.
+8. HB-1859 date/place/agenda >=5 days before, except compulsory situations; email/IT is additional channel, not deadline waiver.
+9. HB-1860 decisions after majority vote/tie rule and principal approval; lifecycle states stay separate.
+10. HB-1862 relevant members including absentees sign minutes; administration retains; SSDP controls retention duration.
+11. HB-1864 year-end decision/result evaluation is exact Art12/4.
+12. HB-1865 vocational institutions may include expert/master trainer/trainer/technician actors only when needed and relevant to area.
+13. HB-1866 vocational area/department chief is area zümre chair while chief duty continues; role-bound special rule.
+14. HB-1867 EK-2 exact MTAL rule: area zümre teachers meet one business day in last week of May to determine students for internship/workplace vocational training. This is MTAL/feature conditional, not ALL.
+15. Current Art12/8 agenda catalog includes 2024/2025 additions; agenda semantics are authority-versioned and propagated prospectively.
 
-### V94 guards
-- CLASS_BRANCH_BOARD_IDENTITY_REQUIRES_SOURCE_CLAUSE
-- CLASS_BRANCH_BOARD_REQUIRES_INSTITUTION_APPLICABILITY_RESOLVER
-- CLASS_BRANCH_BOARD_SCHEDULE_IS_SCHOOL_TYPE_SPECIFIC
-- HB1848_PARENT_SCOPE_REQUIRES_SPECIAL_AUTHORITY_SPLIT
-- HEM_STUDENTLESS_DIVISION_EXCEPTION_IS_CURRENT_ART10_1
-- OOIY_MD36_SPECIAL_SCOPE_OVERRIDES_GENERIC_PARENT
-- HB1850_AND_HB2142_REQUIRE_SCHEDULE_DEDUPE_WITH_PROVENANCE
-- SECONDARY_BOARD_MUST_NOT_INHERIT_MIDDLE_JUNE_MEETING
-- MIDDLE_BOARD_MUST_NOT_INHERIT_SECONDARY_NOVEMBER_APRIL_PAIR
-- NEEDS_BASED_MEETING_IS_SEPARATE_CHILD
-- CLASS_BRANCH_MEETINGS_MAY_BE_COMBINED_BY_NEED
-- YEAR_END_EVALUATION_DOES_NOT_CREATE_UNSTATED_SECONDARY_MEETING
-- FIVE_DAY_NOTICE_RETAINS_EXTRAORDINARY_EXCEPTION
-- ART9_LESSON_HOUR_EXCEPTION_MUST_NOT_LEAK_TO_ART10
-- CLASS_BRANCH_INVITEES_ARE_OPTIONAL_AND_TOPIC_CONDITIONAL
-- OPTIONAL_INVITEE_CANNOT_BECOME_STANDING_MEMBER
-- BOARD_VOTE_PRECEDES_PRINCIPAL_APPROVAL
-- SIGNED_CLASS_BRANCH_MINUTES_ARE_IMMUTABLE_EVIDENCE
-- WRONG_DERIVATIVE_SOCIAL_ACTIVITY_FAMILY_IS_NOT_EVIDENCE
-- ROW_LEVEL_LEDGER_REQUIRED_BEFORE_COUNT_CHANGE
+### V95 guards
+- ZUMRE_IDENTITY_REQUIRES_SOURCE_CLAUSE
+- HB1861_IS_3_4_NOT_3_3
+- CURRENT_TWO_YEAR_ZUMRE_CHAIR_TERM_CONFIRMED
+- JUNE_SELECTION_SEPTEMBER_EFFECTIVE_DATE_REQUIRED
+- ZUMRE_CHAIR_SELECTION_HIERARCHY_IS_2024_VERSIONED
+- MEBBIS_CHAIR_ENTRY_IS_EXACT_CHILD
+- SUBSTITUTE_CHAIR_REPLACEMENT_ROUTE_REQUIRED
+- PRIMARY_SCHOOL_ZUMRE_COMPOSITION_IS_SPECIAL
+- AREA_CHIEF_ZUMRE_CHAIR_IS_ROLE_BOUND
+- SECONDARY_NOVEMBER_APRIL_IS_SCHOOL_TYPE_SPECIFIC
+- ZUMRE_MEETINGS_OUTSIDE_LESSON_HOURS
+- FIVE_DAY_NOTICE_HAS_FORCED_SITUATION_EXCEPTION
+- PRINCIPAL_APPROVAL_FOLLOWS_VOTE
+- ZUMRE_MINUTES_INCLUDE_ABSENT_RELEVANT_MEMBERS
+- MTAL_MAY_INTERNSHIP_MEETING_IS_FEATURE_AND_SCHOOL_TYPE_CONDITIONAL
+- HISTORICAL_VERIFIED_ROWS_ARE_RETESTED_NOT_BLINDLY_ROLLED_BACK
+- ROW_LEVEL_LEDGER_REQUIRED_BEFORE_NEW_PROMOTION
 
 ## Open exact-source recovery queue
 - HB-1787..1794 Teacher Practice Directive exact clauses.
-- V90 OÖKY 84/85 live consolidated row dedupe.
+- V90 OÖKY 84/85 row dedupe.
 - HB-1825 workload/report identity.
 - V91 post-2025 school-health guide transition; HB-1828 exact dedupe.
 - HB-1832/HB-1833 row dedupe.
 - HB-1834 parent-meeting frequency exact-source recovery.
-- V93 Art9 strong rows count-pending due row-ledger/dedupe.
-- V94 Art10 strong rows count-pending due row-ledger/dedupe.
+- V93/V94 strong rows count-pending due row-ledger/dedupe.
+- V95 strong non-counted rows remain pending only where historical count/dedupe proof is absent.
 
-## V95 — 3.3 EĞİTİM KURUMU SINIF/ALAN ZÜMRELERİ
-Starts HB-1853. Current authority family is Art.11-12 + EK-2 of the same current directive.
+## V96 — 3.4 EĞİTİM KURUMU SINIF/ALAN ZÜMRE BAŞKANLAR KURULU
+Canonical source begins at HB-1868 but HB-1861=3.4.6 is interleaved earlier. Section identity must resolve by `3.4.x`, not numeric adjacency.
 
-Known master start:
-- HB-1853 = 3.3.1 same-class/course teachers form class/area zümre.
-- HB-1854 = 3.3.2 single-teacher area/class meeting with principal or designated deputy.
-- HB-1855 = 3.3.3 zümre president selection + legacy `2-year` claim; MUST verify against current 2024 selection hierarchy and current term rule.
-- HB-1856 = 3.3.4 school-year/second-term/year-end + needs-based interim meetings.
-- HB-1857 = 3.3.5 secondary November/April one-business-day meetings.
-- HB-1858 = 3.3.6 outside lesson hours (boundary continuation to recover).
+Known source rows:
+- 3.4.1 formation + chair selection / legacy two-year wording.
+- 3.4.2 ordinary + interim meetings.
+- 3.4.3 >=5-day notice.
+- 3.4.4 decisions re-evaluated in class/area zümre.
+- 3.4.5 outside lesson hours.
+- 3.4.6 HB-1861 principal approval.
+- 3.4.7 minutes/signature/retention.
+- 3.4.8 year-end evaluation.
 
-### V95 priority
-1. Recover full exact 3.3.x boundary and IDs.
-2. Lock current Art11-12 + EK-2.
-3. Verify 02.01.2024 zümre-president hierarchy: willing candidates first, then doctorate/head teacher/master's/expert teacher/previous chair/seniority sequence, and MEBBİS entry.
-4. Test master `selected chair serves 2 years` against current text; do not preserve stale term if current directive differs.
-5. Preserve primary-school, middle/IH-middle, secondary, MTAL/IHL, special-education and non-formal zümre scope distinctions.
-6. Resolve additional secondary November/April schedule and MTAL May internship-selection meeting separately.
-7. Audit five-day notice, lesson-hours, approval, minutes, year-end evaluation.
-8. Historical ARTICLE_VERIFIED ledger audit before count change.
-9. Build >=300 atoms; Migration 0 / Lovable 0.
+### V96 priority
+1. Recover every 3.4.x workflow ID exactly.
+2. Lock current Art13 + EK-1/EK-2 as applicable.
+3. Test master `chair serves 2 years` against current Art13/1 — current text appears to say chair chosen for **that education year**, so a material mismatch/possible rollback must be ledger-audited rather than assumed.
+4. Lock 2024 selection hierarchy + MEBBİS entry if applicable to board chair.
+5. Verify schedule as following class/area-zümre meeting workday + interim trigger.
+6. Preserve re-evaluation-in-zümre child, outside-lesson-hours, vote/approval, minutes and year-end evaluation.
+7. Audit historical ARTICLE_VERIFIED HB-1868 before any rollback; Batch01 shows it was previously ARTICLE_VERIFIED, so this is a high-priority row-level integrity test.
+8. Build >=300 atoms; Migration 0 / Lovable 0.
 
 ## Tenant requirement
 **Sosyal Sorumluluk Kulübü** remains active tenant requirement; ARTICLE_VERIFIED sayacına eklenmez.
 
 ## Repo / execution boundary
-Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` => immediately execute **V95 / 3.3 EĞİTİM KURUMU SINIF/ALAN ZÜMRELERİ**. Work mode remains deferred until all legal verification is complete.
+Only `halisbozoglu-design/okulos-edu-suite`. User `Devam` => immediately execute **V96 / 3.4 EĞİTİM KURUMU SINIF/ALAN ZÜMRE BAŞKANLAR KURULU**. Work mode remains deferred until all legal verification is complete.
