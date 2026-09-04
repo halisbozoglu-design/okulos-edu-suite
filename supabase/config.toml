@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.web-push-public-key]
 verify_jwt = false
+
+[functions.smartboard-daily-plan]
+verify_jwt = false

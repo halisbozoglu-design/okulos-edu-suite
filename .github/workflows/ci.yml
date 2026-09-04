@@ -80,6 +80,9 @@ jobs:
       - name: Check Supabase migrations
         run: node scripts/check-migrations.mjs
 
+      - name: Check SmartBoard integration contract
+        run: node scripts/check-smartboard-integration.mjs
+
       - name: Audit legacy migration replay safety
         run: node scripts/check-migration-replay-safety.mjs
 
