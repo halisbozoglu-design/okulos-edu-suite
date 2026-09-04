@@ -8,10 +8,12 @@ const requiredFiles = [
   'supabase/migrations/20260903103000_smartboard_unlock_command_delivery.sql',
   'supabase/migrations/20260903113000_guidance_calendar_smartboard_access.sql',
   'supabase/migrations/20260903115000_guidance_due_reminder_dispatch.sql',
+  'supabase/migrations/20260904233000_smartboard_platform_classroom_interaction.sql',
   'supabase/functions/smartboard-daily-plan/index.ts',
   'src/routes/guidance-calendar.tsx',
   'docs/SMARTBOARD_INTEGRATION_CANONICAL.md',
   'docs/SMARTBOARD_GUIDANCE_CALENDAR_ACCESS.md',
+  'docs/SMARTBOARD_PLATFORM_CLASSROOM_INTERACTION.md',
 ];
 
 for (const file of requiredFiles) {
@@ -25,10 +27,12 @@ const unlock = fs.readFileSync(requiredFiles[3], 'utf8');
 const commands = fs.readFileSync(requiredFiles[4], 'utf8');
 const guidance = fs.readFileSync(requiredFiles[5], 'utf8');
 const reminderDispatch = fs.readFileSync(requiredFiles[6], 'utf8');
-const edge = fs.readFileSync(requiredFiles[7], 'utf8');
-const guidanceUi = fs.readFileSync(requiredFiles[8], 'utf8');
-const docs = fs.readFileSync(requiredFiles[9], 'utf8');
-const guidanceDocs = fs.readFileSync(requiredFiles[10], 'utf8');
+const platform = fs.readFileSync(requiredFiles[7], 'utf8');
+const edge = fs.readFileSync(requiredFiles[8], 'utf8');
+const guidanceUi = fs.readFileSync(requiredFiles[9], 'utf8');
+const docs = fs.readFileSync(requiredFiles[10], 'utf8');
+const guidanceDocs = fs.readFileSync(requiredFiles[11], 'utf8');
+const platformDocs = fs.readFileSync(requiredFiles[12], 'utf8');
 
 const mustContain = (name, text, needles) => {
   for (const needle of needles) {
@@ -119,6 +123,40 @@ mustContain('guidance calendar UI', guidanceUi, [
   'dispatch_my_due_guidance_reminders',
 ]);
 
+mustContain('cross-platform classroom interaction migration', platform, [
+  'smartboard_platform_profiles',
+  "'PARDUS','WINDOWS'",
+  "'PHASE_1','PHASE_2','PHASE_3','PHASE_4','OTHER'",
+  'smartboard_runtime_feature_matrix',
+  'smartboard_resolution_profile',
+  'smartboard_evaluate_runtime_features',
+  'smartboard_app_catalog',
+  'SMARTBOARD_WHITEBOARD',
+  'MATH_TOOLS',
+  'LIBREOFFICE_IMPRESS',
+  'smartboard_ota_channels',
+  "'PILOT','BETA','STABLE'",
+  'smartboard_cast_sessions',
+  'TEACHER_ONLY',
+  'classroom_response_sessions',
+  "'POLL','MULTIPLE_CHOICE','QUICK_CHECK','SURVEY'",
+  'classroom_response_options',
+  'classroom_responses',
+  'classroom_response_summary',
+]);
+
+mustContain('platform classroom interaction docs', platformDocs, [
+  'FATİH / ETAP faz 1, 2, 3, 4',
+  'Windows runtime ayrı ve eşdeğer',
+  'öğretmenin kendi cihazına odaklanır',
+  'A/B/C/D çoktan seçmeli cevap',
+  'SmartBoard Whiteboard',
+  'LibreOffice Impress',
+  'PILOT -> BETA -> STABLE',
+  'smartboard_resolution_profile()',
+  'Lovable token çalışma zamanında kullanılmaz',
+]);
+
 mustContain('daily plan edge function', edge, [
   'x-smartboard-device-key',
   'x-smartboard-secret',
@@ -130,6 +168,9 @@ mustContain('daily plan edge function', edge, [
 
 if (/LOVABLE_(TOKEN|API_KEY)|x-lovable|lovable\.dev\/api/i.test(edge)) {
   throw new Error('Lovable runtime credential/API usage is forbidden in SmartBoard daily plan endpoint.');
+}
+if (/LOVABLE_(TOKEN|API_KEY)|x-lovable|lovable\.dev\/api/i.test(platform)) {
+  throw new Error('Lovable runtime credential/API usage is forbidden in SmartBoard platform/runtime contract.');
 }
 
 if (!docs.includes('Lovable token bu akışların hiçbirinde')) {
